@@ -8,6 +8,6 @@ public class TestCon {
 
     @GetMapping("/index")
     public String index(){
-        return "/pages/dashboard";
+        return "/pages/billing";
     }
 }
