@@ -18,6 +18,6 @@ public class TestCon {
 
     @GetMapping("/index2")
     public String index2(){
-        return "/pages/hoa_don";
+        return "/pages/hoa-don";
     }
 }
