@@ -42,11 +42,14 @@ import createCache from "@emotion/cache";
 // Soft UI Dashboard React routes
 import routes from "routes";
 
+// Bosstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 // Soft UI Dashboard React contexts
 import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "context";
 
 // Images
-import brand from "assets/images/logo-ct.png";
+import brand from "assets/images/logo-shop.png";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();

@@ -54,23 +54,39 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
+//
+import HoaDon from "layouts/hoa-don";
+import HoaDonCT from "layouts/hoa-don/hoa-don-chi-tiet";
 
 const routes = [
   {
     type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
-    route: "/dashboard",
+    name: "Quản lý hóa đơn",
+    key: "hoa-don",
+    route: "/hoa-don",
+    icon: <Office size="12px" />,
+    component: <HoaDon />,
+    noCollapse: true,
+  },
+  {
+    route: "/hoa-don/chi-tiet",
+    component: <HoaDonCT />,
+  },
+  {
+    type: "collapse",
+    name: "Quản lý nhân viên",
+    key: "nhan-vien",
+    route: "/nhan-vien",
     icon: <Shop size="12px" />,
     component: <Dashboard />,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
-    route: "/tables",
-    icon: <Office size="12px" />,
+    name: "Quản lý khách hàng",
+    key: "khach-hang",
+    route: "/khach-hang",
+    icon: <Shop size="12px" />,
     component: <Tables />,
     noCollapse: true,
   },
