@@ -67,11 +67,7 @@ function Footer({ company, links }) {
           </Icon>
         </SoftBox>
         by
-        <Link href={href} target="_blank">
-          <SoftTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;
-          </SoftTypography>
-        </Link>
+          V
         for a better web.
       </SoftBox>
       <SoftBox
@@ -99,12 +95,12 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
+  company: { href: "#", name: "Viet-Pham" },
   links: [
-    { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-    { href: "https://www.creative-tim.com/blog", name: "Blog" },
-    { href: "https://www.creative-tim.com/license", name: "License" },
+    { href: "#", name: "Trang Chủ" },
+    { href: "#", name: "Giới Thiệu" },
+    { href: "#", name: "Liên Hệ" },
+    { href: "#", name: "Hỗ Trợ" },
   ],
 };
 
