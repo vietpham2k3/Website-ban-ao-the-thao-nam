@@ -1,5 +1,5 @@
 // import axios from "axios"
-import axios from "./custommize-axios"
+import axios from "../custommize-axios"
 
 const fetchAll = (page) => {
     return axios.get(`/?page=${page}`)
