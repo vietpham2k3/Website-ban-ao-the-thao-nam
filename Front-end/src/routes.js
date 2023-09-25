@@ -55,22 +55,22 @@ import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 //
-import HoaDon from "layouts/hoa-don";
-import HoaDonCT from "layouts/hoa-don/hoa-don-chi-tiet";
+import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
+import DonHang from "layouts/don-hang";
 
 const routes = [
   {
     type: "collapse",
-    name: "Quản lý hóa đơn",
-    key: "hoa-don",
-    route: "/hoa-don",
+    name: "Quản lý đơn hàng",
+    key: "don-hang",
+    route: "/don-hang",
     icon: <Office size="12px" />,
-    component: <HoaDon />,
+    component: <DonHang />,
     noCollapse: true,
   },
   {
-    route: "/hoa-don/chi-tiet",
-    component: <HoaDonCT />,
+    route: "/don-hang/chi-tiet",
+    component: <DonHangCT />,
   },
   {
     type: "collapse",
