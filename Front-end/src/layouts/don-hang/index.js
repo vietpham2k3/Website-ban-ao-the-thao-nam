@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactPaginate from "react-paginate";
-import { fetchAll, searchUser } from 'service/Service';
-import Confirm from 'Confirm';
+// import { fetchAll, searchUser } from 'service/Service';
+// import Confirm from 'Confirm';
 // bosstrap 
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
