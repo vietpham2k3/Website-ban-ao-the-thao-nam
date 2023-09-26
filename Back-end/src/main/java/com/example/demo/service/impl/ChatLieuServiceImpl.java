@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.ChatLieuCustom;
 import com.example.demo.dto.ChatLieuRequest;
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repository.ChatLieuRepository;
 import com.example.demo.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,11 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     }
 
     @Override
+    public ChatLieu detail(UUID id) {
+        return chatLieuRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public ChatLieu add(ChatLieu chatLieu) {
         chatLieu.setMa(chatLieu.getMa());
         chatLieu.setTen(chatLieu.getTen());
@@ -64,10 +70,12 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
 
     @Override
-    public ChatLieu delete(UUID id,ChatLieu chatLieu) {
-        chatLieu.setTrangThai(1);
-        chatLieu.setNgayTao(chatLieu.getNgayTao());
-        chatLieu.setNgaySua(new Date());
-        return chatLieuRepository.save(chatLieu);
+    public ChatLieu delete(UUID id) {
+        ChatLieu chatLieu1 = chatLieuRepository.findById(id).orElse(null);
+        chatLieu1.setTrangThai(1);
+        chatLieu1.setNgaySua(new Date());
+      chatLieu1.setNgayTao(chatLieu1.getNgayTao());
+        chatLieu1.setTen(chatLieu1.getMa());
+        return chatLieuRepository.save(chatLieu1);
     }
 }

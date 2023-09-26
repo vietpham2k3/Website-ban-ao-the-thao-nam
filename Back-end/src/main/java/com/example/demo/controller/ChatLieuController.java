@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.MauSac;
 import com.example.demo.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ChatLieuController {
     @Autowired
     private ChatLieuService chatLieuService;
 
-    @GetMapping("")
+    @GetMapping("/hienthi")
     public ResponseEntity<?> page(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chatLieuService.getAll(page));
     }
@@ -50,9 +51,17 @@ public class ChatLieuController {
         return ResponseEntity.ok(chatLieuService.update(chatLieu));
     }
 
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id,@RequestBody ChatLieu chatLieu) {
-        return ResponseEntity.ok(chatLieuService.delete(id,chatLieu));
+    @PutMapping("delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id,
+                                    @RequestBody ChatLieu chatLieu) {
+
+        chatLieu.setId(id);
+        return ResponseEntity.ok(chatLieuService.delete(id));
+    }
+
+    @GetMapping("detail/{id}")
+    public ResponseEntity<?>     detail(@PathVariable UUID id) {
+        return ResponseEntity.ok(chatLieuService.detail(id));
     }
 
 

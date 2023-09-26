@@ -1,14 +1,17 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { deleteUser } from "../../service/ServiceChatLieu";
+import { useParams } from "react-router-dom";
+import {deleteCL } from "../../service/ServiceChatLieu";
 import { toast } from "react-toastify";
 
-const ConfirmDelete = (props) => {
-  const { handleClose, show, dataDelete, getAll } = props;
+const ConfirmDelete = ({ handleClose, show, dataDelete, getAll }) => {
 
-  const handleConfirm = async () => {
-    let res = await deleteUser(dataDelete);
+  const { id } = useParams();
+
+  const handleConfirm = async (id) => {
+    let res = await deleteCL(dataDelete.id); // Truyền dataDelete.id vào hàm deleteMS
     if (res) {
       toast.success("Delete success!");
       handleClose();
@@ -20,18 +23,23 @@ const ConfirmDelete = (props) => {
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Thông báo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="body-add-new">Mày có chắc muốn xoá không?</div>
+          <div className="body-add-new">Bạn có chắc muốn xoá không?</div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Đóng
           </Button>
-          <Button variant="danger" onClick={() => handleConfirm()}>
+          <Button variant="danger" onClick={handleConfirm}>
             Xoá
           </Button>
         </Modal.Footer>
@@ -39,5 +47,4 @@ const ConfirmDelete = (props) => {
     </div>
   );
 };
-
 export default ConfirmDelete;

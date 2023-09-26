@@ -46,11 +46,10 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 // Bosstrap
-import 'bootstrap/dist/css/bootstrap.min.css'
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
@@ -66,14 +65,14 @@ import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
 import DonHang from "layouts/don-hang";
 
 import ChatLieu from "layouts/chat-lieu/chatlieu";
+import AddChatLieu from "layouts/chat-lieu/addchatlieu";
+import UpdateCL from "layouts/chat-lieu/UpdateChatLieu";
 
 import MauSac from "layouts/mausac/mau-sac";
 import AddMauSac from "layouts/mausac/addMS";
 import UpdateMS from "layouts/mausac/updateMS";
 
-
 const routes = [
-  
   // Đơn hàng
   {
     type: "collapse",
@@ -91,7 +90,7 @@ const routes = [
   },
 
   // Sản Phẩm
-  { 
+  {
     type: "collapse",
     name: "Quản lý sản phẩm",
     key: "san-pham",
@@ -143,11 +142,28 @@ const routes = [
     type: "collapse",
     name: "Quản lý Chất Liệu",
     key: "chatlieu",
-    route: "/chatlieu",
+    route: "/san-pham/chatlieu",
     icon: <Office size="12px" />,
     component: <ChatLieu />,
     noCollapse: true,
   },
+  {
+    route: "/san-pham/chatlieu/add",
+    component: <AddChatLieu />,
+  },
+  {
+    route: "/san-pham/chatlieu/delete/:id",
+    component: <ChatLieu />,
+  },
+  {
+    route: "/san-pham/chatlieu/detail/:id",
+    component: <UpdateCL />,
+  },
+  {
+    route: "/san-pham/chatlieu/update/:id",
+    component: <UpdateCL />,
+  },
+
   {
     type: "collapse",
     name: "Quản lý nhân viên",

@@ -4,7 +4,7 @@ const fetchAll = () => {
   return axios.get(`/api/chatlieu/getAll`);
 };
 const fetchAllList = (page) => {
-  return axios.get(`/api/chatlieu?page=${page}`);
+  return axios.get(`/api/chatlieu/hienthi?page=${page}`);
 };
 
 const postCreate = (values) => {
@@ -14,13 +14,16 @@ const postCreate = (values) => {
 const putUpdateCL = (id, values) => {
   return axios.put("/api/chatlieu/update/" + id, values);
 };
+const detailCL = (id) => {
+  return axios.get(`/api/chatlieu/detail/` + id);
+};
 
-const deleteCL = (id) => {
-  return axios.delete(`/api/chatlieu/delete/${id}`);
+const deleteCL = (id, values) => {
+  return axios.put(`/api/chatlieu/delete/` + id, values);
 };
 
 const searchCL = (key, page) => {
-  return axios.get(`/api/chatlieu/search?page=${page}&key=${key}`);
+  return axios.get(`/api/chatlieu/serach?page=${page}&key=${key}`);
 };
 
-export { fetchAll, fetchAllList, postCreate, putUpdateCL, deleteCL, searchCL };
+export { fetchAll, detailCL, fetchAllList, postCreate, putUpdateCL, deleteCL, searchCL };
