@@ -12,7 +12,7 @@ import Footer from "examples/Footer";
 
 
 
-function HoaDonCT() {
+function DonHangCT() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -58,4 +58,4 @@ function HoaDonCT() {
   );
 }
 
-export default HoaDonCT;
+export default DonHangCT;

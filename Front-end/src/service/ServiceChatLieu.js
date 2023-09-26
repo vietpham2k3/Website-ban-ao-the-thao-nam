@@ -11,16 +11,16 @@ const postCreate = (values) => {
   return axios.post("/api/chatlieu/add", values);
 };
 
-const putUpdateUser = (id, values) => {
+const putUpdateCL = (id, values) => {
   return axios.put("/api/chatlieu/update/" + id, values);
 };
 
-const deleteUser = (id) => {
+const deleteCL = (id) => {
   return axios.delete(`/api/chatlieu/delete/${id}`);
 };
 
-const searchUser = (key, page) => {
+const searchCL = (key, page) => {
   return axios.get(`/api/chatlieu/search?page=${page}&key=${key}`);
 };
 
-export { fetchAll, fetchAllList, postCreate, putUpdateUser, deleteUser, searchUser };
+export { fetchAll, fetchAllList, postCreate, putUpdateCL, deleteCL, searchCL };
