@@ -20,8 +20,8 @@ const putMS = (id, values) => {
     return axios.put(`/api/mau-sac/update/` + id, values)
 }
 
-const deleteMS = (id) => {
-    return axios.put(`/api/mau-sac/delete/` + id)
+const deleteMS = (id, values) => {
+    return axios.put(`/api/mau-sac/delete/` + id, values)
 }
 
 const searchMS = (key, page) => {
