@@ -45,6 +45,13 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
+// Bosstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
+
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
@@ -57,8 +64,14 @@ import Cube from "examples/Icons/Cube";
 //
 import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
 import DonHang from "layouts/don-hang";
+import MauSac from "layouts/mausac/mau-sac";
+import AddMauSac from "layouts/mausac/addMS";
+import UpdateMS from "layouts/mausac/updateMS";
+import ConfirmDelete from "layouts/mausac/ConfirmDelete";
 
 const routes = [
+  
+  // Đơn hàng
   {
     type: "collapse",
     name: "Quản lý đơn hàng",
@@ -72,6 +85,56 @@ const routes = [
     route: "/don-hang/chi-tiet",
     component: <DonHangCT />,
   },
+
+  // Sản Phẩm
+  { 
+    type: "collapse",
+    name: "Quản lý sản phẩm",
+    key: "san-pham",
+    route: "/san-pham",
+    icon: <Shop size="12px" />,
+    component: <Dashboard />,
+    noCollapse: true,
+    // collapse: [
+    //   {
+    //     type: "collapse",
+    //     name: "Màu sắc",
+    //     key: "mau-sac",
+    //     route: "/mau-sac",
+    //     component: <MauSac />,
+    //   },
+    // ],
+  },
+
+  //Màu sắc
+  {
+    type: "collapse",
+    name: "Màu sắc",
+    key: "mau-sac",
+    route: "/san-pham/mau-sac",
+    icon: <Shop size="12px" />,
+    component: <MauSac />,
+    noCollapse: true,
+  },
+  {
+    route: "/san-pham/mau-sac/add",
+    component: <AddMauSac />,
+  },
+  {
+    route: "/san-pham/mau-sac/delete/:id",
+    component: <MauSac />,
+  },
+  {
+    route: "/san-pham/mau-sac/detail/:id",
+    component: <UpdateMS />,
+  },
+  {
+    route: "/san-pham/mau-sac/update/:id",
+    component: <UpdateMS />,
+  },
+
+  //
+
   {
     type: "collapse",
     name: "Quản lý nhân viên",
