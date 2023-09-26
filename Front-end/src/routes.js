@@ -57,6 +57,7 @@ import Cube from "examples/Icons/Cube";
 //
 import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
 import DonHang from "layouts/don-hang";
+import ChatLieu from "layouts/chat-lieu/chatlieu";
 
 const routes = [
   {
@@ -68,9 +69,19 @@ const routes = [
     component: <DonHang />,
     noCollapse: true,
   },
+
   {
     route: "/don-hang/chi-tiet",
     component: <DonHangCT />,
+  },
+  {
+    type: "collapse",
+    name: "Quản lý Chất Liệu",
+    key: "chatlieu",
+    route: "/chatlieu",
+    icon: <Office size="12px" />,
+    component: <ChatLieu />,
+    noCollapse: true,
   },
   {
     type: "collapse",
