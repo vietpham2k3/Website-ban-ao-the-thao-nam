@@ -65,6 +65,9 @@ import Cube from "examples/Icons/Cube";
 import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
 import DonHang from "layouts/don-hang";
 import MauSac from "layouts/mausac/mau-sac";
+import AddMauSac from "layouts/mausac/addMS";
+import UpdateMS from "layouts/mausac/updateMS";
+import ConfirmDelete from "layouts/mausac/ConfirmDelete";
 
 const routes = [
   
@@ -108,10 +111,26 @@ const routes = [
     type: "collapse",
     name: "Màu sắc",
     key: "mau-sac",
-    route: "/mau-sac",
+    route: "/san-pham/mau-sac",
     icon: <Shop size="12px" />,
     component: <MauSac />,
     noCollapse: true,
+  },
+  {
+    route: "/san-pham/mau-sac/add",
+    component: <AddMauSac />,
+  },
+  {
+    route: "/san-pham/mau-sac/delete/:id",
+    component: <MauSac />,
+  },
+  {
+    route: "/san-pham/mau-sac/detail/:id",
+    component: <UpdateMS />,
+  },
+  {
+    route: "/san-pham/mau-sac/update/:id",
+    component: <UpdateMS />,
   },
 
   //

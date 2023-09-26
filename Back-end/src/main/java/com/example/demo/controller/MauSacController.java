@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.MauSac;
-import com.example.demo.service.MauSacService;
+import com.example.demo.service.impl.MauSacServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -16,7 +16,7 @@ import java.util.UUID;
 @CrossOrigin(origins = "http://localhost:3000")
 public class MauSacController {
     @Autowired public
-    MauSacService service;
+    MauSacServiceImpl service;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> hienThi(){
@@ -37,13 +37,22 @@ public class MauSacController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody MauSac mauSac){
+        mauSac.setNgayTao(new Date());
+
         return ResponseEntity.ok(service.add(mauSac));
+    }
+    
+    @GetMapping("detail/{id}")
+    public ResponseEntity<?> detail(@PathVariable UUID id){
+        return ResponseEntity.ok(service.detail(id));
     }
 
     @PutMapping("update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @RequestBody MauSac mauSac){
         mauSac.setId(id);
+        mauSac.setNgayTao(mauSac.getNgayTao());
+        mauSac.setNgaySua(new Date());
         return ResponseEntity.ok(service.add(mauSac));
     }
 

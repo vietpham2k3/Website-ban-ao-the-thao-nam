@@ -14,7 +14,7 @@ import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
 
 
-function HoaDonCT() {
+function DonHangCT() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -60,4 +60,4 @@ function HoaDonCT() {
   );
 }
 
-export default HoaDonCT;
+export default DonHangCT;

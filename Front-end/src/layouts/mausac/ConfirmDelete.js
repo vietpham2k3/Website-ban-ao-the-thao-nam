@@ -1,14 +1,17 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import { deleteMS } from "service/ServiceMauSac";
 import { toast } from "react-toastify";
 
-const ConfirmDelete = (props) => {
-  const { handleClose, show, dataDelete, getAll } = props;
+const ConfirmDelete = ({ handleClose, show, dataDelete, getAll }) => {
 
-  const handleConfirm = async () => {
-    let res = await deleteMS(dataDelete);
+  const { id } = useParams();
+
+  const handleConfirm = async (id) => {
+    let res = await deleteMS(dataDelete.id); // Truyền dataDelete.id vào hàm deleteMS
     if (res) {
       toast.success("Delete success!");
       handleClose();
@@ -36,7 +39,7 @@ const ConfirmDelete = (props) => {
           <Button variant="secondary" onClick={handleClose}>
             Đóng
           </Button>
-          <Button variant="danger" onClick={() => handleConfirm()}>
+          <Button variant="danger" onClick={handleConfirm}>
             Xoá
           </Button>
         </Modal.Footer>
@@ -44,5 +47,4 @@ const ConfirmDelete = (props) => {
     </div>
   );
 };
-
 export default ConfirmDelete;

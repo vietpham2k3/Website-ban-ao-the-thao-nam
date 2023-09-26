@@ -8,12 +8,16 @@ const getAllMS = () => {
     return axios.get("/api/mau-sac/hien-thi")
 }
 
+const detailMS = (id) => {
+    return axios.get(`/api/mau-sac/detail/` + id)
+}
+
 const postMS = (values) => {
-    return axios.post("/add", values)
+    return axios.post("/api/mau-sac/add", values)
 }
 
 const putMS = (id, values) => {
-    return axios.put("/update/" + id, values)
+    return axios.put(`/api/mau-sac/update/` + id, values)
 }
 
 const deleteMS = (id) => {
@@ -24,4 +28,4 @@ const searchMS = (key, page) => {
     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&page=${page}`);
   };
 
-export { getAllPageMS, getAllMS, searchMS, deleteMS, postMS, putMS }
+export { getAllPageMS, getAllMS, searchMS, deleteMS, postMS, putMS, detailMS  }
