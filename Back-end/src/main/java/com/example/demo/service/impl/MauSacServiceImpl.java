@@ -27,8 +27,8 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
-    public Page<MauSac> pageSearchMS(String key,Pageable pageable){
-        return res.searchPageMS(key,pageable);
+    public Page<MauSac> pageSearchMS(String key,Integer trangThai,Pageable pageable){
+        return res.searchPageMS(key,trangThai,pageable);
     }
 
     @Override

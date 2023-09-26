@@ -24,8 +24,8 @@ const deleteMS = (id, values) => {
     return axios.put(`/api/mau-sac/delete/` + id, values)
 }
 
-const searchMS = (key, page) => {
-    return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&page=${page}`);
+const searchMS = (key,trangThai, page) => {
+    return axios.get(`/api/mau-sac/hien-thi-page-search?trangThai=${trangThai}&key=${key}&page=${page}`);
   };
 
 export { getAllPageMS, getAllMS, searchMS, deleteMS, postMS, putMS, detailMS  }
