@@ -56,7 +56,7 @@ const handleColorChange = (newColor) => {
   const put = async (id, value) => {
     const res = await putMS(id, value);
     if (res) {
-      toast.success("Update succses");
+      toast.success("Cập nhật thành công !");
       navigate("/san-pham/mau-sac");
     }
   };
