@@ -48,7 +48,7 @@ function AddMauSac() {
   const post = async (value) => {
     const res = await postMS(value);
     if (res) {
-      toast.success("Add succses");
+      toast.success("Thêm thành công !");
       navigate("/san-pham/mau-sac");
     }
   };

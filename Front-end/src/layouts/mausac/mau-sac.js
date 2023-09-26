@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import ReactPaginate from 'react-paginate'
+import { toast } from "react-toastify";
+
 import { useParams } from "react-router-dom";
 import { getAllMS,getAllPageMS,searchMS } from 'service/ServiceMauSac';
 import { Link } from 'react-router-dom'
@@ -26,7 +28,9 @@ function MauSac() {
         const [data, setData] = useState([])
         const [totalPages, setTotalPages] = useState()
         const [isShow, setIsShow] = useState(false)
-        const [dataDelete, setDataDelete] = useState({})
+        const [dataDelete, setDataDelete] = useState({
+          ma: ""
+        })
       
         useEffect(() => {
           getAll(0)
@@ -71,19 +75,18 @@ function MauSac() {
           getAll(event.selected)
         }
       
-        const { id } = useParams();
+        // const { id } = useParams();
 
-        const del = async (id) => {
-          const res = await deleteMS(id);
+        const del = async (id, values) => {
+          const res = await deleteMS(id, values);
           if (res) {
-            toast.success("Delete succses !");
-            navigate("/san-pham/mau-sac");
+            toast.success("Xóa thành công !");
+            getAll(0);
           }
         };
       
-        const handleSubmit = (event) => {
-          event.preventDefault();
-          del(id);
+        const handleSubmit = (id) => {
+          del(id, dataDelete);
         };
       
 
@@ -154,7 +157,7 @@ function MauSac() {
                     <i style={{color: 'aqua'}} className="fa-regular fa-pen-to-square fa-lg"></i></Link>
 
 
-                    <Link className='mx-2' onClick={(id) => del(d.id)}>
+                    <Link className='mx-2' onClick={() => handleSubmit(d.id, {ma: d.ma})}>
                     <i style={{color: '#ff1744'}}  className="fa-solid fa-trash"></i></Link>
 
                     {/* <Link><i className="fa-solid fa-trash" 
