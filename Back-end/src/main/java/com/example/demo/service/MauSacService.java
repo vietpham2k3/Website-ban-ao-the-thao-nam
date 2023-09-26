@@ -15,7 +15,7 @@ public interface MauSacService {
 
     public Page<MauSac> pageMS(Pageable pageable);
 
-    public Page<MauSac> pageSearchMS(String key,Pageable pageable);
+    public Page<MauSac> pageSearchMS(String key,Integer trangThai,Pageable pageable);
 
     public MauSac add(MauSac mauSac);
 

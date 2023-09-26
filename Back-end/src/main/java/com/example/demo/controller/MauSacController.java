@@ -30,9 +30,9 @@ public class MauSacController {
     }
 
     @GetMapping("hien-thi-page-search")
-    public ResponseEntity<?> hienThiPageSearch(String key,@RequestParam (defaultValue = "0") int page){
+    public ResponseEntity<?> hienThiPageSearch(String key,Integer trangThai,@RequestParam (defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page,5);
-        return ResponseEntity.ok(service.pageSearchMS(key,pageable));
+        return ResponseEntity.ok(service.pageSearchMS(key,trangThai,pageable));
     }
 
     @PostMapping("add")
