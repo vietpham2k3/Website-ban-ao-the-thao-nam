@@ -10,7 +10,7 @@ import _ from "lodash";
 // @mui material components
 import Card from "@mui/material/Card";
 
-// React components                                   
+// React components
 import SoftBox from "components/SoftBox";
 
 //  React examples

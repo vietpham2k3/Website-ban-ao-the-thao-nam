@@ -63,11 +63,11 @@ import Cube from "examples/Icons/Cube";
 //
 import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
 import DonHang from "layouts/don-hang";
-
+//chatlieu
 import ChatLieu from "layouts/chat-lieu/chatlieu";
 import AddChatLieu from "layouts/chat-lieu/addchatlieu";
 import UpdateCL from "layouts/chat-lieu/UpdateChatLieu";
-
+//mausac
 import MauSac from "layouts/mausac/mau-sac";
 import AddMauSac from "layouts/mausac/addMS";
 import UpdateMS from "layouts/mausac/updateMS";

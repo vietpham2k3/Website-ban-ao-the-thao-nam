@@ -22,8 +22,8 @@ const deleteCL = (id, values) => {
   return axios.put(`/api/chatlieu/delete/` + id, values);
 };
 
-const searchCL = (key, page) => {
-  return axios.get(`/api/chatlieu/serach?page=${page}&key=${key}`);
+const searchCL = (key, trangThai, page) => {
+  return axios.get(`/api/chatlieu/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
 export { fetchAll, detailCL, fetchAllList, postCreate, putUpdateCL, deleteCL, searchCL };

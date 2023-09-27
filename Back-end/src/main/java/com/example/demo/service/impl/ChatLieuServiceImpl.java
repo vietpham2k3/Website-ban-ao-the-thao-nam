@@ -29,10 +29,10 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     }
 
     @Override
-    public Page<ChatLieu> serach(Integer page, String ten) {
-        Pageable pageable = PageRequest.of(page, 5);
-        return chatLieuRepository.search(ten, pageable);
+    public Page<ChatLieu> pageSearchMS(String key, Integer trangThai, Pageable pageable) {
+        return chatLieuRepository.searchPageMS(key,trangThai,pageable);
     }
+
 
     @Override
     public List<ChatLieu> fillAll() {

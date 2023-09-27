@@ -4,6 +4,8 @@ import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.MauSac;
 import com.example.demo.service.ChatLieuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,9 @@ public class ChatLieuController {
     }
 
     @GetMapping("/serach")
-    public ResponseEntity<?> serach(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam("key") String key) {
-        return ResponseEntity.ok(chatLieuService.serach(page, key));
+    public ResponseEntity<?> hienThiPageSearch(String key,Integer trangThai,@RequestParam (defaultValue = "0") int page){
+        Pageable pageable = PageRequest.of(page,5);
+        return ResponseEntity.ok(chatLieuService.pageSearchMS(key,trangThai,pageable));
 
     }
 

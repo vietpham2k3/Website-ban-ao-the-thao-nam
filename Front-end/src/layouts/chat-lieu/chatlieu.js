@@ -7,16 +7,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import SoftBox from "components/SoftBox";
 import { toast } from "react-toastify";
-import {
-  fetchAllList,
-  deleteCL,
-  putUpdateCL,
-  postCreate,
-  detailCL,
-  searchCL,
-} from "../../service/ServiceChatLieu";
+import { fetchAllList, searchCL } from "../../service/ServiceChatLieu";
+import { deleteCL } from "../../service/ServiceChatLieu";
 import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
+
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
@@ -25,10 +20,14 @@ import _ from "lodash";
 // import AddChatLieu from './addchatlieu';
 
 const ChatLieu = (page) => {
+  const [filterStatus, setFilterStatus] = useState("");
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const [isShow, setIsShow] = useState(false);
-  const [dataDelete, setDataDelete] = useState({});
+  // const [isShow, setIsShow] = useState(false);
+  const [dataDelete, setDataDelete] = useState({
+    ma: "",
+  });
+
   console.log(data);
 
   useEffect(() => {
@@ -53,19 +52,18 @@ const ChatLieu = (page) => {
     }
   };
 
-  const search = async (key, page) => {
-    const res = await searchCL(key, page);
+  const search = async (key, trangThai, page) => {
+    const res = await searchCL(key, trangThai, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearchMS = _.debounce(async (e) => {
+  const handleSearchCL = _.debounce(async (e) => {
     let term = e.target.value;
-    // setKey(term); // Lưu từ khóa tìm kiếm vào state key
-    if (term) {
-      searchCL(term, 0); // Gọi hàm search từ service
+    if (term || filterStatus) {
+      search(term, filterStatus, 0); // Đã cập nhật tham số trangThai thành radio
     } else {
       getAll(0);
     }
@@ -116,22 +114,75 @@ const ChatLieu = (page) => {
         <SoftBox mb={3}>
           <Card>
             <div className="w-auto rounded bg-white border shadow p-4">
-              <div className="search">
-                <input
-                  style={{ borderRadius: 15, width: 300 }}
-                  type="text"
-                  className="input-search"
-                  placeholder=" Nhập tên, mã màu cần tìm..."
-                  onChange={handleSearchMS}
-                />
+              <div className="d-flex justify-content-between">
+                <div className="search">
+                  <input
+                    style={{ borderRadius: 15, width: 300 }}
+                    type="text"
+                    className="input-search"
+                    placeholder=" Nhập tên, mã màu cần tìm..."
+                    onChange={handleSearchCL}
+                  />
+                </div>
+                <div style={{ marginRight: 50 }}>
+                  <label
+                    style={{ fontWeight: "bold", marginRight: 25 }}
+                    className="form-check-label"
+                  >
+                    Trạng Thái:
+                  </label>
 
-                <Link
-                  style={{ marginLeft: 20 }}
-                  to="/san-pham/chatlieu/add"
-                  className="btn btn-primary"
-                >
-                  Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
-                </Link>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      checked={filterStatus === ""}
+                      onChange={() => {
+                        setFilterStatus("");
+                        search("", "", 0);
+                      }}
+                    />
+                    <label style={{ marginLeft: 10 }} className="form-check-label">
+                      Tất Cả
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      checked={filterStatus === 0}
+                      onChange={() => {
+                        setFilterStatus(0);
+                        search("", 0, 0);
+                      }}
+                    />
+                    <label className="form-check-label">Đang kích hoạt</label>
+                  </div>
+                  <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      checked={filterStatus === 1}
+                      onChange={() => {
+                        setFilterStatus(1);
+                        search("", 1, 0);
+                      }}
+                    />
+                    <label className="form-check-label">Ngừng kích hoạt</label>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-end">
+                  <Link to="/san-pham/chatlieu/add" className="btn btn-primary">
+                    Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
+                  </Link>
+                </div>
               </div>
 
               <table style={{ textAlign: "center" }} className="table table-hover">
