@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Card } from '@mui/material';
-// import ReactPaginate from 'react-paginate'
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 
 function SanPham() {
   const [data, setData] = useState([]);
-  // const [totalPages, setTotalPages] = useState();
+  const [totalPages, setTotalPages] = useState();
   // const [isShow, setIsShow] = useState(false);
   // const [dataDelete, setDataDelete] = useState({});
   const navigate = useNavigate();
@@ -27,8 +27,13 @@ function SanPham() {
     const res = await getAllCTSP(page);
     if (res) {
       setData(res.data.content);
+      setTotalPages(res.data.totalPages);
       console.log(res);
     }
+  };
+
+  const handlePageClick = (event) => {
+    getAll(event.selected);
   };
 
   function convertToCurrency(number) {
@@ -65,7 +70,7 @@ function SanPham() {
             <div className="col-12">
               <Table striped hover className="my-4">
                 <thead>
-                  <tr>
+                  <tr className="text-center">
                     <th>#</th>
                     <th>Ảnh</th>
                     <th>Mã</th>
@@ -83,9 +88,15 @@ function SanPham() {
                 </thead>
                 <tbody>
                   {data.map((d, i) => (
-                    <tr key={i}>
+                    <tr key={i} className="text-center">
                       <td>{i + 1}</td>
-                      <td>ảnh</td>
+                      <td>
+                        <img
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                          alt=""
+                          style={{ width: '70px', height: '100px' }}
+                        />
+                      </td>
                       <td>{d.ma}</td>
                       <td>{d.sanPham.ten}</td>
                       <td>Chất liệu</td>
@@ -104,6 +115,24 @@ function SanPham() {
                   ))}
                 </tbody>
               </Table>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="next"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={totalPages}
+                previousLabel="previous"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination justify-content-center"
+                activeClassName="active"
+              />
             </div>
           </div>
         </Card>

@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface AnhRepository extends JpaRepository<Anh, UUID> {
+
+    Anh findFirstByChiTietSanPhamId(UUID id);
 }

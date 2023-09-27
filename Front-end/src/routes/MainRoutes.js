@@ -16,6 +16,7 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
+const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -35,7 +36,7 @@ const MainRoutes = {
         },
         {
           path: 'chi-tiet-san-pham/add',
-          element: <ChiTietSanPham />
+          element: <AddChiTietSanPham />
         },
         {
           path: 'mau-sac',
