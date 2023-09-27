@@ -6,6 +6,8 @@ import Loadable from 'ui-component/Loadable';
 import MauSac from 'views/mausac/mau-sac';
 import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
+import DonHang from 'views/donhang/don-hang';
+import DonHangCT from 'views/donhang/don-hang-chi-tiet';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -27,7 +29,11 @@ const MainRoutes = {
   children: [
     {
       path: '/don-hang',
-      element: <DashboardDefault />
+      element: <DonHang />
+    },
+    {
+      path: '/don-hang/chi-tiet/:id',
+      element: <DonHangCT />
     },
     {
       path: '/san-pham',

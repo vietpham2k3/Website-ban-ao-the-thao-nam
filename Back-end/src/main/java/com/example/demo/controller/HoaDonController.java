@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/hoa-don/")
@@ -27,6 +29,14 @@ public class HoaDonController {
         Pageable pageable = PageRequest.of(page,5);
         model.addAttribute("httt", serviceHttt.getAll());
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
+    }
+
+    @GetMapping("detail/{id}")
+    public ResponseEntity<?> detail(@PathVariable UUID id,Model model){
+        model.addAttribute("hd", service.detailHD(id));
+        model.addAttribute("listHD", service.listHD());
+        model.addAttribute("httt", serviceHttt.getAll());
+        return ResponseEntity.ok(service.detailHD(id));
     }
 
     @PostMapping("print-excel")

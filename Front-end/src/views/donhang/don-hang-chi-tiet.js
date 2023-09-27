@@ -1,62 +1,76 @@
-// bosstrap 
-import Table from 'react-bootstrap/Table';
+import React, { useEffect, useState } from 'react';
+import { Card } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
-// Soft UI Dashboard React components
-import SoftBox from "components/SoftBox";
-import SoftTypography from "components/SoftTypography";
-
-// Soft UI Dashboard React examples
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
-
+import '../../scss/MauSac.scss';
+import { detailHD } from 'services/ServiceDonHang';
+import MainCard from 'ui-component/cards/MainCard';
 
 function DonHangCT() {
+  const { id } = useParams();
+
+  const [hoaDon, setHoaDon] = useState('');
+
+  useEffect(() => {
+    detail(id);
+  }, [id]);
+
+  const detail = async (id) => {
+    const res = await detailHD(id);
+    if (res) {
+      setHoaDon(res.hoaDon);
+    }
+  };
+
+  // useEffect(() => {
+  //   getAll();
+  // }, []);
+
+  // const getAll = async () => {
+  //   const res = await getAllHD();
+  //   if (res && res.data) {
+  //     setData(res.data.content);
+  //   }
+  // };
+
+  console.log(hoaDon);
+
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <SoftBox py={3}>
-        <SoftBox mb={3}>
-
-          {/* //noi dung */}
-      <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </Table>
-{/* //end  */}
-
-      </SoftBox>
-       </SoftBox>
-      <Footer />
-    </DashboardLayout>
+    <div>
+      <MainCard>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+            <div className="col-12 row">
+              <div style={{ display: 'flex', justifyContent: 'center' }} className="card-box">
+                <div className="row">
+                  <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7 row">
+                    <h3 className="col-6" style={{ fontWeight: 'bold', color: 'brown' }}>
+                      Thông Tin Đơn Hàng
+                    </h3>
+                    <div className="col-1"></div>
+                  </div>
+                </div>
+                <hr />
+                <div style={{ display: 'flex', justifyContent: 'space-around', justifyItems: 'center' }} className="row">
+                  {hoaDon && (
+                    <div>
+                      <span className="label">Mã Đơn:</span>
+                      <span className="value">{hoaDon.diaChi}</span>
+                      <br />
+                      <span className="label">Người tạo Đơn:</span>
+                      <span className="value">Phạm Quốc Việt</span>
+                      <br />
+                      {/* Các trường dữ liệu khác */}
+                    </div>
+                  )}
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </MainCard>
+    </div>
   );
 }
 

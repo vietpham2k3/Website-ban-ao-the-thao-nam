@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
 
-    @Query(value = "SELECT HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien_sau_khi_giam, HD.trang_thai, HD.loai_don, HTTT.ten\n" +
+    @Query(value = "SELECT HD.id,HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien_sau_khi_giam, HD.trang_thai, HD.loai_don, HTTT.ten\n" +
             "FROM HoaDon HD JOIN HinhThucThanhToan HTTT ON HD.id_httt = HTTT.id \n",
             nativeQuery = true)
     public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
