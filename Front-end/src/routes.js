@@ -62,8 +62,8 @@ import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 //
-import DonHangCT from "layouts/don-hang/don-hang-chi-tiet";
-import DonHang from "layouts/don-hang";
+import DonHangCT from "layouts/donhang/don-hang-chi-tiet";
+import DonHang from "layouts/donhang/don-hang";
 import MauSac from "layouts/mausac/mau-sac";
 import AddMauSac from "layouts/mausac/addMS";
 import UpdateMS from "layouts/mausac/updateMS";
