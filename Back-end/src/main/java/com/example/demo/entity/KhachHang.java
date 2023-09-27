@@ -16,6 +16,8 @@ import java.util.UUID;
 @Table(name="KhachHang")
 public class KhachHang {
 
+    private static int i = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
@@ -48,10 +50,8 @@ public class KhachHang {
 
     @PrePersist
     public void generateMaKhachHang() {
-        int i = 1;
         if (maKhachHang == null) {
-            maKhachHang = "KH"+i;
-            i++;
+            maKhachHang = String.format("KH%02d", i++);
         }
     }
 }

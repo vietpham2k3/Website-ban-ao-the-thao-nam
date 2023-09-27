@@ -26,6 +26,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -140,7 +141,8 @@ public class KhachHangController {
                                  @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = new KhachHang();
-//        khachHang.setMaKhachHang(maKhachHang);
+      String ma = "CL" + new Random().nextInt(100000);
+        khachHang.setMaKhachHang(ma);
         khachHang.setTenKhachHang(tenKhachHang);
         khachHang.setSdt(sdt);
         khachHang.setEmail(email);
@@ -221,8 +223,8 @@ public class KhachHangController {
 
 
     @GetMapping("/searchKH")
-    public ResponseEntity<?> getAll(@RequestParam("key") String key,
-                                         @RequestParam("trangThai") Integer trangThai,
+    public ResponseEntity<?> getAll(@RequestParam(value = "key", required = false) String key,
+                                         @RequestParam(value = "trangThai", required = false) Integer trangThai,
                                          @RequestParam(defaultValue = "0") Integer page) throws IOException {
         Pageable pageable = PageRequest.of(page, 5);
         Page<KhachHang> khachHangPage = khService.searchKH(key, trangThai, pageable);

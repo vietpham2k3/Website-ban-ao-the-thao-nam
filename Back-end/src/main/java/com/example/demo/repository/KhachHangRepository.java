@@ -19,12 +19,12 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
     @Query(value = "update KhachHang kh set kh.trangThai = 0 where kh.id = :id")
     void delete(UUID id);
 
-    @Query("SELECT kh FROM KhachHang kh " +
-            "WHERE (kh.maKhachHang IS NULL OR kh.maKhachHang LIKE CONCAT('%', :key, '%')) " +
-            "AND (kh.tenKhachHang IS NULL OR kh.tenKhachHang LIKE CONCAT('%', :key, '%')) " +
-            "AND (kh.sdt IS NULL OR kh.sdt LIKE CONCAT('%', :key, '%')) " +
-            "AND (kh.email IS NULL OR kh.email LIKE CONCAT('%', :key, '%')) " +
-            "AND (kh.trangThai IS NULL OR kh.trangThai = :trangThai)")
+    @Query(value = "SELECT * FROM KhachHang \n" +
+            "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
+            "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%')))\n" +
+            "or (sdt is null or sdt LIKE lower(CONCAT('%', ?1, '%')))\n" +
+            "or (email is null or email LIKE lower(CONCAT('%', ?1, '%'))))\n" +
+            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
     Page<KhachHang> searchKH(
             @Param("key") String key,
             @Param("trangThai") Integer trangThai,

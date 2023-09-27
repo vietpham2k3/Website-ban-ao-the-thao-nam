@@ -81,132 +81,136 @@ const KhachHang = () => {
   }
 
   return (
-    <MainCard>
-      <Card>
-        <div className="div">
-          <div className="search">
-            <input
-              style={{ borderRadius: 15, width: 300 }}
-              type="text"
-              className="input-search"
-              value={searchTerm}
-              placeholder="Nhập tên, mã màu cần tìm..."
-              onChange={handleSearch}
+    <div>
+      <MainCard>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+            <div className="d-flex justify-content-between">
+              <div className="search">
+                <input
+                  style={{ borderRadius: 15, width: 300 }}
+                  type="text"
+                  className="input-search"
+                  value={searchTerm}
+                  placeholder="Nhập tên, mã màu cần tìm..."
+                  onChange={handleSearch}
+                />
+              </div>
+              <div style={{ marginRight: 50 }}>
+                <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                  Trạng Thái:
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="all"
+                    checked={filterStatus === ''}
+                    onChange={() => handleFilterStatusChange('')}
+                  />
+                  <label htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
+                    Tất Cả
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="inactive"
+                    checked={filterStatus === 0}
+                    onChange={() => handleFilterStatusChange(0)}
+                  />
+                  <label htmlFor="inactive" className="form-check-label">
+                    Không hoạt động
+                  </label>
+                </div>
+                <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="active"
+                    checked={filterStatus === 1}
+                    onChange={() => handleFilterStatusChange(1)}
+                  />
+                  <label htmlFor="active" className="form-check-label">
+                    Hoạt động
+                  </label>
+                </div>
+              </div>
+              <div color="blue">
+                <button className="btn btn-primary" onClick={() => navigate('/khach-hang/add')}>
+                  Add
+                </button>
+              </div>
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Mã</th>
+                  <th>Tên</th>
+                  <th>Email</th>
+                  <th>SĐT</th>
+                  <th>Ngày sinh</th>
+                  {/* <th>Người Tạo</th> */}
+                  <th>Mật Khẩu</th>
+                  <th>Ảnh</th>
+                  <th>Trạng thái</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((d, i) => (
+                  <tr key={d.id}>
+                    <td>{i + 1}</td>
+                    <td>{d.maKhachHang}</td>
+                    <td>{d.tenKhachHang}</td>
+                    <td>{d.email}</td>
+                    <td>{d.sdt}</td>
+                    <td>{formatDate(d.ngaySinh)}</td>
+                    {/* <td>{d.nguoiTao}</td> */}
+                    <td>{d.matKhau}</td>
+                    <td>
+                      <img src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
+                    </td>
+                    <td>{d.trangThai === 0 ? 'Không hoạt động' : 'Hoạt động'}</td>
+                    <td>
+                      <button className="mx-2" onClick={() => navigate(`/khach-hang/detail/${d.id}`)}>
+                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
+                      </button>
+                      <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>
+                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPages}
+              previousLabel="< Previous"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination justify-content-center"
+              activeClassName="active"
             />
           </div>
-          <div style={{ marginRight: 50 }}>
-            <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
-              Trạng Thái:
-            </label>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="all"
-                checked={filterStatus === ''}
-                onChange={() => handleFilterStatusChange('')}
-              />
-              <label htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
-                Tất Cả
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inactive"
-                checked={filterStatus === 0}
-                onChange={() => handleFilterStatusChange(0)}
-              />
-              <label htmlFor="inactive" className="form-check-label">
-                Không hoạt động
-              </label>
-            </div>
-            <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="active"
-                checked={filterStatus === 1}
-                onChange={() => handleFilterStatusChange(1)}
-              />
-              <label htmlFor="active" className="form-check-label">
-                Hoạt động
-              </label>
-            </div>
-          </div>
-          <div color="blue">
-            <button className="btn btn-primary" onClick={() => navigate('/khach-hang/add')}>
-              Add
-            </button>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Mã</th>
-                <th>Tên</th>
-                <th>Email</th>
-                <th>SĐT</th>
-                <th>Ngày sinh</th>
-                {/* <th>Người Tạo</th> */}
-                <th>Mật Khẩu</th>
-                <th>Ảnh</th>
-                <th>Trạng thái</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((d, i) => (
-                <tr key={d.id}>
-                  <td>{i + 1}</td>
-                  <td>{d.maKhachHang}</td>
-                  <td>{d.tenKhachHang}</td>
-                  <td>{d.email}</td>
-                  <td>{d.sdt}</td>
-                  <td>{formatDate(d.ngaySinh)}</td>
-                  {/* <td>{d.nguoiTao}</td> */}
-                  <td>{d.matKhau}</td>
-                  <td>
-                    <img src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
-                  </td>
-                  <td>{d.trangThai === 0 ? 'Không hoạt động' : 'Hoạt động'}</td>
-                  <td>
-                    <button className="mx-2" onClick={() => navigate(`/khach-hang/detail/${d.id}`)}>
-                      <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
-                    </button>
-                    <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>
-                      <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel="Next >"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={5}
-            pageCount={totalPages}
-            previousLabel="< Previous"
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination justify-content-center"
-            activeClassName="active"
-          />
-        </div>
-      </Card>
-    </MainCard>
+        </Card>
+      </MainCard>
+    </div>
   );
 };
 
