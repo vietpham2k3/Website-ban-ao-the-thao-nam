@@ -27,9 +27,10 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
         return khuyenMaiRepository.findAll(pageable);
     }
 
+
     @Override
-    public Page<KhuyenMai> pageSearchKM(String key, Pageable pageable) {
-        return khuyenMaiRepository.search(key, pageable);
+    public Page<KhuyenMai> pageSearchKM(String key,Integer trangThai, Pageable pageable) {
+        return khuyenMaiRepository.search(key,trangThai, pageable);
     }
 
     @Override

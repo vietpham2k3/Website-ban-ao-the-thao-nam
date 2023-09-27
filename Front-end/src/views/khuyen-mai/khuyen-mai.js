@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { deleteKM } from 'services/ServiceKhuyenMai';
 function KhuyenMai() {
   const [filterStatus, setFilterStatus] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
   // const [isShow, setIsShow] = useState(false);
@@ -32,6 +33,7 @@ function KhuyenMai() {
   }, []);
 
   const getAll = async (page) => {
+    setCurrentPage(page);
     const res = await getAllPageKM(page);
     if (res) {
       setData(res.data.content);
@@ -49,6 +51,7 @@ function KhuyenMai() {
 
   //Search
   const search = async (key, trangThai, page) => {
+    setCurrentPage(page);
     const res = await searchKM(key, trangThai, page);
     if (res) {
       setData(res.data.content);
@@ -59,14 +62,19 @@ function KhuyenMai() {
   const handleSearchKM = _.debounce(async (e) => {
     let term = e.target.value;
     if (term || filterStatus !== 0) {
-      search(term, filterStatus, 0); // Đã cập nhật tham số trangThai thành radio
+      search(term, filterStatus, currentPage);
     } else {
-      getAll(0);
+      search('', 0, currentPage);
     }
   }, 100);
 
   const handlePageClick = (event) => {
-    getAll(event.selected);
+    const selectedPage = event.selected;
+    if (filterStatus === '') {
+      getAll(selectedPage);
+    } else {
+      search('', filterStatus, selectedPage);
+    }
   };
 
   const handleSubmit = (id) => {
@@ -102,62 +110,55 @@ function KhuyenMai() {
             style={{ borderRadius: 15, width: 300 }}
             type="text"
             className="input-search"
-            placeholder=" Nhập tên cần tìm..."
+            placeholder=" Nhập tên, mã màu cần tìm..."
             onChange={handleSearchKM}
           />
         </div>
         <div style={{ marginRight: 50 }}>
-          <label htmlFor="a" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+          <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
             Trạng Thái:
-          </label>
+          </span>
 
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
               name="inlineRadioOptions"
-              id="inlineRadio1"
               checked={filterStatus === ''}
               onChange={() => {
                 setFilterStatus('');
                 search('', '', 0);
               }}
             />
-            <label htmlFor="a" style={{ marginLeft: 10 }} className="form-check-label">
+            <span style={{ marginLeft: 10 }} className="form-check-label">
               Tất Cả
-            </label>
+            </span>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
               name="inlineRadioOptions"
-              id="inlineRadio1"
               checked={filterStatus === 0}
               onChange={() => {
                 setFilterStatus(0);
                 search('', 0, 0);
               }}
             />
-            <label htmlFor="a" className="form-check-label">
-              Đang kích hoạt
-            </label>
+            <span className="form-check-label">Đang kích hoạt</span>
           </div>
           <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
               name="inlineRadioOptions"
-              id="inlineRadio2"
               checked={filterStatus === 1}
               onChange={() => {
                 setFilterStatus(1);
                 search('', 1, 0);
               }}
             />
-            <label htmlFor="a" className="form-check-label">
-              Ngừng kích hoạt
-            </label>
+            <span className="form-check-label">Ngừng kích hoạt</span>
           </div>
         </div>
         <div className="d-flex justify-content-end">

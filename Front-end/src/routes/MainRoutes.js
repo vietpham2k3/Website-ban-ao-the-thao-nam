@@ -3,12 +3,14 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import MauSac from 'views/mausac/mau-sac';
+import AddMauSac from 'views/mausac/addMS';
+import UpdateMS from 'views/mausac/updateMS';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
 // utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
@@ -44,7 +46,23 @@ const MainRoutes = {
         },
         {
           path: 'mau-sac',
-          element: <UtilsTypography />
+          element: <MauSac />
+        },
+        {
+          path: 'mau-sac/add',
+          element: <AddMauSac />
+        },
+        {
+          path: 'mau-sac/detail/:id',
+          element: <UpdateMS />
+        },
+        {
+          path: 'mau-sac/update/:id',
+          element: <UpdateMS />
+        },
+        {
+          path: 'mau-sac/delete/:id',
+          element: <MauSac />
         },
         {
           path: 'kich-co',

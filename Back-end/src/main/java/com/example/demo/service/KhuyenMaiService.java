@@ -12,7 +12,7 @@ public interface KhuyenMaiService {
 
     public Page<KhuyenMai> pageKM(Pageable pageable);
 
-    public Page<KhuyenMai> pageSearchKM(String key,Pageable pageable);
+    public Page<KhuyenMai> pageSearchKM(String key,Integer trangThai,Pageable pageable);
 
     public KhuyenMai add(KhuyenMai khuyenMai);
 

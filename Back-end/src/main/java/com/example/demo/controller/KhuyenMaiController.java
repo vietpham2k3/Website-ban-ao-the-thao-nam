@@ -30,9 +30,9 @@ public class KhuyenMaiController {
     }
 
     @GetMapping("hien-thi-page-search")
-    public ResponseEntity<?> hienThiPageSearch(String key, @RequestParam (defaultValue = "0") Integer page){
+    public ResponseEntity<?> hienThiPageSearch(String key,Integer trangThai, @RequestParam (defaultValue = "0") Integer page){
         Pageable pageable = PageRequest.of(page,5);
-        return ResponseEntity.ok(service.pageSearchKM(key,pageable));
+        return ResponseEntity.ok(service.pageSearchKM(key,trangThai,pageable));
     }
 
     @PostMapping("add")
