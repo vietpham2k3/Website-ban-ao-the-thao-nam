@@ -1,36 +1,27 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { useNavigate } from 'react-router-dom';
+import MainCard from 'ui-component/cards/MainCard';
 import {
-  fetchAllList,
-  deleteCL,
-  putUpdateCL,
-  postCreate,
-  detailCL,
-  searchCL,
-} from "../../service/ServiceChatLieu";
 
-import { useNavigate } from "react-router-dom";
+  putUpdateCL,
+  detailCL,
+  
+} from "services/ServiceChatLieu";
+
+
 
 // @mui material components
 import Card from "@mui/material/Card";
 
-// React components
-import SoftBox from "components/SoftBox";
-
-//  React examples
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 import { Button } from "react-bootstrap";
 
 function UpdateCL() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    ma: "",
-    ten: "",
-    trangThai: 0,
+    ma: '',
+    trangThai: 0
   });
 
   const { id } = useParams();
@@ -50,7 +41,7 @@ function UpdateCL() {
     const res = await putUpdateCL(id, value);
     if (res) {
       toast.success("Cập nhật thành công !");
-      navigate("/san-pham/chatlieu");
+      navigate("/san-pham/chat-lieu");
     }
   };
 
@@ -67,7 +58,7 @@ function UpdateCL() {
               <div className="body flex-grow-1 px-3">
                 <form className="row g-3" onSubmit={handleSubmit}>
                   <div className="col-md-6">
-                    <label className="form-label">MÃ</label>
+                    <span className="form-label">MÃ</span>
                     <input
                       type="text"
                       className="form-control"
@@ -76,7 +67,7 @@ function UpdateCL() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">TÊN</label>
+                    <span className="form-label">TÊN</span>
                     <input
                       type="text"
                       className="form-control"
@@ -85,9 +76,9 @@ function UpdateCL() {
                     />
                   </div>
                   <div className="col-6">
-                    <label style={{ fontWeight: "bold" }} className="form-label me-3">
+                    <span style={{ fontWeight: "bold" }} className="form-label me-3">
                       Trạng thái:{" "}
-                    </label>
+                    </span>
                     <br></br>
                     <div className="form-check form-check-inline">
                       <input
@@ -97,9 +88,9 @@ function UpdateCL() {
                         id="inlineRadio1"
                         value="0"
                         checked={true}
-                        onChange={(e) => setValues({ ...values, trangThai: 0 })}
+                        onChange={() => setValues({ ...values, trangThai: 0 })}
                       />
-                      <label className="form-check-label">Kích hoạt</label>
+                      <span className="form-check-label">Kích hoạt</span>
                     </div>
                     <br></br>
                     <br></br>
@@ -110,9 +101,9 @@ function UpdateCL() {
                         name="inlineRadioOptions"
                         id="inlineRadio2"
                         value="1"
-                        onChange={(e) => setValues({ ...values, trangThai: 1 })}
+                        onChange={() => setValues({ ...values, trangThai: 1 })}
                       />
-                      <label className="form-check-label">Ngừng kích hoạt</label>
+                      <span className="form-check-label">Ngừng kích hoạt</span>
                     </div>
                   </div>
                   <div className="col-12">

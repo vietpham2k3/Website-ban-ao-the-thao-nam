@@ -1,22 +1,22 @@
 // bosstrap
-import Card from '@mui/material/Card';
-import MainCard from 'ui-component/cards/MainCard';
+import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import Table from 'react-bootstrap/Table';
-import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
+import { Card } from '@mui/material';
+import '../../scss/SanPham.scss';
 import { fetchAllList, searchCL } from 'services/ServiceChatLieu';
 import { deleteCL } from 'services/ServiceChatLieu';
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
+import MainCard from 'ui-component/cards/MainCard';
 
 // Soft UI Dashboard React compone  nts
 
 // import AddChatLieu from './addchatlieu';
 
-const ChatLieu = (page) => {
+const ChatLieu = () => {
   const [filterStatus, setFilterStatus] = useState('');
+  const [currentPage,   setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
   const navigate = useNavigate();
@@ -29,11 +29,12 @@ const ChatLieu = (page) => {
 
   useEffect(() => {
     getAll(0);
+    setDataDelete();
   }, []);
 
-  const handleClose = () => {
-    setIsShow(false);
-  };
+  // const handleClose = () => {
+  //   setIsShow(false);
+  // };
 
   // const handleDelete = (id) => {
   //   setIsShow(true);
@@ -41,6 +42,7 @@ const ChatLieu = (page) => {
   // };
 
   const getAll = async (page) => {
+    setCurrentPage(page);
     const res = await fetchAllList(page);
     if (res && res.data) {
       setData(res.data.content);
@@ -59,15 +61,19 @@ const ChatLieu = (page) => {
 
   const handleSearchCL = _.debounce(async (e) => {
     let term = e.target.value;
-    if (term || filterStatus) {
-      search(term, filterStatus, 0); // Đã cập nhật tham số trangThai thành radio
+    if (term || filterStatus !== 0) {
+      search(term, filterStatus, currentPage);
     } else {
-      getAll(0);
+      search('', 0, currentPage);
     }
   }, 100);
-
   const handlePageClick = (event) => {
-    getAll(event.selected);
+    const selectedPage = event.selected;
+    if (filterStatus === '') {
+      getAll(selectedPage);
+    } else {
+      search('', filterStatus, selectedPage);
+    }
   };
 
   // const { id } = useParams();
@@ -97,7 +103,6 @@ const ChatLieu = (page) => {
 
     const hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-    const seconds = dateObject.getSeconds();
 
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
 
@@ -120,9 +125,9 @@ const ChatLieu = (page) => {
                 />
               </div>
               <div style={{ marginRight: 50 }}>
-                <label style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
                   Trạng Thái:
-                </label>
+                </span>
 
                 <div className="form-check form-check-inline">
                   <input
@@ -136,9 +141,9 @@ const ChatLieu = (page) => {
                       search('', '', 0);
                     }}
                   />
-                  <label style={{ marginLeft: 10 }} className="form-check-label">
+                  <span style={{ marginLeft: 10 }} className="form-check-label">
                     Tất Cả
-                  </label>
+                  </span>
                 </div>
                 <div className="form-check form-check-inline">
                   <input
@@ -152,7 +157,7 @@ const ChatLieu = (page) => {
                       search('', 0, 0);
                     }}
                   />
-                  <label className="form-check-label">Đang kích hoạt</label>
+                  <span className="form-check-label">Đang kích hoạt</span>
                 </div>
                 <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
                   <input
@@ -166,18 +171,18 @@ const ChatLieu = (page) => {
                       search('', 1, 0);
                     }}
                   />
-                  <label className="form-check-label">Ngừng kích hoạt</label>
+                  <span className="form-check-label">Ngừng kích hoạt</span>
                 </div>
               </div>
 
               <div className="d-flex justify-content-end">
-                <Link to="/san-pham/chatlieu/add" className="btn btn-primary">
+              <button onClick={() => navigate('/san-pham/chat-lieu/add')} className="btn btn-primary ">
                   Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
-                </Link>
+                </button>
               </div>
             </div>
 
-            <Table style={{ textAlign: 'center' }} className="table table-hover">
+            <table style={{ textAlign: 'center' }} className="table table-hover">
               <tr>
                 <th>#</th>
                 <th>Mã</th>
@@ -197,18 +202,19 @@ const ChatLieu = (page) => {
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
-                      <Link className="mx-2" to={`/san-pham/chatlieu/detail/${d.id}`}>
-                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
-                      </Link>
+                  
+                      <button onClick={() => navigate(`/san-pham/chat-lieu/detail/${d.id}`)} 
+                      style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg fa-khenh">
+                      </button>
 
-                      <Link className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
-                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
-                      </Link>
+                      <button onClick={() => handleSubmit(d.id, { ma: d.ma })} 
+                      style={{ color: '#ff1744' }} className="fa-solid fa-trash fa-khenh">
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </table>
 
             <ReactPaginate
               breakLabel="..."

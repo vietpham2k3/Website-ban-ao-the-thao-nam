@@ -1,9 +1,11 @@
 import { postCreate } from 'services/ServiceChatLieu';
+import { toast } from "react-toastify";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@mui/material';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import { Button } from "react";
 
 
 // import { useState } from 'react';;
@@ -36,7 +38,7 @@ function AddChatLieu() {
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
-                <label className="form-label">MÃ</label>
+                <span className="form-label">MÃ</span>
                 <input
                   type="text"
                   className="form-control"
@@ -45,7 +47,7 @@ function AddChatLieu() {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">TÊN</label>
+                <span className="form-label">TÊN</span>
                 <input
                   type="text"
                   className="form-control"
@@ -54,9 +56,9 @@ function AddChatLieu() {
                 />
               </div>
               <div className="col-6">
-                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                <span style={{ fontWeight: 'bold' }} className="form-label me-3">
                   Trạng thái:{' '}
-                </label>
+                </span>
                 <br></br>
                 <div className="form-check form-check-inline">
                   <input
@@ -66,9 +68,9 @@ function AddChatLieu() {
                     id="inlineRadio1"
                     value="0"
                     checked={true}
-                    onChange={(e) => setValues({ ...values, trangThai: 0 })}
+                    onChange={() => setValues({ ...values, trangThai: 0 })}
                   />
-                  <label className="form-check-label">Kích hoạt</label>
+                  <span className="form-check-label">Kích hoạt</span>
                 </div>
                 <br></br>
                 <br></br>
@@ -79,9 +81,9 @@ function AddChatLieu() {
                     name="inlineRadioOptions"
                     id="inlineRadio2"
                     value="1"
-                    onChange={(e) => setValues({ ...values, trangThai: 1 })}
+                    onChange={() => setValues({ ...values, trangThai: 1 })}
                   />
-                  <label className="form-check-label">Ngừng kích hoạt</label>
+                  <span className="form-check-label">Ngừng kích hoạt</span>
                 </div>
               </div>
               <div className="col-12">

@@ -1,34 +1,27 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
-import { useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import {deleteCL } from "../../service/ServiceChatLieu";
-import { toast } from "react-toastify";
+import { Button, Modal } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { deleteCL } from 'services/ServiceChatLieu';
+import { toast } from 'react-toastify';
 
 const ConfirmDelete = ({ handleClose, show, dataDelete, getAll }) => {
-
   const { id } = useParams();
 
   const handleConfirm = async (id) => {
     let res = await deleteCL(dataDelete.id); // Truyền dataDelete.id vào hàm deleteMS
     if (res) {
-      toast.success("Delete success!");
+      toast.success('Delete success!');
       handleClose();
       getAll(0);
     } else {
-      toast.error("Error!");
+      toast.error('Error!');
     }
   };
 
   return (
     <div>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Thông báo</Modal.Title>
         </Modal.Header>
