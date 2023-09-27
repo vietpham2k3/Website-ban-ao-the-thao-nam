@@ -16,7 +16,7 @@ import MainCard from 'ui-component/cards/MainCard';
 
 const ChatLieu = () => {
   const [filterStatus, setFilterStatus] = useState('');
-  const [currentPage,   setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
   const navigate = useNavigate();
@@ -176,7 +176,7 @@ const ChatLieu = () => {
               </div>
 
               <div className="d-flex justify-content-end">
-              <button onClick={() => navigate('/san-pham/chat-lieu/add')} className="btn btn-primary ">
+                <button onClick={() => navigate('/san-pham/chat-lieu/add')} className="btn btn-primary ">
                   Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
                 </button>
               </div>
@@ -202,14 +202,17 @@ const ChatLieu = () => {
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
-                  
-                      <button onClick={() => navigate(`/san-pham/chat-lieu/detail/${d.id}`)} 
-                      style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg fa-khenh">
-                      </button>
+                      <button
+                        onClick={() => navigate(`/san-pham/chat-lieu/detail/${d.id}`)}
+                        style={{ color: 'aqua' }}
+                        className="fa-regular fa-pen-to-square fa-lg fa-khenh"
+                      ></button>
 
-                      <button onClick={() => handleSubmit(d.id, { ma: d.ma })} 
-                      style={{ color: '#ff1744' }} className="fa-solid fa-trash fa-khenh">
-                      </button>
+                      <button
+                        onClick={() => handleSubmit(d.id, { ma: d.ma })}
+                        style={{ color: '#ff1744' }}
+                        className="fa-solid fa-trash fa-khenh"
+                      ></button>
                     </td>
                   </tr>
                 ))}

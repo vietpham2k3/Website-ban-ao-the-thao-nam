@@ -7,13 +7,15 @@ import MauSac from 'views/mausac/mau-sac';
 import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
 //chatlieu
-import ChatLieu from 'views/chat-lieu/chatlieu';
-import AddChatLieu from 'views/chat-lieu/addchatlieu';
+
+
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-
+//chatlieu
+const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
+const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
 // utilities routing
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
@@ -23,8 +25,7 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
-//chất liệu
-
+//chất 
 
 const MainRoutes = {
   path: '/',
@@ -34,7 +35,7 @@ const MainRoutes = {
       path: '/don-hang',
       element: <DashboardDefault />
     },
-  
+
     {
       path: '/san-pham',
       children: [
@@ -48,23 +49,23 @@ const MainRoutes = {
         },
         {
           path: 'mau-sac',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'mau-sac/add',
-          element: <AddMauSac/>
+          element: <AddMauSac />
         },
         {
           path: 'mau-sac/detail/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/update/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/delete/:id',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'kich-co',
@@ -84,15 +85,15 @@ const MainRoutes = {
         },
         {
           path: 'chat-lieu/detail/:id',
-          element: <UpdateCL/>
+          element: <UpdateCL />
         },
         {
           path: 'chat-lieu/update/:id',
-          element: <UpdateCL/>
+          element: <UpdateCL />
         },
         {
           path: 'chat-lieu/delete/:id',
-          element: <ChatLieu/>
+          element: <ChatLieu />
         },
         {
           path: 'loai-san-pham',

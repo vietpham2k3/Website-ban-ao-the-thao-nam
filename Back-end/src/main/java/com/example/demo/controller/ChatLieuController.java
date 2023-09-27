@@ -53,7 +53,7 @@ public class ChatLieuController {
         return ResponseEntity.ok(chatLieuService.update(chatLieu));
     }
 
-    @PutMapping("delete/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id,
                                     @RequestBody ChatLieu chatLieu) {
 
@@ -61,7 +61,7 @@ public class ChatLieuController {
         return ResponseEntity.ok(chatLieuService.delete(id));
     }
 
-    @GetMapping("detail/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?>     detail(@PathVariable UUID id) {
         return ResponseEntity.ok(chatLieuService.detail(id));
     }
