@@ -13,7 +13,11 @@ import java.util.UUID;
 @Repository
 public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
 
-    @Query(value = "SELECT * FROM MauSac WHERE ma LIKE NULL OR ma LIKE CONCAT('%', :key, '%')\n" +
-            " AND ten LIKE NULL OR ten LIKE CONCAT('%', :key, '%')", nativeQuery = true)
-    Page<MauSac> searchPageMS(@Param("key") String key, Pageable pageable);
+    @Query(value = "SELECT * FROM MauSac \n" +
+            "WHERE (:key IS NULL OR ma LIKE CONCAT('%', :key, '%'))\n" +
+            "      AND (:key IS NULL OR ten LIKE CONCAT('%', :key , '%'))\n" +
+            "      AND (:trangThai IS NULL OR trang_thai = :trangThai)", nativeQuery = true)
+    Page<MauSac> searchPageMS(@Param("key") String key,
+                              @Param("trangThai") Integer trangThai,
+                              Pageable pageable);
 }
