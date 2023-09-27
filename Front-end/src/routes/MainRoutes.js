@@ -9,7 +9,6 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 
 // utilities routing
 const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
@@ -18,6 +17,11 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
+
+// Khuyen Mai
+const KhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/khuyen-mai')));
+const AddKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/add')));
+const UpdateKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/update')));
 
 const MainRoutes = {
   path: '/',
@@ -60,10 +64,24 @@ const MainRoutes = {
         }
       ]
     },
+    //khuyen mai
     {
       path: '/voucher',
-      element: <UtilsColor />
+      element: <KhuyenMai />
     },
+    {
+      path: '/voucher/add',
+      element: <AddKhuyenMai />
+    },
+    {
+      path: '/voucher/update/:id',
+      element: <UpdateKhuyenMai />
+    },
+    {
+      path: '/voucher/detail/:id',
+      element: <UpdateKhuyenMai />
+    },
+
     {
       path: '/nhan-vien',
       element: <UtilsShadow />
