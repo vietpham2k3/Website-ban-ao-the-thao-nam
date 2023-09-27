@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.HoaDon;
+import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,8 @@ public interface HoaDonService {
     public List<HoaDon> listHD();
 
     public Page<HoaDon> pageHD(Pageable pageable);
+
+    public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
     public List<HoaDon> getExcel();
 

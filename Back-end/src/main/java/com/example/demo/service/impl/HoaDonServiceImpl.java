@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.HoaDon;
 import com.example.demo.repository.HoaDonRespository;
+import com.example.demo.response.HoaDonCustom;
 import com.example.demo.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public Page<HoaDon> pageHD(Pageable pageable) {
         return res.findAll(pageable);
+    }
+
+    @Override
+    public Page<HoaDonCustom> hienThiPageHD(Pageable pageable) {
+        return res.hienThiPageHD(pageable);
     }
 
     @Override

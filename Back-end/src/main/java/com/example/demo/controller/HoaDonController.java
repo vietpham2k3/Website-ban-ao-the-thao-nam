@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/hoa-don/")
 public class HoaDonController {
     @Autowired public HoaDonServiceImpl service;
+    @Autowired public HinhThucThanhToanServiceImpl serviceHttt;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll(){
@@ -23,8 +25,8 @@ public class HoaDonController {
     public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page,
                                        Model model){
         Pageable pageable = PageRequest.of(page,5);
-
-        return ResponseEntity.ok(service.pageHD(pageable));
+        model.addAttribute("httt", serviceHttt.getAll());
+        return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
     @PostMapping("print-excel")

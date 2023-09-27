@@ -31,6 +31,9 @@ public class HoaDon {
 //    @JoinColumn(name = "id_tk", referencedColumnName = "id")
 //    private TaiKhoan taiKhoan;
 
+    @Column(name = "dia_chi")
+    private String diaChi;
+
     @Column(name = "ma")
     private String ma;
 
@@ -56,21 +59,18 @@ public class HoaDon {
     @Column(name = "ten_nguoi_nhan")
     private String tenNguoiNhan;
 
-    @Column(name = "dia_chi")
-    private String diaChi;
-
     @Column(name = "sdt")
     private String soDienThoai;
-
-    @Column(name = "ngay_ship")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ngayShip;
 
     @Column(name = "ngay_du_kien_nhan")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
     private Date ngayDuKienNhan;
+
+    @Column(name = "ngay_ship")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ngayShip;
 
     @Column(name = "tien_ship")
     private Double tienShip;
@@ -78,9 +78,6 @@ public class HoaDon {
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date ngaySua;
-
-    @Column(name = "nguoi_tao")
-    private String nguoiTaoHD;
 
     @Column(name = "ngay_nhan")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
