@@ -11,13 +11,15 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
+//chất liệu
+const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
+const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 
 const MainRoutes = {
   path: '/',
@@ -26,6 +28,19 @@ const MainRoutes = {
     {
       path: '/don-hang',
       element: <DashboardDefault />
+    },
+    {
+      path: '/chat-lieu',
+      children: [
+        {
+          path: 'hienthi',
+          element: <ChatLieu />
+        },
+        {
+          path: 'add',
+          element: <AddChatLieu />
+        }
+      ]
     },
     {
       path: '/san-pham',
@@ -52,7 +67,7 @@ const MainRoutes = {
         },
         {
           path: 'chat-lieu',
-          element: <DashboardDefault />
+          element: <ChatLieu />
         },
         {
           path: 'loai-san-pham',
@@ -73,8 +88,7 @@ const MainRoutes = {
       element: <UtilsTablerIcons />
     },
     {
-      path: '/thong-ke',
-      element: <UtilsMaterialIcons />
+      path: '/chat-lieu'
     }
   ]
 };
