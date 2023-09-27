@@ -5,7 +5,7 @@ const getAllCTSP = (page) => {
   return axios.get(`/api/chi-tiet-san-pham/getAll?page=${page}`);
 };
 
-const postCO = (values) => {
+const postCTSP = (values) => {
   return axios.post('/api/chi-tiet-san-pham/add', values);
 };
 
@@ -45,4 +45,16 @@ const getAllListNSX = () => {
   return axios.get(`/api/nha-san-xuat/getAll`);
 };
 
-export { getAllCTSP, postCO, putCO, deleteCO, searchCO, detailCO, getAllListCO, getAllListCL, getAllListMS, getAllListLSP, getAllListNSX };
+export {
+  getAllCTSP,
+  postCTSP,
+  putCO,
+  deleteCO,
+  searchCO,
+  detailCO,
+  getAllListCO,
+  getAllListCL,
+  getAllListMS,
+  getAllListLSP,
+  getAllListNSX
+};

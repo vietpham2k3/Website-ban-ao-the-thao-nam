@@ -5,11 +5,11 @@ import { Card } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
-import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { getAllCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
+import '../../scss/SanPham.scss';
 
 function SanPham() {
   const [data, setData] = useState([]);
@@ -108,8 +108,11 @@ function SanPham() {
                       <td>{convertToCurrency(d.giaBan)}</td>
                       <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                       <td>
-                        <button onClick={() => navigate('/lồn')} className="fa-solid fa-pen"></button>
-                        <button onClick={() => navigate('/lồn')} className="fa-solid fa-trash"></button>
+                        <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/update/${d.id}`)} className="fa-solid fa-pen"></button>
+                        <button
+                          onClick={() => navigate(`/san-pham/chi-tiet-san-pham/delete/${d.id}`)}
+                          className="fa-solid fa-trash"
+                        ></button>
                       </td>
                     </tr>
                   ))}

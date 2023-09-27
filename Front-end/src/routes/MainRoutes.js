@@ -41,24 +41,28 @@ const MainRoutes = {
           element: <AddChiTietSanPham />
         },
         {
+          path: 'chi-tiet-san-pham/detail/:id',
+          element: <AddChiTietSanPham />
+        },
+        {
           path: 'mau-sac',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'mau-sac/add',
-          element: <AddMauSac/>
+          element: <AddMauSac />
         },
         {
           path: 'mau-sac/detail/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/update/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/delete/:id',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'kich-co',
