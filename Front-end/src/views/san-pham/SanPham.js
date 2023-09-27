@@ -99,7 +99,7 @@ function SanPham() {
                       </td>
                       <td>{d.ma}</td>
                       <td>{d.sanPham.ten}</td>
-                      <td>Chất liệu</td>
+                      <td>{d.chatLieu.ten}</td>
                       <td>{d.mauSac.ten}</td>
                       <td>{d.loaiSanPham.ten}</td>
                       <td>{d.nhaSanXuat.ten}</td>

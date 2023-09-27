@@ -29,10 +29,9 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         return chatLieuRepository.searchPageMS(key,trangThai,pageable);
     }
 
-
     @Override
     public List<ChatLieu> fillAll() {
-        return chatLieuRepository.getAll();
+        return chatLieuRepository.findAll();
     }
 
     @Override

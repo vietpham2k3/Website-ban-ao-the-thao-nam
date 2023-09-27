@@ -1,10 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { Card } from '@mui/material';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { useState } from 'react';
+import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
+import { useEffect } from 'react';
 
 function AddSanPham() {
+  const [listCL, setListCL] = useState([]);
+  const [listNSX, setListNSX] = useState([]);
+  const [listMS, setListMS] = useState([]);
+  const [listLSP, setListLSP] = useState([]);
+  const [listCA, setListCA] = useState([]);
+
   const [values, setValues] = useState({
     chatLieu: {
       id: ''
@@ -29,6 +38,46 @@ function AddSanPham() {
     giaBan: '',
     trangThai: 1
   });
+
+  useEffect(() => {
+    getAllList();
+  }, []);
+
+  const getAllList = async () => {
+    const resCL = await getAllListCL();
+    const resMS = await getAllListMS();
+    const resLSP = await getAllListLSP();
+    const resCA = await getAllListCO();
+    const resNSX = await getAllListNSX();
+    if (resCL || resMS || resLSP || resCA || resNSX) {
+      setListCL(resCL.data);
+      setListMS(resMS.data);
+      setListCA(resCA.data);
+      setListLSP(resLSP.data);
+      setListNSX(resNSX.data);
+      if (resCL.data.length > 0 || resMS.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
+        setValues({
+          ...values,
+          chatLieu: {
+            id: resCL.data[0].id
+          },
+          mauSac: {
+            id: resMS.data[0].id
+          },
+          coAo: {
+            id: resCA.data[0].id
+          },
+          loaiSanPham: {
+            id: resLSP.data[0].id
+          },
+          nhaSanXuat: {
+            id: resNSX.data[0].id
+          }
+        });
+      }
+    }
+  };
+
   return (
     <div>
       <MainCard>
@@ -95,7 +144,7 @@ function AddSanPham() {
                 <option value="0">Ngừng kinh doanh</option>
               </select>
             </div>
-            {/* <div className="col-6">
+            <div className="col-6">
               <label className="form-label me-3" htmlFor="trang-thai3">
                 Chất liệu:{' '}
               </label>{' '}
@@ -138,7 +187,7 @@ function AddSanPham() {
               >
                 {listMS.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.tenMauSac}
+                    {c.ten}
                   </option>
                 ))}
               </select>
@@ -214,7 +263,7 @@ function AddSanPham() {
                   </option>
                 ))}
               </select>
-            </div> */}
+            </div>
             <div className="col-12 d-flex justify-content-end">
               <button type="submit" className="btn btn-primary">
                 Add

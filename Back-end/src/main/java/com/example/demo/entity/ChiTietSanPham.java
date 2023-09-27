@@ -38,10 +38,10 @@ public class ChiTietSanPham {
     @Column(name = "ma")
     private String ma;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_cl", referencedColumnName = "id")
-//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-//    private ChatLieu chatLieu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cl", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private ChatLieu chatLieu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sp", referencedColumnName = "id")

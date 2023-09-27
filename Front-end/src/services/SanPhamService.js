@@ -26,7 +26,23 @@ const detailCO = (id) => {
 };
 
 const getAllListCO = () => {
-  return axios.get(`/api/chi-tiet-san-pham/getAllList`);
+  return axios.get(`/api/co-ao/getAll`);
 };
 
-export { getAllCTSP, postCO, putCO, deleteCO, searchCO, detailCO, getAllListCO };
+const getAllListCL = () => {
+  return axios.get(`/api/chatlieu/getAll`);
+};
+
+const getAllListMS = () => {
+  return axios.get(`/api/mau-sac/hien-thi`);
+};
+
+const getAllListLSP = () => {
+  return axios.get(`/api/loai-san-pham/getAll`);
+};
+
+const getAllListNSX = () => {
+  return axios.get(`/api/nha-san-xuat/getAll`);
+};
+
+export { getAllCTSP, postCO, putCO, deleteCO, searchCO, detailCO, getAllListCO, getAllListCL, getAllListMS, getAllListLSP, getAllListNSX };
