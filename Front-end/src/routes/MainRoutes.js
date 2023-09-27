@@ -14,11 +14,17 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
-const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
+// ==============================|| MAIN ROUTING ||============================== //
+
+//Khách Hàng
+const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
+const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')));
+const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -42,23 +48,23 @@ const MainRoutes = {
         },
         {
           path: 'mau-sac',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'mau-sac/add',
-          element: <AddMauSac/>
+          element: <AddMauSac />
         },
         {
           path: 'mau-sac/detail/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/update/:id',
-          element: <UpdateMS/>
+          element: <UpdateMS />
         },
         {
           path: 'mau-sac/delete/:id',
-          element: <MauSac/>
+          element: <MauSac />
         },
         {
           path: 'kich-co',
@@ -86,10 +92,25 @@ const MainRoutes = {
       path: '/nhan-vien',
       element: <UtilsShadow />
     },
+    //Khách Hàng
     {
       path: '/khach-hang',
-      element: <UtilsTablerIcons />
+      element: <KhachHang />
     },
+    {
+      path: '/khach-hang/add',
+      element: <AddKhachHang />
+    },
+    {
+      path: '/khach-hang/detail/:id',
+      element: <UpdateKhachHang />
+    },
+    {
+      path: '/khach-hang/update/:id',
+      element: <UpdateKhachHang />
+    },
+
+    //============//
     {
       path: '/thong-ke',
       element: <UtilsMaterialIcons />
