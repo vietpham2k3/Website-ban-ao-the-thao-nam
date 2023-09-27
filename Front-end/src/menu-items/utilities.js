@@ -12,7 +12,7 @@ const icons = {
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
 const utilities = {
-  id: 'hoa-don',
+  id: 'other',
   title: 'Khác',
   type: 'group',
   children: [

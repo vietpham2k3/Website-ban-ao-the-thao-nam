@@ -23,7 +23,7 @@ const pages = {
           id: 'san-pham',
           title: 'Sản phẩm',
           type: 'item',
-          url: '/san-pham/san-pham',
+          url: '/san-pham/chi-tiet-san-pham',
           breadcrumbs: false
         },
         {
