@@ -17,8 +17,8 @@ const printExcel = (values) => {
 }
 
 
-const putMS = (id, values) => {
-  return axios.put(`/api/mau-sac/update/` + id, values);
+const updateKHDH = (id, values) => {
+  return axios.put(`/api/hoa-don/updateKH/` + id, values);
 };
 
 
@@ -26,5 +26,5 @@ const putMS = (id, values) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, printExcel, putMS, detailHD  }
+export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD  }
 

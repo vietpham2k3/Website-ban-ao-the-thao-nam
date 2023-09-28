@@ -41,4 +41,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         res.findAll();
         return res.findById(id).orElse(null);
     }
+
+    @Override
+    public void updateKHHD(UUID id, String tenNguoiNhan,String soDienThoai,String diaChi) {
+         res.updateKH(id,tenNguoiNhan,soDienThoai,diaChi);
+    }
 }

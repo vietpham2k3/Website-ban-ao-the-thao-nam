@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import Modal from 'react-bootstrap/Modal';
 
 import '../../scss/MauSac.scss';
-import { detailHD } from 'services/ServiceDonHang';
+import { detailHD, updateKHDH } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 
 function DonHangCT() {
@@ -24,14 +26,23 @@ function DonHangCT() {
     soDienThoai: ''
   });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setValues({ ...values, [name]: value });
+  const updateKH = async (id, value) => {
+    const res = await updateKHDH(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow(false);
+      // navigate(`/don-hang/chi-tiet/${d.id}`);
+    }
+  };
+
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    await updateKH(id, values);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Xử lý logic cập nhật thông tin khách hàng tại đây
     setShowModal(false);
   };
 
@@ -40,11 +51,14 @@ function DonHangCT() {
   useEffect(() => {
     detail(id);
   }, [id]);
-
+  
+  useEffect(() => {
+    setValues(hoaDon);
+  }, [hoaDon]);
+  
   const detail = async (id) => {
     const res = await detailHD(id);
     if (res && res.data) {
-      // Kiểm tra res.data không null hoặc undefined
       setHoaDon(res.data);
     }
   };
@@ -88,8 +102,6 @@ function DonHangCT() {
 
     return formattedDate;
   }
-
-  console.log(hoaDon);
 
   return (
     <div>
@@ -137,7 +149,7 @@ function DonHangCT() {
                       <Modal.Body>
                         <form className="needs-validation" noValidate onSubmit={handleSubmit}>
                           <div className="form-group row">
-                            <label style={{fontWeight: 'bold'}} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                            <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
                               Họ Và Tên:
                             </label>
                             <div className="col-sm-9">
@@ -146,16 +158,18 @@ function DonHangCT() {
                                 className="form-control"
                                 name="tenNguoiNhan"
                                 placeholder=""
-                                value={values.tenNguoiNhan}
-                                onChange={handleInputChange}
+                                value={hoaDon.tenNguoiNhan}
+                                onChange={(e) => { setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value }) 
+                               }}
                                 required
                               />
+
                               <div className="invalid-feedback">Không được để trống!</div>
                             </div>
                           </div>
                           <br></br>
                           <div className="form-group row">
-                            <label style={{fontWeight: 'bold'}} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
+                            <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
                               Số Điện Thoại:
                             </label>
                             <div className="col-sm-9">
@@ -164,8 +178,9 @@ function DonHangCT() {
                                 className="form-control"
                                 name="soDienThoai"
                                 placeholder=""
-                                value={values.soDienThoai}
-                                onChange={handleInputChange}
+                                value={hoaDon.soDienThoai}
+                                onChange={(e) => { setHoaDon({ ...hoaDon, soDienThoai: e.target.value }) 
+                                }}
                                 required
                                 pattern="^0\d\S*$"
                                 title="Sai định dạng số điện thoại!"
@@ -175,7 +190,7 @@ function DonHangCT() {
                           </div>
                           <br></br>
                           <div className="form-group row">
-                            <label style={{fontWeight: 'bold'}} htmlFor="diaChi" className="col-sm-3 col-form-label">
+                            <label style={{ fontWeight: 'bold' }} htmlFor="diaChi" className="col-sm-3 col-form-label">
                               Địa Chỉ:
                             </label>
                             <div className="col-sm-9">
@@ -184,8 +199,9 @@ function DonHangCT() {
                                 rows="4"
                                 name="diaChi"
                                 placeholder=""
-                                value={values.diaChi}
-                                onChange={handleInputChange}
+                                value={hoaDon.diaChi}
+                                onChange={(e) => { setHoaDon({ ...hoaDon, diaChi: e.target.value }) 
+                                }}
                                 required
                               ></textarea>
                               <div className="invalid-feedback">Không được để trống!</div>
@@ -202,6 +218,7 @@ function DonHangCT() {
                                 border: '1px solid black',
                                 justifyItems: 'center'
                               }}
+                              onClick={handleUpdate}
                             >
                               <span
                                 style={{
@@ -357,7 +374,7 @@ function DonHangCT() {
                             </div>
                             <div style={{ float: 'left' }} className="col-3">
                               <span style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                                {/* {hoaDon.hinhThucThanhToan.ten} */}
+                                {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : ''}
                               </span>
                             </div>
                           </div>

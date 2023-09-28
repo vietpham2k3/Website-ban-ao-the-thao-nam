@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,18 +47,22 @@ public class HoaDonController {
     }
 
     @GetMapping("hien-thi-page")
-    public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page,
-                                       Model model){
+    public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page){
         Pageable pageable = PageRequest.of(page,5);
-//        model.addAttribute("httt", serviceHttt.getAll());
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable UUID id,Model model){
-        model.addAttribute("listHD", service.listHD());
-        model.addAttribute("httt", serviceHttt.getAll());
+    public ResponseEntity<?> detail(@PathVariable UUID id){
         return ResponseEntity.ok(service.detailHD(id));
+    }
+
+    @PutMapping("updateKH/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id,@RequestBody HoaDon hoaDon){
+        hoaDon.setNgaySua(new Date());
+        service.updateKHHD(id,hoaDon.getTenNguoiNhan(),hoaDon.getSoDienThoai(),
+                hoaDon.getDiaChi());
+        return ResponseEntity.ok("ok");
     }
 
 //    @PostMapping("print-excel")
