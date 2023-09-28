@@ -1,13 +1,11 @@
 import { postCreate } from 'services/ServiceChatLieu';
 import { toast } from 'react-toastify';
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card } from '@mui/material';
-// project imports
-import MainCard from 'ui-component/cards/MainCard';
-import { Button } from 'react';
+import { Card, Button } from '@mui/material'; // Import Button from '@mui/material'
 
-// import { useState } from 'react';;
+import MainCard from 'ui-component/cards/MainCard';
 
 function AddChatLieu() {
   const navigate = useNavigate();
@@ -26,7 +24,7 @@ function AddChatLieu() {
     const res = await postCreate(value);
     if (res) {
       toast.success('Add thành công');
-      navigate("/san-pham/chat-lieu");
+      navigate('/san-pham/chat-lieu');
     }
   };
 
@@ -86,7 +84,7 @@ function AddChatLieu() {
                 </div>
               </div>
               <div className="col-12">
-                <Button type="submit" className="btn btn-bg-info">
+                <Button type="submit" className="btn btn-primary">
                   Thêm
                 </Button>
               </div>
