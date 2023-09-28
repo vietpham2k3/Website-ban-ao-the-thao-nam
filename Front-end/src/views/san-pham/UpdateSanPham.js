@@ -4,7 +4,16 @@ import React from 'react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { useState } from 'react';
-import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX, postCTSP, detailCTSP } from 'services/SanPhamService';
+import {
+  getAllListCL,
+  getAllListCO,
+  getAllListLSP,
+  getAllListMS,
+  getAllListNSX,
+  postCTSP,
+  detailCTSP,
+  listAnh
+} from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
@@ -12,6 +21,8 @@ import { useNavigate, useParams } from 'react-router';
 import { postCreate } from 'services/ServiceChatLieu';
 import { postCreate as postCa } from 'services/ServiceCoAo';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
+import { useRef } from 'react';
+import defaultImage from '../../assets/images/default-placeholder.png';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -23,8 +34,95 @@ function UpdateSanPham() {
   const [modalShowCA, setModalShowCA] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [file, setFile] = useState([]);
+  const [imageList, setImageList] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]);
+  const inputRef = useRef(null);
 
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({
+    chatLieu: {
+      id: ''
+    },
+    sanPham: {
+      ten: '',
+      moTa: ''
+    },
+    mauSac: {
+      id: ''
+    },
+    loaiSanPham: {
+      id: ''
+    },
+    nhaSanXuat: {
+      id: ''
+    },
+    coAo: {
+      id: ''
+    },
+    soLuong: '',
+    giaBan: '',
+    trangThai: 1
+  });
+
+  const anh = async (value) => {
+    const res = await addAnh(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      getAllAnh(id);
+    }
+  };
+
+  const handleAddAnh = (event) => {
+    event.preventDefault();
+
+    if (file.length === 0) {
+      alert('Vui lòng chọn ít nhất một tệp ảnh.');
+      return;
+    }
+
+    const formData = new FormData();
+    file.forEach((file) => {
+      formData.append('files', file);
+      formData.append('id', id);
+    });
+
+    // Gửi formData đến server để xử lý
+    anh(formData);
+
+    setFile([]);
+    setPreviewImages([]);
+    inputRef.current.value = null;
+  };
+
+  const handleDeleteImage = async (idAnh) => {
+    const res = await deleteAnh(idAnh);
+    if (res) {
+      toast.success('Xoá thành công');
+      getAllAnh(id);
+    }
+  };
+
+  const handleImageChange = (event) => {
+    const newFiles = Array.from(event.target.files);
+    setFile((prevFiles) => [...prevFiles, ...newFiles]);
+    const newPreviewImages = newFiles.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prevPreviewImages) => [...prevPreviewImages, ...newPreviewImages]);
+  };
+
+  const getAllAnh = async (id) => {
+    const res = await listAnh(id);
+    if (res) {
+      setImageList(res.data);
+    }
+  };
+
+  const imagePreviews = previewImages.map((previewImage) => (
+    <img className="preview-image d-flex justify-content-around" src={previewImage} alt="Preview" key={previewImage} />
+  ));
+
+  const handleClick = () => {
+    inputRef.current.click();
+  };
 
   const [valuesCL, setValuesCL] = useState({
     ma: '',
@@ -49,6 +147,7 @@ function UpdateSanPham() {
 
   useEffect(() => {
     detail(id);
+    getAllAnh(id);
   }, [id]);
 
   const detail = async (idCTSP) => {
@@ -57,7 +156,6 @@ function UpdateSanPham() {
       setValues(res.data);
     }
   };
-  console.log(values);
 
   const postCA = async (value) => {
     const res = await postCa(value);
@@ -111,6 +209,7 @@ function UpdateSanPham() {
       setListNSX(resNSX.data);
     }
   };
+
   return (
     <div>
       <MainCard>
@@ -206,7 +305,7 @@ function UpdateSanPham() {
               }}
             >
               {listCL.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.chatLieu.id}>
                   {c.ten}
                 </option>
               ))}
@@ -343,11 +442,79 @@ function UpdateSanPham() {
         />
       </MainCard>
       <MainCard className="my-3">
-        <div className="row">
-          <div className="col-12">
-            <input type="file" name="" id="" />
+        <form onSubmit={handleAddAnh}>
+          <div className="justify-content-center">
+            {file.length === 0 ? (
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={handleClick}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleClick();
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <img src={defaultImage} alt="" width={300} />
+              </span>
+            ) : (
+              <div>
+                <div className="image-preview-container">{imagePreviews}</div>
+              </div>
+            )}
+            <input type="file" id="fileInput" onChange={handleImageChange} ref={inputRef} multiple style={{ display: 'none' }} />
           </div>
-        </div>
+          <div className="justify-content-center">{file ? file.name : 'Chọn ảnh'}</div>
+          <div className="justify-content-center">
+            <button type="submit" className="btn btn-primary">
+              Tải ảnh
+            </button>
+          </div>
+          <h1 className="justify-content-center">Danh sách ảnh</h1>
+          <div className="justify-content-center">
+            {imageList.length === 0 ? (
+              <h1>Không có ảnh</h1>
+            ) : (
+              <>
+                <br />
+                <ul style={{ listStyle: 'none', padding: 0 }} className="ull">
+                  {imageList.map((image) => (
+                    <li
+                      key={image.id}
+                      style={{
+                        position: 'relative',
+                        marginBottom: '10px'
+                      }}
+                    >
+                      <img style={{ width: '300px', height: '450px' }} src={`data:image/jpeg;base64,${image.tenBase64}`} alt={image.ma} />
+                      <i
+                        style={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '10px',
+                          color: 'red',
+                          border: 'none',
+                          padding: '5px 10px',
+                          cursor: 'pointer'
+                        }}
+                        className="fa-solid fa-trash"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleDeleteImage(image.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleDeleteImage(image.id);
+                          }
+                        }}
+                      ></i>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </form>
       </MainCard>
     </div>
   );
