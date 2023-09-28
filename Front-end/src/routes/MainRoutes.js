@@ -22,6 +22,7 @@ const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
+const UpdateSanPham = Loadable(lazy(() => import('views/san-pham/UpdateSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 //Khách Hàng
@@ -38,7 +39,6 @@ const MainRoutes = {
       path: '/don-hang',
       element: <DashboardDefault />
     },
-
     {
       path: '/san-pham',
       children: [
@@ -52,7 +52,7 @@ const MainRoutes = {
         },
         {
           path: 'chi-tiet-san-pham/detail/:id',
-          element: <AddChiTietSanPham />
+          element: <UpdateSanPham />
         },
         {
           path: 'mau-sac',

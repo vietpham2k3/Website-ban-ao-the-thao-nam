@@ -6,17 +6,21 @@ import MainCard from 'ui-component/cards/MainCard';
 import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { getAllCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
+import defaul from '../../assets/images/default-placeholder.png';
 
 function SanPham() {
   const [data, setData] = useState([]);
+  const [imageErrors, setImageErrors] = useState([]);
   const [totalPages, setTotalPages] = useState();
   // const [isShow, setIsShow] = useState(false);
   // const [dataDelete, setDataDelete] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAll(0);
@@ -30,6 +34,12 @@ function SanPham() {
       setTotalPages(res.data.totalPages);
       console.log(res);
     }
+  };
+
+  const handleImageError = (index) => {
+    const updatedErrors = [...imageErrors];
+    updatedErrors[index] = true;
+    setImageErrors(updatedErrors);
   };
 
   const handlePageClick = (event) => {
@@ -75,11 +85,6 @@ function SanPham() {
                     <th>Ảnh</th>
                     <th>Mã</th>
                     <th>Tên sản phẩm</th>
-                    <th>Chất liệu</th>
-                    <th>Màu sắc</th>
-                    <th>Loại sản phẩm</th>
-                    <th>Nhà sản xuất</th>
-                    <th>Cổ áo</th>
                     <th>Số lượng</th>
                     <th>Giá bán</th>
                     <th>Trạng thái</th>
@@ -91,24 +96,25 @@ function SanPham() {
                     <tr key={i} className="text-center">
                       <td>{i + 1}</td>
                       <td>
-                        <img
-                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                          alt=""
-                          style={{ width: '70px', height: '100px' }}
-                        />
+                        {!imageErrors[i] ? (
+                          <img
+                            src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                            alt="Hình ảnh sản phẩm"
+                            onError={() => handleImageError(i)}
+                            className="product-image"
+                            style={{ width: '70px', height: '100px' }}
+                          />
+                        ) : (
+                          <img src={defaul} alt="Ảnh mặc định" className="product-image" style={{ width: '70px', height: '100px' }} />
+                        )}
                       </td>
                       <td>{d.ma}</td>
                       <td>{d.sanPham.ten}</td>
-                      <td>{d.chatLieu.ten}</td>
-                      <td>{d.mauSac.ten}</td>
-                      <td>{d.loaiSanPham.ten}</td>
-                      <td>{d.nhaSanXuat.ten}</td>
-                      <td>{d.coAo.ten}</td>
                       <td>{d.soLuong}</td>
                       <td>{convertToCurrency(d.giaBan)}</td>
                       <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                       <td>
-                        <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/update/${d.id}`)} className="fa-solid fa-pen"></button>
+                        <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
                         <button
                           onClick={() => navigate(`/san-pham/chi-tiet-san-pham/delete/${d.id}`)}
                           className="fa-solid fa-trash"

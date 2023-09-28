@@ -10,7 +10,7 @@ import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 
-function AddSanPham() {
+function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
   const [listMS, setListMS] = useState([]);
@@ -102,7 +102,7 @@ function AddSanPham() {
           <form className="row g-3" onSubmit={handleSubmit}>
             <div className="col-md-12">
               <label className="form-label" htmlFor="trang-thai">
-                Tên
+                Tên1
               </label>
               <input
                 type="text"
@@ -293,4 +293,4 @@ function AddSanPham() {
   );
 }
 
-export default AddSanPham;
+export default UpdateSanPham;
