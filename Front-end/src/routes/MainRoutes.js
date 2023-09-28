@@ -9,6 +9,10 @@ import UpdateMS from 'views/mausac/updateMS';
 //chatlieu
 
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
+// cổ áo
+import AddCoAo from 'views/co-ao/addCoAo';
+import UpdateCA from 'views/co-ao/UpdateCoAo';
+import CoAo from 'views/co-ao/coAo';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -78,9 +82,26 @@ const MainRoutes = {
           path: 'kich-co',
           element: <DashboardDefault />
         },
+        //co ao
         {
           path: 'co-ao',
-          element: <DashboardDefault />
+          element: <CoAo />
+        },
+        {
+          path: 'co-ao/add',
+          element: <AddCoAo />
+        },
+        {
+          path: 'co-ao/detail/:id',
+          element: <UpdateCA />
+        },
+        {
+          path: 'co-ao/update/:id',
+          element: <UpdateCA />
+        },
+        {
+          path: 'co-ao/delete/:id',
+          element: <CoAo />
         },
         {
           path: 'chat-lieu',
