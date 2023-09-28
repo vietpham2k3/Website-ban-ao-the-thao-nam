@@ -9,25 +9,37 @@ import UpdateMS from 'views/mausac/updateMS';
 //chatlieu
 
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
+// cổ áo
+import AddCoAo from 'views/co-ao/addCoAo';
+import UpdateCA from 'views/co-ao/UpdateCoAo';
+import CoAo from 'views/co-ao/coAo';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 //chatlieu
 const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
-// utilities routing
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
+const UpdateSanPham = Loadable(lazy(() => import('views/san-pham/UpdateSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
+
+// Khuyen Mai
+const KhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/khuyen-mai')));
+const AddKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/add')));
+const UpdateKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/update')));
 
 //Khách Hàng
 const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
 const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')));
 const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
+
+// Nhân Viên
+const NhanVien = Loadable(lazy(() => import('views/nhanvien/NhanVien')));
+const AddNhanVien = Loadable(lazy(() => import('views/nhanvien/addNhanVien')));
+const UpdateNhanVien = Loadable(lazy(() => import('views/nhanvien/UpdateNhanVien')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -45,7 +57,6 @@ const MainRoutes = {
       path: '/don-hang',
       element: <DashboardDefault />
     },
-
     {
       path: '/san-pham',
       children: [
@@ -59,7 +70,7 @@ const MainRoutes = {
         },
         {
           path: 'chi-tiet-san-pham/detail/:id',
-          element: <AddChiTietSanPham />
+          element: <UpdateSanPham />
         },
         {
           path: 'mau-sac',
@@ -85,9 +96,26 @@ const MainRoutes = {
           path: 'kich-co',
           element: <DashboardDefault />
         },
+        //co ao
         {
           path: 'co-ao',
-          element: <DashboardDefault />
+          element: <CoAo />
+        },
+        {
+          path: 'co-ao/add',
+          element: <AddCoAo />
+        },
+        {
+          path: 'co-ao/detail/:id',
+          element: <UpdateCA />
+        },
+        {
+          path: 'co-ao/update/:id',
+          element: <UpdateCA />
+        },
+        {
+          path: 'co-ao/delete/:id',
+          element: <CoAo />
         },
         {
           path: 'chat-lieu',
@@ -134,14 +162,24 @@ const MainRoutes = {
         //====================
       ]
     },
+    //khuyen mai
     {
       path: '/voucher',
-      element: <UtilsColor />
+      element: <KhuyenMai />
     },
     {
-      path: '/nhan-vien',
-      element: <UtilsShadow />
+      path: '/voucher/add',
+      element: <AddKhuyenMai />
     },
+    {
+      path: '/voucher/update/:id',
+      element: <UpdateKhuyenMai />
+    },
+    {
+      path: '/voucher/detail/:id',
+      element: <UpdateKhuyenMai />
+    },
+
     //Khách Hàng
     {
       path: '/khach-hang',
@@ -158,6 +196,24 @@ const MainRoutes = {
     {
       path: '/khach-hang/update/:id',
       element: <UpdateKhachHang />
+    },
+
+    //Nhân Viên
+    {
+      path: '/nhan-vien/add',
+      element: <AddNhanVien />
+    },
+    {
+      path: '/nhan-vien',
+      element: <NhanVien />
+    },
+    {
+      path: '/nhan-vien/detail/:id',
+      element: <UpdateNhanVien />
+    },
+    {
+      path: '/nhan-vien/update/:id',
+      element: <UpdateNhanVien />
     },
 
     //============//

@@ -28,8 +28,4 @@ const searchMS = (key, trangThai, page) => {
   return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 };
 
-<<<<<<< HEAD
 export { getAllHD, getAllPageDH, searchMS, postMS, putMS, detailMS, deleteMS };
-=======
-export { getAllHD, getAllPageDH, searchMS, postMS, putMS, detailMS };
->>>>>>> c21117d2801590678202d0f84c20529d4257fb65

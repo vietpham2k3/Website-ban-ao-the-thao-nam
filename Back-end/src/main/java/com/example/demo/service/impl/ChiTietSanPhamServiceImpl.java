@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
@@ -24,5 +26,10 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public ChiTietSanPham add(ChiTietSanPham chiTietSanPham) {
         return repository.save(chiTietSanPham);
+    }
+
+    @Override
+    public ChiTietSanPham detail(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 }

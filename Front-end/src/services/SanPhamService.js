@@ -21,7 +21,7 @@ const searchCO = (key, page) => {
   return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&page=${page}`);
 };
 
-const detailCO = (id) => {
+const detailCTSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/detail/${id}`);
 };
 
@@ -45,13 +45,18 @@ const getAllListNSX = () => {
   return axios.get(`/api/nha-san-xuat/getAll`);
 };
 
+const listAnh = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/view-all-image/${id}`);
+};
+
 export {
   getAllCTSP,
+  listAnh,
   postCTSP,
   putCO,
   deleteCO,
   searchCO,
-  detailCO,
+  detailCTSP,
   getAllListCO,
   getAllListCL,
   getAllListMS,

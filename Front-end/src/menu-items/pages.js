@@ -55,6 +55,13 @@ const pages = {
           breadcrumbs: false
         },
         {
+          id: 'nha-san-xuat',
+          title: 'Nhà sản xuất',
+          type: 'item',
+          url: '/san-pham/nha-san-xuat',
+          breadcrumbs: false
+        },
+        {
           id: 'loai-san-pham',
           title: 'Loại sản phẩm',
           type: 'item',
