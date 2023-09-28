@@ -185,8 +185,8 @@ function UpdateKhachHang() {
                     name="inlineRadioOptions"
                     id="inlineRadio1"
                     value="1"
-                    checked={values.trangThai === '1'} // Kiểm tra nếu trạng thái là "1" thì được chọn
-                    onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                    checked={values.trangThai === 1} // Kiểm tra nếu trạng thái là "1" thì được chọn
+                    onChange={() => setValues({ ...values, trangThai: 1 })}
                   />
                   <label htmlFor="a" className="form-check-label">
                     Hoạt động
@@ -199,8 +199,8 @@ function UpdateKhachHang() {
                     name="inlineRadioOptions"
                     id="inlineRadio2"
                     value="0"
-                    checked={values.trangThai === '0'} // Kiểm tra nếu trạng thái là "0" thì được chọn
-                    onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                    checked={values.trangThai === 0} // Kiểm tra nếu trạng thái là "0" thì được chọn
+                    onChange={() => setValues({ ...values, trangThai: 0 })}
                   />
                   <label htmlFor="a" className="form-check-label">
                     Không hoạt động

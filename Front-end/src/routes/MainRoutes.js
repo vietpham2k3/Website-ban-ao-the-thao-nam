@@ -30,6 +30,13 @@ const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')
 const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+
+//Loại Sản Phẩm
+const LoaiSanPham = Loadable(lazy(() => import('views/loaisanpham/loaisanpham')));
+const UpdateLSP = Loadable(lazy(() => import('views/loaisanpham/UpdateLSP')));
+const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
+// ==============================|| MAIN ROUTING ||============================== //
+
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
@@ -102,10 +109,29 @@ const MainRoutes = {
           path: 'chat-lieu/delete/:id',
           element: <ChatLieu />
         },
+
+        //Loại Sản Phẩm
         {
           path: 'loai-san-pham',
-          element: <DashboardDefault />
+          element: <LoaiSanPham />
+        },
+        {
+          path: 'loai-san-pham/add',
+          element: <AddLSP />
+        },
+        {
+          path: 'loai-san-pham/detail/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/update/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/delete/:id',
+          element: <LoaiSanPham />
         }
+        //====================
       ]
     },
     {
