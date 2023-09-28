@@ -6,19 +6,24 @@ import Loadable from 'ui-component/Loadable';
 import MauSac from 'views/mausac/mau-sac';
 import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
+//chatlieu
+
+import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-
+//chatlieu
+const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
+const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
 // utilities routing
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
+//chất
 
 //Khách Hàng
 const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
@@ -35,6 +40,7 @@ const MainRoutes = {
       path: '/don-hang',
       element: <DashboardDefault />
     },
+
     {
       path: '/san-pham',
       children: [
@@ -76,7 +82,23 @@ const MainRoutes = {
         },
         {
           path: 'chat-lieu',
-          element: <DashboardDefault />
+          element: <ChatLieu />
+        },
+        {
+          path: 'chat-lieu/add',
+          element: <AddChatLieu />
+        },
+        {
+          path: 'chat-lieu/detail/:id',
+          element: <UpdateCL />
+        },
+        {
+          path: 'chat-lieu/update/:id',
+          element: <UpdateCL />
+        },
+        {
+          path: 'chat-lieu/delete/:id',
+          element: <ChatLieu />
         },
         {
           path: 'loai-san-pham',
@@ -113,7 +135,7 @@ const MainRoutes = {
     //============//
     {
       path: '/thong-ke',
-      element: <UtilsMaterialIcons />
+      element: <UpdateKhachHang />
     }
   ]
 };
