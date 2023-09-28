@@ -15,10 +15,12 @@ public interface ChatLieuService {
     List<ChatLieu> fillAll();
 
     ChatLieu getOne(UUID id);
+
     public ChatLieu detail(UUID id);
 
     ChatLieu add(ChatLieu chatLieu);
 
     ChatLieu update(ChatLieu chatLieu);
+
     ChatLieu delete(UUID id);
 }
