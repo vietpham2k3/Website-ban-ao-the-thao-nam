@@ -8,7 +8,6 @@ import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
 //chatlieu
 
-
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
 
 // dashboard routing
@@ -19,13 +18,19 @@ const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
 // utilities routing
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
-//chất 
+//chất
+
+//Khách Hàng
+const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
+const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')));
+const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
+
+// ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
   path: '/',
@@ -81,7 +86,7 @@ const MainRoutes = {
         },
         {
           path: 'chat-lieu/add',
-          element: <AddChatLieu/>
+          element: <AddChatLieu />
         },
         {
           path: 'chat-lieu/detail/:id',
@@ -109,12 +114,28 @@ const MainRoutes = {
       path: '/nhan-vien',
       element: <UtilsShadow />
     },
+    //Khách Hàng
     {
       path: '/khach-hang',
-      element: <UtilsTablerIcons />
+      element: <KhachHang />
     },
     {
-      path: '/chat-lieu'
+      path: '/khach-hang/add',
+      element: <AddKhachHang />
+    },
+    {
+      path: '/khach-hang/detail/:id',
+      element: <UpdateKhachHang />
+    },
+    {
+      path: '/khach-hang/update/:id',
+      element: <UpdateKhachHang />
+    },
+
+    //============//
+    {
+      path: '/thong-ke',
+      element: <UpdateKhachHang />
     }
   ]
 };

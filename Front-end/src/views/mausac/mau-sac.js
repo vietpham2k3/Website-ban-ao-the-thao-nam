@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import "../../scss/MauSac.scss"
+import '../../scss/MauSac.scss';
 import { getAllPageMS, searchMS, deleteMS } from 'services/ServiceMauSac';
 
 // import ConfirmDelete from './ConfirmDelete';
@@ -48,7 +48,7 @@ function MauSac() {
       setTotalPages(res.data.totalPages);
     }
   };
-  
+
   const handleSearchMS = _.debounce(async (e) => {
     let term = e.target.value;
     if (term || filterStatus !== 0) {
@@ -57,7 +57,7 @@ function MauSac() {
       search('', 0, currentPage);
     }
   }, 100);
-  
+
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
     if (filterStatus === '') {
@@ -192,15 +192,17 @@ function MauSac() {
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
-                      <button onClick={() => navigate(`/san-pham/mau-sac/detail/${d.id}`)} 
-                      style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg fa-khenh">
-                      </button>
+                      <button
+                        onClick={() => navigate(`/san-pham/mau-sac/detail/${d.id}`)}
+                        style={{ color: 'aqua' }}
+                        className="fa-regular fa-pen-to-square fa-lg fa-khenh"
+                      ></button>
 
-                      <button onClick={() => handleSubmit(d.id, { ma: d.ma })} 
-                      style={{ color: '#ff1744' }} className="fa-solid fa-trash fa-khenh">
-                      </button>
-
-                    
+                      <button
+                        onClick={() => handleSubmit(d.id, { ma: d.ma })}
+                        style={{ color: '#ff1744' }}
+                        className="fa-solid fa-trash fa-khenh"
+                      ></button>
                     </td>
                   </tr>
                 ))}

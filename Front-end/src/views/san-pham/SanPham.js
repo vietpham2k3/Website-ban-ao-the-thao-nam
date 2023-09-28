@@ -11,8 +11,6 @@ import { useState } from 'react';
 import { getAllCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 
-
-
 function SanPham() {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
