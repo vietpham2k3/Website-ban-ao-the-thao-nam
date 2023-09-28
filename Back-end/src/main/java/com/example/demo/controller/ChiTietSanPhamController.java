@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AnhDTO;
 import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.SanPham;
@@ -8,6 +9,7 @@ import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,15 +20,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -95,5 +102,89 @@ public class ChiTietSanPhamController {
 
         chiTietSanPham.setSanPham(sanPham);
         return ResponseEntity.ok(chiTietSanPhamService.add(chiTietSanPham));
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImages(
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("id") UUID id
+    ) {
+        if (files.length == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vui lòng chọn ít nhất một tệp ảnh.");
+        }
+
+        ChiTietSanPham ctsp = chiTietSanPhamService.detail(id);
+
+        try {
+            List<Anh> addedImages = new ArrayList<>();
+
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) {
+                    continue;
+                }
+
+                String ma = "IMG" + new Random().nextInt(100000);
+
+                Anh anh = new Anh();
+                anh.setId(UUID.randomUUID());
+                anh.setMa(ma);
+                anh.setChiTietSanPham(ctsp);
+                Blob imageBlob = createBlob(file.getBytes());
+                anh.setTen(imageBlob);
+                anh.setTrangThai(1);
+                anh.setNgayTao(date);
+                anhService.add(anh);
+
+                addedImages.add(anh);
+            }
+
+            return ResponseEntity.ok("Tải lên ảnh thành công.");
+        } catch (IOException | SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi trong quá trình tải lên ảnh.");
+        }
+    }
+
+    private Blob createBlob(byte[] bytes) throws SQLException {
+        return new javax.sql.rowset.serial.SerialBlob(bytes);
+    }
+
+    @GetMapping("/view-all-image/{id}")
+    public ResponseEntity<List<AnhDTO>> getImageListByChiTietSanPhamId(@PathVariable("id") UUID chiTietSanPhamId) {
+        List<Anh> imageList = anhService.getAllByChiTietSanPhamId(chiTietSanPhamId);
+
+        if (imageList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<AnhDTO> imageDTOList = imageList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(imageDTOList);
+    }
+
+    private AnhDTO convertToDTO(Anh anh) {
+        AnhDTO anhDTO = new AnhDTO();
+        anhDTO.setId(anh.getId());
+        anhDTO.setMa(anh.getMa());
+        anhDTO.setTrangThai(anh.getTrangThai());
+        anhDTO.setNgayTao(anh.getNgayTao());
+        anhDTO.setNgaySua(anh.getNgaySua());
+        anhDTO.setChiTietSanPhamTen(anh.getChiTietSanPham().getSanPham().getTen());
+
+        if (anh.getTen() != null) {
+            try {
+                Blob blob = anh.getTen();
+                byte[] tenBytes = blob.getBytes(1, (int) blob.length());
+                String tenBase64 = Base64.getEncoder().encodeToString(tenBytes);
+                anhDTO.setTenBase64(tenBase64);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            anhDTO.setTenBase64(null);
+        }
+
+        return anhDTO;
     }
 }
