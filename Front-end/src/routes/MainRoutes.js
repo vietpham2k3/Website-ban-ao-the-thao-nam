@@ -20,7 +20,6 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
 // utilities routing
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
 const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 
 // Sản phẩm
@@ -28,6 +27,11 @@ const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
 const AddChiTietSanPham = Loadable(lazy(() => import('views/san-pham/AddSanPham')));
 const UpdateSanPham = Loadable(lazy(() => import('views/san-pham/UpdateSanPham')));
 // ==============================|| MAIN ROUTING ||============================== //
+
+// Khuyen Mai
+const KhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/khuyen-mai')));
+const AddKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/add')));
+const UpdateKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/update')));
 
 //Khách Hàng
 const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
@@ -129,10 +133,24 @@ const MainRoutes = {
         }
       ]
     },
+    //khuyen mai
     {
       path: '/voucher',
-      element: <UtilsColor />
+      element: <KhuyenMai />
     },
+    {
+      path: '/voucher/add',
+      element: <AddKhuyenMai />
+    },
+    {
+      path: '/voucher/update/:id',
+      element: <UpdateKhuyenMai />
+    },
+    {
+      path: '/voucher/detail/:id',
+      element: <UpdateKhuyenMai />
+    },
+
     {
       path: '/nhan-vien',
       element: <UtilsShadow />
