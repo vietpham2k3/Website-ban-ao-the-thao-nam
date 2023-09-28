@@ -1,12 +1,12 @@
-import axios from "../custommize-axios"
+import axios from '../custommize-axios';
 
 const getAllPageDH = (page) => {
-    return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`)
-}
+  return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`);
+};
 
 const getAllHD = () => {
-    return axios.get("/api/hoa-don/hien-thi")
-}
+  return axios.get('/api/hoa-don/hien-thi');
+};
 
 const detailHD = (id) => {
     return axios.get(`/api/hoa-don/detail/` + id)
@@ -16,9 +16,10 @@ const printExcel = (values) => {
     return axios.get("/api/hoa-don/print-excel", values)
 }
 
+
 const putMS = (id, values) => {
-    return axios.put(`/api/mau-sac/update/` + id, values)
-}
+  return axios.put(`/api/mau-sac/update/` + id, values);
+};
 
 
 // const searchMS = (key,trangThai, page) => {
@@ -26,3 +27,4 @@ const putMS = (id, values) => {
 //   };
 
 export { getAllHD, getAllPageDH, printExcel, putMS, detailHD  }
+

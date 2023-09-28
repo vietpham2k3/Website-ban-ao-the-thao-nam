@@ -82,3 +82,19 @@
   border: none;
   background-color: transparent;
 }
+select.form-select {
+  appearance: none;
+}
+
+select.form-select option[selected] {
+  background-color: red;
+}
+
+select.form-select option[selected]::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  background-color: red;
+}

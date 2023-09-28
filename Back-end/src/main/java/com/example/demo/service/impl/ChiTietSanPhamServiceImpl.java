@@ -20,4 +20,9 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
         Pageable pageable = PageRequest.of(page, 5);
         return repository.findAll(pageable);
     }
+
+    @Override
+    public ChiTietSanPham add(ChiTietSanPham chiTietSanPham) {
+        return repository.save(chiTietSanPham);
+    }
 }

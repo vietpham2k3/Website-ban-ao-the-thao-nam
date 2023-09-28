@@ -1,55 +1,66 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// bosstrap
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import { Card } from '@mui/material';
+import '../../scss/SanPham.scss';
+import { fetchAllList, searchCA } from 'services/ServiceCoAo';
+import { deleteCA } from 'services/ServiceCoAo';
 import { useNavigate } from 'react-router-dom';
-
-import '../../scss/MauSac.scss';
-import { getAllPageMS, searchMS, deleteMS } from 'services/ServiceMauSac';
-
-// import ConfirmDelete from './ConfirmDelete';
 import _ from 'lodash';
 import MainCard from 'ui-component/cards/MainCard';
 
-//  React examples
+// Soft UI Dashboard React compone  nts
 
-function MauSac() {
+// import AddChatLieu from './addchatlieu';
+
+const CoAo = () => {
   const [filterStatus, setFilterStatus] = useState('');
-
   const [currentPage, setCurrentPage] = useState(0);
-
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
+  const navigate = useNavigate();
+  // const [isShow, setIsShow] = useState(false);
   const [dataDelete, setDataDelete] = useState({
     ma: ''
   });
+
+  console.log(data);
 
   useEffect(() => {
     getAll(0);
     setDataDelete();
   }, []);
 
-  const navigate = useNavigate();
+  // const handleClose = () => {
+  //   setIsShow(false);
+  // };
+
+  // const handleDelete = (id) => {
+  //   setIsShow(true);
+  //   setDataDelete(id);
+  // };
 
   const getAll = async (page) => {
     setCurrentPage(page);
-    const res = await getAllPageMS(page);
+    const res = await fetchAllList(page);
     if (res && res.data) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
+      console.log(data);
     }
   };
 
   const search = async (key, trangThai, page) => {
-    setCurrentPage(page);
-    const res = await searchMS(key, trangThai, page);
+    const res = await searchCA(key, trangThai, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearchMS = _.debounce(async (e) => {
+  const handleSearchCL = _.debounce(async (e) => {
     let term = e.target.value;
     if (term || filterStatus !== 0) {
       search(term, filterStatus, currentPage);
@@ -57,7 +68,6 @@ function MauSac() {
       search('', 0, currentPage);
     }
   }, 100);
-
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
     if (filterStatus === '') {
@@ -67,8 +77,10 @@ function MauSac() {
     }
   };
 
+  // const { id } = useParams();
+
   const del = async (id, values) => {
-    const res = await deleteMS(id, values);
+    const res = await deleteCA(id, values);
     if (res) {
       toast.success('Xóa thành công !');
       getAll(0);
@@ -92,7 +104,6 @@ function MauSac() {
 
     const hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-    // const seconds = dateObject.getSeconds();
 
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
 
@@ -111,7 +122,7 @@ function MauSac() {
                   type="text"
                   className="input-search"
                   placeholder=" Nhập tên, mã màu cần tìm..."
-                  onChange={handleSearchMS}
+                  onChange={handleSearchCL}
                 />
               </div>
               <div style={{ marginRight: 50 }}>
@@ -124,6 +135,7 @@ function MauSac() {
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
+                    id="inlineRadio1"
                     checked={filterStatus === ''}
                     onChange={() => {
                       setFilterStatus('');
@@ -139,6 +151,7 @@ function MauSac() {
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
+                    id="inlineRadio1"
                     checked={filterStatus === 0}
                     onChange={() => {
                       setFilterStatus(0);
@@ -152,6 +165,7 @@ function MauSac() {
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
+                    id="inlineRadio2"
                     checked={filterStatus === 1}
                     onChange={() => {
                       setFilterStatus(1);
@@ -163,17 +177,17 @@ function MauSac() {
               </div>
 
               <div className="d-flex justify-content-end">
-                <button onClick={() => navigate('/san-pham/mau-sac/add')} className="btn btn-primary ">
+                <button onClick={() => navigate('/san-pham/co-ao/add')} className="btn btn-primary ">
                   Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
                 </button>
               </div>
             </div>
 
-            <table style={{ textAlign: 'center', marginTop: 50 }} className="table table-hover">
+            <table style={{ textAlign: 'center' }} className="table table-hover">
               <tr>
                 <th>#</th>
-                <th>Mã Màu</th>
-                <th>Tên Màu</th>
+                <th>Mã</th>
+                <th>Tên Cổ ÁO</th>
                 <th>Ngày Tạo</th>
                 <th>Ngày Sửa</th>
                 <th>Trạng Thái</th>
@@ -183,17 +197,14 @@ function MauSac() {
                 {data.map((d, i) => (
                   <tr key={i}>
                     <td>{i + 1}</td>
-                    <td>
-                      {' '}
-                      <span className="color-code">{d.ma}</span>
-                    </td>
-                    <td className="color-code" style={{ backgroundColor: d.ten }}></td>
+                    <td> {d.ma}</td>
+                    <td>{d.ten}</td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
                       <button
-                        onClick={() => navigate(`/san-pham/mau-sac/detail/${d.id}`)}
+                        onClick={() => navigate(`/san-pham/co-ao/detail/${d.id}`)}
                         style={{ color: 'aqua' }}
                         className="fa-regular fa-pen-to-square fa-lg fa-khenh"
                       ></button>
@@ -227,11 +238,19 @@ function MauSac() {
               containerClassName="pagination justify-content-center"
               activeClassName="active"
             />
+
+            {/* <ConfirmDelete
+          show={isShow}
+          handleClose={handleClose}
+          dataDelete={dataDelete}
+          getAll={getAll}
+        >
+        </ConfirmDelete> */}
           </div>
         </Card>
       </MainCard>
     </div>
   );
-}
+};
 
-export default MauSac;
+export default CoAo;

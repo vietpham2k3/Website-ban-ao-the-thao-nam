@@ -1,30 +1,17 @@
-import React, { useState } from 'react';
+import { postCreate } from 'services/ServiceCoAo';
 import { toast } from 'react-toastify';
-import InputColor from 'react-input-color';
+import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, Button } from '@mui/material'; // Import Button from '@mui/material'
+
 import MainCard from 'ui-component/cards/MainCard';
 
-import { postMS } from 'services/ServiceMauSac';
-
-import { useNavigate } from 'react-router-dom';
-
-// @mui material components
-import Card from '@mui/material/Card';
-
-//  React examples
-import { Button } from 'react-bootstrap';
-
-function AddMauSac() {
-  const [color, setColor] = useState({ r: 94, g: 114, b: 228, a: 1 }); // Giá trị màu mặc định
-
-  const handleColorChange = (newColor) => {
-    setColor(newColor); // Cập nhật giá trị màu từ bảng màu
-    // setMa(newColor.hex); // Cập nhật giá trị 'ma' từ bảng màu
-    setValues({ ...values, ma: newColor.hex });
-  };
-
+function AddCoAo() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     ma: '',
+    ten: '',
     trangThai: 0
   });
 
@@ -34,10 +21,10 @@ function AddMauSac() {
   };
 
   const post = async (value) => {
-    const res = await postMS(value);
+    const res = await postCreate(value);
     if (res) {
-      toast.success('Thêm thành công !');
-      navigate('/san-pham/mau-sac');
+      toast.success('Add thành công');
+      navigate('/san-pham/co-ao');
     }
   };
 
@@ -48,33 +35,23 @@ function AddMauSac() {
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
-                <span style={{ fontWeight: 'bold' }} className="form-label">
-                  Mã Màu:{' '}
-                </span>
-                <br></br>
-                <InputColor initialValue={values.ma} onChange={handleColorChange} placement="right" />
-                <div
-                  style={{
-                    width: 300,
-                    height: 300,
-                    marginTop: 20,
-                    backgroundColor: color.rgba
-                  }}
-                />
-              </div>
-
-              {/* <div >
-           <label className="form-label">Mã Màu</label>
-           <input
+                <span className="form-label">MÃ</span>
+                <input
                   type="text"
                   className="form-control"
                   value={values.ma}
-                  onChange={(e) =>
-                    setValues({ ...values, ma: e.target.value })
-                  }
+                  onChange={(e) => setValues({ ...values, ma: e.target.value })}
                 />
-             </div> */}
-
+              </div>
+              <div className="col-md-6">
+                <span className="form-label">TÊN</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={values.ten}
+                  onChange={(e) => setValues({ ...values, ten: e.target.value })}
+                />
+              </div>
               <div className="col-6">
                 <span style={{ fontWeight: 'bold' }} className="form-label me-3">
                   Trạng thái:{' '}
@@ -107,7 +84,7 @@ function AddMauSac() {
                 </div>
               </div>
               <div className="col-12">
-                <Button type="submit" className="btn btn-bg-info">
+                <Button type="submit" className="btn btn-primary">
                   Thêm
                 </Button>
               </div>
@@ -119,4 +96,4 @@ function AddMauSac() {
   );
 }
 
-export default AddMauSac;
+export default AddCoAo;
