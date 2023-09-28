@@ -16,13 +16,14 @@ import java.util.UUID;
 public interface ChatLieuRepository extends JpaRepository<ChatLieu, UUID> {
     @Query(value = "select id,ma,ten,trang_thai,ngay_tao,ngay_sua from chatLieu", nativeQuery = true)
     List<ChatLieu> getAll();
-    @Query(value = "SELECT * FROM ChatLieu \n" +
-            "WHERE (:key IS NULL OR ma LIKE CONCAT('%', :key, '%'))\n" +
-            "      AND (:key IS NULL OR ten LIKE CONCAT('%', :key , '%'))\n" +
-            "      AND (:trangThai IS NULL OR trang_thai = :trangThai)", nativeQuery = true)
+
+    @Query(value = "SELECT * FROM ChatLieu\n" +
+            "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
+            "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%')))\n" +
+            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
     Page<ChatLieu> searchPageMS(@Param("key") String key,
-                              @Param("trangThai") Integer trangThai,
-                              Pageable pageable);
+                                @Param("trang_thai") Integer trangThai,
+                                Pageable pageable);
 
 
 }
