@@ -44,15 +44,23 @@ const getAllListLSP = () => {
 const getAllListNSX = () => {
   return axios.get(`/api/nha-san-xuat/getAll`);
 };
+const addAnh = (values) => {
+  return axios.post('/api/chi-tiet-san-pham/upload', values);
+};
 
 const listAnh = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/view-all-image/${id}`);
 };
 
+const deleteAnh = (id) => {
+  return axios.delete(`/api/chi-tiet-san-pham/delete-img/${id}`);
+};
 export {
   getAllCTSP,
   listAnh,
+  addAnh,
   postCTSP,
+  deleteAnh,
   putCO,
   deleteCO,
   searchCO,

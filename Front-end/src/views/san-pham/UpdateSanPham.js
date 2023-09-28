@@ -12,7 +12,9 @@ import {
   getAllListNSX,
   postCTSP,
   detailCTSP,
-  listAnh
+  listAnh,
+  deleteAnh,
+  addAnh
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
