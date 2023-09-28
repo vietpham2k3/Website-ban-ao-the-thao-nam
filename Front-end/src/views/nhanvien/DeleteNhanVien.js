@@ -42,9 +42,6 @@ const deleteNV = (props) => {
 
 export default deleteNV;
 
-
-
-
 // /* eslint-disable react/react-in-jsx-scope */
 // /* eslint-disable react/prop-types */
 // import { useEffect } from "react";
@@ -52,7 +49,6 @@ export default deleteNV;
 // import { useParams } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import { deleteNhanVien } from "service/ServiceNhanVien";
-
 
 // const ConfirmDelete = ({ handleClose, show, dataDelete, getAll }) => {
 

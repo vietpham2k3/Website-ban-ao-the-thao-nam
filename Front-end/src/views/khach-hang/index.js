@@ -92,7 +92,7 @@ const KhachHang = () => {
                   type="text"
                   className="input-search"
                   value={searchTerm}
-                  placeholder="Nhập tên, mã màu cần tìm..."
+                  placeholder="Nhập tên, mã khách hàng cần tìm..."
                   onChange={handleSearch}
                 />
               </div>

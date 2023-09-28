@@ -16,6 +16,7 @@ import {
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
+import '../../scss/UpdateSanPham.scss';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router';
 import { postCreate } from 'services/ServiceChatLieu';

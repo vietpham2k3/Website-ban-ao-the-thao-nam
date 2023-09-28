@@ -44,6 +44,13 @@ const AddNhanVien = Loadable(lazy(() => import('views/nhanvien/addNhanVien')));
 const UpdateNhanVien = Loadable(lazy(() => import('views/nhanvien/UpdateNhanVien')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+
+//Loại Sản Phẩm
+const LoaiSanPham = Loadable(lazy(() => import('views/loaisanpham/loaisanpham')));
+const UpdateLSP = Loadable(lazy(() => import('views/loaisanpham/UpdateLSP')));
+const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
+// ==============================|| MAIN ROUTING ||============================== //
+
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
@@ -142,10 +149,29 @@ const MainRoutes = {
           path: 'chat-lieu/delete/:id',
           element: <ChatLieu />
         },
+
+        //Loại Sản Phẩm
         {
           path: 'loai-san-pham',
-          element: <DashboardDefault />
+          element: <LoaiSanPham />
+        },
+        {
+          path: 'loai-san-pham/add',
+          element: <AddLSP />
+        },
+        {
+          path: 'loai-san-pham/detail/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/update/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/delete/:id',
+          element: <LoaiSanPham />
         }
+        //====================
       ]
     },
     //khuyen mai
@@ -166,7 +192,6 @@ const MainRoutes = {
       element: <UpdateKhuyenMai />
     },
 
-    
     //Khách Hàng
     {
       path: '/khach-hang',
@@ -187,20 +212,20 @@ const MainRoutes = {
 
     //Nhân Viên
     {
-      path: "/nhan-vien/add",
-      element: <AddNhanVien />,
+      path: '/nhan-vien/add',
+      element: <AddNhanVien />
     },
     {
-      path: "/nhan-vien",
-      element: <NhanVien />,
+      path: '/nhan-vien',
+      element: <NhanVien />
     },
     {
-      path: "/nhan-vien/detail/:id",
-      element: <UpdateNhanVien />,
+      path: '/nhan-vien/detail/:id',
+      element: <UpdateNhanVien />
     },
     {
-      path: "/nhan-vien/update/:id",
-      element: <UpdateNhanVien />,
+      path: '/nhan-vien/update/:id',
+      element: <UpdateNhanVien />
     },
 
     //============//
