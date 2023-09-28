@@ -19,24 +19,24 @@ public class KhuyenMaiController {
     private KhuyenMaiServiceImpl service;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> hienThi(){
+    public ResponseEntity<?> hienThi() {
         return ResponseEntity.ok(service.getAllKM());
     }
 
     @GetMapping("hien-thi-page")
-    public ResponseEntity<?> hienthiPage(@RequestParam(defaultValue = "0") Integer page){
-        Pageable pageable = PageRequest.of(page,5);
+    public ResponseEntity<?> hienthiPage(@RequestParam(defaultValue = "0") Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
         return ResponseEntity.ok(service.pageKM(pageable));
     }
 
     @GetMapping("hien-thi-page-search")
-    public ResponseEntity<?> hienThiPageSearch(String key,Integer trangThai, @RequestParam (defaultValue = "0") Integer page){
-        Pageable pageable = PageRequest.of(page,5);
-        return ResponseEntity.ok(service.pageSearchKM(key,trangThai,pageable));
+    public ResponseEntity<?> hienThiPageSearch(String key, Integer trangThai, @RequestParam(defaultValue = "0") Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return ResponseEntity.ok(service.pageSearchKM(key, trangThai,  pageable));
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody KhuyenMai khuyenMai){
+    public ResponseEntity<?> add(@RequestBody KhuyenMai khuyenMai) {
         khuyenMai.setMa(khuyenMai.getMa());
         khuyenMai.setTen(khuyenMai.getTen());
         khuyenMai.setMucGiam(khuyenMai.getMucGiam());
@@ -49,12 +49,12 @@ public class KhuyenMaiController {
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable UUID id){
+    public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(service.detail(id));
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody KhuyenMai khuyenMai){
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody KhuyenMai khuyenMai) {
         khuyenMai.setId(id);
         khuyenMai.setMa(khuyenMai.getMa());
         khuyenMai.setTen(khuyenMai.getTen());
@@ -69,7 +69,7 @@ public class KhuyenMaiController {
     }
 
     @PutMapping("delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable UUID id, @RequestBody KhuyenMai khuyenMai){
+    public ResponseEntity<?> delete(@PathVariable UUID id, @RequestBody KhuyenMai khuyenMai) {
         khuyenMai.setId(id);
         return ResponseEntity.ok(service.xoa(id));
     }

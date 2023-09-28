@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,8 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
 
     @Override
-    public Page<KhuyenMai> pageSearchKM(String key,Integer trangThai, Pageable pageable) {
-        return khuyenMaiRepository.search(key,trangThai, pageable);
+    public Page<KhuyenMai> pageSearchKM(String key, Integer trangThai, Pageable pageable) {
+        return khuyenMaiRepository.search(key,trangThai,pageable);
     }
 
     @Override

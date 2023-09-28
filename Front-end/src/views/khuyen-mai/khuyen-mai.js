@@ -26,6 +26,9 @@ function KhuyenMai() {
     ma: ''
   });
 
+  //loc ngay
+  // const [startDate, setStartDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -160,7 +163,17 @@ function KhuyenMai() {
             />
             <span className="form-check-label">Ngừng kích hoạt</span>
           </div>
+          {/* <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <span className="form-check-label">Ngày bắt đầu</span>
+          </div>
+
+          <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            <span className="form-check-label">Ngày kết thúc</span>
+          </div> */}
         </div>
+
         <div className="d-flex justify-content-end">
           {/* <Link to="/khuyen-mai/add" className="btn btn-primary">
             Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
