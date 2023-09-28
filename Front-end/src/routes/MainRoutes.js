@@ -154,7 +154,6 @@ const MainRoutes = {
       element: <UpdateKhuyenMai />
     },
 
-    
     //Khách Hàng
     {
       path: '/khach-hang',
@@ -175,20 +174,20 @@ const MainRoutes = {
 
     //Nhân Viên
     {
-      path: "/nhan-vien/add",
-      element: <AddNhanVien />,
+      path: '/nhan-vien/add',
+      element: <AddNhanVien />
     },
     {
-      path: "/nhan-vien",
-      element: <NhanVien />,
+      path: '/nhan-vien',
+      element: <NhanVien />
     },
     {
-      path: "/nhan-vien/detail/:id",
-      element: <UpdateNhanVien />,
+      path: '/nhan-vien/detail/:id',
+      element: <UpdateNhanVien />
     },
     {
-      path: "/nhan-vien/update/:id",
-      element: <UpdateNhanVien />,
+      path: '/nhan-vien/update/:id',
+      element: <UpdateNhanVien />
     },
 
     //============//

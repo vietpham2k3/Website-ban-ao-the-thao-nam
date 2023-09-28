@@ -6,7 +6,6 @@ import { Card } from '@mui/material';
 import { toast } from 'react-toastify';
 import { addNV, vaitro } from 'services/NhanVienService';
 
-
 function AddNhanVien() {
   const navigate = useNavigate();
   const [vaiTroS, setVaiTroS] = useState([]);
@@ -25,29 +24,27 @@ function AddNhanVien() {
     setAnh(file);
   };
 
-       const [values, setValues] = useState(
-     {
-       ma: "",
-       ten: "",
-       sdt: "",
-       email: "",
-       diaChi: "",
-       ngaySinh: "",
-       matKhau: "",
-       vaiTro: "",
-       trangThai: "",
-     }
-   );
+  const [values, setValues] = useState({
+    ma: '',
+    ten: '',
+    sdt: '',
+    email: '',
+    diaChi: '',
+    ngaySinh: '',
+    matKhau: '',
+    vaiTro: '',
+    trangThai: 0
+  });
 
-//   const [values, setValues] = useState({
-//     maKhachHang: '',
-//     tenKhachHang: '',
-//     sdt: '',
-//     email: '',
-//     ngaySinh: '',
-//     matKhau: '',
-//     trangThai: '1'
-//   });
+  //   const [values, setValues] = useState({
+  //     maKhachHang: '',
+  //     tenKhachHang: '',
+  //     sdt: '',
+  //     email: '',
+  //     ngaySinh: '',
+  //     matKhau: '',
+  //     trangThai: '1'
+  //   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -81,24 +78,23 @@ function AddNhanVien() {
     }
   };
 
-    useEffect(() => {
-    getAllVaiTro()
-  }, [])
+  useEffect(() => {
+    getAllVaiTro();
+  }, []);
 
   const getAllVaiTro = async () => {
-    let res = await vaitro()
+    let res = await vaitro();
     if (res) {
       setVaiTroS(res.data);
-
     }
-  }
+  };
 
-//   const handleFileChange = (event) => {
-//     setValues({
-//       ...values,
-//     })
-//     event.target.files[0];
-//   };
+  //   const handleFileChange = (event) => {
+  //     setValues({
+  //       ...values,
+  //     })
+  //     event.target.files[0];
+  //   };
 
   return (
     <MainCard>
@@ -144,7 +140,7 @@ function AddNhanVien() {
                 Email
               </label>
               <input
-              id="email"
+                id="email"
                 type="email"
                 className="form-control"
                 value={values.email}
@@ -156,7 +152,7 @@ function AddNhanVien() {
                 Địa Chỉ
               </label>
               <input
-              id="diaChi"
+                id="diaChi"
                 type="text"
                 className="form-control"
                 value={values.diaChi}
@@ -180,7 +176,7 @@ function AddNhanVien() {
                 Mật khẩu
               </label>
               <input
-              id="matKhau"
+                id="matKhau"
                 type="text"
                 className="form-control"
                 value={values.matKhau}
@@ -189,22 +185,22 @@ function AddNhanVien() {
             </div>
 
             <div className="mb-2">
-             <label  htmlFor="vaiTro">Vai Trò: </label>
-             <select
-             id="vaiTro"
-              className="form-select"
-              aria-label="Default select example"
-              value={values.vaiTro}
-              onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
-            >
-              <option>Chọn mã khách hàng</option>
-              {vaiTroS.map((d, i) => (
-                <option key={i} value={d.id}>
-                  {d.ten}
-                </option>
-              ))}
-            </select>
-          </div>
+              <label htmlFor="vaiTro">Vai Trò: </label>
+              <select
+                id="vaiTro"
+                className="form-select"
+                aria-label="Default select example"
+                value={values.vaiTro}
+                onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
+              >
+                <option>Chọn mã khách hàng</option>
+                {vaiTroS.map((d, i) => (
+                  <option key={i} value={d.id}>
+                    {d.ten}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="col-6">
               <label htmlFor="a" className="form-label">
@@ -223,9 +219,9 @@ function AddNhanVien() {
                   type="radio"
                   name="inlineRadioOptions"
                   id="inlineRadio1"
-                  value="0"
+                  value={values.trangThai}
                   checked={true}
-                  onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                  onChange={() => setValues({ ...values, trangThai: 0 })}
                 />
                 <label htmlFor="a" className="form-check-label">
                   Hoạt động
@@ -237,8 +233,8 @@ function AddNhanVien() {
                   type="radio"
                   name="inlineRadioOptions"
                   id="inlineRadio2"
-                  value="1"
-                  onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                  value={values.trangThai}
+                  onChange={() => setValues({ ...values, trangThai: 1 })}
                 />
                 <label htmlFor="a" className="form-check-label">
                   Không hoạt động
@@ -259,8 +255,6 @@ function AddNhanVien() {
 
 export default AddNhanVien;
 
-
-// import React, { useEffect, useState } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 // import { toast } from "react-toastify";
 // import axios from "axios";
@@ -278,7 +272,6 @@ export default AddNhanVien;
 // import Footer from "examples/Footer";
 // import { Button } from "react-bootstrap";
 // import { vaitro } from "service/ServiceNhanVien";
-
 
 // function AddNhanVien() {
 
@@ -299,8 +292,6 @@ export default AddNhanVien;
 //       trangThai: "",
 //     }
 //   );
-
-  
 
 //   const navigate = useNavigate();
 
@@ -339,7 +330,7 @@ export default AddNhanVien;
 //       <SoftBox py={3}>
 //         <SoftBox mb={3}>
 //         <Card >
-            
+
 //         <div className="body flex-grow-1 px-3">
 //             <form className="row g-3" onSubmit={handleSubmit}>
 
@@ -409,7 +400,7 @@ export default AddNhanVien;
 //               onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
 //             />
 //           </div>
-          
+
 //           <div className="mb-2">
 //             <label htmlFor="email">Mật Khẩu: </label>
 //             <input
