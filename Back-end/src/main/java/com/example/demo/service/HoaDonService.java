@@ -20,4 +20,6 @@ public interface HoaDonService {
 
     public HoaDon detailHD(UUID id);
 
+    public void updateKHHD(UUID id, String tenNguoiNhan,String soDienThoai,String diaChi);
+
 }

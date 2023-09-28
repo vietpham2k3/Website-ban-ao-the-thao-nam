@@ -6,6 +6,8 @@ import Loadable from 'ui-component/Loadable';
 import MauSac from 'views/mausac/mau-sac';
 import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
+import DonHang from 'views/donhang/don-hang';
+import DonHangCT from 'views/donhang/don-hang-chi-tiet';
 //chatlieu
 
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
@@ -53,9 +55,18 @@ const MainRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
+    //đơn hàng
     {
       path: '/don-hang',
-      element: <DashboardDefault />
+      element: <DonHang />
+    },
+    {
+      path: '/don-hang/print-excel',
+      element: <DonHang />
+    },
+    {
+      path: '/don-hang/chi-tiet/:id',
+      element: <DonHangCT />
     },
     {
       path: '/san-pham',
@@ -72,6 +83,7 @@ const MainRoutes = {
           path: 'chi-tiet-san-pham/detail/:id',
           element: <UpdateSanPham />
         },
+        //màu sắc
         {
           path: 'mau-sac',
           element: <MauSac />

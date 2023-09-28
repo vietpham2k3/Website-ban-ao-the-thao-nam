@@ -8,24 +8,22 @@ const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
 
-const detailMS = (id) => {
-  return axios.get(`/api/mau-sac/detail/` + id);
+const detailHD = (id) => {
+    return axios.get(`/api/hoa-don/detail/` + id)
+}
+
+const printExcel = (values) => {
+    return axios.get("/api/hoa-don/print-excel", values)
+}
+
+
+const updateKHDH = (id, values) => {
+  return axios.put(`/api/hoa-don/updateKH/` + id, values);
 };
 
-const postMS = (values) => {
-  return axios.post('/api/mau-sac/add', values);
-};
 
-const putMS = (id, values) => {
-  return axios.put(`/api/mau-sac/update/` + id, values);
-};
+// const searchMS = (key,trangThai, page) => {
+//     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
+//   };
 
-const deleteMS = (id, values) => {
-  return axios.put(`/api/mau-sac/delete/` + id, values);
-};
-
-const searchMS = (key, trangThai, page) => {
-  return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
-};
-
-export { getAllHD, getAllPageDH, searchMS, postMS, putMS, detailMS, deleteMS };
+export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD  }
