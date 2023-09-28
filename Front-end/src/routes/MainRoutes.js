@@ -19,8 +19,6 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 //chatlieu
 const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
-// utilities routing
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
@@ -37,6 +35,11 @@ const UpdateKhuyenMai = Loadable(lazy(() => import('views/khuyen-mai/update')));
 const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
 const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')));
 const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
+
+// Nhân Viên
+const NhanVien = Loadable(lazy(() => import('views/nhanvien/NhanVien')));
+const AddNhanVien = Loadable(lazy(() => import('views/nhanvien/addNhanVien')));
+const UpdateNhanVien = Loadable(lazy(() => import('views/nhanvien/UpdateNhanVien')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 const MainRoutes = {
@@ -151,10 +154,6 @@ const MainRoutes = {
       element: <UpdateKhuyenMai />
     },
 
-    {
-      path: '/nhan-vien',
-      element: <UtilsShadow />
-    },
     //Khách Hàng
     {
       path: '/khach-hang',
@@ -171,6 +170,24 @@ const MainRoutes = {
     {
       path: '/khach-hang/update/:id',
       element: <UpdateKhachHang />
+    },
+
+    //Nhân Viên
+    {
+      path: '/nhan-vien/add',
+      element: <AddNhanVien />
+    },
+    {
+      path: '/nhan-vien',
+      element: <NhanVien />
+    },
+    {
+      path: '/nhan-vien/detail/:id',
+      element: <UpdateNhanVien />
+    },
+    {
+      path: '/nhan-vien/update/:id',
+      element: <UpdateNhanVien />
     },
 
     //============//
