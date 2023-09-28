@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -187,4 +189,46 @@ public class ChiTietSanPhamController {
 
         return anhDTO;
     }
+
+    @DeleteMapping("/delete-img/{id}")
+    public ResponseEntity<?> deleteImg(@PathVariable UUID id) {
+        anhService.delete(id);
+        return ResponseEntity.ok("OK");
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody ChiTietSanPham chiTietSanPham) {
+        ChiTietSanPham sp = chiTietSanPhamService.detail(id);
+        SanPham spct = sanPhamRepository.detail(chiTietSanPham.getSanPham().getId());
+
+        SanPham sanPham = new SanPham().builder()
+                .ma(spct.getMa())
+                .ten(chiTietSanPham.getSanPham().getTen())
+                .moTa(chiTietSanPham.getSanPham().getMoTa())
+                .ngayTao(spct.getNgayTao())
+                .ngaySua(date)
+                .trangThai(1)
+                .build();
+
+        // Lưu sanPham vào cơ sở dữ liệu trước
+        sanPham = sanPhamRepository.add(sanPham);
+
+        chiTietSanPham.setId(id);
+        chiTietSanPham.setMa(sp.getMa());
+        chiTietSanPham.setNgayTao(sp.getNgayTao());
+        chiTietSanPham.setNgaySua(date);
+        chiTietSanPham.setSanPham(sanPham);
+        return ResponseEntity.ok(chiTietSanPhamService.add(chiTietSanPham));
+    }
+
+    @PutMapping("/update-tt/{id}")
+    public ResponseEntity<?> updatett(@PathVariable UUID id) {
+        chiTietSanPhamService.delete(id);
+        return ResponseEntity.ok("Thành công");
+    }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<?> search(@RequestParam(value = "key") String key, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+//        return ResponseEntity.ok(chiTietSanPhamService.search(key, page));
+//    }
 }

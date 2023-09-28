@@ -6,6 +6,8 @@ import com.example.demo.service.SanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
 
@@ -15,5 +17,10 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public SanPham add(SanPham sanPham) {
         return repository.save(sanPham);
+    }
+
+    @Override
+    public SanPham detail(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 }

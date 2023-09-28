@@ -12,4 +12,6 @@ public interface ChiTietSanPhamService {
     ChiTietSanPham add(ChiTietSanPham chiTietSanPham);
 
     ChiTietSanPham detail(UUID id);
+
+    void delete(UUID id);
 }

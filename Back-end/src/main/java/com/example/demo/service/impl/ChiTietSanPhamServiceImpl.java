@@ -32,4 +32,9 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     public ChiTietSanPham detail(UUID id) {
         return repository.findById(id).orElse(null);
     }
+
+    @Override
+    public void delete(UUID id) {
+        repository.delete(id);
+    }
 }

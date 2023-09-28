@@ -35,7 +35,6 @@ function DonHangCT() {
     }
   };
 
-
   const handleUpdate = async (event) => {
     event.preventDefault();
     await updateKH(id, values);
@@ -51,11 +50,11 @@ function DonHangCT() {
   useEffect(() => {
     detail(id);
   }, [id]);
-  
+
   useEffect(() => {
     setValues(hoaDon);
   }, [hoaDon]);
-  
+
   const detail = async (id) => {
     const res = await detailHD(id);
     if (res && res.data) {
@@ -159,8 +158,9 @@ function DonHangCT() {
                                 name="tenNguoiNhan"
                                 placeholder=""
                                 value={hoaDon.tenNguoiNhan}
-                                onChange={(e) => { setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value }) 
-                               }}
+                                onChange={(e) => {
+                                  setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
+                                }}
                                 required
                               />
 
@@ -179,7 +179,8 @@ function DonHangCT() {
                                 name="soDienThoai"
                                 placeholder=""
                                 value={hoaDon.soDienThoai}
-                                onChange={(e) => { setHoaDon({ ...hoaDon, soDienThoai: e.target.value }) 
+                                onChange={(e) => {
+                                  setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
                                 }}
                                 required
                                 pattern="^0\d\S*$"
@@ -200,7 +201,8 @@ function DonHangCT() {
                                 name="diaChi"
                                 placeholder=""
                                 value={hoaDon.diaChi}
-                                onChange={(e) => { setHoaDon({ ...hoaDon, diaChi: e.target.value }) 
+                                onChange={(e) => {
+                                  setHoaDon({ ...hoaDon, diaChi: e.target.value });
                                 }}
                                 required
                               ></textarea>

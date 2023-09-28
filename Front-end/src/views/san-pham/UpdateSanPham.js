@@ -10,7 +10,7 @@ import {
   getAllListLSP,
   getAllListMS,
   getAllListNSX,
-  postCTSP,
+  putCTSP,
   detailCTSP,
   listAnh,
   deleteAnh,
@@ -185,17 +185,17 @@ function UpdateSanPham() {
     getAllList();
   }, []);
 
-  const postctsp = async (value) => {
-    const res = await postCTSP(value);
+  const putctsp = async (idSP, value) => {
+    const res = await putCTSP(idSP, value);
     if (res) {
-      toast.success('Thêm thành công');
-      navigate('/san-pham/chi-tiet-san-pham/detail/' + res.data.id);
+      toast.success('Thành công');
+      navigate('/san-pham/chi-tiet-san-pham');
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await postctsp(values);
+    await putctsp(id, values);
   };
 
   const getAllList = async () => {

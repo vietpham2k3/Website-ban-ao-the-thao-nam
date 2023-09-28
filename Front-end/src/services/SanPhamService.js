@@ -9,7 +9,7 @@ const postCTSP = (values) => {
   return axios.post('/api/chi-tiet-san-pham/add', values);
 };
 
-const putCO = (id, values) => {
+const putCTSP = (id, values) => {
   return axios.put('/api/chi-tiet-san-pham/update/' + id, values);
 };
 
@@ -61,7 +61,7 @@ export {
   addAnh,
   postCTSP,
   deleteAnh,
-  putCO,
+  putCTSP,
   deleteCO,
   searchCO,
   detailCTSP,
