@@ -5,7 +5,8 @@ import { Card } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
-import { Link, useNavigate } from 'react-router-dom';
+import '../../scss/SanPham.scss';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { getAllCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
@@ -16,7 +17,6 @@ function SanPham() {
   const [totalPages, setTotalPages] = useState();
   // const [isShow, setIsShow] = useState(false);
   // const [dataDelete, setDataDelete] = useState({});
-  const navigate = useNavigate();
 
   useEffect(() => {
     getAll(0);
