@@ -21,7 +21,7 @@ const searchCO = (key, page) => {
   return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&page=${page}`);
 };
 
-const detailCO = (id) => {
+const detailCTSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/detail/${id}`);
 };
 
@@ -51,7 +51,7 @@ export {
   putCO,
   deleteCO,
   searchCO,
-  detailCO,
+  detailCTSP,
   getAllListCO,
   getAllListCL,
   getAllListMS,

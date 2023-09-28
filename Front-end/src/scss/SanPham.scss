@@ -98,3 +98,17 @@ select.form-select option[selected]::before {
   margin-right: 5px;
   background-color: red;
 }
+.col-6 {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-container label {
+  margin-right: 1rem;
+}

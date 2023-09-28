@@ -57,6 +57,11 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
     }
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detail(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(chiTietSanPhamService.detail(id));
+    }
+
     private byte[] convertBlobToBytes(Blob blob) throws IOException, SQLException {
         try (InputStream inputStream = blob.getBinaryStream()) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
