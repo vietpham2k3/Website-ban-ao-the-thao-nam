@@ -27,4 +27,3 @@ const updateKHDH = (id, values) => {
 //   };
 
 export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD  }
-

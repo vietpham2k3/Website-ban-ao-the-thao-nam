@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
@@ -431,6 +432,20 @@ function DonHang() {
         </Card>
       </MainCard>
     </div>
+=======
+//  React examples
+import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
+import Footer from 'examples/Footer';
+
+function DonHang() {
+  return (
+    <DashboardLayout>
+      <DashboardNavbar />
+
+      <Footer />
+    </DashboardLayout>
+>>>>>>> 62260c1350d93b724d55339814cfd3de4e703d93
   );
 }
 
