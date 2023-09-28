@@ -12,8 +12,8 @@ const detailHD = (id) => {
     return axios.get(`/api/hoa-don/detail/` + id)
 }
 
-const postMS = (values) => {
-    return axios.post("/api/mau-sac/add", values)
+const printExcel = (values) => {
+    return axios.get("/api/hoa-don/print-excel", values)
 }
 
 const putMS = (id, values) => {
@@ -25,4 +25,4 @@ const putMS = (id, values) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, postMS, putMS, detailHD  }
+export { getAllHD, getAllPageDH, printExcel, putMS, detailHD  }

@@ -1,5 +1,7 @@
 package com.example.demo.response;
 
+import com.example.demo.entity.HinhThucThanhToan;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,5 +13,6 @@ public interface HoaDonCustom {
     Double gettong_tien_sau_khi_giam();
     Integer gettrang_thai();
     Integer getloai_don();
+//    HinhThucThanhToan getHinhThucThanhToan();
     String getten();
 }

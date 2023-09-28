@@ -2,7 +2,7 @@
   "name": "berry-free-material-react-cra",
   "version": "3.3.2",
   "private": true,
-  "homepage": "https://berrydashboard.io/free",
+  "homepage": "https://berrydashboard.io/don-hang",
   "dependencies": {
     "@emotion/cache": "^11.9.3",
     "@emotion/react": "^11.9.3",
@@ -27,6 +27,8 @@
     "react-bootstrap": "^2.9.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
+    "react-input-color": "^4.0.1",
+    "react-modal": "^3.16.1",
     "react-paginate": "^8.2.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-redux": "^8.0.2",

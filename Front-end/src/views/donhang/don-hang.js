@@ -9,12 +9,11 @@ import { getAllPageDH } from 'services/ServiceDonHang';
 // import _ from 'lodash';
 import MainCard from 'ui-component/cards/MainCard';
 
-//  React examples
-
 function DonHang() {
   // const [filterStatus, setFilterStatus] = useState('');
   // const [currentPage, setCurrentPage] = useState(0);
 
+  //hien thi
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
 
@@ -31,6 +30,26 @@ function DonHang() {
       setTotalPages(res.data.totalPages);
     }
   };
+
+
+
+
+  //in hoa don
+
+  // const [values, setValues] = useState({});
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   setValues(values);
+  //   post(values);
+  // };
+
+  // const post = async (value) => {
+  //   const res = await printExcel(value);
+  //   if (res) {
+  //     toast.success('In hóa đơn thành công !');
+  //     navigate('/don-hang');
+  //   }
+  // };
 
   // const search = async (key, trangThai, page) => {
   //   setCurrentPage(page);
@@ -99,6 +118,27 @@ function DonHang() {
               </div>
             </div>
 
+            {/* <form className="export-form">
+              <button
+                onClick={handleSubmit}
+                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
+                data-toggle="tooltip"
+                title="In hóa đơn Excel"
+                className="shadow-button"
+                type="submit"
+                
+              >
+                <button
+                onClick={() => navigate(`/don-hang/print-excel`)}>
+                  <img  width="30px" height="30px" alt="" />
+                </button>
+                <span className="separator">|</span>
+                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
+                  In Excel
+                </span>
+              </button>
+            </form> */}
+
             {/* <div className="d-flex justify-content-between">
               <div className="search">
                 <input
@@ -164,7 +204,7 @@ function DonHang() {
               </div>
             </div> */}
 
-            <table style={{ textAlign: 'center' }} className="table table-hover">
+            <table style={{ textAlign: 'center', alignItems: 'center' }} className="table table-hover">
               <tr>
                 <th>#</th>
                 <th>Mã Đơn Hàng</th>
@@ -174,18 +214,17 @@ function DonHang() {
                 <th>Trạng Thái</th>
                 <th>Loại Đơn</th>
                 <th>Hình Thức Thanh Toán</th>
-                <th>Action</th>
               </tr>
               <tbody>
                 {data.map((d, i) => (
-                  <tr key={i}>
+                  <tr key={i} onClick={() => navigate(`/don-hang/chi-tiet/${d.id}`)}>
                     <td>{i + 1}</td>
                     <td>{d.ma}</td>
                     <td>{d.ten_nguoi_nhan}</td>
                     <td>{formatDate(d.ngay_tao)}</td>
                     <td>{convertToCurrency(d.tong_tien_sau_khi_giam)}</td>
                     <td
-                      style={{ fontSize: '14px', fontWeight: 'bold', display: 'flex', justifyContent: 'center' }}
+                      style={{ fontSize: '14px', fontWeight: 'bold', justifyContent: 'center', display: 'flex' }}
                       className="align-middle"
                     >
                       {d.trang_thai === 0 && (
@@ -215,7 +254,7 @@ function DonHang() {
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-success status-completed"
+                          className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
                           Đã xác nhận
                         </span>
@@ -247,7 +286,7 @@ function DonHang() {
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                         >
                           Chờ giao hàng
                         </span>
@@ -279,7 +318,7 @@ function DonHang() {
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-success status-completed"
+                          className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
                           Giao hàng thành công
                         </span>
@@ -311,7 +350,7 @@ function DonHang() {
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-success status-completed"
+                          className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
                           Thanh toán thành công
                         </span>
@@ -322,51 +361,50 @@ function DonHang() {
                         fontSize: '14px',
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        justifyItems: 'center'
+                        verticalAlign: 'middle'
                       }}
                       className="align-middle"
                     >
-                      {d.loai_don === 0 && (
-                        <span
-                          style={{
-                            width: '200px',
-                            pointerEvents: 'none',
-                            height: '30px',
-                            borderRadius: '20px',
-
-                            alignItems: 'center'
-                          }}
-                          className="btn btn-labeled shadow-button btn btn-dark status-completed"
-                        >
-                          Tại Quầy
-                        </span>
-                      )}
-                      {d.loai_don === 1 && (
-                        <span
-                          style={{
-                            width: '200px',
-                            pointerEvents: 'none',
-                            height: '30px',
-                            borderRadius: '20px',
-
-                            alignItems: 'center'
-                          }}
-                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
-                        >
-                          Đặt Hàng Online
-                        </span>
-                      )}
+                      <div style={{ display: 'inline-block', textAlign: 'left' }}>
+                        {d.loai_don === 0 && (
+                          <span
+                            style={{
+                              width: '200px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              justifyItems: 'center',
+                              alignItems: 'center',
+                              verticalAlign: 'middle'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-dark status-completed"
+                          >
+                            Tại Quầy
+                          </span>
+                        )}
+                        {d.loai_don === 1 && (
+                          <span
+                            style={{
+                              width: '200px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              justifyItems: 'center',
+                              verticalAlign: 'middle',
+                              alignItems: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                          >
+                            Đặt Hàng Online
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td>{d.ten}</td>
-                    <td>
-                      <button
-                        onClick={() => navigate(`/don-hang/chi-tiet/${d.id}`)}
-                        style={{ color: '#0c5460' }}
-                        className="fa-solid fa-circle-info fa-shake fa-lg fa-khenh"
-                      ></button>
-                    </td>
                   </tr>
                 ))}
               </tbody>
