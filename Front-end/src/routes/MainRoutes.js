@@ -118,7 +118,7 @@ const MainRoutes = {
         },
         {
           path: 'kich-co/add',
-          element: <AddKichCo/>
+          element: <AddKichCo />
         },
         {
           path: 'kich-co/update/:id',
@@ -127,6 +127,10 @@ const MainRoutes = {
         {
           path: 'kich-co/delete/:id',
           element: <KichCo />
+        },
+        {
+          path: 'kich-co/detail/:id',
+          element: <UpdateKC />
         },
         //co ao
         {
@@ -195,7 +199,6 @@ const MainRoutes = {
       ]
     },
 
-    
     //khuyen mai
     {
       path: '/voucher',
