@@ -8,13 +8,14 @@ import {
   getAllListCL,
   getAllListCO,
   getAllListLSP,
-  getAllListMS,
   getAllListNSX,
   putCTSP,
   detailCTSP,
   listAnh,
   deleteAnh,
-  addAnh
+  addAnh,
+  getAllMSKCCTSP,
+  addAllMSKCCTSP
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
@@ -24,17 +25,20 @@ import { useNavigate, useParams } from 'react-router';
 import { postCreate } from 'services/ServiceChatLieu';
 import { postCreate as postCa } from 'services/ServiceCoAo';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
+import AddMSKCCTSP from './AddMSKCCTSP';
 import { useRef } from 'react';
 import defaultImage from '../../assets/images/default-placeholder.png';
+import { Table } from 'react-bootstrap';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
-  const [listMS, setListMS] = useState([]);
   const [listLSP, setListLSP] = useState([]);
   const [listCA, setListCA] = useState([]);
+  const [listMSKCCTSP, setListMSKCCTSP] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
+  const [show, setShow] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
@@ -50,9 +54,6 @@ function UpdateSanPham() {
       ten: '',
       moTa: ''
     },
-    mauSac: {
-      id: ''
-    },
     loaiSanPham: {
       id: ''
     },
@@ -66,6 +67,41 @@ function UpdateSanPham() {
     giaBan: '',
     trangThai: 1
   });
+
+  const [valuesMSKCCTSP, setValuesMSKCCTSP] = useState({
+    chiTietSanPham: {
+      id: id
+    },
+    kichCo: {
+      id: ''
+    },
+    mauSac: {
+      id: ''
+    },
+    soLuong: ''
+  });
+
+  console.log(valuesMSKCCTSP);
+
+  const addAllByIdCTSP = async (value) => {
+    const res = await addAllMSKCCTSP(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      getAllByIdCTSP(id);
+    }
+  };
+
+  const handleAdd = (event) => {
+    event.preventDefault();
+    addAllByIdCTSP(valuesMSKCCTSP);
+  };
+
+  const getAllByIdCTSP = async (id) => {
+    const res = await getAllMSKCCTSP(id);
+    if (res) {
+      setListMSKCCTSP(res.data);
+    }
+  };
 
   const anh = async (value) => {
     const res = await addAnh(value);
@@ -151,6 +187,7 @@ function UpdateSanPham() {
   useEffect(() => {
     detail(id);
     getAllAnh(id);
+    getAllByIdCTSP(id);
   }, [id]);
 
   const detail = async (idCTSP) => {
@@ -200,13 +237,11 @@ function UpdateSanPham() {
 
   const getAllList = async () => {
     const resCL = await getAllListCL();
-    const resMS = await getAllListMS();
     const resLSP = await getAllListLSP();
     const resCA = await getAllListCO();
     const resNSX = await getAllListNSX();
-    if (resCL || resMS || resLSP || resCA || resNSX) {
+    if (resCL || resLSP || resCA || resNSX) {
       setListCL(resCL.data);
-      setListMS(resMS.data);
       setListCA(resCA.data);
       setListLSP(resLSP.data);
       setListNSX(resNSX.data);
@@ -315,33 +350,9 @@ function UpdateSanPham() {
             </select>
           </div>
           <div className="col-6">
-            <label className="form-label me-3" htmlFor="trang-thai4">
-              Màu sắc: <i className="fa-solid fa-plus"></i>
-            </label>{' '}
-            <select
-              className="form-select"
-              aria-label="Default select example"
-              onChange={(e) => {
-                setValues({
-                  ...values,
-                  mauSac: {
-                    id: e.target.value
-                  }
-                });
-              }}
-            >
-              {listMS.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.ten}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-4">
             <label className="form-label me-3" htmlFor="trang-thai5">
               Loại sản phẩm: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
             </label>
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
@@ -361,7 +372,7 @@ function UpdateSanPham() {
               ))}
             </select>
           </div>
-          <div className="col-4">
+          <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6s">
               Cổ áo:{' '}
               <span
@@ -379,7 +390,6 @@ function UpdateSanPham() {
                 <i className="fa-solid fa-plus"></i>
               </span>
             </label>{' '}
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
@@ -399,11 +409,10 @@ function UpdateSanPham() {
               ))}
             </select>
           </div>
-          <div className="col-4">
+          <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6">
               Nhà sản xuất: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
             </label>{' '}
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
@@ -443,6 +452,44 @@ function UpdateSanPham() {
           values={valuesCL}
           setValues={setValuesCL}
         />
+      </MainCard>
+      <MainCard className="my-3">
+        <div className="row">
+          <div className="col-10 d-flex align-items-center">
+            <h2>Thuộc tính</h2>
+          </div>
+          <div className="col-2 d-flex justify-content-end align-items-center">
+            <button type="submit" className="btn btn-primary" onClick={() => setShow(true)}>
+              Thêm thuộc tính
+            </button>
+          </div>
+          <div className="col-12">
+            <Table striped hover className="my-4">
+              <thead>
+                <tr className="text-center">
+                  <th>#</th>
+                  <th>Màu sắc</th>
+                  <th>Kích cỡ</th>
+                  <th>Số lượng</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listMSKCCTSP.map((d, i) => (
+                  <tr key={d.id} className="text-center">
+                    <td>{i + 1}</td>
+                    <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                    </td>
+                    <td>{d.kichCo.ten}</td>
+                    <td>{d.soLuong}</td>
+                    <td>Xoá</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </div>
       </MainCard>
       <MainCard className="my-3">
         <form onSubmit={handleAddAnh}>
@@ -519,6 +566,13 @@ function UpdateSanPham() {
           </div>
         </form>
       </MainCard>
+      <AddMSKCCTSP
+        show={show}
+        onHide={() => setShow(false)}
+        handleSubmit={handleAdd}
+        values={valuesMSKCCTSP}
+        setValues={setValuesMSKCCTSP}
+      />
     </div>
   );
 }

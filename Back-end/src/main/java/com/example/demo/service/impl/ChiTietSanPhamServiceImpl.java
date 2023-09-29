@@ -24,6 +24,12 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public Page<ChiTietSanPham> search(String key, Integer trangThai, Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return repository.search(key, trangThai, pageable);
+    }
+
+    @Override
     public ChiTietSanPham add(ChiTietSanPham chiTietSanPham) {
         return repository.save(chiTietSanPham);
     }

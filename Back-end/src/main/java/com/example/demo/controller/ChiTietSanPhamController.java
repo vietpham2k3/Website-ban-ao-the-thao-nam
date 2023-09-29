@@ -3,10 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.dto.AnhDTO;
 import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.MauSac_KichCo_CTSP;
 import com.example.demo.entity.SanPham;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.MauSac_KichCo_CTSPServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,13 +51,16 @@ public class ChiTietSanPhamController {
     @Autowired
     private SanPhamServiceImpl sanPhamRepository;
 
+    @Autowired
+    private MauSac_KichCo_CTSPServiceImpl mauSac_kichCo_ctspService;
+
     private Date date = new Date();
 
     @Autowired
     private AnhServiceImpl anhService;
 
     @GetMapping("getAll")
-    public ResponseEntity<?> hienThiPage(@RequestParam(value = "page",defaultValue = "0") Integer page){
+    public ResponseEntity<?> hienThiPage(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
     }
 
@@ -67,7 +72,7 @@ public class ChiTietSanPhamController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable("id") UUID id){
+    public ResponseEntity<?> detail(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(chiTietSanPhamService.detail(id));
     }
 
@@ -227,8 +232,21 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("Thành công");
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<?> search(@RequestParam(value = "key") String key, @RequestParam(value = "page", defaultValue = "0") Integer page) {
-//        return ResponseEntity.ok(chiTietSanPhamService.search(key, page));
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key,
+                                    @RequestParam(value = "trangThai", required = false) Integer trangThai,
+                                    @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, page));
+    }
+
+    @GetMapping("/getAllMSKCCTSP/{id}")
+    public ResponseEntity<?> getAllMS_KC_CTSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(mauSac_kichCo_ctspService.getAllById(id));
+    }
+
+    @PostMapping("/addAllMSKCCTSP")
+    public ResponseEntity<?> addAllMS_KC_CTSP(@RequestBody MauSac_KichCo_CTSP mauSac_kichCo_ctsp) {
+        return ResponseEntity.ok(mauSac_kichCo_ctspService.add(mauSac_kichCo_ctsp));
+    }
+
 }

@@ -49,11 +49,6 @@ public class ChiTietSanPham {
     private SanPham sanPham;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_ms", referencedColumnName = "id")
-    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private MauSac mauSac;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_lsp", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private LoaiSanPham loaiSanPham;

@@ -55,8 +55,17 @@ const listAnh = (id) => {
 const deleteAnh = (id) => {
   return axios.delete(`/api/chi-tiet-san-pham/delete-img/${id}`);
 };
+const getAllMSKCCTSP = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllMSKCCTSP/${id}`);
+};
+const addAllMSKCCTSP = (values) => {
+  return axios.post('/api/chi-tiet-san-pham/addAllMSKCCTSP', values);
+};
+
 export {
   getAllCTSP,
+  addAllMSKCCTSP,
+  getAllMSKCCTSP,
   listAnh,
   addAnh,
   postCTSP,
