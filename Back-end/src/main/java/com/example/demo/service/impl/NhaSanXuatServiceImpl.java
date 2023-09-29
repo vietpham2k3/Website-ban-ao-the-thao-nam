@@ -4,9 +4,13 @@ import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.repository.NhaSanXuatRepository;
 import com.example.demo.service.NhaSanXuatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class NhaSanXuatServiceImpl implements NhaSanXuatService {
@@ -15,8 +19,38 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     private NhaSanXuatRepository repository;
 
     @Override
-    public List<NhaSanXuat> getAll() {
+    public List<NhaSanXuat> getAllNSX() {
         return repository.findAll();
     }
 
+    @Override
+    public Page<NhaSanXuat> pageNSX(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @Override
+    public Page<NhaSanXuat> pageSearchNSX(String key, Integer trangThai,  Pageable pageable) {
+        return repository.searchPageNSX(key,trangThai ,pageable);
+    }
+
+    @Override
+    public NhaSanXuat add(NhaSanXuat nhaSanXuat) {
+        nhaSanXuat.setTen(nhaSanXuat.getTen());
+        return repository.save(nhaSanXuat);
+    }
+
+    @Override
+    public NhaSanXuat detail(UUID id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public NhaSanXuat xoa(UUID id) {
+        NhaSanXuat nhaSanXuat = repository.findById(id).orElse(null);
+        nhaSanXuat.setTen(nhaSanXuat.getMa());
+        nhaSanXuat.setNgayTao(nhaSanXuat.getNgayTao());
+        nhaSanXuat.setNgaySua(new Date());
+        nhaSanXuat.setTrangThai(1);
+        return repository.save(nhaSanXuat);
+    }
 }
