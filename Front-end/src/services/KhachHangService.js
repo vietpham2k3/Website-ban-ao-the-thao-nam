@@ -13,7 +13,7 @@ const addKH = (values) => {
 };
 
 const deleteKH = (id) => {
-  return axios.put(`http://localhost:8080/api/khach-hang/delete/${id}`);
+  return axios.put(`/api/khach-hang/delete/${id}`);
 };
 
 const updateKH = (id, values) => {

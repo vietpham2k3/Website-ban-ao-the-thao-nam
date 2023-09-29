@@ -30,7 +30,7 @@ function AddKhachHang() {
     email: '',
     ngaySinh: '',
     matKhau: '',
-    trangThai: '1'
+    trangThai: 1
   });
 
   const handleSubmit = async (event) => {
@@ -159,7 +159,7 @@ function AddKhachHang() {
                   id="inlineRadio1"
                   value="1"
                   checked={true}
-                  onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                  onChange={() => setValues({ ...values, trangThai: 1 })}
                 />
                 <label htmlFor="a" className="form-check-label">
                   Hoạt động
@@ -172,7 +172,7 @@ function AddKhachHang() {
                   name="inlineRadioOptions"
                   id="inlineRadio2"
                   value="0"
-                  onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
+                  onChange={() => setValues({ ...values, trangThai: 0 })}
                 />
                 <label htmlFor="a" className="form-check-label">
                   Không hoạt động

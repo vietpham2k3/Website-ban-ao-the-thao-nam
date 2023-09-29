@@ -126,53 +126,57 @@ const CoAo = () => {
                 />
               </div>
               <div style={{ marginRight: 50 }}>
-                <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
                   Trạng Thái:
-                </span>
+                </label>
 
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="inlineRadio1"
+                    id="all"
                     checked={filterStatus === ''}
                     onChange={() => {
                       setFilterStatus('');
                       search('', '', 0);
                     }}
                   />
-                  <span style={{ marginLeft: 10 }} className="form-check-label">
+                  <lable htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
                     Tất Cả
-                  </span>
+                  </lable>
                 </div>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="inlineRadio1"
+                    id="inactive"
                     checked={filterStatus === 0}
                     onChange={() => {
                       setFilterStatus(0);
                       search('', 0, 0);
                     }}
                   />
-                  <span className="form-check-label">Đang kích hoạt</span>
+                  <label htmlFor="inactive" className="form-check-label">
+                    Đang kích hoạt
+                  </label>
                 </div>
                 <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="inlineRadio2"
+                    id="active"
                     checked={filterStatus === 1}
                     onChange={() => {
                       setFilterStatus(1);
                       search('', 1, 0);
                     }}
                   />
-                  <span className="form-check-label">Ngừng kích hoạt</span>
+                  <label htmlFor="active" className="form-check-label">
+                    Ngừng kích hoạt
+                  </label>
                 </div>
               </div>
 

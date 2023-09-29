@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,6 +35,7 @@ public class Anh {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ctsp", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private ChiTietSanPham chiTietSanPham;
 
     @Column(name = "ma")

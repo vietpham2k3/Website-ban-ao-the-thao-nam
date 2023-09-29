@@ -6,6 +6,8 @@ import Loadable from 'ui-component/Loadable';
 import MauSac from 'views/mausac/mau-sac';
 import AddMauSac from 'views/mausac/addMS';
 import UpdateMS from 'views/mausac/updateMS';
+import DonHang from 'views/donhang/don-hang';
+import DonHangCT from 'views/donhang/don-hang-chi-tiet';
 //chatlieu
 
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
@@ -17,13 +19,14 @@ import NhaSanXuat from 'views/nha-san-xuat/NSX';
 import AddNSX from 'views/nha-san-xuat/NSXadd';
 import UpdateNSX from 'views/nha-san-xuat/NSXupdate';
 
+//
+import AddKichCo from 'views/kich-co/addKichCo';
+
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 //chatlieu
 const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
-// utilities routing
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 
 // Sản phẩm
 const ChiTietSanPham = Loadable(lazy(() => import('views/san-pham/SanPham')));
@@ -41,14 +44,39 @@ const KhachHang = Loadable(lazy(() => import('views/khach-hang/index')));
 const AddKhachHang = Loadable(lazy(() => import('views/khach-hang/addKhachHang')));
 const UpdateKhachHang = Loadable(lazy(() => import('views/khach-hang/UpdateKhachHang')));
 
+// Nhân Viên
+const NhanVien = Loadable(lazy(() => import('views/nhanvien/NhanVien')));
+const AddNhanVien = Loadable(lazy(() => import('views/nhanvien/addNhanVien')));
+const UpdateNhanVien = Loadable(lazy(() => import('views/nhanvien/UpdateNhanVien')));
+
 // ==============================|| MAIN ROUTING ||============================== //
+
+//Loại Sản Phẩm
+const LoaiSanPham = Loadable(lazy(() => import('views/loaisanpham/loaisanpham')));
+const UpdateLSP = Loadable(lazy(() => import('views/loaisanpham/UpdateLSP')));
+const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
+// ==============================|| MAIN ROUTING ||============================== //
+
+// kich co
+const KichCo = Loadable(lazy(() => import('views/kich-co/KichCo')));
+const UpdateKC = Loadable(lazy(() => import('views/kich-co/UpdateKichCo')));
+
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
+    //đơn hàng
     {
       path: '/don-hang',
-      element: <DashboardDefault />
+      element: <DonHang />
+    },
+    {
+      path: '/don-hang/print-excel',
+      element: <DonHang />
+    },
+    {
+      path: '/don-hang/chi-tiet/:id',
+      element: <DonHangCT />
     },
     {
       path: '/san-pham',
@@ -65,6 +93,7 @@ const MainRoutes = {
           path: 'chi-tiet-san-pham/detail/:id',
           element: <UpdateSanPham />
         },
+        //màu sắc
         {
           path: 'mau-sac',
           element: <MauSac />
@@ -85,9 +114,26 @@ const MainRoutes = {
           path: 'mau-sac/delete/:id',
           element: <MauSac />
         },
+        //kichco
         {
           path: 'kich-co',
-          element: <DashboardDefault />
+          element: <KichCo />
+        },
+        {
+          path: 'kich-co/add',
+          element: <AddKichCo />
+        },
+        {
+          path: 'kich-co/update/:id',
+          element: <UpdateKC />
+        },
+        {
+          path: 'kich-co/delete/:id',
+          element: <KichCo />
+        },
+        {
+          path: 'kich-co/detail/:id',
+          element: <UpdateKC />
         },
         //co ao
         {
@@ -130,9 +176,12 @@ const MainRoutes = {
           path: 'chat-lieu/delete/:id',
           element: <ChatLieu />
         },
+
+        //Loại Sản Phẩm
         {
           path: 'loai-san-pham',
-          element: <DashboardDefault />
+
+          element: <LoaiSanPham />
         },
         //Nha San Xuat
         {
@@ -150,9 +199,27 @@ const MainRoutes = {
         {
           path: 'nha-san-xuat/update/:id',
           element: <UpdateNSX />
+        },
+        {
+          path: 'loai-san-pham/add',
+          element: <AddLSP />
+        },
+        {
+          path: 'loai-san-pham/detail/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/update/:id',
+          element: <UpdateLSP />
+        },
+        {
+          path: 'loai-san-pham/delete/:id',
+          element: <LoaiSanPham />
         }
+        //====================
       ]
     },
+
     //khuyen mai
     {
       path: '/voucher',
@@ -171,10 +238,6 @@ const MainRoutes = {
       element: <UpdateKhuyenMai />
     },
 
-    {
-      path: '/nhan-vien',
-      element: <UtilsShadow />
-    },
     //Khách Hàng
     {
       path: '/khach-hang',
@@ -193,10 +256,32 @@ const MainRoutes = {
       element: <UpdateKhachHang />
     },
 
+    //Nhân Viên
+    {
+      path: '/nhan-vien/add',
+      element: <AddNhanVien />
+    },
+    {
+      path: '/nhan-vien',
+      element: <NhanVien />
+    },
+    {
+      path: '/nhan-vien/detail/:id',
+      element: <UpdateNhanVien />
+    },
+    {
+      path: '/nhan-vien/update/:id',
+      element: <UpdateNhanVien />
+    },
+
     //============//
     {
       path: '/thong-ke',
       element: <UpdateKhachHang />
+    },
+    {
+      path: '/thong-ke',
+      element: <DashboardDefault />
     }
   ]
 };

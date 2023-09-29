@@ -23,7 +23,7 @@ const deleteCL = (id, ma) => {
 };
 
 const searchCL = (key, trangThai, page) => {
-  return axios.get(`/api/chatlieu/serach?trangthai=${trangThai}&key=${key}&page=${page}`);
+  return axios.get(`/api/chatlieu/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
 export { fetchAll, detailCL, fetchAllList, postCreate, putUpdateCL, deleteCL, searchCL };

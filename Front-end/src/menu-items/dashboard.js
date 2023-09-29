@@ -13,7 +13,7 @@ const dashboard = {
   children: [
     {
       id: 'default',
-      title: 'Quản lý hoá đơn',
+      title: 'Quản lý đơn hàng',
       type: 'item',
       url: '/don-hang',
       icon: icons.IconDashboard,

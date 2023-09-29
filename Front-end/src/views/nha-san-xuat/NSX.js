@@ -39,9 +39,9 @@ function NhaSanXuat() {
     }
   };
 
-  const search = async (key, trangThai,diaChi, page) => {
+  const search = async (key, trangThai, diaChi, page) => {
     setCurrentPage(page);
-    const res = await searchNSX(key, trangThai,diaChi, page);
+    const res = await searchNSX(key, trangThai, diaChi, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
