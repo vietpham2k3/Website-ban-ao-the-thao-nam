@@ -26,7 +26,7 @@ const deleteKC = (id, ma) => {
 };
 
 const searchKC = (key, trangThai, page) => {
-  return axios.get(`/api/kich-co/serach?trangthai=${trangThai}&key=${key}&page=${page}`);
+  return axios.get(`/api/kich-co/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
 export { fetchAll, detailKC, fetchAllList, postCreate, putUpdateKC, deleteKC, searchKC ,fetchAllCTSP};

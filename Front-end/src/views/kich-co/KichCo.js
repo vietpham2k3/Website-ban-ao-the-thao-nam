@@ -188,7 +188,7 @@ const KichCo = () => {
                 <th>#</th>
                 <th>Mã</th>
                 <th>Tên</th>
-                <th>Mã Sản Phẩm</th>
+                {/* <th>Mã Sản Phẩm</th> */}
                 <th>Ngày Tạo</th>
                 <th>Ngày Sửa</th>
                 <th>Trạng Thái</th>
@@ -200,7 +200,6 @@ const KichCo = () => {
                     <td>{i + 1}</td>
                     <td> {d.ma}</td>
                     <td>{d.ten}</td>
-                    <td> {d.chiTietSanPham.ma}</td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>

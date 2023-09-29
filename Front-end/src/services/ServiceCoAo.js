@@ -23,7 +23,7 @@ const deleteCA = (id, ma) => {
 };
 
 const searchCA = (key, trangThai, page) => {
-  return axios.get(`/api/co-ao/serach?trangthai=${trangThai}&key=${key}&page=${page}`);
+  return axios.get(`/api/co-ao/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
 export { fetchAll, detailCA, fetchAllList, postCreate, putUpdateCA, deleteCA, searchCA };
