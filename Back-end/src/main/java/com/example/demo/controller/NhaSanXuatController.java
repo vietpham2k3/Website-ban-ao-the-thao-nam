@@ -1,12 +1,23 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.service.impl.NhaSanXuatServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -16,8 +27,45 @@ public class NhaSanXuatController {
     @Autowired
     private NhaSanXuatServiceImpl service;
 
-    @GetMapping("/getAll")
+    @GetMapping("/hien-thi")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(service.getAllNSX());
+    }
+
+    @GetMapping("/hien-thi-page")
+    public ResponseEntity<?> hienThiPage(@RequestParam (defaultValue = "0") Integer page){
+        Pageable pageable = PageRequest.of(page,5);
+        return ResponseEntity.ok(service.pageNSX(pageable));
+    }
+
+    @GetMapping("/hien-thi-page-search")
+    public ResponseEntity<?> hienThiPageSearch(String key, Integer trangThai, @RequestParam (defaultValue = "0") Integer page){
+        Pageable pageable = PageRequest.of(page,5);
+        return ResponseEntity.ok(service.pageSearchNSX(key,trangThai, pageable));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody NhaSanXuat nhaSanXuat){
+        nhaSanXuat.setNgayTao(new Date());
+        return ResponseEntity.ok(service.add(nhaSanXuat));
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detail(@PathVariable UUID id){
+        return ResponseEntity.ok(service.detail(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody NhaSanXuat nhaSanXuat){
+        nhaSanXuat.setId(id);
+        nhaSanXuat.setNgayTao(nhaSanXuat.getNgayTao());
+        nhaSanXuat.setNgaySua(new Date());
+        return ResponseEntity.ok(service.add(nhaSanXuat));
+    }
+
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id, @RequestBody NhaSanXuat nhaSanXuat){
+        nhaSanXuat.setId(id);
+        return ResponseEntity.ok(service.xoa(id));
     }
 }

@@ -1,66 +1,54 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// bosstrap
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import { Card } from '@mui/material';
-import '../../scss/SanPham.scss';
-import { fetchAllList, searchKC } from 'services/KichCoService';
-import { deleteKC } from 'services/KichCoService';
 import { useNavigate } from 'react-router-dom';
+
+import { getAllPageNSX, searchNSX, deleteNSX } from 'services/NhaSanXuatService';
+
+// import ConfirmDelete from './ConfirmDelete';
 import _ from 'lodash';
 import MainCard from 'ui-component/cards/MainCard';
 
-// Soft UI Dashboard React compone  nts
+//  React examples
 
-// import AddChatLieu from './addchatlieu';
-
-const KichCo = () => {
+function NhaSanXuat() {
   const [filterStatus, setFilterStatus] = useState('');
+
   const [currentPage, setCurrentPage] = useState(0);
+
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const navigate = useNavigate();
-  // const [isShow, setIsShow] = useState(false);
   const [dataDelete, setDataDelete] = useState({
     ma: ''
   });
-
-  console.log(data);
 
   useEffect(() => {
     getAll(0);
     setDataDelete();
   }, []);
 
-  // const handleClose = () => {
-  //   setIsShow(false);
-  // };
-
-  // const handleDelete = (id) => {
-  //   setIsShow(true);
-  //   setDataDelete(id);
-  // };
+  const navigate = useNavigate();
 
   const getAll = async (page) => {
     setCurrentPage(page);
-    const res = await fetchAllList(page);
+    const res = await getAllPageNSX(page);
     if (res && res.data) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
-      console.log(data);
     }
   };
 
-  const search = async (key, trangThai, page) => {
-    const res = await searchKC(key, trangThai, page);
+  const search = async (key, trangThai, diaChi, page) => {
+    setCurrentPage(page);
+    const res = await searchNSX(key, trangThai, diaChi, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearchKC = _.debounce(async (e) => {
+  const handleSearchNSX = _.debounce(async (e) => {
     let term = e.target.value;
     if (term || filterStatus !== 0) {
       search(term, filterStatus, currentPage);
@@ -68,6 +56,7 @@ const KichCo = () => {
       search('', 0, currentPage);
     }
   }, 100);
+
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
     if (filterStatus === '') {
@@ -77,10 +66,8 @@ const KichCo = () => {
     }
   };
 
-  // const { id } = useParams();
-
   const del = async (id, values) => {
-    const res = await deleteKC(id, values);
+    const res = await deleteNSX(id, values);
     if (res) {
       toast.success('Xóa thành công !');
       getAll(0);
@@ -104,6 +91,7 @@ const KichCo = () => {
 
     const hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
+    // const seconds = dateObject.getSeconds();
 
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
 
@@ -122,77 +110,69 @@ const KichCo = () => {
                   type="text"
                   className="input-search"
                   placeholder=" Nhập tên, mã màu cần tìm..."
-                  onChange={handleSearchKC}
+                  onChange={handleSearchNSX}
                 />
               </div>
               <div style={{ marginRight: 50 }}>
-                <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
                   Trạng Thái:
-                </label>
+                </span>
 
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="all"
                     checked={filterStatus === ''}
                     onChange={() => {
                       setFilterStatus('');
                       search('', '', 0);
                     }}
                   />
-                  <lable htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
+                  <span style={{ marginLeft: 10 }} className="form-check-label">
                     Tất Cả
-                  </lable>
+                  </span>
                 </div>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="inactive"
                     checked={filterStatus === 0}
                     onChange={() => {
                       setFilterStatus(0);
                       search('', 0, 0);
                     }}
                   />
-                  <label htmlFor="inactive" className="form-check-label">
-                    Đang kích hoạt
-                  </label>
+                  <span className="form-check-label">Đang kích hoạt</span>
                 </div>
                 <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions"
-                    id="active"
                     checked={filterStatus === 1}
                     onChange={() => {
                       setFilterStatus(1);
                       search('', 1, 0);
                     }}
                   />
-                  <label htmlFor="active" className="form-check-label">
-                    Ngừng kích hoạt
-                  </label>
+                  <span className="form-check-label">Ngừng kích hoạt</span>
                 </div>
               </div>
 
               <div className="d-flex justify-content-end">
-                <button onClick={() => navigate('/san-pham/kich-co/add')} className="btn btn-primary ">
+                <button onClick={() => navigate('/san-pham/nha-san-xuat/add')} className="btn btn-primary ">
                   Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
                 </button>
               </div>
             </div>
 
-            <table style={{ textAlign: 'center' }} className="table table-hover">
+            <table style={{ textAlign: 'center', marginTop: 50 }} className="table table-hover">
               <tr>
                 <th>#</th>
-                <th>Mã</th>
-                <th>Tên</th>
-                {/* <th>Mã Sản Phẩm</th> */}
+                <th>Mã NSX</th>
+                <th>Tên NSX</th>
                 <th>Ngày Tạo</th>
                 <th>Ngày Sửa</th>
                 <th>Trạng Thái</th>
@@ -202,14 +182,17 @@ const KichCo = () => {
                 {data.map((d, i) => (
                   <tr key={i}>
                     <td>{i + 1}</td>
-                    <td> {d.ma}</td>
-                    <td>{d.ten}</td>
+                    <td>
+                      {' '}
+                      <span className="color-code">{d.ma}</span>
+                    </td>
+                    <td className="color-code">{d.ten}</td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
                       <button
-                        onClick={() => navigate(`/san-pham/kich-co/detail/${d.id}`)}
+                        onClick={() => navigate(`/san-pham/nha-san-xuat/detail/${d.id}`)}
                         style={{ color: 'aqua' }}
                         className="fa-regular fa-pen-to-square fa-lg fa-khenh"
                       ></button>
@@ -243,19 +226,11 @@ const KichCo = () => {
               containerClassName="pagination justify-content-center"
               activeClassName="active"
             />
-
-            {/* <ConfirmDelete
-          show={isShow}
-          handleClose={handleClose}
-          dataDelete={dataDelete}
-          getAll={getAll}
-        >
-        </ConfirmDelete> */}
           </div>
         </Card>
       </MainCard>
     </div>
   );
-};
+}
 
-export default KichCo;
+export default NhaSanXuat;

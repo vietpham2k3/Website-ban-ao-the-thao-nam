@@ -126,7 +126,7 @@ const CoAo = () => {
                 />
               </div>
               <div style={{ marginRight: 50 }}>
-                <label  htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
                   Trạng Thái:
                 </label>
 
@@ -142,7 +142,7 @@ const CoAo = () => {
                       search('', '', 0);
                     }}
                   />
-                  <lable  htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
+                  <lable htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
                     Tất Cả
                   </lable>
                 </div>
@@ -158,9 +158,11 @@ const CoAo = () => {
                       search('', 0, 0);
                     }}
                   />
-                  <label htmlFor="inactive" className="form-check-label">Đang kích hoạt</label>
+                  <label htmlFor="inactive" className="form-check-label">
+                    Đang kích hoạt
+                  </label>
                 </div>
-                <div  style={{ marginLeft: 10 }} className="form-check form-check-inline">
+                <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
@@ -172,7 +174,9 @@ const CoAo = () => {
                       search('', 1, 0);
                     }}
                   />
-                  <label htmlFor="active" className="form-check-label">Ngừng kích hoạt</label>
+                  <label htmlFor="active" className="form-check-label">
+                    Ngừng kích hoạt
+                  </label>
                 </div>
               </div>
 

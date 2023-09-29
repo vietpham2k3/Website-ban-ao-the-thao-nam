@@ -15,6 +15,9 @@ import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
 import AddCoAo from 'views/co-ao/addCoAo';
 import UpdateCA from 'views/co-ao/UpdateCoAo';
 import CoAo from 'views/co-ao/coAo';
+import NhaSanXuat from 'views/nha-san-xuat/NSX';
+import AddNSX from 'views/nha-san-xuat/NSXadd';
+import UpdateNSX from 'views/nha-san-xuat/NSXupdate';
 
 //
 import AddKichCo from 'views/kich-co/addKichCo';
@@ -177,7 +180,25 @@ const MainRoutes = {
         //Loại Sản Phẩm
         {
           path: 'loai-san-pham',
+
           element: <LoaiSanPham />
+        },
+        //Nha San Xuat
+        {
+          path: 'nha-san-xuat',
+          element: <NhaSanXuat />
+        },
+        {
+          path: 'nha-san-xuat/add',
+          element: <AddNSX />
+        },
+        {
+          path: 'nha-san-xuat/detail/:id',
+          element: <UpdateNSX />
+        },
+        {
+          path: 'nha-san-xuat/update/:id',
+          element: <UpdateNSX />
         },
         {
           path: 'loai-san-pham/add',
