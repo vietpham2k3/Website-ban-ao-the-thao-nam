@@ -20,7 +20,7 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public List<NhaSanXuat> getAllNSX() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override

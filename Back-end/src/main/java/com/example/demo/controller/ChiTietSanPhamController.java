@@ -3,19 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.dto.AnhDTO;
 import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.MauSac_KichCo_CTSP;
 import com.example.demo.entity.SanPham;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.MauSac_KichCo_CTSPServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,13 +51,16 @@ public class ChiTietSanPhamController {
     @Autowired
     private SanPhamServiceImpl sanPhamRepository;
 
+    @Autowired
+    private MauSac_KichCo_CTSPServiceImpl mauSac_kichCo_ctspService;
+
     private Date date = new Date();
 
     @Autowired
     private AnhServiceImpl anhService;
 
     @GetMapping("getAll")
-    public ResponseEntity<?> hienThiPage(@RequestParam(value = "page",defaultValue = "0") Integer page){
+    public ResponseEntity<?> hienThiPage(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
     }
 
@@ -65,7 +72,7 @@ public class ChiTietSanPhamController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable("id") UUID id){
+    public ResponseEntity<?> detail(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(chiTietSanPhamService.detail(id));
     }
 
@@ -187,4 +194,107 @@ public class ChiTietSanPhamController {
 
         return anhDTO;
     }
+
+    @DeleteMapping("/delete-img/{id}")
+    public ResponseEntity<?> deleteImg(@PathVariable UUID id) {
+        anhService.delete(id);
+        return ResponseEntity.ok("OK");
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody ChiTietSanPham chiTietSanPham) {
+        ChiTietSanPham sp = chiTietSanPhamService.detail(id);
+        SanPham spct = sanPhamRepository.detail(chiTietSanPham.getSanPham().getId());
+
+        SanPham sanPham = new SanPham().builder()
+                .ma(spct.getMa())
+                .ten(chiTietSanPham.getSanPham().getTen())
+                .moTa(chiTietSanPham.getSanPham().getMoTa())
+                .ngayTao(spct.getNgayTao())
+                .ngaySua(date)
+                .trangThai(1)
+                .build();
+
+        // Lưu sanPham vào cơ sở dữ liệu trước
+        sanPham = sanPhamRepository.add(sanPham);
+
+        chiTietSanPham.setId(id);
+        chiTietSanPham.setMa(sp.getMa());
+        chiTietSanPham.setNgayTao(sp.getNgayTao());
+        chiTietSanPham.setNgaySua(date);
+        chiTietSanPham.setSanPham(sanPham);
+        return ResponseEntity.ok(chiTietSanPhamService.add(chiTietSanPham));
+    }
+
+    @PutMapping("/update-tt/{id}")
+    public ResponseEntity<?> updatett(@PathVariable UUID id) {
+        chiTietSanPhamService.delete(id);
+        return ResponseEntity.ok("Thành công");
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key,
+                                    @RequestParam(value = "trangThai", required = false) Integer trangThai,
+                                    @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, page));
+    }
+
+    @GetMapping("/getAllMSKCCTSP/{id}")
+    public ResponseEntity<?> getAllMS_KC_CTSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(mauSac_kichCo_ctspService.getAllById(id));
+    }
+
+    @PostMapping("/addAllMSKCCTSP")
+    public ResponseEntity<?> addAllMS_KC_CTSP(@RequestBody MauSac_KichCo_CTSP mauSac_kichCo_ctsp) {
+        mauSac_kichCo_ctspService.add(mauSac_kichCo_ctsp);
+
+        // Tính tổng số lượng của bảng MauSac_KichCo_CTSP
+        Integer totalQuantity = mauSac_kichCo_ctspService.calculateTotalQuantityByChiTietSanPham(mauSac_kichCo_ctsp.getChiTietSanPham());
+
+        // Gán tổng số lượng vào chi tiết sản phẩm
+        mauSac_kichCo_ctsp.getChiTietSanPham().setSoLuong(totalQuantity);
+        chiTietSanPhamService.update(mauSac_kichCo_ctsp.getChiTietSanPham().getSoLuong(), mauSac_kichCo_ctsp.getChiTietSanPham().getId());
+
+        return ResponseEntity.ok(mauSac_kichCo_ctsp);
+    }
+
+    @DeleteMapping("/deleteAllMSKCCTSP/{id}")
+    public ResponseEntity<?> deleteAllMS_KC_CTSP(@PathVariable UUID id) {
+        MauSac_KichCo_CTSP deletedMauSacKichCo = mauSac_kichCo_ctspService.delete(id);
+
+        if (deletedMauSacKichCo != null) {
+            // Lấy chi tiết sản phẩm sau khi xóa MauSac_KichCo_CTSP
+            ChiTietSanPham chiTietSanPham = deletedMauSacKichCo.getChiTietSanPham();
+
+            // Tính tổng số lượng của chi tiết sản phẩm
+            Integer totalQuantity = mauSac_kichCo_ctspService.calculateTotalQuantityByChiTietSanPham(chiTietSanPham);
+
+            // Cập nhật số lượng của chi tiết sản phẩm
+            chiTietSanPham.setSoLuong(totalQuantity);
+            chiTietSanPhamService.update(chiTietSanPham.getSoLuong(), chiTietSanPham.getId());
+        }
+
+        return ResponseEntity.ok(deletedMauSacKichCo);
+    }
+
+    @PutMapping("/updateAllMSKCCTSP/{id}")
+    public ResponseEntity<?> updateAllMS_KC_CTSP(@RequestBody MauSac_KichCo_CTSP mauSac_kichCo_ctsp, @PathVariable UUID id) {
+        mauSac_kichCo_ctsp.setId(id);
+        mauSac_kichCo_ctspService.add(mauSac_kichCo_ctsp);
+
+        // Tính tổng số lượng của bảng MauSac_KichCo_CTSP
+        Integer totalQuantity = mauSac_kichCo_ctspService.calculateTotalQuantityByChiTietSanPham(mauSac_kichCo_ctsp.getChiTietSanPham());
+
+        // Gán tổng số lượng vào chi tiết sản phẩm
+        mauSac_kichCo_ctsp.getChiTietSanPham().setSoLuong(totalQuantity);
+        chiTietSanPhamService.update(mauSac_kichCo_ctsp.getChiTietSanPham().getSoLuong(), mauSac_kichCo_ctsp.getChiTietSanPham().getId());
+
+        return ResponseEntity.ok(mauSac_kichCo_ctsp);
+    }
+
+    @GetMapping("/detailMSKCCTSP/{id}")
+    public ResponseEntity<?> detailAllMS_KC_CTSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(mauSac_kichCo_ctspService.detail(id));
+    }
+
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -46,6 +47,8 @@ public class NhaSanXuatController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody NhaSanXuat nhaSanXuat){
+        String ma = "NSX" + new Random().nextInt(100000);
+        nhaSanXuat.setMa(ma);
         nhaSanXuat.setNgayTao(new Date());
         return ResponseEntity.ok(service.add(nhaSanXuat));
     }
@@ -57,7 +60,9 @@ public class NhaSanXuatController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody NhaSanXuat nhaSanXuat){
+        NhaSanXuat c = service.detail(id);
         nhaSanXuat.setId(id);
+        nhaSanXuat.setMa(c.getMa());
         nhaSanXuat.setNgayTao(nhaSanXuat.getNgayTao());
         nhaSanXuat.setNgaySua(new Date());
         return ResponseEntity.ok(service.add(nhaSanXuat));

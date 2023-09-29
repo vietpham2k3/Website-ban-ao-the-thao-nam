@@ -4,7 +4,7 @@ const fetchAll = () => {
   return axios.get(`/api/kich-co/getAll`);
 };
 const fetchAllCTSP = () => {
- return axios.get(`/api/kich-co/getAllchitietsp`);
+  return axios.get(`/api/kich-co/getAllchitietsp`);
 };
 const fetchAllList = (page) => {
   return axios.get(`/api/kich-co/hienthi?page=${page}`);
@@ -29,4 +29,4 @@ const searchKC = (key, trangThai, page) => {
   return axios.get(`/api/kich-co/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
-export { fetchAll, detailKC, fetchAllList, postCreate, putUpdateKC, deleteKC, searchKC ,fetchAllCTSP};
+export { fetchAll, detailKC, fetchAllList, postCreate, putUpdateKC, deleteKC, searchKC, fetchAllCTSP };

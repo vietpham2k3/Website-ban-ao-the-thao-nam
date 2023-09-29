@@ -10,7 +10,6 @@ import MainCard from 'ui-component/cards/MainCard';
 function AddCoAo() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    ma: '',
     ten: '',
     trangThai: 0
   });
@@ -35,15 +34,6 @@ function AddCoAo() {
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
-                <span className="form-label">MÃ</span>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={values.ma}
-                  onChange={(e) => setValues({ ...values, ma: e.target.value })}
-                />
-              </div>
-              <div className="col-md-6">
                 <span className="form-label">TÊN</span>
                 <input
                   type="text"
@@ -53,10 +43,9 @@ function AddCoAo() {
                 />
               </div>
               <div className="col-6">
-                <span style={{ fontWeight: 'bold' }} className="form-label me-3">
+                <span style={{ fontWeight: 'bold' }} className="form-label">
                   Trạng thái:{' '}
                 </span>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -69,8 +58,6 @@ function AddCoAo() {
                   />
                   <span className="form-check-label">Kích hoạt</span>
                 </div>
-                <br></br>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"

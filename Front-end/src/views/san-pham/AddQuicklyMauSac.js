@@ -2,10 +2,20 @@
 /* eslint-disable react/prop-types */
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import InputColor from 'react-input-color';
 import '../../scss/AddQuickly.scss';
+import { useState } from 'react';
 
-function MyVerticallyCenteredModal(props) {
+function AddMauSac(props) {
+  const [color, setColor] = useState({ r: 94, g: 114, b: 228, a: 1 }); // Giá trị màu mặc định
   const { onHide, handleSubmit, values, setValues } = props;
+
+  const handleColorChange = (newColor) => {
+    setColor(newColor); // Cập nhật giá trị màu từ bảng màu
+    // setMa(newColor.hex); // Cập nhật giá trị 'ma' từ bảng màu
+    setValues({ ...values, ma: newColor.hex });
+  };
+
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
@@ -14,12 +24,18 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Body>
         <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
-            <span className="form-label">TÊN</span>
-            <input
-              type="text"
-              className="form-control"
-              value={values.ten}
-              onChange={(e) => setValues({ ...values, ten: e.target.value })}
+            <span style={{ fontWeight: 'bold' }} className="form-label">
+              Mã Màu:{' '}
+            </span>
+            <br></br>
+            <InputColor initialValue={values && values.ten} onChange={handleColorChange} placement="right" />
+            <div
+              style={{
+                width: 300,
+                height: 300,
+                marginTop: 20,
+                backgroundColor: color && color.rgba
+              }}
             />
           </div>
           <div className="col-6">
@@ -68,4 +84,4 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 
-export default MyVerticallyCenteredModal;
+export default AddMauSac;

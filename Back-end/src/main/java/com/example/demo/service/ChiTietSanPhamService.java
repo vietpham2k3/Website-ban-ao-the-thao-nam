@@ -11,7 +11,13 @@ public interface ChiTietSanPhamService {
 
     Page<ChiTietSanPham> page(Integer page);
 
+    Page<ChiTietSanPham> search(String key, Integer trangThai, Integer page);
+
     ChiTietSanPham add(ChiTietSanPham chiTietSanPham);
 
     ChiTietSanPham detail(UUID id);
+
+    void delete(UUID id);
+
+    void update(Integer soLuong ,UUID id);
 }

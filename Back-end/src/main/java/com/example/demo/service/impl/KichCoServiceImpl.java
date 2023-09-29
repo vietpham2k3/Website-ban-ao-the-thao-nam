@@ -22,12 +22,10 @@ import java.util.UUID;
 public class KichCoServiceImpl implements KichCoService {
     @Autowired
     private KichCoRepository repository;
-    @Autowired
-    private ChiTietSanPhamRepository chiTietSanPhamRepository;
 
     @Override
     public List<KichCo> getAll() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override
@@ -54,7 +52,7 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public KichCo add(KichCo kichCo) {
-        String maSP = "SP" + new Random().nextInt(100000);
+        String maSP = "KC" + new Random().nextInt(100000);
         kichCo.setMa(maSP);
         kichCo.setTen(kichCo.getTen());
         kichCo.setTrangThai(kichCo.getTrangThai());

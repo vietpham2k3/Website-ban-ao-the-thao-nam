@@ -18,7 +18,7 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public List<MauSac> getAllMS(){
-        return res.findAll();
+        return res.getAll();
     }
 
     @Override
