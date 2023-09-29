@@ -62,19 +62,6 @@ function AddMauSac() {
                   }}
                 />
               </div>
-
-              {/* <div >
-           <label className="form-label">Mã Màu</label>
-           <input
-                  type="text"
-                  className="form-control"
-                  value={values.ma}
-                  onChange={(e) =>
-                    setValues({ ...values, ma: e.target.value })
-                  }
-                />
-             </div> */}
-
               <div className="col-6">
                 <span style={{ fontWeight: 'bold' }} className="form-label me-3">
                   Trạng thái:{' '}

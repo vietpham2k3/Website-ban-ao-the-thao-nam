@@ -62,10 +62,9 @@ function UpdateLSP() {
                 />
               </div>
               <div className="col-6">
-                <span style={{ fontWeight: 'bold' }} className="form-label me-3">
+                <span style={{ fontWeight: 'bold' }} className="form-label">
                   Trạng thái:{' '}
                 </span>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -78,8 +77,6 @@ function UpdateLSP() {
                   />
                   <span className="form-check-label">Kích hoạt</span>
                 </div>
-                <br></br>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"

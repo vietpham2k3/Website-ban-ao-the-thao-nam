@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Repository
 public interface ChatLieuRepository extends JpaRepository<ChatLieu, UUID> {
-    @Query(value = "select id,ma,ten,trang_thai,ngay_tao,ngay_sua from chatLieu", nativeQuery = true)
+    @Query(value = "select c from ChatLieu c where c.trangThai = 0")
     List<ChatLieu> getAll();
 
     @Query(value = "SELECT * FROM ChatLieu\n" +

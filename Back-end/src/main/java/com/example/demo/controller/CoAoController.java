@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -47,6 +48,8 @@ public class CoAoController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody CoAo coAo) {
+        String ma = "CA" + new Random().nextInt(100000);
+        coAo.setMa(ma);
         return ResponseEntity.ok(service.add(coAo));
     }
 

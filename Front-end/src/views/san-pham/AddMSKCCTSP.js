@@ -114,6 +114,9 @@ function AddMSKCCTSP(props) {
             <Button type="submit" className="btn btn-primary" onClick={onHide}>
               Thêm
             </Button>
+            <Button type="submit" className="btn btn-primary mx-3" onClick={getAllList}>
+              Reset
+            </Button>
           </div>
         </form>
       </Modal.Body>

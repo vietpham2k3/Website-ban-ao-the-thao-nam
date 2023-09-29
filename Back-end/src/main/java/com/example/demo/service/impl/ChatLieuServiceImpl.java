@@ -31,7 +31,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public List<ChatLieu> fillAll() {
-        return chatLieuRepository.findAll();
+        return chatLieuRepository.getAll();
     }
 
     @Override
@@ -55,7 +55,9 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ChatLieu update(ChatLieu chatLieu) {
+        ChatLieu c = detail(chatLieu.getId());
         chatLieu.setId(chatLieu.getId());
+        chatLieu.setMa(c.getMa());
         chatLieu.setTen(chatLieu.getTen());
         chatLieu.setTrangThai(chatLieu.getTrangThai());
         chatLieu.setNgayTao(chatLieu.getNgayTao());

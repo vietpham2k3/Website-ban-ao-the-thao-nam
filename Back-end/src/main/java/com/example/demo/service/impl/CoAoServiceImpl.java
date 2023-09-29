@@ -22,7 +22,7 @@ public class CoAoServiceImpl implements CoAoService {
 
     @Override
     public List<CoAo> getAll() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override
@@ -58,7 +58,9 @@ public class CoAoServiceImpl implements CoAoService {
 
     @Override
     public CoAo update(CoAo coAo) {
+        CoAo c = detail(coAo.getId());
         coAo.setId(coAo.getId());
+        coAo.setMa(c.getMa());
         coAo.setTen(coAo.getTen());
         coAo.setTrangThai(coAo.getTrangThai());
         coAo.setNgayTao(coAo.getNgayTao());

@@ -42,7 +42,7 @@ const getAllListLSP = () => {
 };
 
 const getAllListNSX = () => {
-  return axios.get(`/api/nha-san-xuat/getAll`);
+  return axios.get(`/api/nha-san-xuat/hien-thi`);
 };
 const addAnh = (values) => {
   return axios.post('/api/chi-tiet-san-pham/upload', values);

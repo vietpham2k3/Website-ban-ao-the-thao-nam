@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -44,6 +45,8 @@ public class ChatLieuController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody ChatLieu chatLieu) {
+        String ma = "CL" + new Random().nextInt(100000);
+        chatLieu.setMa(ma);
         return ResponseEntity.ok(chatLieuService.add(chatLieu));
     }
 

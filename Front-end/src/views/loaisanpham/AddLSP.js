@@ -16,7 +16,7 @@ function AddLSP() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     ten: '',
-    trangThai: ''
+    trangThai: 0
   });
 
   const handleSubmit = (event) => {
@@ -51,7 +51,6 @@ function AddLSP() {
                 <span style={{ fontWeight: 'bold' }} className="form-label me-3">
                   Trạng thái:{' '}
                 </span>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -59,13 +58,11 @@ function AddLSP() {
                     name="inlineRadioOptions"
                     id="inlineRadio1"
                     value="0"
-                    checked={values.trangThai === 0}
+                    checked={true}
                     onChange={() => setValues({ ...values, trangThai: 0 })}
                   />
                   <span className="form-check-label">Kích hoạt</span>
                 </div>
-                <br></br>
-                <br></br>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -73,7 +70,6 @@ function AddLSP() {
                     name="inlineRadioOptions"
                     id="inlineRadio2"
                     value="1"
-                    checked={values.trangThai === 1}
                     onChange={() => setValues({ ...values, trangThai: 1 })}
                   />
                   <span className="form-check-label">Ngừng kích hoạt</span>

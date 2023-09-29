@@ -26,6 +26,9 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router';
 import { postCreate } from 'services/ServiceChatLieu';
 import { postCreate as postCa } from 'services/ServiceCoAo';
+import { add } from 'services/LoaiSanPhamService';
+import { postNSX } from 'services/NhaSanXuatService';
+import { postCreate as postKC } from 'services/KichCoService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 import AddMSKCCTSP from './AddMSKCCTSP';
 import { useRef } from 'react';
@@ -33,6 +36,11 @@ import defaultImage from '../../assets/images/default-placeholder.png';
 import { Table } from 'react-bootstrap';
 import ConfirmDelete from './ConfirmDelete';
 import UpdateMSKCCTSP from './UpdateMSKCCTSP';
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import AddMauSac from './AddQuicklyMauSac';
+import { postMS } from 'services/ServiceMauSac';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -44,6 +52,10 @@ function UpdateSanPham() {
   const [isShow, setIsShow] = useState(false);
   const [dataDelete, setDataDelete] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
+  const [modalShowLSP, setModalShowLSP] = useState(false);
+  const [modalShowNSX, setModalShowNSX] = useState(false);
+  const [modalShowKC, setModalShowKC] = useState(false);
+  const [modalShowMS, setModalShowMS] = useState(false);
   const [show, setShow] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const { id } = useParams();
@@ -77,6 +89,55 @@ function UpdateSanPham() {
     giaBan: '',
     trangThai: 1
   });
+
+  const handleAddMS = (event) => {
+    event.preventDefault();
+    addMS(valuesCL);
+  };
+
+  const addMS = (value) => {
+    const res = postMS(value);
+    if (res) {
+      closeModal();
+    }
+  };
+
+  const handleAddKC = (event) => {
+    event.preventDefault();
+    addKC(valuesCL);
+  };
+
+  const addKC = (value) => {
+    const res = postKC(value);
+    if (res) {
+      closeModal();
+      detailmskcctsp(idMSKCCTSP);
+    }
+  };
+
+  const handleAddNSX = (event) => {
+    event.preventDefault();
+    addNSX(valuesCL);
+  };
+
+  const addNSX = (value) => {
+    const res = postNSX(value);
+    if (res) {
+      closeModal();
+    }
+  };
+
+  const handleAddLSP = (event) => {
+    event.preventDefault();
+    addLSP(valuesCL);
+  };
+
+  const addLSP = (value) => {
+    const res = add(value);
+    if (res) {
+      closeModal();
+    }
+  };
 
   useEffect(() => {
     detailmskcctsp(idMSKCCTSP);
@@ -210,14 +271,16 @@ function UpdateSanPham() {
   };
 
   const [valuesCL, setValuesCL] = useState({
-    ma: '',
     ten: '',
     trangThai: 0
   });
 
   const closeModal = () => {
+    toast.success('Thêm thành công');
     setModalShowCA(false);
+    setModalShowLSP(false);
     setModalShow(false);
+    setModalShowNSX(false);
     getAllList();
     setValuesCL({
       ma: '',
@@ -354,8 +417,12 @@ function UpdateSanPham() {
               aria-label="Default select example"
               onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
             >
-              <option value="1">Kinh doanh</option>
-              <option value="0">Ngừng kinh doanh</option>
+              <option value="1" selected={values.trangThai === 1}>
+                Kinh doanh
+              </option>
+              <option value="0" selected={values.trangThai === 0}>
+                Ngừng kinh doanh
+              </option>
             </select>
           </div>
           <div className="col-6">
@@ -397,7 +464,21 @@ function UpdateSanPham() {
           </div>
           <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai5">
-              Loại sản phẩm: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
+              Loại sản phẩm:{' '}
+              <span
+                role="button"
+                tabIndex={0}
+                className="fa-solid"
+                onClick={() => setModalShowLSP(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setModalShowLSP(true);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <i className="fa-solid fa-plus"></i>
+              </span>
             </label>
             <select
               className="form-select"
@@ -412,7 +493,7 @@ function UpdateSanPham() {
               }}
             >
               {listLSP.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.loaiSanPham.id}>
                   {c.ten}
                 </option>
               ))}
@@ -449,7 +530,7 @@ function UpdateSanPham() {
               }}
             >
               {listCA.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.coAo.id}>
                   {c.ten}
                 </option>
               ))}
@@ -457,7 +538,21 @@ function UpdateSanPham() {
           </div>
           <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6">
-              Nhà sản xuất: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
+              Nhà sản xuất:{' '}
+              <span
+                role="button"
+                tabIndex={0}
+                className="fa-solid"
+                onClick={() => setModalShowNSX(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setModalShowNSX(true);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <i className="fa-solid fa-plus"></i>
+              </span>
             </label>{' '}
             <select
               className="form-select"
@@ -472,7 +567,7 @@ function UpdateSanPham() {
               }}
             >
               {listNSX.map((c) => (
-                <option key={c.id} value={c.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.nhaSanXuat.id}>
                   {c.ten}
                 </option>
               ))}
@@ -498,6 +593,20 @@ function UpdateSanPham() {
           values={valuesCL}
           setValues={setValuesCL}
         />
+        <MyVerticallyCenteredModal
+          show={modalShowLSP}
+          onHide={() => setModalShowLSP(false)}
+          handleSubmit={handleAddLSP}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
+        <MyVerticallyCenteredModal
+          show={modalShowNSX}
+          onHide={() => setModalShowNSX(false)}
+          handleSubmit={handleAddNSX}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
       </MainCard>
       <MainCard className="my-3">
         <div className="row">
@@ -513,11 +622,41 @@ function UpdateSanPham() {
             <Table striped hover className="my-4">
               <thead>
                 <tr className="text-center">
-                  <th>#</th>
-                  <th>Màu sắc</th>
-                  <th>Kích cỡ</th>
-                  <th>Số lượng</th>
-                  <th>Action</th>
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }}>
+                        <strong>#</strong>
+                      </Button>
+                    </OverlayTrigger>
+                  </th>
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh màu sắc ở đây</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }} onClick={() => setModalShowMS(true)}>
+                        <strong>Màu sắc</strong>
+                      </Button>
+                    </OverlayTrigger>
+                  </th>
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh kích cỡ ở đây</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }} onClick={() => setModalShowKC(true)}>
+                        <strong>Kích cỡ</strong>
+                      </Button>
+                    </OverlayTrigger>
+                  </th>
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }}>
+                        <strong>Số lượng</strong>
+                      </Button>
+                    </OverlayTrigger>
+                  </th>
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }}>
+                        <strong>Action</strong>
+                      </Button>
+                    </OverlayTrigger>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -634,6 +773,20 @@ function UpdateSanPham() {
         values={valuesUpdate}
         setValues={setValuesUpdate}
         id={idMSKCCTSP}
+      />
+      <MyVerticallyCenteredModal
+        show={modalShowKC}
+        onHide={() => setModalShowKC(false)}
+        handleSubmit={handleAddKC}
+        values={valuesCL}
+        setValues={setValuesCL}
+      />
+      <AddMauSac
+        show={modalShowMS}
+        onHide={() => setModalShowMS(false)}
+        handleSubmit={handleAddMS}
+        values={valuesCL}
+        setValues={setValuesCL}
       />
       <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={dataDelete} getAll={getAllByIdCTSP} id={id} />
     </div>
