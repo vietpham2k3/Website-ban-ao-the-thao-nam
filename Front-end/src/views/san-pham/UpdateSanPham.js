@@ -16,7 +16,8 @@ import {
   addAnh,
   getAllMSKCCTSP,
   addAllMSKCCTSP,
-  putMSKCCTSP
+  putMSKCCTSP,
+  detailMSKCCTSP
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
@@ -48,9 +49,12 @@ function UpdateSanPham() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
+  const [idMSKCCTSP, setIdMSKCCTSP] = useState('');
   const [imageList, setImageList] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const inputRef = useRef(null);
+
+  const [valuesUpdate, setValuesUpdate] = useState({});
 
   const [values, setValues] = useState({
     chatLieu: {
@@ -74,6 +78,22 @@ function UpdateSanPham() {
     trangThai: 1
   });
 
+  useEffect(() => {
+    detailmskcctsp(idMSKCCTSP);
+  }, [idMSKCCTSP]);
+
+  const detailmskcctsp = async (idCTSP) => {
+    const res = await detailMSKCCTSP(idCTSP);
+    if (res) {
+      setValuesUpdate(res.data);
+    }
+  };
+
+  const handleIdMSKCCTSP = (idSP) => {
+    setIdMSKCCTSP(idSP);
+    setShowUpdate(true);
+  };
+
   const [valuesMSKCCTSP, setValuesMSKCCTSP] = useState({
     chiTietSanPham: {
       id: id
@@ -95,9 +115,10 @@ function UpdateSanPham() {
   const handleClose = () => {
     setIsShow(false);
   };
+
   const handleUpdate = (event) => {
     event.preventDefault();
-    updateAllByIdCTSP(valuesMSKCCTSP);
+    updateAllByIdCTSP(idMSKCCTSP, valuesUpdate);
   };
 
   const updateAllByIdCTSP = async (idCTSP, value) => {
@@ -509,7 +530,12 @@ function UpdateSanPham() {
                     <td>{d.kichCo.ten}</td>
                     <td>{d.soLuong}</td>
                     <td>
-                      <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
+                      <button
+                        onClick={() => {
+                          handleIdMSKCCTSP(d.id);
+                        }}
+                        className="fa-solid fa-pen"
+                      ></button>
                       <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
                     </td>
                   </tr>
@@ -605,8 +631,9 @@ function UpdateSanPham() {
         show={showUpdate}
         onHide={() => setShowUpdate(false)}
         handleSubmit={handleUpdate}
-        values={valuesMSKCCTSP}
-        setValues={setValuesMSKCCTSP}
+        values={valuesUpdate}
+        setValues={setValuesUpdate}
+        id={idMSKCCTSP}
       />
       <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={dataDelete} getAll={getAllByIdCTSP} id={id} />
     </div>

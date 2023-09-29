@@ -12,7 +12,6 @@ function AddKichCo() {
   const [values, setValues] = useState({
     ma: '',
     ten: '',
-    chiTietSanPham: '',
     trangThai: 0
   });
 
@@ -46,7 +45,7 @@ function AddKichCo() {
         <Card>
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
-              <div className="col-md-6">
+              {/* <div className="col-md-6">
                 <span className="form-label">MÃ</span>
                 <input
                   type="text"
@@ -54,7 +53,7 @@ function AddKichCo() {
                   value={values.ma}
                   onChange={(e) => setValues({ ...values, ma: e.target.value })}
                 />
-              </div>
+              </div> */}
               <div className="col-md-6">
                 <span className="form-label">TÊN</span>
                 <input
@@ -64,6 +63,7 @@ function AddKichCo() {
                   onChange={(e) => setValues({ ...values, ten: e.target.value })}
                 />
               </div>
+
               <div className="col-6">
                 <div className="mb-2">
                   <label htmlFor="chiTietSanPham">MÃ SẢN PHẨM</label>
@@ -83,8 +83,7 @@ function AddKichCo() {
                   </select>
                 </div>
               </div>
-
-              <div className="col-6">
+              <div className="ol-md-6">
                 <br></br>
                 <span style={{ fontWeight: 'bold' }} className="form-label me-3">
                   Trạng thái:{' '}

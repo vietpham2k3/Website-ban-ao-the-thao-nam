@@ -70,9 +70,13 @@ const putMSKCCTSP = (id, values) => {
   return axios.put('/api/chi-tiet-san-pham/updateAllMSKCCTSP/' + id, values);
 };
 
+const detailMSKCCTSP = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/detailMSKCCTSP/${id}`);
+};
 export {
   getAllCTSP,
   getAllListKC,
+  detailMSKCCTSP,
   addAllMSKCCTSP,
   putMSKCCTSP,
   getAllMSKCCTSP,

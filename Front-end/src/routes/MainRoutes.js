@@ -128,6 +128,10 @@ const MainRoutes = {
           path: 'kich-co/delete/:id',
           element: <KichCo />
         },
+        {
+          path: 'kich-co/detail/:id',
+          element: <UpdateKC />
+        },
         //co ao
         {
           path: 'co-ao',

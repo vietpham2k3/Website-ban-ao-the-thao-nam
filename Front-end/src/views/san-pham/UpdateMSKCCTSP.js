@@ -44,6 +44,7 @@ function UpdateMSKCCTSP(props) {
                     name="1"
                     id={d.id}
                     value={d.id}
+                    checked={values && values.mauSac && d.id === values.mauSac.id}
                     onChange={() =>
                       setValues({
                         ...values,
@@ -72,6 +73,7 @@ function UpdateMSKCCTSP(props) {
                     type="radio"
                     name="2"
                     id={d.id}
+                    checked={values && values.kichCo && d.id === values.kichCo.id}
                     value={d.id}
                     onChange={() =>
                       setValues({
@@ -100,6 +102,7 @@ function UpdateMSKCCTSP(props) {
                   className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Nhập số lượng"
+                  value={values.soLuong}
                   onChange={(e) =>
                     setValues({
                       ...values,
