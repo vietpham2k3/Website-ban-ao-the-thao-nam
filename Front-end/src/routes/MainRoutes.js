@@ -16,6 +16,9 @@ import AddCoAo from 'views/co-ao/addCoAo';
 import UpdateCA from 'views/co-ao/UpdateCoAo';
 import CoAo from 'views/co-ao/coAo';
 
+//
+import AddKichCo from 'views/kich-co/addKichCo';
+
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 //chatlieu
@@ -50,6 +53,10 @@ const LoaiSanPham = Loadable(lazy(() => import('views/loaisanpham/loaisanpham'))
 const UpdateLSP = Loadable(lazy(() => import('views/loaisanpham/UpdateLSP')));
 const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
 // ==============================|| MAIN ROUTING ||============================== //
+
+// kich co
+const KichCo = Loadable(lazy(() => import('views/kich-co/KichCo')));
+const UpdateKC = Loadable(lazy(() => import('views/kich-co/UpdateKichCo')));
 
 const MainRoutes = {
   path: '/',
@@ -104,9 +111,22 @@ const MainRoutes = {
           path: 'mau-sac/delete/:id',
           element: <MauSac />
         },
+        //kichco
         {
           path: 'kich-co',
-          element: <DashboardDefault />
+          element: <KichCo />
+        },
+        {
+          path: 'kich-co/add',
+          element: <AddKichCo />
+        },
+        {
+          path: 'kich-co/update/:id',
+          element: <UpdateKC />
+        },
+        {
+          path: 'kich-co/delete/:id',
+          element: <KichCo />
         },
         //co ao
         {
@@ -174,6 +194,7 @@ const MainRoutes = {
         //====================
       ]
     },
+
     //khuyen mai
     {
       path: '/voucher',
@@ -232,6 +253,10 @@ const MainRoutes = {
     {
       path: '/thong-ke',
       element: <UpdateKhachHang />
+    },
+    {
+      path: '/thong-ke',
+      element: <DashboardDefault />
     }
   ]
 };

@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,6 +17,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
     @Autowired
     private ChiTietSanPhamRepository repository;
+
+    @Override
+    public List<ChiTietSanPham> getAll() {
+        return repository.findAll();
+    }
 
     @Override
     public Page<ChiTietSanPham> page(Integer page) {

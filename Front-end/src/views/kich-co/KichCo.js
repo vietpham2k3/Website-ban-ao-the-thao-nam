@@ -5,8 +5,8 @@ import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import { Card } from '@mui/material';
 import '../../scss/SanPham.scss';
-import { fetchAllList, searchCA } from 'services/ServiceCoAo';
-import { deleteCA } from 'services/ServiceCoAo';
+import { fetchAllList, searchKC } from 'services/KichCoService';
+import { deleteKC } from 'services/KichCoService';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import MainCard from 'ui-component/cards/MainCard';
@@ -15,7 +15,7 @@ import MainCard from 'ui-component/cards/MainCard';
 
 // import AddChatLieu from './addchatlieu';
 
-const CoAo = () => {
+const KichCo = () => {
   const [filterStatus, setFilterStatus] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
@@ -53,14 +53,14 @@ const CoAo = () => {
   };
 
   const search = async (key, trangThai, page) => {
-    const res = await searchCA(key, trangThai, page);
+    const res = await searchKC(key, trangThai, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearchCL = _.debounce(async (e) => {
+  const handleSearchKC = _.debounce(async (e) => {
     let term = e.target.value;
     if (term || filterStatus !== 0) {
       search(term, filterStatus, currentPage);
@@ -80,7 +80,7 @@ const CoAo = () => {
   // const { id } = useParams();
 
   const del = async (id, values) => {
-    const res = await deleteCA(id, values);
+    const res = await deleteKC(id, values);
     if (res) {
       toast.success('Xóa thành công !');
       getAll(0);
@@ -122,7 +122,7 @@ const CoAo = () => {
                   type="text"
                   className="input-search"
                   placeholder=" Nhập tên, mã màu cần tìm..."
-                  onChange={handleSearchCL}
+                  onChange={handleSearchKC}
                 />
               </div>
               <div style={{ marginRight: 50 }}>
@@ -177,7 +177,7 @@ const CoAo = () => {
               </div>
 
               <div className="d-flex justify-content-end">
-                <button onClick={() => navigate('/san-pham/co-ao/add')} className="btn btn-primary ">
+                <button onClick={() => navigate('/san-pham/kich-co/add')} className="btn btn-primary ">
                   Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
                 </button>
               </div>
@@ -187,7 +187,8 @@ const CoAo = () => {
               <tr>
                 <th>#</th>
                 <th>Mã</th>
-                <th>Tên Cổ ÁO</th>
+                <th>Tên</th>
+                <th>Mã Sản Phẩm</th>
                 <th>Ngày Tạo</th>
                 <th>Ngày Sửa</th>
                 <th>Trạng Thái</th>
@@ -199,12 +200,13 @@ const CoAo = () => {
                     <td>{i + 1}</td>
                     <td> {d.ma}</td>
                     <td>{d.ten}</td>
+                    <td> {d.chiTietSanPham.ma}</td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
                     <td>
                       <button
-                        onClick={() => navigate(`/san-pham/co-ao/detail/${d.id}`)}
+                        onClick={() => navigate(`/san-pham/kich-co/detail/${d.id}`)}
                         style={{ color: 'aqua' }}
                         className="fa-regular fa-pen-to-square fa-lg fa-khenh"
                       ></button>
@@ -253,4 +255,4 @@ const CoAo = () => {
   );
 };
 
-export default CoAo;
+export default KichCo;
