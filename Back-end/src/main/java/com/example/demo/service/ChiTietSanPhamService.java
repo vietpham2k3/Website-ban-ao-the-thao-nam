@@ -18,4 +18,6 @@ public interface ChiTietSanPhamService {
     ChiTietSanPham detail(UUID id);
 
     void delete(UUID id);
+
+    void update(Integer soLuong ,UUID id);
 }

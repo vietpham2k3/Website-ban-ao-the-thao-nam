@@ -6,7 +6,7 @@ import { getAllListMS, getAllListKC } from 'services/SanPhamService';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-function AddMSKCCTSP(props) {
+function UpdateMSKCCTSP(props) {
   const { onHide, handleSubmit, values, setValues } = props;
   const [listMS, setListMS] = useState([]);
   const [listKC, setListLC] = useState([]);
@@ -121,4 +121,4 @@ function AddMSKCCTSP(props) {
   );
 }
 
-export default AddMSKCCTSP;
+export default UpdateMSKCCTSP;

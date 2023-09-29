@@ -108,7 +108,7 @@ function SanPham() {
                     </td>
                     <td>{d.ma}</td>
                     <td>{d.sanPham.ten}</td>
-                    <td>{d.soLuong}</td>
+                    <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
                     <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>

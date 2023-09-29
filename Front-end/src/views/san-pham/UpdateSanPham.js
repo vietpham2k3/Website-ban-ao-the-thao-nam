@@ -15,7 +15,8 @@ import {
   deleteAnh,
   addAnh,
   getAllMSKCCTSP,
-  addAllMSKCCTSP
+  addAllMSKCCTSP,
+  putMSKCCTSP
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
@@ -29,6 +30,8 @@ import AddMSKCCTSP from './AddMSKCCTSP';
 import { useRef } from 'react';
 import defaultImage from '../../assets/images/default-placeholder.png';
 import { Table } from 'react-bootstrap';
+import ConfirmDelete from './ConfirmDelete';
+import UpdateMSKCCTSP from './UpdateMSKCCTSP';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -37,8 +40,11 @@ function UpdateSanPham() {
   const [listCA, setListCA] = useState([]);
   const [listMSKCCTSP, setListMSKCCTSP] = useState([]);
   const [modalShow, setModalShow] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const [dataDelete, setDataDelete] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
   const [show, setShow] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
@@ -81,7 +87,26 @@ function UpdateSanPham() {
     soLuong: ''
   });
 
-  console.log(valuesMSKCCTSP);
+  const handleDelete = (id) => {
+    setIsShow(true);
+    setDataDelete(id);
+  };
+
+  const handleClose = () => {
+    setIsShow(false);
+  };
+  const handleUpdate = (event) => {
+    event.preventDefault();
+    updateAllByIdCTSP(valuesMSKCCTSP);
+  };
+
+  const updateAllByIdCTSP = async (idCTSP, value) => {
+    const res = await putMSKCCTSP(idCTSP, value);
+    if (res) {
+      toast.success('Sửa thành công');
+      getAllByIdCTSP(id);
+    }
+  };
 
   const addAllByIdCTSP = async (value) => {
     const res = await addAllMSKCCTSP(value);
@@ -483,7 +508,10 @@ function UpdateSanPham() {
                     </td>
                     <td>{d.kichCo.ten}</td>
                     <td>{d.soLuong}</td>
-                    <td>Xoá</td>
+                    <td>
+                      <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
+                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -573,6 +601,14 @@ function UpdateSanPham() {
         values={valuesMSKCCTSP}
         setValues={setValuesMSKCCTSP}
       />
+      <UpdateMSKCCTSP
+        show={showUpdate}
+        onHide={() => setShowUpdate(false)}
+        handleSubmit={handleUpdate}
+        values={valuesMSKCCTSP}
+        setValues={setValuesMSKCCTSP}
+      />
+      <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={dataDelete} getAll={getAllByIdCTSP} id={id} />
     </div>
   );
 }

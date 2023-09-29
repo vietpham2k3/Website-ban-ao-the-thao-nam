@@ -21,6 +21,11 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void delete(UUID id);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update ChiTietSanPham c set c.soLuong = :soLuong where c.id = :id")
+    void update(Integer soLuong, UUID id);
+
     @Query(value = "SELECT c.*, sp.id as idsp, sp.ten FROM ChiTietSanPham c\n" +
             "join SanPham sp on c.id_sp = sp.id\n" +
             "WHERE ((c.ma IS NULL OR c.ma LIKE LOWER( CONCAT('%', :key, '%')))\n" +

@@ -49,4 +49,9 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     public void delete(UUID id) {
         repository.delete(id);
     }
+
+    @Override
+    public void update(Integer soLuong, UUID id) {
+        repository.update(soLuong, id);
+    }
 }

@@ -1,8 +1,8 @@
-import { postCreate,fetchAllCTSP } from 'services/KichCoService';
+import { postCreate, fetchAllCTSP } from 'services/KichCoService';
 import { toast } from 'react-toastify';
-import React,{ useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card,Button } from '@mui/material'; // Import Button from '@mui/material'
+import { Card, Button } from '@mui/material'; // Import Button from '@mui/material'
 
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -12,11 +12,9 @@ function AddKichCo() {
   const [values, setValues] = useState({
     ma: '',
     ten: '',
-    chiTietSanPham:'',
+    chiTietSanPham: '',
     trangThai: 0
-   
   });
-
 
   useEffect(() => {
     getAllCTSP();
@@ -36,7 +34,7 @@ function AddKichCo() {
       navigate('/san-pham/kich-co');
     }
   };
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
     post(values);
@@ -67,24 +65,24 @@ function AddKichCo() {
                 />
               </div>
               <div className="col-6">
-              <div className="mb-2">
-              <label htmlFor="chiTietSanPham">MÃ SẢN PHẨM</label>
-              <select
-                id="chiTietSanPham"
-                className="form-select"
-                aria-label="Default select example"
-                value={values.chiTietSanPham}
-                onChange={(e) => setValues({ ...values, chiTietSanPham: e.target.value })}
-              >
-                <option>Chọn mã Sản Phẩm</option>
-                {KichCos.map((d, i) => (
-                  <option key={i} value={d.id}>
-                    {d.ma}
-                  </option>
-                ))}
-              </select>
-            </div>
-            </div>
+                <div className="mb-2">
+                  <label htmlFor="chiTietSanPham">MÃ SẢN PHẨM</label>
+                  <select
+                    id="chiTietSanPham"
+                    className="form-select"
+                    aria-label="Default select example"
+                    value={values.chiTietSanPham}
+                    onChange={(e) => setValues({ ...values, chiTietSanPham: e.target.value })}
+                  >
+                    <option>Chọn mã Sản Phẩm</option>
+                    {KichCos.map((d, i) => (
+                      <option key={i} value={d.id}>
+                        {d.ma}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
               <div className="col-6">
                 <br></br>
@@ -105,7 +103,7 @@ function AddKichCo() {
                   <span className="form-check-label">Kích hoạt</span>
                 </div>
                 <br></br>
-                
+
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"

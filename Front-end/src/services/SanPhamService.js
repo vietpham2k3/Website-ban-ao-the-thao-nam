@@ -13,10 +13,6 @@ const putCTSP = (id, values) => {
   return axios.put('/api/chi-tiet-san-pham/update/' + id, values);
 };
 
-const deleteCO = (id) => {
-  return axios.delete(`/api/chi-tiet-san-pham/delete/${id}`);
-};
-
 const searchCO = (key, page) => {
   return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&page=${page}`);
 };
@@ -31,6 +27,10 @@ const getAllListCO = () => {
 
 const getAllListCL = () => {
   return axios.get(`/api/chatlieu/getAll`);
+};
+
+const getAllListKC = () => {
+  return axios.get(`/api/kich-co/getAll`);
 };
 
 const getAllListMS = () => {
@@ -62,16 +62,26 @@ const addAllMSKCCTSP = (values) => {
   return axios.post('/api/chi-tiet-san-pham/addAllMSKCCTSP', values);
 };
 
+const deleteMSKCCTSP = (id) => {
+  return axios.delete(`/api/chi-tiet-san-pham/deleteAllMSKCCTSP/${id}`);
+};
+
+const putMSKCCTSP = (id, values) => {
+  return axios.put('/api/chi-tiet-san-pham/updateAllMSKCCTSP/' + id, values);
+};
+
 export {
   getAllCTSP,
+  getAllListKC,
   addAllMSKCCTSP,
+  putMSKCCTSP,
   getAllMSKCCTSP,
   listAnh,
   addAnh,
   postCTSP,
   deleteAnh,
   putCTSP,
-  deleteCO,
+  deleteMSKCCTSP,
   searchCO,
   detailCTSP,
   getAllListCO,
