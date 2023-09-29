@@ -104,17 +104,18 @@ function DonHang() {
   return (
     <div>
       <MainCard>
-        <Card>
-          <div className="w-auto rounded bg-white border shadow p-4">
-            <div className="col-12 row">
+      <div className="col-12 row">
               <div className="page-title-box">
                 <div className="page-title-center">
                   <h1 className="page-title" style={{ textAlign: 'center', fontSize: '200%', marginBottom: '50px', fontWeight: 'bold' }}>
-                    Hóa Đơn
+                    Đơn Hàng
                   </h1>
                 </div>
               </div>
             </div>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+           
 
             {/* <form className="export-form">
               <button

@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.HoaDonRequest;
+import com.example.demo.dto.KhachHangDTO;
+import com.example.demo.dto.NhanVienRequest;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,14 +29,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.*;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")

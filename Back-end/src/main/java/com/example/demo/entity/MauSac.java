@@ -16,24 +16,24 @@ public class MauSac {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    public UUID id;
+    private UUID id;
 
     @Column(name = "ma")
-    public String ma;
+    private String ma;
 
     @Column(name = "ten")
-    public String ten;
+    private String ten;
 
     @Column(name = "trang_thai")
-    public Integer trangThai;
+    private Integer trangThai;
 
     @Column(name = "ngay_tao")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
-    public Date ngayTao;
+    private Date ngayTao;
 
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
-    public Date ngaySua;
+    private Date ngaySua;
 }

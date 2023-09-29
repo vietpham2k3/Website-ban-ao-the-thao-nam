@@ -1,7 +1,5 @@
 package com.example.demo.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,10 +34,10 @@ public class HoaDon {
     @Column(name = "id")
     private UUID id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "id_tk", referencedColumnName = "id")
-//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-//    private NhanVien nhanVien;
+    @ManyToOne
+    @JoinColumn(name = "id_tk",
+            referencedColumnName = "id")
+    private NhanVien nhanVien;
 
     @Column(name = "dia_chi")
     private String diaChi;
