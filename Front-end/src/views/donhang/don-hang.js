@@ -138,70 +138,6 @@ function DonHang() {
               </button>
             </form> */}
 
-            {/* <div className="d-flex justify-content-between">
-              <div className="search">
-                <input
-                  style={{ borderRadius: 15, width: 300 }}
-                  type="text"
-                  className="input-search"
-                  placeholder=" Nhập tên, mã màu cần tìm..."
-                  onChange={handleSearchMS}
-                />
-              </div>
-              <div style={{ marginRight: 50 }}>
-                <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
-                  Trạng Thái:
-                </span>
-
-                <div className="form-check form-check-inline">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    checked={filterStatus === ''}
-                    onChange={() => {
-                      setFilterStatus('');
-                      search('', '', 0);
-                    }}
-                  />
-                  <span style={{ marginLeft: 10 }} className="form-check-label">
-                    Tất Cả
-                  </span>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    checked={filterStatus === 0}
-                    onChange={() => {
-                      setFilterStatus(0);
-                      search('', 0, 0);
-                    }}
-                  />
-                  <span className="form-check-label">Đang kích hoạt</span>
-                </div>
-                <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="inlineRadioOptions"
-                    checked={filterStatus === 1}
-                    onChange={() => {
-                      setFilterStatus(1);
-                      search('', 1, 0);
-                    }}
-                  />
-                  <span className="form-check-label">Ngừng kích hoạt</span>
-                </div>
-              </div>
-
-              <div className="d-flex justify-content-end">
-                <button onClick={() => navigate('/san-pham/mau-sac/add')} className="btn btn-primary ">
-                  Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
-                </button>
-              </div>
-            </div> */}
 
             <table style={{ textAlign: 'center', alignItems: 'center' }} className="table table-hover">
               <tr>
@@ -235,7 +171,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
@@ -251,9 +188,10 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
                         >
                           Đã xác nhận
                         </span>
@@ -267,7 +205,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
                         >
@@ -283,7 +222,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                         >
@@ -299,7 +239,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
@@ -315,7 +256,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
@@ -331,7 +273,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
                         >
@@ -347,7 +290,8 @@ function DonHang() {
                             borderRadius: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
                           }}
                           className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
@@ -376,7 +320,8 @@ function DonHang() {
                               justifyContent: 'center',
                               justifyItems: 'center',
                               alignItems: 'center',
-                              verticalAlign: 'middle'
+                              verticalAlign: 'middle',
+                              fontWeight: 'bold'
                             }}
                             className="btn btn-labeled shadow-button btn btn-dark status-completed"
                           >
@@ -394,9 +339,12 @@ function DonHang() {
                               justifyContent: 'center',
                               justifyItems: 'center',
                               verticalAlign: 'middle',
-                              alignItems: 'center'
+                              alignItems: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: "#126e3bff",
+                              color: 'white'
                             }}
-                            className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                            className="btn btn-labeled shadow-button btn status-completed"
                           >
                             Đặt Hàng Online
                           </span>
