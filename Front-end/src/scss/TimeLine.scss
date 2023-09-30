@@ -73,7 +73,7 @@
   .mini:hover .p-timeline-block{background-color:#ed9300;}
   .bmw .p-timeline-block, .mini .p-timeline-block, .mini:hover .p-timeline-block, .bmw:hover .p-timeline-block {transition:background-color 1s ease;}
   .p-timeline-date, .p-timeline-carmodel, .p-timeline-block{width:100%;}
-  .p-timeline-date{font-weight:600;font-size:20px;}
+  .p-timeline-date{font-weight:600;font-size:18px;font-weight: bold;}
   .p-timeline-carmodel{margin-top: 5px;margin-bottom: 10px;}
   .p-timeline-block {
     min-width:55px;
@@ -205,7 +205,7 @@
   .timeline{background-position: center top 55%;}
   .timeline-item{margin:0 10px;}
   .p-timeline-block{min-width: 45px; min-height: 45px; max-width: 45px; max-height: 45px;}
-  .p-timeline-date{font-size:16px;}
+  .p-timeline-date{font-size:16px;font-weight: bold;}
   .p-timeline-carmodel{margin:0; line-height:20px; font-size: 13px;}
   .p-timeline-content time{line-height:20px;}
   .p-timeline-content p{font-size:0.9em; padding-right:0px;}

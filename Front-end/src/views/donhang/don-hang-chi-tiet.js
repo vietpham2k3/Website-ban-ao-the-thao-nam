@@ -5,11 +5,8 @@ import { toast } from 'react-toastify';
 import $ from 'jquery';
 import '../../scss/TimeLine.scss';
 import { useNavigate } from 'react-router-dom';
-
 import { Container, Row, Col } from 'react-bootstrap';
-
 import Modal from 'react-bootstrap/Modal';
-
 import { detailHD, updateKHDH } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -254,31 +251,35 @@ function DonHangCT() {
                   <ul className="timeline">
                     <li className="timeline-item bmw">
                       <div className="p-timeline-item">
-                        <time className="p-timeline-date">Tạo hóa đơn</time>
+                        <span className="p-timeline-date">Tạo hóa đơn</span>
                         <span className="p-timeline-carmodel">
-                          
-                        </span>
-                        <div className="p-timeline-block"></div>
-                      </div>
-                    </li>
-                    <li className="timeline-item mini">
-                      <div className="p-timeline-item">
-                        <span style={{width: 150, fontWeight: "bold"}} className="p">Đã xác thực thông tin người dùng</span>
-                        <span className="p-timeline-carmodel">
-                          
+                        10/10/2023
                         </span>
                         <div className="p-timeline-block">
-
+                        <i style={{marginTop: 27}} className="fa-solid fa-spinner fa-spin fa-xl"></i>
                         </div>
                       </div>
                     </li>
                     <li className="timeline-item mini">
                       <div className="p-timeline-item">
-                        <time className="p-timeline-date">Đã hủy đơn hàng</time>
+                        <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
+                        <span className="p-timeline-carmodel">
+                          10/10/2023
+                        </span>
+                        <div className="p-timeline-block">
+                        
+                        </div>
+                      </div>
+                    </li>
+                    <li className="timeline-item mini">
+                      <div className="p-timeline-item">
+                        <span className="p-timeline-date">Đã hủy đơn hàng</span>
                         <span className="p-timeline-carmodel">
                           
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                        </div>
                       </div>
                     </li>
                     <li className="timeline-item bmw">
@@ -287,7 +288,9 @@ function DonHangCT() {
                         <span className="p-timeline-carmodel">
                           
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                        </div>
                       </div>
                     </li>
                     <li className="timeline-item bmw">
@@ -301,7 +304,7 @@ function DonHangCT() {
                     </li>
                     <li className="timeline-item bmw">
                       <div className="p-timeline-item">
-                        <time className="p-timeline-date">Giao hàng thành công</time>
+                        <span className="p-timeline-date">Giao hàng thành công</span>
                         <span className="p-timeline-carmodel">
                           
                         </span>

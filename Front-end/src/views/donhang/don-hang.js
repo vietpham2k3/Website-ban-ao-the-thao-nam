@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-import '../../scss/MauSac.scss';
+import '../../scss/DonHang.scss';
 import { getAllPageDH } from 'services/ServiceDonHang';
-
-// import _ from 'lodash';
 import MainCard from 'ui-component/cards/MainCard';
 
 function DonHang() {
@@ -138,7 +135,8 @@ function DonHang() {
             </form> */}
 
 
-            <table style={{ textAlign: 'center', alignItems: 'center' }} className="table table-hover">
+            <table style={{ textAlign: 'center', alignItems: 'center',
+             cursor: "pointer" }} className="table table-hover">
               <tr>
                 <th>#</th>
                 <th>Mã Đơn Hàng</th>
