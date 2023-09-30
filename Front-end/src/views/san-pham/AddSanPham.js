@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { postCreate } from 'services/ServiceChatLieu';
 import { postCreate as postCa } from 'services/ServiceCoAo';
+import { add } from 'services/LoaiSanPhamService';
+import { postNSX } from 'services/NhaSanXuatService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 
 function AddSanPham() {
@@ -20,6 +22,8 @@ function AddSanPham() {
   const [listCA, setListCA] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
+  const [modalShowLSP, setModalShowLSP] = useState(false);
+  const [modalShowNSX, setModalShowNSX] = useState(false);
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -45,7 +49,6 @@ function AddSanPham() {
   });
 
   const [valuesCL, setValuesCL] = useState({
-    ma: '',
     ten: '',
     trangThai: 0
   });
@@ -53,11 +56,39 @@ function AddSanPham() {
   const closeModal = () => {
     setModalShowCA(false);
     setModalShow(false);
+    setModalShowNSX(false);
+    setModalShowLSP(false);
     getAllList();
     setValuesCL({
-      ma: '',
-      ten: ''
+      ten: '',
+      trangThai: 0
     });
+  };
+
+  const handleAddNSX = (event) => {
+    event.preventDefault();
+    addNSX(valuesCL);
+  };
+
+  const addNSX = (value) => {
+    const res = postNSX(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      closeModal();
+    }
+  };
+
+  const handleAddLSP = (event) => {
+    event.preventDefault();
+    addLSP(valuesCL);
+  };
+
+  const addLSP = (value) => {
+    const res = add(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      closeModal();
+    }
   };
 
   const handleSubmitCA = (event) => {
@@ -65,10 +96,10 @@ function AddSanPham() {
     postCA(valuesCL);
   };
 
-  const postCA = async (value) => {
-    const res = await postCa(value);
+  const postCA = (value) => {
+    const res = postCa(value);
     if (res) {
-      toast.success('Add thành công');
+      toast.success('Thêm thành công');
       closeModal();
     }
   };
@@ -81,7 +112,7 @@ function AddSanPham() {
   const post = async (value) => {
     const res = await postCreate(value);
     if (res) {
-      toast.success('Add thành công');
+      toast.success('Thêm thành công');
       closeModal();
     }
   };
@@ -237,7 +268,21 @@ function AddSanPham() {
           </div>
           <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai5">
-              Loại sản phẩm: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
+              Loại sản phẩm:{' '}
+              <span
+                role="button"
+                tabIndex={0}
+                className="fa-solid"
+                onClick={() => setModalShowLSP(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setModalShowLSP(true);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <i className="fa-solid fa-plus"></i>
+              </span>
             </label>
             <select
               className="form-select"
@@ -297,7 +342,21 @@ function AddSanPham() {
           </div>
           <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6">
-              Nhà sản xuất: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
+              Nhà sản xuất:{' '}
+              <span
+                role="button"
+                tabIndex={0}
+                className="fa-solid"
+                onClick={() => setModalShowNSX(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setModalShowNSX(true);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <i className="fa-solid fa-plus"></i>
+              </span>
             </label>{' '}
             <select
               className="form-select"
@@ -335,6 +394,20 @@ function AddSanPham() {
           show={modalShowCA}
           onHide={() => setModalShowCA(false)}
           handleSubmit={handleSubmitCA}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
+        <MyVerticallyCenteredModal
+          show={modalShowLSP}
+          onHide={() => setModalShowLSP(false)}
+          handleSubmit={handleAddLSP}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
+        <MyVerticallyCenteredModal
+          show={modalShowNSX}
+          onHide={() => setModalShowNSX(false)}
+          handleSubmit={handleAddNSX}
           values={valuesCL}
           setValues={setValuesCL}
         />

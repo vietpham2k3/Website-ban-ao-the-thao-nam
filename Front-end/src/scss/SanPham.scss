@@ -50,6 +50,7 @@
 // Here you can add other styles
 .input-search {
   width: 50%;
+  height: 50%;
   border-radius: 15px;
   padding-left: 10px;
 }
@@ -101,4 +102,22 @@ select.form-select option[selected]::before {
 
 .flex-container label {
   margin-right: 1rem;
+}
+.slider {
+  width: 100%;
+  height: 2px;
+  background-color: #cdd9ed;
+  margin-top: 20px;
+}
+.slider .thumb {
+  width: 23px;
+  height: 23px;
+  cursor: grab;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid black;
+  margin-top: -12px;
+}
+.box {
+  width: 250px;
 }

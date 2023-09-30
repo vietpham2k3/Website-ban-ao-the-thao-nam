@@ -235,8 +235,10 @@ public class ChiTietSanPhamController {
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key,
                                     @RequestParam(value = "trangThai", required = false) Integer trangThai,
+                                    @RequestParam(value = "min", required = false) Double min,
+                                    @RequestParam(value = "max", required = false) Double max,
                                     @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, page));
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai,min,max, page));
     }
 
     @GetMapping("/getAllMSKCCTSP/{id}")

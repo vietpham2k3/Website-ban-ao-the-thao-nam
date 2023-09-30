@@ -11,7 +11,7 @@ public interface ChiTietSanPhamService {
 
     Page<ChiTietSanPham> page(Integer page);
 
-    Page<ChiTietSanPham> search(String key, Integer trangThai, Integer page);
+    Page<ChiTietSanPham> search(String key, Integer trangThai,Double min, Double max, Integer page);
 
     ChiTietSanPham add(ChiTietSanPham chiTietSanPham);
 
