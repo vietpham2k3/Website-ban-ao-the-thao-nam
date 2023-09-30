@@ -297,4 +297,10 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(mauSac_kichCo_ctspService.detail(id));
     }
 
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        chiTietSanPhamService.delete(id);
+        return ResponseEntity.ok("ok");
+    }
+
 }

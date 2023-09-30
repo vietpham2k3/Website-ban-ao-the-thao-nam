@@ -13,6 +13,10 @@ const putCTSP = (id, values) => {
   return axios.put('/api/chi-tiet-san-pham/update/' + id, values);
 };
 
+const deleteCTSP = (id) => {
+  return axios.put('/api/chi-tiet-san-pham/delete/' + id);
+};
+
 const searchCO = (key, page) => {
   return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&page=${page}`);
 };
@@ -76,6 +80,7 @@ const detailMSKCCTSP = (id) => {
 export {
   getAllCTSP,
   getAllListKC,
+  deleteCTSP,
   detailMSKCCTSP,
   addAllMSKCCTSP,
   putMSKCCTSP,
