@@ -7,10 +7,11 @@ import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { getAllCTSP } from 'services/SanPhamService';
+import { getAllCTSP, deleteCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 import defaul from '../../assets/images/default-placeholder.png';
+import { toast } from 'react-toastify';
 
 function SanPham() {
   const [data, setData] = useState([]);
@@ -31,7 +32,6 @@ function SanPham() {
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
-      console.log(res);
     }
   };
 
@@ -55,12 +55,18 @@ function SanPham() {
     return formatter.format(number);
   }
 
-  // const handleDelete = (id) => {
-  //   setIsShow(true);
-  //   setDataDelete(id);
-  // };
+  const deletesp = async (idSP) => {
+    const res = await deleteCTSP(idSP);
+    if (res) {
+      toast.success('Xoá thành công');
+    }
+  };
 
-  console.log(data);
+  const handleDelete = async (id) => {
+    await deletesp(id);
+    getAll(0);
+  };
+
   return (
     <div>
       <MainCard>
@@ -113,7 +119,7 @@ function SanPham() {
                     <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
-                      <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/delete/${d.id}`)} className="fa-solid fa-trash"></button>
+                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
                     </td>
                   </tr>
                 ))}
