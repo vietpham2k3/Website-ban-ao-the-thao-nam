@@ -10,9 +10,11 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter @Getter @Builder
-@Table(name = "MauSac")
-public class MauSac {
+@Getter
+@Setter
+@Builder
+@Table(name = "LichSuHoaDon")
+public class LichSuHoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -24,6 +26,9 @@ public class MauSac {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "nguoi_tao")
+    private String nguoiTao;
+
     @Column(name = "trang_thai")
     private Integer trangThai;
 
@@ -32,8 +37,11 @@ public class MauSac {
     @Temporal(TemporalType.TIMESTAMP)
     private Date ngayTao;
 
-    @Column(name = "ngay_sua")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ngaySua;
+    @Column(name = "ghi_chu")
+    private String ghiChu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_hd",
+    referencedColumnName = "id")
+    private HoaDon hoaDon;
 }
