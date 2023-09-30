@@ -4,7 +4,7 @@ import React from 'react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { useState } from 'react';
-import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX, postCTSP } from 'services/SanPhamService';
+import { getAllListCL, getAllListCO, getAllListLSP, getAllListNSX, postCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
@@ -16,7 +16,6 @@ import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 function AddSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
-  const [listMS, setListMS] = useState([]);
   const [listLSP, setListLSP] = useState([]);
   const [listCA, setListCA] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -30,9 +29,6 @@ function AddSanPham() {
     sanPham: {
       ten: '',
       moTa: ''
-    },
-    mauSac: {
-      id: ''
     },
     loaiSanPham: {
       id: ''
@@ -109,24 +105,19 @@ function AddSanPham() {
 
   const getAllList = async () => {
     const resCL = await getAllListCL();
-    const resMS = await getAllListMS();
     const resLSP = await getAllListLSP();
     const resCA = await getAllListCO();
     const resNSX = await getAllListNSX();
-    if (resCL || resMS || resLSP || resCA || resNSX) {
+    if (resCL || resLSP || resCA || resNSX) {
       setListCL(resCL.data);
-      setListMS(resMS.data);
       setListCA(resCA.data);
       setListLSP(resLSP.data);
       setListNSX(resNSX.data);
-      if (resCL.data.length > 0 || resMS.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
+      if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
         setValues({
           ...values,
           chatLieu: {
             id: resCL.data[0].id
-          },
-          mauSac: {
-            id: resMS.data[0].id
           },
           coAo: {
             id: resCA.data[0].id
@@ -245,33 +236,9 @@ function AddSanPham() {
             </select>
           </div>
           <div className="col-6">
-            <label className="form-label me-3" htmlFor="trang-thai4">
-              Màu sắc: <i className="fa-solid fa-plus"></i>
-            </label>{' '}
-            <select
-              className="form-select"
-              aria-label="Default select example"
-              onChange={(e) => {
-                setValues({
-                  ...values,
-                  mauSac: {
-                    id: e.target.value
-                  }
-                });
-              }}
-            >
-              {listMS.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.ten}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-4">
             <label className="form-label me-3" htmlFor="trang-thai5">
               Loại sản phẩm: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
             </label>
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
@@ -291,7 +258,7 @@ function AddSanPham() {
               ))}
             </select>
           </div>
-          <div className="col-4">
+          <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6s">
               Cổ áo:{' '}
               <span
@@ -309,7 +276,6 @@ function AddSanPham() {
                 <i className="fa-solid fa-plus"></i>
               </span>
             </label>{' '}
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
@@ -329,11 +295,10 @@ function AddSanPham() {
               ))}
             </select>
           </div>
-          <div className="col-4">
+          <div className="col-6">
             <label className="form-label me-3" htmlFor="trang-thai6">
               Nhà sản xuất: <i className="fa-solid fa-plus" style={{ cursor: 'pointer' }}></i>
             </label>{' '}
-            <br />
             <select
               className="form-select"
               aria-label="Default select example"
