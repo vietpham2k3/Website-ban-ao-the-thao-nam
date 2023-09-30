@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 // project imports
@@ -7,18 +9,25 @@ import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { getAllCTSP, deleteCTSP } from 'services/SanPhamService';
+import { getAllCTSP, deleteCTSP, searchCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
-import defaul from '../../assets/images/default-placeholder.png';
+// import defaul from '../../assets/images/default-placeholder.png';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
+import Slider from 'react-slider';
+
+const MIN = 0;
+const MAX = 999999;
 
 function SanPham() {
   const [data, setData] = useState([]);
-  const [imageErrors, setImageErrors] = useState([]);
+  // const [imageErrors, setImageErrors] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  // const [isShow, setIsShow] = useState(false);
-  // const [dataDelete, setDataDelete] = useState({});
+  const [values, setValues] = useState([MIN, MAX]);
+  const [term, setTerm] = useState('');
+  const [status, setStatus] = useState('');
+  const [radio, setRadio] = useState('');
 
   const navigate = useNavigate();
 
@@ -35,11 +44,11 @@ function SanPham() {
     }
   };
 
-  const handleImageError = (index) => {
-    const updatedErrors = [...imageErrors];
-    updatedErrors[index] = true;
-    setImageErrors(updatedErrors);
-  };
+  // const handleImageError = (index) => {
+  //   const updatedErrors = [...imageErrors];
+  //   updatedErrors[index] = true;
+  //   setImageErrors(updatedErrors);
+  // };
 
   const handlePageClick = (event) => {
     getAll(event.selected);
@@ -67,12 +76,84 @@ function SanPham() {
     getAll(0);
   };
 
+  const handleSearchUsers = _.debounce(async () => {
+    const res = await searchCTSP(term, status, values[0], values[1], '0');
+    if (res && res.data) {
+      setData(res.data.content);
+    }
+  }, 100);
+
+  useEffect(() => {
+    handleSearchUsers();
+  }, [term, status, values]);
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
+  };
+
+  const handleRadioChange = (e) => {
+    setStatus(e.target.value);
+    setRadio(e.target.value);
+  };
+
+  const handleAllClick = () => {
+    setStatus('');
+    setRadio('');
+  };
+
   return (
     <div>
       <MainCard>
         <div className="row">
-          <div className="col-6 search">
-            <input type="text" className="input-search" placeholder="Search..." />
+          <div className="col-6 search d-flex align-items-center row">
+            <input
+              type="text"
+              className="input-search box col-auto"
+              placeholder="Search..."
+              value={term}
+              onChange={handleInputChange}
+              style={{ width: '500px' }}
+            />
+            <div className="box d-flex flex-row col-auto">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  checked={radio === ''}
+                  value=""
+                  onClick={handleAllClick}
+                  onChange={handleRadioChange}
+                />
+                <label className="form-check-label" htmlFor="exampleRadios1" style={{ width: '60px' }}>
+                  Tất cả
+                </label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="radio" checked={radio === '0'} value="0" onChange={handleRadioChange} />
+                <label className="form-check-label" htmlFor="exampleRadios2" style={{ width: '120px' }}>
+                  Ngừng kinh doanh
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="exampleRadios"
+                  checked={radio === '1'}
+                  value="1"
+                  onChange={handleRadioChange}
+                />
+                <label className="form-check-label" htmlFor="exampleRadios3" style={{ width: '120px' }}>
+                  Đang kinh doanh
+                </label>
+              </div>
+            </div>
+            <div className="box col-auto" style={{ marginLeft: '120px', width: '200px' }}>
+              <div className="values">
+                <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
+              </div>
+              <Slider className="slider" onChange={setValues} value={values} min={MIN} max={MAX}></Slider>
+            </div>
           </div>
           <div className="col-6 d-none d-md-block">
             <div color="blue" className="float-end">
@@ -100,17 +181,11 @@ function SanPham() {
                   <tr key={i} className="text-center">
                     <td>{i + 1}</td>
                     <td>
-                      {!imageErrors[i] ? (
-                        <img
-                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                          alt="Hình ảnh sản phẩm"
-                          onError={() => handleImageError(i)}
-                          className="product-image"
-                          style={{ width: '70px', height: '100px' }}
-                        />
-                      ) : (
-                        <img src={defaul} alt="Ảnh mặc định" className="product-image" style={{ width: '70px', height: '100px' }} />
-                      )}
+                      <img
+                        src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                        className="product-image"
+                        style={{ width: '70px', height: '100px' }}
+                      />
                     </td>
                     <td>{d.ma}</td>
                     <td>{d.sanPham.ten}</td>

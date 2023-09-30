@@ -17,8 +17,8 @@ const deleteCTSP = (id) => {
   return axios.put('/api/chi-tiet-san-pham/delete/' + id);
 };
 
-const searchCO = (key, page) => {
-  return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&page=${page}`);
+const searchCTSP = (key, trangThai, min, max, page) => {
+  return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&trangThai=${trangThai}&min=${min}&max=${max}&page=${page}`);
 };
 
 const detailCTSP = (id) => {
@@ -91,7 +91,7 @@ export {
   deleteAnh,
   putCTSP,
   deleteMSKCCTSP,
-  searchCO,
+  searchCTSP,
   detailCTSP,
   getAllListCO,
   getAllListCL,

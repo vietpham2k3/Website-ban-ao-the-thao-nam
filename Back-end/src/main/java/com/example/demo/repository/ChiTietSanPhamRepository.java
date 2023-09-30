@@ -27,10 +27,17 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     void update(Integer soLuong, UUID id);
 
     @Query(value = "SELECT c.*, sp.id as idsp, sp.ten FROM ChiTietSanPham c\n" +
-            "join SanPham sp on c.id_sp = sp.id\n" +
-            "WHERE ((c.ma IS NULL OR c.ma LIKE LOWER( CONCAT('%', :key, '%')))\n" +
-            "or (sp.ten IS NULL OR sp.ten LIKE LOWER(CONCAT('%', :key , '%'))))\n" +
-            "and (c.trang_thai IS NULL OR c.trang_thai = :trangThai)", nativeQuery = true)
-    Page<ChiTietSanPham> search(String key, Integer trangThai, Pageable pageable);
+            "JOIN SanPham sp ON c.id_sp = sp.id\n" +
+            "WHERE (:key IS NULL OR c.ma LIKE LOWER(CONCAT('%', :key, '%')) OR sp.ten LIKE LOWER(CONCAT('%', :key , '%')))\n" +
+            "AND (:trangThai IS NULL OR c.trang_thai = :trangThai)\n" +
+            "AND ((:min IS NULL OR c.gia_ban >= :min) AND (:max IS NULL OR c.gia_ban <= :max))",
+            nativeQuery = true)
+    Page<ChiTietSanPham> search(
+            @Param("key") String key,
+            @Param("trangThai") Integer trangThai,
+            @Param("min") Double min,
+            @Param("max") Double max,
+            Pageable pageable
+    );
 
 }

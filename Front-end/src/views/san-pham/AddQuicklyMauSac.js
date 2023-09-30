@@ -13,7 +13,7 @@ function AddMauSac(props) {
   const handleColorChange = (newColor) => {
     setColor(newColor); // Cập nhật giá trị màu từ bảng màu
     // setMa(newColor.hex); // Cập nhật giá trị 'ma' từ bảng màu
-    setValues({ ...values, ma: newColor.hex });
+    setValues({ ...values, ten: newColor.hex });
   };
 
   return (

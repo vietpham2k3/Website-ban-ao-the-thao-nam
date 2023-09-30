@@ -100,19 +100,17 @@ function DonHang() {
   return (
     <div>
       <MainCard>
-      <div className="col-12 row">
-              <div className="page-title-box">
-                <div className="page-title-center">
-                  <h1 className="page-title" style={{ textAlign: 'center', fontSize: '200%', marginBottom: '50px', fontWeight: 'bold' }}>
-                    Đơn Hàng
-                  </h1>
-                </div>
-              </div>
+        <div className="col-12 row">
+          <div className="page-title-box">
+            <div className="page-title-center">
+              <h1 className="page-title" style={{ textAlign: 'center', fontSize: '200%', marginBottom: '50px', fontWeight: 'bold' }}>
+                Đơn Hàng
+              </h1>
             </div>
+          </div>
+        </div>
         <Card>
           <div className="w-auto rounded bg-white border shadow p-4">
-           
-
             {/* <form className="export-form">
               <button
                 onClick={handleSubmit}
@@ -338,7 +336,7 @@ function DonHang() {
                               verticalAlign: 'middle',
                               alignItems: 'center',
                               fontWeight: 'bold',
-                              backgroundColor: "#126e3bff",
+                              backgroundColor: '#126e3bff',
                               color: 'white'
                             }}
                             className="btn btn-labeled shadow-button btn status-completed"

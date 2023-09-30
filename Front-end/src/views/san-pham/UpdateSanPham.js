@@ -283,8 +283,8 @@ function UpdateSanPham() {
     setModalShowNSX(false);
     getAllList();
     setValuesCL({
-      ma: '',
-      ten: ''
+      ten: '',
+      trangThai: 0
     });
   };
 
@@ -309,7 +309,6 @@ function UpdateSanPham() {
   const postCA = async (value) => {
     const res = await postCa(value);
     if (res) {
-      toast.success('Add thành công');
       closeModal();
     }
   };
@@ -322,7 +321,6 @@ function UpdateSanPham() {
   const post = async (value) => {
     const res = await postCreate(value);
     if (res) {
-      toast.success('Add thành công');
       closeModal();
     }
   };
