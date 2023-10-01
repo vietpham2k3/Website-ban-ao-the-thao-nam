@@ -4,6 +4,13 @@ const getAllPageDH = (page) => {
   return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`);
 };
 
+const findVIP = (key,tuNgay,denNgay,min,max,
+  trangThai,loaiDon,tenHinhThuc,page) => {
+  return axios.get(`/api/hoa-don/hien-thi-page-find?key=${key}&tuNgay=${tuNgay}
+  &denNgay=${denNgay}&min=${min}&max=${max}&trangThai=${trangThai}
+  &loaiDon=${loaiDon}&tenHinhThuc=${tenHinhThuc}&page=${page}`);
+};
+
 const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
@@ -24,4 +31,4 @@ const updateKHDH = (id, values) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD };
+export { getAllHD, getAllPageDH, findVIP,printExcel, updateKHDH, detailHD };

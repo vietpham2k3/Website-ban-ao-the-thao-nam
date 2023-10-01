@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,37 +33,78 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/hoa-don/")
 public class HoaDonController {
-    @Autowired public HoaDonServiceImpl service;
-    @Autowired public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public HoaDonServiceImpl service;
+    @Autowired
+    public HinhThucThanhToanServiceImpl serviceHttt;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> getAll(){
-     return ResponseEntity.ok(service.listHD());
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(service.listHD());
     }
 
     @GetMapping("hien-thi-page")
-    public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page){
-        Pageable pageable = PageRequest.of(page,5);
+    public ResponseEntity<?> getPageHD(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable UUID id){
+    public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(service.detailHD(id));
     }
 
+    public class TrangThaiWrapper {
+        private List<Integer> trangThai;
+        // getters and setters
+
+        public List<Integer> getTrangThai() {
+            return trangThai;
+        }
+
+        public TrangThaiWrapper(List<Integer> trangThai) {
+            this.trangThai = trangThai;
+        }
+
+        public void setTrangThai(List<Integer> trangThai) {
+            this.trangThai = trangThai;
+        }
+    }
+
+    @GetMapping("hien-thi-page-find")
+    public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Double min, Double max,
+                                     @Param("trangThai") TrangThaiWrapper trangThai, Integer loaiDon, String tenHinhThuc,
+                                     @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
+        Date tuNgayDate = null;
+        Date denNgayDate = null;
+
+        try {
+            tuNgayDate = dateFormat.parse(tuNgay);
+            denNgayDate = dateFormat.parse(denNgay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(service.searchVIP(key, tuNgayDate, denNgayDate, min, max, trangThai, loaiDon, tenHinhThuc, pageable));
+    }
+
     @PutMapping("updateKH/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id,@RequestBody HoaDon hoaDon){
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         hoaDon.setNgaySua(new Date());
-        service.updateKHHD(id,hoaDon.getTenNguoiNhan(),hoaDon.getSoDienThoai(),
+        service.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi());
         return ResponseEntity.ok("ok");
     }

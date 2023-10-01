@@ -267,7 +267,7 @@ function DonHangCT() {
                           10/10/2023
                         </span>
                         <div className="p-timeline-block">
-                        
+                        <i style={{marginTop: 27}} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
                         </div>
                       </div>
                     </li>
@@ -275,7 +275,7 @@ function DonHangCT() {
                       <div className="p-timeline-item">
                         <span className="p-timeline-date">Đã hủy đơn hàng</span>
                         <span className="p-timeline-carmodel">
-                          
+                        10/10/2023
                         </span>
                         <div className="p-timeline-block">
                         <i style={{marginTop: 27}} className="fa-solid fa-xmark fa-beat fa-xl"></i>
@@ -299,7 +299,9 @@ function DonHangCT() {
                         <span className="p-timeline-carmodel">
                           
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                        </div>
                       </div>
                     </li>
                     <li className="timeline-item bmw">
@@ -308,7 +310,9 @@ function DonHangCT() {
                         <span className="p-timeline-carmodel">
                           
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+                        </div>
                       </div>
                     </li>
                     <li className="timeline-item bmw">
@@ -317,7 +321,9 @@ function DonHangCT() {
                         <span className="p-timeline-carmodel" >
                           
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                        </div>
                       </div>
                     </li>
                     <li className="timeline-item mini">
@@ -326,7 +332,9 @@ function DonHangCT() {
                         <span className="p-timeline-carmodel">
                          
                         </span>
-                        <div className="p-timeline-block"></div>
+                        <div className="p-timeline-block">
+                        <i style={{marginTop: 27}} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                        </div>
                       </div>
                     </li>
                   </ul>
