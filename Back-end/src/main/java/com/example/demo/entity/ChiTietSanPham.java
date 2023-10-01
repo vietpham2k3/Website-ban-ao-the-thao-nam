@@ -68,7 +68,7 @@ public class ChiTietSanPham {
 
     @Column(name = "gia_ban")
     @NotNull(message = "Không được để trống")
-    private Integer giaBan;
+    private Double giaBan;
 
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

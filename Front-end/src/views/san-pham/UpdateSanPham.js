@@ -608,7 +608,7 @@ function UpdateSanPham() {
       </MainCard>
       <MainCard className="my-3">
         <div className="row">
-          <div className="col-10 d-flex align-items-center">
+          <div className="col-10 d-flex align-items-center justify-content-start">
             <h2>Thuộc tính</h2>
           </div>
           <div className="col-2 d-flex justify-content-end align-items-center">
@@ -673,7 +673,7 @@ function UpdateSanPham() {
                         }}
                         className="fa-solid fa-pen"
                       ></button>
-                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
+                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
                     </td>
                   </tr>
                 ))}

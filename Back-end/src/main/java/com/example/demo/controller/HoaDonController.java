@@ -4,9 +4,13 @@ import com.example.demo.dto.HoaDonRequest;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.NhanVienRequest;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
+import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
+import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,29 +44,66 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/hoa-don/")
 public class HoaDonController {
-    @Autowired public HoaDonServiceImpl service;
-    @Autowired public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public HoaDonServiceImpl service;
+    @Autowired
+    public HoaDonChiTietServiceImpl hoaDonChiTietService;
+    @Autowired
+    public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public LichSuHoaDonServiceImpl lichSuHoaDonService;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> getAll(){
-     return ResponseEntity.ok(service.listHD());
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(service.listHD());
+    }
+
+    @GetMapping("getById/{id}")
+    public ResponseEntity<?> getAllById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
+    }
+
+
+    @PostMapping("add")
+    public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) {
+        String ma = "HD" + new Random().nextInt(100000);
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        hoaDon.setMa(ma);
+        hoaDon.setNgayTao(new Date());
+        hoaDon.setLoaiDon(0);
+        hoaDon.setTrangThai(1);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
+                .ma(maLSHD)
+                .ten("Tạo hoá đơn")
+                .trangThai(0)
+                .ngayTao(new Date())
+                .hoaDon(hoaDon)
+                .build();
+        service.add(hoaDon);
+        return ResponseEntity.ok(lichSuHoaDonService.add(lichSuHoaDon));
+    }
+
+    @PostMapping("add-sp")
+    public ResponseEntity<?> addSP(@RequestBody HoaDonChiTiet hoaDon) {
+        hoaDon.setDonGia(hoaDon.getChiTietSanPham().getGiaBan());
+        return ResponseEntity.ok(hoaDonChiTietService.add(hoaDon));
     }
 
     @GetMapping("hien-thi-page")
-    public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page){
-        Pageable pageable = PageRequest.of(page,5);
+    public ResponseEntity<?> getPageHD(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable UUID id){
+    public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(service.detailHD(id));
     }
 
     @PutMapping("updateKH/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id,@RequestBody HoaDon hoaDon){
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         hoaDon.setNgaySua(new Date());
-        service.updateKHHD(id,hoaDon.getTenNguoiNhan(),hoaDon.getSoDienThoai(),
+        service.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi());
         return ResponseEntity.ok("ok");
     }

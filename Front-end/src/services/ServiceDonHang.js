@@ -20,8 +20,16 @@ const updateKHDH = (id, values) => {
   return axios.put(`/api/hoa-don/updateKH/` + id, values);
 };
 
+const addHD = () => {
+  return axios.post('/api/hoa-don/add', {});
+};
+
+const getById = (id) => {
+  return axios.get(`/api/hoa-don/getById/${id}`);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD };
+export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailHD, addHD, getById };

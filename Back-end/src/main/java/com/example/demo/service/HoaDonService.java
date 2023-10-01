@@ -10,16 +10,17 @@ import java.util.UUID;
 
 public interface HoaDonService {
 
-    public List<HoaDon> listHD();
+    List<HoaDon> listHD();
 
-    public Page<HoaDon> pageHD(Pageable pageable);
+    Page<HoaDon> pageHD(Pageable pageable);
 
-    public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
+    Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
-    public List<HoaDon> getExcel();
+    List<HoaDon> getExcel();
 
-    public HoaDon detailHD(UUID id);
+    HoaDon detailHD(UUID id);
 
-    public void updateKHHD(UUID id, String tenNguoiNhan,String soDienThoai,String diaChi);
+    void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
+    HoaDon add(HoaDon hoaDon);
 }
