@@ -26,7 +26,7 @@ function DonHang() {
   const [radioLoai, setRadioLoai] = useState('');
   const [hinhThuc, setHinhThuc] = useState('');
   const [radioHT, setRadioHT] = useState('');
-    //select trangThai
+  //select trangThai
   const [selectedOptions, setSelectedOptions] = useState([]);
   // tong tien
   const [values, setValues] = useState([MIN, MAX]);
@@ -38,8 +38,6 @@ function DonHang() {
   //ngayTao
   const currentDate = new Date();
   const nextYear = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
-
-
 
   const optionList = [
     { value: '0', label: 'Đang chờ xác nhận' },
@@ -135,10 +133,10 @@ function DonHang() {
     handlePageChange(event.selected);
   };
 
-//refesh
-const handleRefresh = () => {
-  window.location.reload();
-};
+  //refesh
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
