@@ -21,7 +21,28 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
+    public List<HoaDonChiTiet> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
     public HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet) {
         return repository.save(hoaDonChiTiet);
+    }
+
+    @Override
+    public void update(Integer soLuong, UUID id) {
+        repository.update(soLuong, id);
+    }
+
+
+    @Override
+    public Boolean existsById(UUID id) {
+        return repository.existsById(id);
+    }
+
+    @Override
+    public HoaDonChiTiet findById(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 }

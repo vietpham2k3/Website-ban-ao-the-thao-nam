@@ -3,14 +3,18 @@ package com.example.demo.controller;
 import com.example.demo.dto.HoaDonRequest;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.NhanVienRequest;
+import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.entity.MauSac_KichCo_CTSP;
 import com.example.demo.entity.NhanVien;
+import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
+import com.example.demo.service.impl.MauSac_KichCo_CTSPServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -52,6 +56,10 @@ public class HoaDonController {
     public HinhThucThanhToanServiceImpl serviceHttt;
     @Autowired
     public LichSuHoaDonServiceImpl lichSuHoaDonService;
+    @Autowired
+    private ChiTietSanPhamServiceImpl chiTietSanPhamService;
+    @Autowired
+    private MauSac_KichCo_CTSPServiceImpl mauSac_kichCo_ctspService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -83,10 +91,14 @@ public class HoaDonController {
         return ResponseEntity.ok(lichSuHoaDonService.add(lichSuHoaDon));
     }
 
-    @PostMapping("add-sp")
-    public ResponseEntity<?> addSP(@RequestBody HoaDonChiTiet hoaDon) {
-        hoaDon.setDonGia(hoaDon.getChiTietSanPham().getGiaBan());
-        return ResponseEntity.ok(hoaDonChiTietService.add(hoaDon));
+    @PostMapping("add-sp/{id}")
+    public ResponseEntity<?> addSP(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+        hoaDon.setDonGia(sp.getGiaBan());
+        mauSac_kichCo_ctspService.update(hoaDon.getSoLuong(), id);
+        mauSac_kichCo_ctspService.updateCTSP(hoaDon.getSoLuong(), hoaDon.getChiTietSanPham().getId());
+        hoaDonChiTietService.add(hoaDon);
+        return ResponseEntity.ok(hoaDon.getId());
     }
 
     @GetMapping("hien-thi-page")

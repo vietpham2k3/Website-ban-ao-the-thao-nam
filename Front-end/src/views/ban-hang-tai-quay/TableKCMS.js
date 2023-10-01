@@ -1,22 +1,10 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import { deleteMSKCCTSP } from 'services/SanPhamService';
+import '../../scss/TableMSKC.scss';
 
 const TableKCMS = (props) => {
-  const { handleClose, show, dataDelete, getAll, id } = props;
-
-  const handleConfirm = async () => {
-    let res = await deleteMSKCCTSP(dataDelete);
-    if (res) {
-      toast.success('Delete success!');
-      handleClose();
-      getAll(id);
-    } else {
-      toast.error('Error!');
-    }
-  };
+  const { handleClose, show, values, setValuesAdd, handleAdd, valuesAdd, handleDetail, dataDetail } = props;
 
   return (
     <div>
@@ -30,19 +18,48 @@ const TableKCMS = (props) => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Thông báo</Modal.Title>
+          <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="body-add-new">
-            Bạn có chắc muốn xoá <strong>vĩnh viễn</strong> thuộc tính này không?
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="form-label">
+                Thuộc tính
+              </label>
+              {values.map((d, i) => (
+                <div className="form-check" key={i}>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault1"
+                    onChange={() => handleDetail(d.id)}
+                  />
+                  <label className="form-check-label custom-label" htmlFor="flexRadioDefault1">
+                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>&nbsp;- {d.kichCo.ten}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                Số lượng:{' '}
+                <small>
+                  Còn lại <strong>{dataDetail.soLuong}</strong>
+                </small>
+              </label>
+              <input
+                className="form-control"
+                id="exampleFormControlTextarea1"
+                type="number"
+                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+              ></input>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Đóng
-          </Button>
-          <Button variant="danger" onClick={() => handleConfirm()}>
-            Xoá
+          <Button variant="primary" onClick={() => handleAdd()}>
+            Thêm
           </Button>
         </Modal.Footer>
       </Modal>

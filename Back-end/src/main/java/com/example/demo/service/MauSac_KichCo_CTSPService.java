@@ -17,4 +17,8 @@ public interface MauSac_KichCo_CTSPService {
     MauSac_KichCo_CTSP delete(UUID id);
 
     MauSac_KichCo_CTSP detail(UUID id);
+
+    void update(Integer soLuong, UUID id);
+
+    void updateCTSP(Integer soLuong, UUID id);
 }

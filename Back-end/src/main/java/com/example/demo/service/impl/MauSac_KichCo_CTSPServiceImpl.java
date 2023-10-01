@@ -45,4 +45,14 @@ public class MauSac_KichCo_CTSPServiceImpl implements MauSac_KichCo_CTSPService 
     public MauSac_KichCo_CTSP detail(UUID id) {
         return reposiory.findById(id).orElse(null);
     }
+
+    @Override
+    public void update(Integer soLuong, UUID id) {
+        reposiory.updateMSKC(soLuong, id);
+    }
+
+    @Override
+    public void updateCTSP(Integer soLuong, UUID id) {
+        reposiory.updateCTSP(soLuong, id);
+    }
 }

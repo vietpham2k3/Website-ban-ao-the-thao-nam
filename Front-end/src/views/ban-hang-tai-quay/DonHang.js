@@ -71,7 +71,7 @@ function DonHang(props) {
           </div>
           {values.length > 0 && (
             <div className="search-result">
-              <SearchResult result={values} id={id} />
+              <SearchResult result={values} id={id} getAllById={getAllById} handleSearchUsers={handleSearchUsers} />
             </div>
           )}
           <div className="table-container">
