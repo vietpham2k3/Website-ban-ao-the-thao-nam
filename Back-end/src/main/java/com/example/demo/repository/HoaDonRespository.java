@@ -55,7 +55,6 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
                                       @Param("maxTT") Double maxTT,
                                       Pageable pageable);
 
-
     @Transactional
     @Modifying
     @Query(value = "UPDATE HoaDon SET ten_nguoi_nhan = :tenNguoiNhan, " +

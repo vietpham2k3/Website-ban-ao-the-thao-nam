@@ -251,11 +251,25 @@ function DonHang() {
                 </div>
               </div>
 
-              <div className="box col-auto col-6">
-                <div style={{ marginLeft: 60, marginTop: 8 }} className="values">
+              <div style={{  marginLeft: 80 }} className="box col-auto col-5">
+                <div style={{  marginTop: 5 }} className="values">
+                  <strong>Số lượng:</strong> {valuesSL[0] + ' - ' + valuesSL[1]}
+                </div>
+                <br />
+                <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
+              </div>
+
+             
+            </div>
+            <br></br>
+            <div className="row">
+       
+
+            <div className="box col-auto col-6">
+                <div  className="values">
                   <strong>Loại đơn:</strong>
                 </div>
-                <FormGroup style={{ marginLeft: 60, marginTop: 15 }}>
+                <FormGroup style={{ marginTop: 15 }}>
                   <FormCheck inline>
                     <FormCheck.Input
                       type="radio"
@@ -278,16 +292,6 @@ function DonHang() {
                     <FormCheck.Label>Đặt hàng online</FormCheck.Label>
                   </FormCheck>
                 </FormGroup>
-              </div>
-            </div>
-            <br></br>
-            <div className="row">
-            <div className="box col-auto col-3">
-                <div className="values">
-                  <strong>Số lượng:</strong> {convertToCurrency(valuesSL[0]) + ' - ' + convertToCurrency(valuesSL[1])}
-                </div>
-                <br />
-                <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
               </div>
 
               <div style={{ marginLeft: 320, marginTop: 20 }} className="box col-auto col-2">
