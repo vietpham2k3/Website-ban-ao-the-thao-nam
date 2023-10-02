@@ -1,47 +1,23 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.HoaDonRequest;
-import com.example.demo.dto.KhachHangDTO;
-import com.example.demo.dto.NhanVienRequest;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.LichSuHoaDon;
-import com.example.demo.entity.MauSac_KichCo_CTSP;
-import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
-import com.example.demo.service.impl.MauSac_KichCo_CTSPServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.*;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -58,8 +34,6 @@ public class HoaDonController {
     public LichSuHoaDonServiceImpl lichSuHoaDonService;
     @Autowired
     private ChiTietSanPhamServiceImpl chiTietSanPhamService;
-    @Autowired
-    private MauSac_KichCo_CTSPServiceImpl mauSac_kichCo_ctspService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -70,7 +44,6 @@ public class HoaDonController {
     public ResponseEntity<?> getAllById(@PathVariable UUID id) {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
     }
-
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) {
@@ -93,10 +66,22 @@ public class HoaDonController {
 
     @PostMapping("add-sp/{id}")
     public ResponseEntity<?> addSP(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+        List<HoaDonChiTiet> list = hoaDonChiTietService.findAll();
+        for (HoaDonChiTiet h : list) {
+            if (h.getChiTietSanPham().getId().equals(hoaDon.getChiTietSanPham().getId()) &&
+                    h.getHoaDon().getId().equals(hoaDon.getHoaDon().getId())  ) {
+                // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+                hoaDon.setDonGia(sp.getGiaBan());
+                // Tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu
+                hoaDonChiTietService.update(hoaDon.getSoLuong(), h.getId());
+                return ResponseEntity.ok("ok");
+            }
+        }
+
+        // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
         ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
         hoaDon.setDonGia(sp.getGiaBan());
-        mauSac_kichCo_ctspService.update(hoaDon.getSoLuong(), id);
-        mauSac_kichCo_ctspService.updateCTSP(hoaDon.getSoLuong(), hoaDon.getChiTietSanPham().getId());
         hoaDonChiTietService.add(hoaDon);
         return ResponseEntity.ok(hoaDon.getId());
     }

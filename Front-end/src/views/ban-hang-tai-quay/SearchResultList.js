@@ -16,6 +16,7 @@ function SearchResult(props) {
   const [idCTSP, setidCTSP] = useState('');
   const [values, setValues] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
+  const [inputDetail, setInputDetail] = useState(null);
   const [valuesAdd, setValuesAdd] = useState({
     chiTietSanPham: {
       id: ''
@@ -66,6 +67,7 @@ function SearchResult(props) {
 
   const handleClose = () => {
     setShow(false);
+    setInputDetail(null);
     setValuesAdd({
       chiTietSanPham: {
         id: ''
@@ -89,6 +91,7 @@ function SearchResult(props) {
   };
 
   const handleDetail = (id) => {
+    setInputDetail(id);
     detail(id);
   };
 
@@ -114,10 +117,8 @@ function SearchResult(props) {
               </td>
               <td>{d.ma}</td>
               <td>{d.sanPham.ten}</td>
-              <td>{id}</td>
               <td>{d.soLuong || 0}</td>
               <td>{convertToCurrency(d.giaBan)}</td>
-              <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
             </tr>
           ))}
         </tbody>
@@ -131,6 +132,7 @@ function SearchResult(props) {
         valuesAdd={valuesAdd}
         handleDetail={handleDetail}
         dataDetail={dataDetail}
+        inputDetail={inputDetail}
       ></TableKCMS>
     </div>
   );

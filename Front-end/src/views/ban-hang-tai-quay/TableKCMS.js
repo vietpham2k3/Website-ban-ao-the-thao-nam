@@ -4,7 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import '../../scss/TableMSKC.scss';
 
 const TableKCMS = (props) => {
-  const { handleClose, show, values, setValuesAdd, handleAdd, valuesAdd, handleDetail, dataDetail } = props;
+  const { handleClose, show, values, setValuesAdd, handleAdd, valuesAdd, handleDetail, dataDetail, inputDetail } = props;
 
   return (
     <div>
@@ -52,6 +52,7 @@ const TableKCMS = (props) => {
                 className="form-control"
                 id="exampleFormControlTextarea1"
                 type="number"
+                style={{ display: `${inputDetail !== null ? '' : 'none'}` }}
                 onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
               ></input>
             </div>

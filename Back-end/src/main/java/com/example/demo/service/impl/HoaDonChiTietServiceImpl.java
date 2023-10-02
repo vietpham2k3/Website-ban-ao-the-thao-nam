@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.service.HoaDonChiTietService;
@@ -37,8 +39,8 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
 
     @Override
-    public Boolean existsById(UUID id) {
-        return repository.existsById(id);
+    public List<HoaDonChiTiet> existsById(ChiTietSanPham chiTietSanPham, HoaDon hoaDon) {
+        return repository.existsById(chiTietSanPham, hoaDon);
     }
 
     @Override

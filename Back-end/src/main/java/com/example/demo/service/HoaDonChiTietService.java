@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 
 import java.util.List;
@@ -15,7 +17,8 @@ public interface HoaDonChiTietService {
 
     void update(Integer soLuong, UUID id);
 
-    Boolean existsById(UUID id);
+    List<HoaDonChiTiet> existsById(ChiTietSanPham chiTietSanPham, HoaDon hoaDon);
 
     HoaDonChiTiet findById(UUID id);
+
 }

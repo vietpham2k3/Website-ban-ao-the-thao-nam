@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,11 +18,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Query(value = "select h from HoaDonChiTiet h where h.hoaDon.id = :id")
     List<HoaDonChiTiet> getAll(UUID id);
 
-    boolean existsById(UUID id);
+    @Query(value = "select h from HoaDonChiTiet h where h.chiTietSanPham = :chiTietSanPham and h.hoaDon = :hoaDon ")
+    List<HoaDonChiTiet> existsById(ChiTietSanPham chiTietSanPham, HoaDon hoaDon);
 
     @Transactional
     @Modifying
     @Query(value = "update HoaDonChiTiet c set c.soLuong = c.soLuong + :soLuong  where c.id = :id")
     void update(Integer soLuong, UUID id);
+
 
 }

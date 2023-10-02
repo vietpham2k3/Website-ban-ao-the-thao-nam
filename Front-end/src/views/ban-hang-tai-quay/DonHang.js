@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { searchCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
 import { getById } from 'services/ServiceDonHang';
+import { toast } from 'react-toastify';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
@@ -33,6 +34,14 @@ function DonHang(props) {
     }
   };
 
+  useEffect(() => {
+    const selectedId = localStorage.getItem('selectedId');
+    // Làm gì đó với giá trị selectedId ở đây
+    // Ví dụ: setValuesAdd({ ...valuesAdd, selectedId });
+    // hoặc handleDetail(selectedId);
+    toast.success(selectedId);
+  }, []);
+
   const handleSearchUsers = _.debounce(async () => {
     if (inputValue !== '') {
       // Kiểm tra nếu inputValue không rỗng
@@ -54,6 +63,10 @@ function DonHang(props) {
 
     return formatter.format(number);
   }
+
+  const handleUpdateSoLuong = (id) => {
+    toast.success(id);
+  };
 
   return (
     <div>
@@ -87,7 +100,7 @@ function DonHang(props) {
               </tr>
               <tbody>
                 {valuesSanPham.map((d, i) => (
-                  <tr key={i} className="text-center">
+                  <tr key={i} className="text-center" style={{ cursor: 'pointer' }} onClick={() => handleUpdateSoLuong(d.id)}>
                     <td>{i + 1}</td>
                     <td>{d.chiTietSanPham.ma}</td>
                     <td>
