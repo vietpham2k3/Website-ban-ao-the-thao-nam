@@ -59,8 +59,13 @@ public class ChiTietSanPhamController {
     }
 
     @GetMapping("getAllCTSP")
-    public ResponseEntity<?>getAll(){
+    public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(chiTietSanPhamService.getAll());
+    }
+
+    @GetMapping("getAllSPNEW")
+    public ResponseEntity<?> getAllSPNEW() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllSPNEW());
     }
 
     @GetMapping("/{id}")
@@ -237,7 +242,7 @@ public class ChiTietSanPhamController {
                                     @RequestParam(value = "min", required = false) Double min,
                                     @RequestParam(value = "max", required = false) Double max,
                                     @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai,min,max, page));
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, page));
     }
 
 

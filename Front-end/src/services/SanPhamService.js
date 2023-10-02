@@ -5,6 +5,10 @@ const getAll = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllCTSP');
 };
 
+const getAllSPNEW = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
+};
+
 const getAllCTSP = (page) => {
   return axios.get(`/api/chi-tiet-san-pham/getAll?page=${page}`);
 };
@@ -102,5 +106,6 @@ export {
   getAllListCL,
   getAllListMS,
   getAllListLSP,
-  getAllListNSX
+  getAllListNSX,
+  getAllSPNEW
 };
