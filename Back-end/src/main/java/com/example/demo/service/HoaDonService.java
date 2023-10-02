@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.controller.HoaDonController;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface HoaDonService {
 
@@ -16,11 +17,16 @@ public interface HoaDonService {
 
     Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
-    List<HoaDon> getExcel();
+    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer trangThai,
+                                        Integer loaiDon, Double minSL, Double maxSL, Double minTT,
+                                        Double maxTT, Pageable pageable);
+
+    public List<HoaDon> getExcel();
+
 
     HoaDon detailHD(UUID id);
 
-    void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
+    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
     HoaDon add(HoaDon hoaDon);
 }

@@ -10,13 +10,13 @@ function Banner() {
     <div>
       <Carousel className="banner" style={{ paddingTop: 20 }}>
         <Carousel.Item interval={1000}>
-          <Image src={AnhBanner} className="d-block w-100" style={{ height: 400 }} alt="Anh1" />
+          <Image src={AnhBanner} className="d-block w-100" alt="Anh1" />
         </Carousel.Item>
         <Carousel.Item interval={500}>
-          <Image src={AnhBanner2} className="d-block w-100" style={{ height: 400 }} alt="Anh2" />
+          <Image src={AnhBanner2} className="d-block w-100" alt="Anh2" />
         </Carousel.Item>
         <Carousel.Item>
-          <Image src={AnhBanner1} className="d-block w-100" style={{ height: 400 }} alt="Anh3" />
+          <Image src={AnhBanner1} className="d-block w-100" alt="Anh3" />
         </Carousel.Item>
       </Carousel>
     </div>

@@ -2,7 +2,15 @@ package com.example.demo.service;
 
 import com.example.demo.entity.LichSuHoaDon;
 
-public interface LichSuHoaDonService {
+import java.util.List;
+import java.util.UUID;
 
-    LichSuHoaDon add(LichSuHoaDon lichSuHoaDon);
+public interface LichSuHoaDonService {
+    LichSuHoaDon createLichSuDonHang(LichSuHoaDon lichSuHoaDon);
+
+    List<LichSuHoaDon> getAll();
+
+    LichSuHoaDon detail(UUID id);
+
+    List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id);
 }
