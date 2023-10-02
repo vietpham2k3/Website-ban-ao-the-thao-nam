@@ -16,46 +16,43 @@ import java.util.*;
 @Repository
 public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
 
-    @Query(value = "SELECT HD.id,HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien_sau_khi_giam," +
-            " HD.trang_thai, HD.loai_don, HTTT.ten\n" +
-            "FROM HoaDon HD JOIN HinhThucThanhToan HTTT ON HD.id_httt = HTTT.id \n",
+    @Query(value = "SELECT HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, SUM(HDCT.so_luong) AS tong_so_luong,\n" +
+            "SUM(HDCT.so_luong * HDCT.don_gia) as tong_tien, HD.trang_thai, HD.loai_don\n" +
+            "FROM HoaDon HD\n" +
+            "JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
+            "GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien, HD.trang_thai, HD.loai_don\n" +
+            "ORDER By HD.ngay_tao DESC",
             nativeQuery = true)
     public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
-    @Query(value = "SELECT HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien_sau_khi_giam, HD.trang_thai, HD.loai_don, HTTT.ten " +
-            "FROM HoaDon HD JOIN HinhThucThanhToan HTTT ON HD.id_httt = HTTT.id " +
-            "WHERE ((:key IS NULL OR HD.ma LIKE CONCAT('%', :key , '%')) " +
-            "OR (:key IS NULL OR HD.ten_nguoi_nhan LIKE CONCAT('%', :key , '%'))) " +
-            "AND (:tuNgay IS NULL OR HD.ngay_tao >= :tuNgay) " +
-            "AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay) " +
-            "AND ((:min IS NULL OR HD.tong_tien_sau_khi_giam >= :min) " +
-            "AND (:max IS NULL OR HD.tong_tien_sau_khi_giam <= :max)) " +
-            "AND ((:trangThai1 IS NULL OR HD.trang_thai = :trangThai1) " +
-            "OR (:trangThai2 IS NULL OR HD.trang_thai = :trangThai2) " +
-            "OR (:trangThai3 IS NULL OR HD.trang_thai = :trangThai3) " +
-            "OR (:trangThai4 IS NULL OR HD.trang_thai = :trangThai4) " +
-            "OR (:trangThai5 IS NULL OR HD.trang_thai = :trangThai5) " +
-            "OR (:trangThai6 IS NULL OR HD.trang_thai = :trangThai6) " +
-            "OR (:trangThai7 IS NULL OR HD.trang_thai = :trangThai7) " +
-            "OR (:trangThai8 IS NULL OR HD.trang_thai = :trangThai8)) " +
-            "AND (:loaiDon IS NULL OR HD.loai_don = :loaiDon) " +
-            "AND (:tenHinhThuc IS NULL OR HTTT.ten LIKE CONCAT('%', :tenHinhThuc , '%')) ",
+    @Query(value = "SELECT HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, \n" +
+            "       SUM(HDCT.so_luong) AS tong_so_luong,\n" +
+            "       SUM(HDCT.so_luong * HDCT.don_gia) as tong_tien, \n" +
+            "       HD.trang_thai, HD.loai_don\n" +
+            "FROM HoaDon HD\n" +
+            "JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
+            "WHERE ((:key IS NULL OR HD.ma LIKE CONCAT('%', :key, '%')) \n" +
+            "       OR (:key IS NULL OR HD.ten_nguoi_nhan LIKE CONCAT('%', :key, '%')))\n" +
+            "       AND (:tuNgay IS NULL OR HD.ngay_tao >= :tuNgay) \n" +
+            "       AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay) \n" +
+            "       AND (:trangThai IS NULL OR HD.trang_thai = :trangThai) \n" +
+            "       AND (:loaiDon IS NULL OR HD.loai_don = :loaiDon)\n" +
+            "GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.trang_thai, HD.loai_don\n" +
+            "HAVING ((:minSL IS NULL OR SUM(HDCT.so_luong) >= :minSL) \n" +
+            "       AND (:maxSL IS NULL OR SUM(HDCT.so_luong) <= :maxSL)) \n" +
+            "       AND ((:minTT IS NULL OR SUM(HDCT.so_luong * HDCT.don_gia) >= :minTT) \n" +
+            "       AND (:maxTT IS NULL OR SUM(HDCT.so_luong * HDCT.don_gia) <= :maxTT))\n" +
+            "\t   ORDER By HD.ngay_tao DESC",
             nativeQuery = true)
     public Page<HoaDonCustom> findVIP(@Param("key") String key,
                                       @Param("tuNgay") Date tuNgay,
                                       @Param("denNgay") Date denNgay,
-                                      @Param("min") Double min,
-                                      @Param("max") Double max,
-                                      @Param("trangThai1") Integer trangThai1,
-                                      @Param("trangThai2") Integer trangThai2,
-                                      @Param("trangThai3") Integer trangThai3,
-                                      @Param("trangThai4") Integer trangThai4,
-                                      @Param("trangThai5") Integer trangThai5,
-                                      @Param("trangThai6") Integer trangThai6,
-                                      @Param("trangThai7") Integer trangThai7,
-                                      @Param("trangThai8") Integer trangThai8,
+                                      @Param("trangThai") Integer trangThai,
                                       @Param("loaiDon") Integer loaiDon,
-                                      @Param("tenHinhThuc") String tenHinhThuc,
+                                      @Param("minSL") Double minSL,
+                                      @Param("maxSL") Double maxSL,
+                                      @Param("minTT") Double minTT,
+                                      @Param("maxTT") Double maxTT,
                                       Pageable pageable);
 
 

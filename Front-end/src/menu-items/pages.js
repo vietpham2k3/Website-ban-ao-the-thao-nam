@@ -1,9 +1,9 @@
 // assets
-import { IconKey } from '@tabler/icons';
+import { IconShirt } from '@tabler/icons';
 
 // constant
 const icons = {
-  IconKey
+  IconShirt
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
@@ -17,7 +17,7 @@ const pages = {
       id: 'san-pham',
       title: 'Quản lý sản phẩm',
       type: 'collapse',
-      icon: icons.IconKey,
+      icon: icons.IconShirt,
       children: [
         {
           id: 'san-pham',

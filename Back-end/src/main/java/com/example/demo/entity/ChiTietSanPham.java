@@ -63,12 +63,22 @@ public class ChiTietSanPham {
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private CoAo coAo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ms", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private MauSac mauSac;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_kc", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private KichCo kichCo;
+
     @Column(name = "so_luong")
     private Integer soLuong;
 
     @Column(name = "gia_ban")
     @NotNull(message = "Không được để trống")
-    private Integer giaBan;
+    private Double giaBan;
 
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

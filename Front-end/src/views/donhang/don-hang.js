@@ -13,7 +13,10 @@ import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
 
 const MIN = 0;
-const MAX = 999999;
+const MAX = 9999999;
+
+const MINSL = 0;
+const MAXSL = 999;
 
 function DonHang() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,12 +27,12 @@ function DonHang() {
   const [term, setTerm] = useState('');
   const [loaiDon, setLoaiDon] = useState('');
   const [radioLoai, setRadioLoai] = useState('');
-  const [hinhThuc, setHinhThuc] = useState('');
-  const [radioHT, setRadioHT] = useState('');
   //select trangThai
   const [selectedOptions, setSelectedOptions] = useState([]);
+  //so luong
+   const [valuesSL, setValuesSL] = useState([MINSL, MAXSL]);
   // tong tien
-  const [values, setValues] = useState([MIN, MAX]);
+  const [valuesTT, setValuesTT] = useState([MIN, MAX]);
   //hien thi
   const [data, setData] = useState([]);
 
@@ -69,8 +72,8 @@ function DonHang() {
   };
 
   //fillter DH
-  const search = async (key, tuNgay, denNgay, min, max, trangThai, loaiDon, hinhThuc, page = 0) => {
-    const res = await findVIP(key, tuNgay, denNgay, min, max, trangThai, loaiDon, hinhThuc, page);
+  const search = async (key, tuNgay, denNgay, minSL, maxSL, minTT,maxTT,trangThai, loaiDon, page = 0) => {
+    const res = await findVIP(key, tuNgay, denNgay, minSL, maxSL, minTT,maxTT, trangThai, loaiDon, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
@@ -86,9 +89,9 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      search(term, tuNgay, denNgay, values[0], values[1], selectedValues, loaiDon, hinhThuc, page);
+      search(term, tuNgay, denNgay, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], selectedValues, loaiDon, page);
     } else {
-      search('', null, null, values[0], values[1], null, '', '', page);
+      search('', null, null, valuesSL[0], valuesSL[1],valuesTT[0], valuesTT[1], null, '', '', page);
     }
   
     if (data.length === 0) {
@@ -98,7 +101,7 @@ function DonHang() {
   
   useEffect(() => {
     handleSearchDH(currentPage);
-  }, [term, tuNgay, denNgay, values, selectedOptions, loaiDon, hinhThuc, currentPage]);
+  }, [term, tuNgay, denNgay, valuesSL,valuesTT, selectedOptions, loaiDon, currentPage]);
 
   
   const handleInputChange = (e) => {
@@ -113,16 +116,6 @@ function DonHang() {
   const handleAllClickLoai = () => {
     setLoaiDon('');
     setRadioLoai('');
-  };
-
-  const handleRadioChange2 = (e) => {
-    setHinhThuc(e.target.value);
-    setRadioHT(e.target.value);
-  };
-
-  const handleAllClickHT = () => {
-    setHinhThuc('');
-    setRadioHT('');
   };
 
   const handleDateChange = (selectedRange) => {
@@ -233,10 +226,10 @@ function DonHang() {
 
               <div className="box col-auto col-3">
                 <div className="values">
-                  <strong>Tổng tiền:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
+                  <strong>Tổng tiền:</strong> {convertToCurrency(valuesTT[0]) + ' - ' + convertToCurrency(valuesTT[1])}
                 </div>
                 <br />
-                <Slider className="slider" onChange={setValues} value={values} min={MIN} max={MAX}></Slider>
+                <Slider className="slider" onChange={setValuesTT} value={valuesTT} min={MIN} max={MAX}></Slider>
               </div>
             </div>
             <br></br>
@@ -289,45 +282,12 @@ function DonHang() {
             </div>
             <br></br>
             <div className="row">
-              <div className="box col-auto col-6">
+            <div className="box col-auto col-3">
                 <div className="values">
-                  <strong>Hình thức thanh toán:</strong>
+                  <strong>Số lượng:</strong> {convertToCurrency(valuesSL[0]) + ' - ' + convertToCurrency(valuesSL[1])}
                 </div>
-                <FormGroup>
-                  <FormCheck inline style={{ marginTop: 15 }}>
-                    <FormCheck.Input
-                      type="radio"
-                      name="radioHT"
-                      checked={radioHT === ''}
-                      value=""
-                      onClick={handleAllClickHT}
-                      onChange={handleRadioChange2}
-                    />
-                    <FormCheck.Label style={{ marginLeft: 10 }}>Tất Cả</FormCheck.Label>
-                  </FormCheck>
-
-                  <FormCheck inline>
-                    <FormCheck.Input
-                      type="radio"
-                      name="radioHT"
-                      checked={radioHT === 'Pay On Cash'}
-                      value="Pay On Cash"
-                      onChange={handleRadioChange2}
-                    />
-                    <FormCheck.Label>Pay On Cash</FormCheck.Label>
-                  </FormCheck>
-
-                  <FormCheck inline style={{ marginLeft: 10 }}>
-                    <FormCheck.Input
-                      type="radio"
-                      name="radioHT"
-                      checked={radioHT === 'Quét QR'}
-                      value="Quét QR"
-                      onChange={handleRadioChange2}
-                    />
-                    <FormCheck.Label>Quét QR</FormCheck.Label>
-                  </FormCheck>
-                </FormGroup>
+                <br />
+                <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
               </div>
 
               <div style={{ marginLeft: 320, marginTop: 20 }} className="box col-auto col-2">
@@ -397,10 +357,10 @@ function DonHang() {
                 <th>Mã Đơn</th>
                 <th>Khách Hàng</th>
                 <th>Ngày Tạo Đơn</th>
+                <th>Số Luợng</th>
                 <th>Tổng tiền</th>
                 <th>Trạng Thái</th>
                 <th>Loại Đơn</th>
-                <th>Hình Thức Thanh Toán</th>
               </tr>
               <tbody>
                 {data.map((d, i) => (
@@ -409,7 +369,8 @@ function DonHang() {
                     <td>{d.ma}</td>
                     <td>{d.ten_nguoi_nhan}</td>
                     <td>{formatDate(d.ngay_tao)}</td>
-                    <td>{convertToCurrency(d.tong_tien_sau_khi_giam)}</td>
+                    <td>{d.tong_so_luong}</td>
+                    <td>{convertToCurrency(d.tong_tien)}</td>
                     <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
                       {d.trang_thai === 0 && (
                         <span

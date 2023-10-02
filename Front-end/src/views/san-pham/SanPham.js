@@ -194,7 +194,7 @@ function SanPham() {
                     <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
-                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
+                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
                     </td>
                   </tr>
                 ))}

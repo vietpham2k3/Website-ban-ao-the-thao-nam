@@ -34,9 +34,10 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Double min, Double max,
-                                        Integer trangThai, Integer loaiDon, String tenHinhThuc, Pageable pageable) {
-        return res.findVIP(key,tuNgay,denNgay,min,max,trangThai,loaiDon,tenHinhThuc,pageable);
+    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer trangThai,
+                                        Integer loaiDon, Double minSL, Double maxSL, Double minTT,
+                                        Double maxTT, Pageable pageable) {
+        return res.findVIP(key,tuNgay,denNgay,trangThai,loaiDon,minSL,maxSL,minTT,maxTT,pageable);
     }
 
     @Override
@@ -53,5 +54,10 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public void updateKHHD(UUID id, String tenNguoiNhan,String soDienThoai,String diaChi) {
          res.updateKH(id,tenNguoiNhan,soDienThoai,diaChi);
+    }
+
+    @Override
+    public HoaDon add(HoaDon hoaDon) {
+        return res.save(hoaDon);
     }
 }

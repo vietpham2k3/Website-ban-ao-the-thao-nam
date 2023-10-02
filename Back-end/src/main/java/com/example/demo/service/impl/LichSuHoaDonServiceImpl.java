@@ -14,8 +14,8 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
     @Autowired private LichSuHoaDonRepository res;
 
     @Override
-    public void createLichSuDonHang(LichSuHoaDon lichSuHoaDon) {
-        res.save(lichSuHoaDon);
+    public LichSuHoaDon createLichSuDonHang(LichSuHoaDon lichSuHoaDon) {
+        return res.save(lichSuHoaDon);
     }
 
     @Override

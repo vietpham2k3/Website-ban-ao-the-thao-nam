@@ -1,34 +1,23 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.HoaDonRequest;
-import com.example.demo.dto.KhachHangDTO;
-import com.example.demo.dto.NhanVienRequest;
+import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.entity.NhanVien;
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
+import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +27,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,13 +37,63 @@ public class HoaDonController {
     @Autowired
     public HoaDonServiceImpl service;
     @Autowired
+    public LichSuHoaDonServiceImpl serviceLSHD;
+    @Autowired
+    public HoaDonChiTietServiceImpl hoaDonChiTietService;
+    @Autowired
     public HinhThucThanhToanServiceImpl serviceHttt;
     @Autowired
-    public LichSuHoaDonServiceImpl serviceLSHD;
+    private ChiTietSanPhamServiceImpl chiTietSanPhamService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(service.listHD());
+    }
+
+    @GetMapping("getById/{id}")
+    public ResponseEntity<?> getAllById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
+    }
+
+    @PostMapping("add")
+    public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) {
+        String ma = "HD" + new Random().nextInt(100000);
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        hoaDon.setMa(ma);
+        hoaDon.setNgayTao(new Date());
+        hoaDon.setLoaiDon(0);
+        hoaDon.setTrangThai(1);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
+                .ma(maLSHD)
+                .ten("Tạo hoá đơn")
+                .trangThai(0)
+                .ngayTao(new Date())
+                .hoaDon(hoaDon)
+                .build();
+        service.add(hoaDon);
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("add-sp/{id}")
+    public ResponseEntity<?> addSP(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+        List<HoaDonChiTiet> list = hoaDonChiTietService.findAll();
+        for (HoaDonChiTiet h : list) {
+            if (h.getChiTietSanPham().getId().equals(hoaDon.getChiTietSanPham().getId()) &&
+                    h.getHoaDon().getId().equals(hoaDon.getHoaDon().getId())  ) {
+                // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+                hoaDon.setDonGia(sp.getGiaBan());
+                // Tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu
+                hoaDonChiTietService.update(hoaDon.getSoLuong(), h.getId());
+                return ResponseEntity.ok("ok");
+            }
+        }
+
+        // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+        hoaDon.setDonGia(sp.getGiaBan());
+        hoaDonChiTietService.add(hoaDon);
+        return ResponseEntity.ok(hoaDon.getId());
     }
 
     @GetMapping("hien-thi-page")
@@ -99,15 +137,9 @@ public class HoaDonController {
     }
 
     @GetMapping("hien-thi-page-find")
-    public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Double min, Double max,
-                                     Integer trangThai1,
-                                      Integer trangThai2,
-                                     Integer trangThai3,
-                                     @Param("trangThai4") Integer trangThai4,
-                                     @Param("trangThai5") Integer trangThai5,
-                                     @Param("trangThai6") Integer trangThai6,
-                                     @Param("trangThai7") Integer trangThai7,
-                                     @Param("trangThai8") Integer trangThai8,, Integer loaiDon, String tenHinhThuc,
+    public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Integer trangThai,
+                                     Integer loaiDon, Double minSL, Double maxSL, Double minTT,
+                                     Double maxTT,
                                      @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
@@ -121,7 +153,7 @@ public class HoaDonController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok(service.searchVIP(key, tuNgayDate, denNgayDate, min, max, trangThai, loaiDon, tenHinhThuc, pageable));
+        return ResponseEntity.ok(service.searchVIP(key, tuNgayDate, denNgayDate, trangThai, loaiDon, minSL, maxSL, minTT, maxTT, pageable));
     }
 
     @PutMapping("updateKH/{id}")

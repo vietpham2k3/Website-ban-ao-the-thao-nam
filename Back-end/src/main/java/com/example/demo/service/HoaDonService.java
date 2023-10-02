@@ -11,19 +11,22 @@ import java.util.*;
 
 public interface HoaDonService {
 
-    public List<HoaDon> listHD();
+    List<HoaDon> listHD();
 
-    public Page<HoaDon> pageHD(Pageable pageable);
+    Page<HoaDon> pageHD(Pageable pageable);
 
-    public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
+    Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
-    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Double min, Double max,
-                                        Integer trangThai, Integer loaiDon, String tenHinhThuc, Pageable pageable);
+    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer trangThai,
+                                        Integer loaiDon, Double minSL, Double maxSL, Double minTT,
+                                        Double maxTT, Pageable pageable);
 
     public List<HoaDon> getExcel();
 
-    public HoaDon detailHD(UUID id);
+
+    HoaDon detailHD(UUID id);
 
     public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
+    HoaDon add(HoaDon hoaDon);
 }

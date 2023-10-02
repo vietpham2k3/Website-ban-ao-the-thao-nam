@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LichSuHoaDonService {
-    void createLichSuDonHang(LichSuHoaDon lichSuHoaDon);
+    LichSuHoaDon createLichSuDonHang(LichSuHoaDon lichSuHoaDon);
 
     List<LichSuHoaDon> getAll();
 
