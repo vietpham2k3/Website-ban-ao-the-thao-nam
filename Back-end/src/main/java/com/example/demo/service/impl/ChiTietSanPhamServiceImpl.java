@@ -26,7 +26,7 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public Page<ChiTietSanPham> page(Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
-        return repository.findAll(pageable);
+        return repository.getAll(pageable);
     }
 
     @Override

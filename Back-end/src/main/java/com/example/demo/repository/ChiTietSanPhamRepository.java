@@ -21,6 +21,19 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void delete(UUID id);
 
+
+    @Query(value = "SELECT C.*\n" +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "  SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id\n" +
+            "  FROM ChiTietSanPham\n" +
+            "  JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
+            "  GROUP BY ChiTietSanPham.id_sp\n" +
+            ") AS T\n" +
+            "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp;", nativeQuery = true)
+    Page<ChiTietSanPham> getAll(Pageable pageable);
+
     @Transactional
     @Modifying
     @Query(value = "update ChiTietSanPham c set c.soLuong = :soLuong where c.id = :id")
