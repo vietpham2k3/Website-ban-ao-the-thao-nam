@@ -1,6 +1,10 @@
 // import axios from 'axios'
 import axios from '../custommize-axios';
 
+const getAll = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllCTSP');
+};
+
 const getAllCTSP = (page) => {
   return axios.get(`/api/chi-tiet-san-pham/getAll?page=${page}`);
 };
@@ -78,6 +82,7 @@ const detailMSKCCTSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/detailMSKCCTSP/${id}`);
 };
 export {
+  getAll,
   getAllCTSP,
   getAllListKC,
   deleteCTSP,

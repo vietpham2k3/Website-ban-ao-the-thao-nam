@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -20,6 +21,19 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Modifying
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void delete(UUID id);
+
+
+    @Query(value = "SELECT C.*\n" +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "  SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id\n" +
+            "  FROM ChiTietSanPham\n" +
+            "  JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
+            "  GROUP BY ChiTietSanPham.id_sp\n" +
+            ") AS T\n" +
+            "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp;", nativeQuery = true)
+    Page<ChiTietSanPham> getAll(Pageable pageable);
 
     @Transactional
     @Modifying
@@ -39,5 +53,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             @Param("max") Double max,
             Pageable pageable
     );
+
+    @Query(value = "SELECT * FROM ChiTietSanPham WHERE trang_thai = 1", nativeQuery = true)
+    List<ChiTietSanPham>getAll();
 
 }

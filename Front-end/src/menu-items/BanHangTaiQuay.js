@@ -6,20 +6,19 @@ const icons = { IconDashboard, IconShirt, IconShoppingCart };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
-const dashboard = {
-  id: 'don-hang',
-  title: 'Hoá đơn',
+const BanHangTaiQuay = {
+  id: 'ban-hang-tai-quay',
+  title: 'Bán hàng tại quầy',
   type: 'group',
   children: [
     {
-      id: 'don-hang',
-      title: 'Quản lý đơn hàng',
+      id: 'ban-hang-tai-quay',
+      title: 'Bán hàn tại quầy',
       type: 'item',
-      url: '/don-hang',
-      icon: icons.IconShoppingCart,
-      breadcrumbs: false
+      url: '/ban-hang-tai-quay',
+      icon: icons.IconDashboard
     }
   ]
 };
 
-export default dashboard;
+export default BanHangTaiQuay;

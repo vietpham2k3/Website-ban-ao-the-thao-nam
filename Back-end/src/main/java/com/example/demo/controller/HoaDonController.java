@@ -1,68 +1,106 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.HoaDonRequest;
-import com.example.demo.dto.KhachHangDTO;
-import com.example.demo.dto.NhanVienRequest;
+import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.NhanVien;
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
+import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.*;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/hoa-don/")
 public class HoaDonController {
-    @Autowired public HoaDonServiceImpl service;
-    @Autowired public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public HoaDonServiceImpl service;
+    @Autowired
+    public HoaDonChiTietServiceImpl hoaDonChiTietService;
+    @Autowired
+    public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public LichSuHoaDonServiceImpl lichSuHoaDonService;
+    @Autowired
+    private ChiTietSanPhamServiceImpl chiTietSanPhamService;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> getAll(){
-     return ResponseEntity.ok(service.listHD());
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(service.listHD());
+    }
+
+    @GetMapping("getById/{id}")
+    public ResponseEntity<?> getAllById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
+    }
+
+    @PostMapping("add")
+    public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) {
+        String ma = "HD" + new Random().nextInt(100000);
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        hoaDon.setMa(ma);
+        hoaDon.setNgayTao(new Date());
+        hoaDon.setLoaiDon(0);
+        hoaDon.setTrangThai(1);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
+                .ma(maLSHD)
+                .ten("Tạo hoá đơn")
+                .trangThai(0)
+                .ngayTao(new Date())
+                .hoaDon(hoaDon)
+                .build();
+        service.add(hoaDon);
+        return ResponseEntity.ok(lichSuHoaDonService.add(lichSuHoaDon));
+    }
+
+    @PostMapping("add-sp/{id}")
+    public ResponseEntity<?> addSP(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+        List<HoaDonChiTiet> list = hoaDonChiTietService.findAll();
+        for (HoaDonChiTiet h : list) {
+            if (h.getChiTietSanPham().getId().equals(hoaDon.getChiTietSanPham().getId()) &&
+                    h.getHoaDon().getId().equals(hoaDon.getHoaDon().getId())  ) {
+                // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+                hoaDon.setDonGia(sp.getGiaBan());
+                // Tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu
+                hoaDonChiTietService.update(hoaDon.getSoLuong(), h.getId());
+                return ResponseEntity.ok("ok");
+            }
+        }
+
+        // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+        hoaDon.setDonGia(sp.getGiaBan());
+        hoaDonChiTietService.add(hoaDon);
+        return ResponseEntity.ok(hoaDon.getId());
     }
 
     @GetMapping("hien-thi-page")
-    public ResponseEntity<?> getPageHD(@RequestParam (defaultValue = "0") int page){
-        Pageable pageable = PageRequest.of(page,5);
+    public ResponseEntity<?> getPageHD(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
     @GetMapping("detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable UUID id){
+    public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(service.detailHD(id));
     }
 
     @PutMapping("updateKH/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id,@RequestBody HoaDon hoaDon){
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         hoaDon.setNgaySua(new Date());
-        service.updateKHHD(id,hoaDon.getTenNguoiNhan(),hoaDon.getSoDienThoai(),
+        service.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi());
         return ResponseEntity.ok("ok");
     }

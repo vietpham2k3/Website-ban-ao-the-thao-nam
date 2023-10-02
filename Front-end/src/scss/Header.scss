@@ -1,15 +1,18 @@
 .navbar {
-  color: red;
+  display: flex;
+  justify-content: center;
   background-color: #eef2f6;
+}
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
 }
 .nameShop {
   color: darkblue;
   font-family: 'Pacifico';
   font-size: 30px;
-}
-.d-flex {
-  width: 700px;
-  padding-left: 150px;
 }
 .nav-item {
   padding-left: 50px;
@@ -20,4 +23,17 @@
 }
 .fa-cart-shopping {
   padding-right: 15px;
+}
+.nav-item {
+  display: flex;
+  justify-content: flex-end;
+}
+.headerBottom {
+  display: flex;
+  justify-content: center;
+  padding-left: 150px;
+}
+.nav-item:hover {
+  color: #000000;
+  font-weight: bold;
 }
