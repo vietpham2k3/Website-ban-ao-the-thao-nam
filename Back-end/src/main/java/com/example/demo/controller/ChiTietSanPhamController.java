@@ -58,6 +58,11 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
     }
 
+    @GetMapping("getAllCTSP")
+    public ResponseEntity<?>getAll(){
+        return ResponseEntity.ok(chiTietSanPhamService.getAll());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
         Anh image = anhService.viewById(id);

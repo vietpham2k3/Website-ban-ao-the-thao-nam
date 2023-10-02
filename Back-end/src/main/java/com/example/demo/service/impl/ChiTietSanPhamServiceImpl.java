@@ -20,7 +20,7 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
     @Override
     public List<ChiTietSanPham> getAll() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override
