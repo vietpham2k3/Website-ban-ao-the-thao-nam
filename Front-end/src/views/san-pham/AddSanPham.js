@@ -4,7 +4,7 @@ import React from 'react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { useState } from 'react';
-import { getAllListCL, getAllListCO, getAllListLSP, getAllListNSX, postCTSP } from 'services/SanPhamService';
+import { getAllListCL, getAllListCO, getAllListKC, getAllListLSP, getAllListMS, getAllListNSX, postCTSP } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
@@ -20,6 +20,8 @@ function AddSanPham() {
   const [listNSX, setListNSX] = useState([]);
   const [listLSP, setListLSP] = useState([]);
   const [listCA, setListCA] = useState([]);
+  const [listMS, setListMS] = useState([]);
+  const [listKC, setListLC] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
   const [modalShowLSP, setModalShowLSP] = useState(false);
@@ -145,11 +147,15 @@ function AddSanPham() {
     const resLSP = await getAllListLSP();
     const resCA = await getAllListCO();
     const resNSX = await getAllListNSX();
-    if (resCL || resLSP || resCA || resNSX) {
+    const resMS = await getAllListMS();
+    const resKC = await getAllListKC();
+    if (resCL || resLSP || resCA || resNSX || resMS || resKC) {
       setListCL(resCL.data);
       setListCA(resCA.data);
       setListLSP(resLSP.data);
       setListNSX(resNSX.data);
+      setListMS(resMS.data);
+      setListLC(resKC.data);
       if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
         setValues({
           ...values,
@@ -169,7 +175,7 @@ function AddSanPham() {
       }
     }
   };
-  console.log(valuesCL);
+  console.log(values);
 
   return (
     <div>
@@ -423,7 +429,87 @@ function AddSanPham() {
           <div className="col-12">
             <h2>Thuộc tính</h2>
           </div>
-          <div className="col-12"></div>
+          <div className="col-12">
+            <div className="col-12">
+              <div className="form-inline">
+                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                  Màu sắc:{' '}
+                </label>
+                {listMS.map((d, i) => (
+                  <div key={i} className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="1"
+                      id={d.id}
+                      value={d.id}
+                      onChange={() =>
+                        setValues({
+                          ...values,
+                          mauSac: {
+                            id: d.id
+                          }
+                        })
+                      }
+                    />
+                    <label className="form-check-label" htmlFor={d.id}>
+                      <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="form-inline">
+                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                  Kích cỡ:{' '}
+                </label>
+                {listKC.map((d, i) => (
+                  <div key={i} className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="2"
+                      id={d.id}
+                      value={d.id}
+                      onChange={() =>
+                        setValues({
+                          ...values,
+                          kichCo: {
+                            id: d.id
+                          }
+                        })
+                      }
+                    />
+                    <label className="form-check-label" htmlFor={d.id}>
+                      {d.ten}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="form-inline">
+                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                  Số lượng:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="Nhập số lượng"
+                    onChange={(e) =>
+                      setValues({
+                        ...values,
+                        soLuong: e.target.value
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </MainCard>
     </div>
