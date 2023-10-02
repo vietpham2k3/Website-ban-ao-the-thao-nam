@@ -85,6 +85,12 @@ function UpdateSanPham() {
     coAo: {
       id: ''
     },
+    kichCo: {
+      id: ''
+    },
+    mauSac: {
+      id: ''
+    },
     soLuong: '',
     giaBan: '',
     trangThai: 1
