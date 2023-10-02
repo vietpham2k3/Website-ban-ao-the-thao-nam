@@ -30,16 +30,16 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay) " +
             "AND ((:min IS NULL OR HD.tong_tien_sau_khi_giam >= :min) " +
             "AND (:max IS NULL OR HD.tong_tien_sau_khi_giam <= :max)) " +
-            "AND ((:trangThai) IS NULL OR HD.trang_thai IN (:trangThai))" +
+            "AND (:trangThai IS NULL OR HD.trang_thai = :trangThai)"+
             "AND (:loaiDon IS NULL OR HD.loai_don = :loaiDon) " +
-            "AND (:tenHinhThuc IS NULL OR HTTT.ten LIKE CONCAT('%', :tenHinhThuc , '%'))",
-            nativeQuery = true)
+            "AND (:tenHinhThuc IS NULL OR HTTT.ten LIKE CONCAT('%', :tenHinhThuc , '%')) "
+            ,nativeQuery = true)
     public Page<HoaDonCustom> findVIP(@Param("key") String key,
                                       @Param("tuNgay") Date tuNgay,
                                       @Param("denNgay") Date denNgay,
                                       @Param("min") Double min,
                                       @Param("max") Double max,
-                                      @Param("trangThai") List<Integer> trangThai,
+                                      @Param("trangThai") Integer trangThai,
                                       @Param("loaiDon") Integer loaiDon,
                                       @Param("tenHinhThuc") String tenHinhThuc,
                                       Pageable pageable);

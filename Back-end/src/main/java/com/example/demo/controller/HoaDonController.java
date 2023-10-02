@@ -65,26 +65,34 @@ public class HoaDonController {
         return ResponseEntity.ok(service.detailHD(id));
     }
 
-    public class TrangThaiWrapper {
-        private List<Integer> trangThai;
-        // getters and setters
 
-        public List<Integer> getTrangThai() {
+    public class TrangThaiWrapper {
+        private int[] trangThai;
+
+        public int[] getTrangThai() {
             return trangThai;
         }
 
-        public TrangThaiWrapper(List<Integer> trangThai) {
-            this.trangThai = trangThai;
+        public TrangThaiWrapper() {
         }
 
-        public void setTrangThai(List<Integer> trangThai) {
-            this.trangThai = trangThai;
+        public void setTrangThai(String trangThai) {
+            if (trangThai != null && !trangThai.trim().isEmpty()) {
+                String[] trangThaiStrings = trangThai.split(",");
+                int[] trangThaiInts = new int[trangThaiStrings.length];
+                for (int i = 0; i < trangThaiStrings.length; i++) {
+                    trangThaiInts[i] = Integer.parseInt(trangThaiStrings[i].trim());
+                }
+                this.trangThai = trangThaiInts;
+            } else {
+                this.trangThai = new int[0];
+            }
         }
     }
 
     @GetMapping("hien-thi-page-find")
     public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Double min, Double max,
-                                     @Param("trangThai") TrangThaiWrapper trangThai, Integer loaiDon, String tenHinhThuc,
+                                     Integer trangThai, Integer loaiDon, String tenHinhThuc,
                                      @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");

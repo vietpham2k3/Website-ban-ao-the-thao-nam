@@ -18,7 +18,7 @@ public interface HoaDonService {
     public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
     public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Double min, Double max,
-                                       @Param("trangThai") HoaDonController.TrangThaiWrapper trangThai, Integer loaiDon, String tenHinhThuc, Pageable pageable);
+                                        Integer trangThai, Integer loaiDon, String tenHinhThuc, Pageable pageable);
 
     public List<HoaDon> getExcel();
 

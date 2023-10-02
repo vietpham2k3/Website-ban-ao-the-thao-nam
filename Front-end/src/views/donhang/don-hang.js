@@ -33,6 +33,7 @@ function DonHang() {
   //hien thi
   const [data, setData] = useState([]);
 
+
   const animatedComponents = makeAnimated();
 
   //ngayTao
@@ -68,28 +69,38 @@ function DonHang() {
   };
 
   //fillter DH
-  const search = async (key, tuNgay, denNgay, min, max, trangThai, loaiDon, hinhThuc, page) => {
-    setCurrentPage(page);
+  const search = async (key, tuNgay, denNgay, min, max, trangThai, loaiDon, hinhThuc, page = 0) => {
     const res = await findVIP(key, tuNgay, denNgay, min, max, trangThai, loaiDon, hinhThuc, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
+  
+      if (res.data.content.length === 0 && currentPage !== 0) {
+        setCurrentPage(0);
+      } else {
+        setCurrentPage(page);
+      }
     }
   };
-
-  const handleSearchDH = _.debounce(async () => {
+  
+  const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      search(term, tuNgay, denNgay, values[0], values[1], selectedValues, loaiDon, hinhThuc, currentPage);
+      search(term, tuNgay, denNgay, values[0], values[1], selectedValues, loaiDon, hinhThuc, page);
     } else {
-      search('', null, null, values[0], values[1], null, '', '', currentPage);
+      search('', null, null, values[0], values[1], null, '', '', page);
+    }
+  
+    if (data.length === 0) {
+      setCurrentPage(0);
     }
   }, []);
-
+  
   useEffect(() => {
-    handleSearchDH();
+    handleSearchDH(currentPage);
   }, [term, tuNgay, denNgay, values, selectedOptions, loaiDon, hinhThuc, currentPage]);
 
+  
   const handleInputChange = (e) => {
     setTerm(e.target.value);
   };
@@ -211,6 +222,10 @@ function DonHang() {
                       showMeridian
                       defaultCalendarValue={[currentDate, nextYear]}
                       onChange={handleDateChange}
+                      onClean={() => {
+                        setTuNgay(null);
+                        setDenNgay(null);
+                      }}
                     />
                   </div>
                 </div>
@@ -315,7 +330,7 @@ function DonHang() {
                 </FormGroup>
               </div>
 
-              <div className="box col-auto col-2">
+              <div style={{ marginLeft: 320, marginTop: 20 }} className="box col-auto col-2">
                 <button
                   onClick={handleRefresh}
                   data-toggle="tooltip"
