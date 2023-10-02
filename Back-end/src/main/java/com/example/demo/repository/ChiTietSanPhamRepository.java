@@ -23,7 +23,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     void delete(UUID id);
 
 
-    @Query(value = "SELECT C.*\n" +
+    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, c.so_luong, " +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
             "FROM ChiTietSanPham C\n" +
             "JOIN (\n" +
             "  SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id\n" +
@@ -40,11 +41,20 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.soLuong = :soLuong where c.id = :id")
     void update(Integer soLuong, UUID id);
 
-    @Query(value = "SELECT c.*, sp.id as idsp, sp.ten FROM ChiTietSanPham c\n" +
-            "JOIN SanPham sp ON c.id_sp = sp.id\n" +
-            "WHERE (:key IS NULL OR c.ma LIKE LOWER(CONCAT('%', :key, '%')) OR sp.ten LIKE LOWER(CONCAT('%', :key , '%')))\n" +
-            "AND (:trangThai IS NULL OR c.trang_thai = :trangThai)\n" +
-            "AND ((:min IS NULL OR c.gia_ban >= :min) AND (:max IS NULL OR c.gia_ban <= :max))",
+    @Query(value ="SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, c.so_luong, " +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "  SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id\n" +
+            "  FROM ChiTietSanPham\n" +
+            "  JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
+            "  GROUP BY ChiTietSanPham.id_sp\n" +
+            ") AS T\n" +
+            "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp\n" +
+            "WHERE (:key IS NULL OR C.ma LIKE LOWER(CONCAT('%', :key, '%')) OR S.ten LIKE LOWER(CONCAT('%', :key , '%')))\n" +
+            "AND (:trangThai IS NULL OR C.trang_thai = :trangThai)\n" +
+            "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max))",
             nativeQuery = true)
     Page<ChiTietSanPham> search(
             @Param("key") String key,

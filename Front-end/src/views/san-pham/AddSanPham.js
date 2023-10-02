@@ -43,6 +43,12 @@ function AddSanPham() {
     coAo: {
       id: ''
     },
+    kichCo: {
+      id: ''
+    },
+    mauSac: {
+      id: ''
+    },
     soLuong: '',
     giaBan: '',
     trangThai: 1
@@ -411,6 +417,14 @@ function AddSanPham() {
           values={valuesCL}
           setValues={setValuesCL}
         />
+      </MainCard>
+      <MainCard className="my-3">
+        <div className="row">
+          <div className="col-12">
+            <h2>Thuộc tính</h2>
+          </div>
+          <div className="col-12"></div>
+        </div>
       </MainCard>
     </div>
   );

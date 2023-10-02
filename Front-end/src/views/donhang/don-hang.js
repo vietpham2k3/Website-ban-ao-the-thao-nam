@@ -251,9 +251,9 @@ function DonHang() {
                 </div>
               </div>
 
-              <div style={{  marginLeft: 80 }} className="box col-auto col-5">
+              <div style={{  marginLeft: 100 }} className="box col-auto col-4">
                 <div style={{  marginTop: 5 }} className="values">
-                  <strong>Số lượng:</strong> {valuesSL[0] + ' - ' + valuesSL[1]}
+                  <strong>Số lượng:</strong> {convertToCurrency(valuesSL[0]) + ' - ' + convertToCurrency(valuesSL[1])}
                 </div>
                 <br />
                 <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>

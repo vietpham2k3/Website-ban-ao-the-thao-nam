@@ -40,6 +40,7 @@ function SanPham() {
     const res = await getAllCTSP(page);
     if (res) {
       setData(res.data.content);
+      console.log(data);
       setTotalPages(res.data.totalPages);
     }
   };
@@ -187,7 +188,7 @@ function SanPham() {
                         style={{ width: '70px', height: '100px' }}
                       />
                     </td>
-                    <td>{d.ma}</td>
+                    <td>{d.sanPham.ma}</td>
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
