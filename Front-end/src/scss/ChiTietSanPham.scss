@@ -1,0 +1,72 @@
+/* SanPham.scss */
+
+/* Thiết lập kiểu cho thẻ Card */
+.card {
+    margin: 20px; /* Khoảng cách giữa các thẻ Card */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiển thị bóng đổ mỏng */
+  }
+  
+  /* Thiết lập kiểu cho hình ảnh trong thẻ Card */
+  .card img {
+    cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua hình ảnh */
+  }
+  
+  /* Thiết lập kiểu cho tiêu đề của thẻ Card */
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* Thiết lập kiểu cho giá tiền */
+  .card-text span {
+    color: #e74c3c; /* Màu đỏ */
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  /* Thiết lập kiểu cho nút "Mua Ngay" và "Thêm Giỏ Hàng" */
+  .card .btn {
+    margin-top: 10px; /* Khoảng cách giữa các nút */
+  }
+  
+  /* Thiết lập kiểu cho phần nội dung collapsible */
+  .collapse {
+    margin-top: 10px; /* Khoảng cách giữa phần nội dung collapsible và các thông tin sản phẩm */
+  }
+  
+  /* Thiết lập kiểu cho phần phân trang */
+  .pagination {
+    margin-top: 20px; /* Khoảng cách giữa phân trang và các sản phẩm */
+  }
+  
+  /* Thiết lập kiểu cho nút phân trang */
+  .page-item {
+    display: inline-block; /* Hiển thị nút phân trang cạnh nhau */
+    margin: 2px; /* Khoảng cách giữa các nút phân trang */
+    cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua nút */
+  }
+  
+  /* Thiết lập kiểu cho nút phân trang được chọn */
+  .page-item.active .page-link {
+    background-color: #007bff; /* Màu nền cho nút phân trang được chọn */
+    border-color: #007bff; /* Màu viền cho nút phân trang được chọn */
+    color: #fff; /* Màu chữ cho nút phân trang được chọn */
+    font-weight: bold;
+  }
+  
+  /* Thiết lập kiểu cho mũi tên của nút phân trang */
+  .page-link::before {
+    content: none; /* Ẩn mũi tên */
+  }
+  
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Điều chỉnh khoảng cách giữa hai hàng */
+}
+
+.custom-button {
+    flex: 1;
+    margin-right: 5px; /* Điều chỉnh khoảng cách giữa các nút */
+}
