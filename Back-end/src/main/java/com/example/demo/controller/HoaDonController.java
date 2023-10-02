@@ -4,9 +4,11 @@ import com.example.demo.dto.HoaDonRequest;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.NhanVienRequest;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
+import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -48,6 +50,8 @@ public class HoaDonController {
     public HoaDonServiceImpl service;
     @Autowired
     public HinhThucThanhToanServiceImpl serviceHttt;
+    @Autowired
+    public LichSuHoaDonServiceImpl serviceLSHD;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -65,6 +69,10 @@ public class HoaDonController {
         return ResponseEntity.ok(service.detailHD(id));
     }
 
+    @GetMapping("hien-thi-list-lshd/{id}")
+    public ResponseEntity<?> listLSHDByIds(@PathVariable UUID id) {
+        return ResponseEntity.ok(serviceLSHD.findAllLSHDByIDsHD(id));
+    }
 
     public class TrangThaiWrapper {
         private int[] trangThai;

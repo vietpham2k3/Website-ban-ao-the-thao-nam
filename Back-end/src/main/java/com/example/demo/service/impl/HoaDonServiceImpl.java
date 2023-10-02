@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.controller.HoaDonController;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.repository.HoaDonRespository;
 import com.example.demo.response.HoaDonCustom;
 import com.example.demo.service.HoaDonService;

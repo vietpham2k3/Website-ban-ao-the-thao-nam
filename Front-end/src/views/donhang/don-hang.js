@@ -347,7 +347,7 @@ function DonHang() {
                   <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
                     <i className="fa-solid fa-arrows-rotate fa-spin fa-lg"></i>
                   </span>
-                  <span style={{ marginBottom: '3px', color: 'white' }} className="separator">
+                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
                     |
                   </span>
                   <span
@@ -355,7 +355,8 @@ function DonHang() {
                       marginBottom: '3px',
                       color: 'white',
                       fontSize: '15px',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
+                       marginLeft: '5px'
                     }}
                     className="btn-text"
                   >

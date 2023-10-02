@@ -5,14 +5,16 @@ import { toast } from 'react-toastify';
 import $ from 'jquery';
 import '../../scss/TimeLine.scss';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Table } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { detailHD, updateKHDH } from 'services/ServiceDonHang';
+import { detailHD, detailLSHD, updateKHDH } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
+import { Button } from 'react-bootstrap';
 
 function DonHangCT() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
 
   //timeLine kaka
 
@@ -129,6 +131,7 @@ function DonHangCT() {
 
   useEffect(() => {
     detail(id);
+    detailListLSHD(id);
   }, [id]);
 
   useEffect(() => {
@@ -139,19 +142,17 @@ function DonHangCT() {
     const res = await detailHD(id);
     if (res && res.data) {
       setHoaDon(res.data);
+      console.log(res);
     }
   };
 
-  // useEffect(() => {
-  //   getAll();
-  // }, []);
-
-  // const getAll = async () => {
-  //   const res = await getAllhoaDon();
-  //   if (res && res.data) {
-  //     setData(res.data.content);
-  //   }
-  // };
+  const detailListLSHD = async (id) => {
+    const res = await detailLSHD(id);
+    if (res && res.data) {
+      setLichSuHoaDon(res.data);
+      console.log(lichSuHoaDon);
+    }
+  };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -165,19 +166,29 @@ function DonHangCT() {
 
   function formatDate(dateString) {
     if (dateString === null) {
-      return ''; // Trả về chuỗi rỗng nếu giá trị là null
+      return '';
     }
+
     const dateObject = new Date(dateString);
 
     const day = dateObject.getDate();
     const month = dateObject.getMonth() + 1;
     const year = dateObject.getFullYear();
 
-    const hours = dateObject.getHours();
+    let hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-    // const seconds = dateObject.getSeconds();
+    let meridian = 'AM';
 
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    if (hours >= 12) {
+      meridian = 'PM';
+      hours = hours % 12; // Chuyển sang định dạng 12 giờ
+    }
+
+    // Đảm bảo hiển thị đúng định dạng hh:mm
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    const formattedDate = `${day}/${month}/${year} ${formattedHours}:${formattedMinutes} ${meridian}`;
 
     return formattedDate;
   }
@@ -194,38 +205,28 @@ function DonHangCT() {
                     <h3 className="col-6" style={{ fontWeight: 'bold', color: 'darkblue' }}>
                       Trạng Thái Đơn Hàng
                     </h3>
-                    {/* <div className="col-1">
-                      <div className="d-flex justify-content-end">
-                        <button
-                          onClick={() => navigate('/don-hang')}
-                          className="btn fa-khenh "
-                          data-bs-placement="right"
-                          data-bs-title="Trở về đơn hàng"
-                        >
-                          <i style={{ color: 'darkblue' }} className="fa-solid fa-person-walking-arrow-loop-left fa-xl"></i>
-                        </button>
-                      </div>
-                    </div> */}
                   </div>
 
                   <div className="col-5">
-                    <div style={{ display: 'flex', justifyContent: 'end' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                       <div className="col-5">
-                        <div className="d-flex justify-content-end">
-                          <button
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="justify-content-end">
+                          <Button
                             onClick={handleShow1}
-                            className="btn btn-labeled shadow-button"
+                            variant="primary"
+                            className="shadow-button"
                             style={{
-                              background: 'deepskyblue',
                               borderRadius: '50px',
                               border: '1px solid black',
-                              justifyItems: 'center'
+                              justifyItems: 'center',
+                              background: 'deepskyblue',
+                              color: 'black'
                             }}
                           >
                             <i className="fa-solid fa-circle-info fa-shake fa-lg"></i>
                             <span> | </span>
                             <span style={{ fontWeight: 'bold' }}>Chi Tiết</span>
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -234,10 +235,167 @@ function DonHangCT() {
                       <Modal.Header closeButton>
                         <Modal.Title style={{ marginLeft: 125 }}>Lịch Sử Đơn Hàng</Modal.Title>
                       </Modal.Header>
-                      <Modal.Body></Modal.Body>
-                      {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
+                      <Modal.Body>
+                        <section className="navbar-expand-lg navbar-light bg-light">
+                          <Table id="myTable" className="table" style={{ textAlign: 'center' }}>
+                            <thead>
+                              <tr style={{ textAlign: 'center' }}>
+                                <th>Trạng Thái</th>
+                                <th>Thời gian</th>
+                                <th>Người xác nhận</th>
+                                <th>Ghi chú</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lichSuHoaDon.map((item, index) => (
+                                <tr key={index}>
+                                  <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
+                                    {item.trangThai === 0 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                                      >
+                                        Đang chờ xác nhận
+                                      </span>
+                                    )}
+                                    {item.trangThai === 1 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                                      >
+                                        Đã xác nhận
+                                      </span>
+                                    )}
+                                    {item.trangThai === 2 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                                      >
+                                        Đã hủy đơn
+                                      </span>
+                                    )}
+                                    {item.trangThai === 3 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-secondary status-pending"
+                                      >
+                                        Chờ giao hàng
+                                      </span>
+                                    )}
+                                    {item.trangThai === 4 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                                      >
+                                        Đang giao hàng
+                                      </span>
+                                    )}
+                                    {item.trangThai === 5 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-info status-completed"
+                                      >
+                                        Giao hàng thành công
+                                      </span>
+                                    )}
+                                    {item.trangThai === 6 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                                      >
+                                        Giao hàng thất bại
+                                      </span>
+                                    )}
+                                    {item.trangThai === 7 && (
+                                      <span
+                                        style={{
+                                          width: '200px',
+                                          pointerEvents: 'none',
+                                          height: '30px',
+                                          borderRadius: '20px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          fontWeight: 'bold'
+                                        }}
+                                        className="btn btn-labeled shadow-button btn btn-info status-completed"
+                                      >
+                                        Thanh toán thành công
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>{formatDate(item.ngayTao)}</td>
+                                  <td>{item.nguoiTao}</td>
+                                  <td>{item.ghiChu}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        </section>
+                      </Modal.Body>
                     </Modal>
                   </div>
                 </div>
@@ -245,102 +403,88 @@ function DonHangCT() {
             </div>
             <hr />
 
-            <div className="row">
-              <div className="wrap">
-                <div className="timeline-wrap">
-                  <ul className="timeline">
-                    <li className="timeline-item bmw">
-                      <div className="p-timeline-item">
-                        <span className="p-timeline-date">Tạo hóa đơn</span>
-                        <span className="p-timeline-carmodel">
-                        10/10/2023
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+            <Row>
+              <Col>
+                <div className="wrap">
+                  <div className="timeline-wrap">
+                    <ul className="timeline">
+                      <li className="timeline-item bmw">
+                        <div className="p-timeline-item">
+                          <span className="p-timeline-date">Tạo hóa đơn</span>
+                          <span className="p-timeline-carmodel">10/10/2023</span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item mini">
-                      <div className="p-timeline-item">
-                        <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
-                        <span className="p-timeline-carmodel">
-                          10/10/2023
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                      </li>
+                      <li className="timeline-item mini">
+                        <div className="p-timeline-item">
+                          <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
+                          <span className="p-timeline-carmodel">10/10/2023</span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item mini">
-                      <div className="p-timeline-item">
-                        <span className="p-timeline-date">Đã hủy đơn hàng</span>
-                        <span className="p-timeline-carmodel">
-                        10/10/2023
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                      </li>
+                      <li className="timeline-item mini">
+                        <div className="p-timeline-item">
+                          <span className="p-timeline-date">Đã hủy đơn hàng</span>
+                          <span className="p-timeline-carmodel">10/10/2023</span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item bmw">
-                      <div className="p-timeline-item">
-                        <time className="p-timeline-date">Chờ giao hàng</time>
-                        <span className="p-timeline-carmodel">
-                          
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                      </li>
+                      <li className="timeline-item bmw">
+                        <div className="p-timeline-item">
+                          <time className="p-timeline-date">Chờ giao hàng</time>
+                          <span className="p-timeline-carmodel"></span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item bmw">
-                      <div className="p-timeline-item">
-                        <time className="p-timeline-date">Đang giao hàng</time>
-                        <span className="p-timeline-carmodel">
-                          
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                      </li>
+                      <li className="timeline-item bmw">
+                        <div className="p-timeline-item">
+                          <time className="p-timeline-date">Đang giao hàng</time>
+                          <span className="p-timeline-carmodel"></span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item bmw">
-                      <div className="p-timeline-item">
-                        <span className="p-timeline-date">Giao hàng thành công</span>
-                        <span className="p-timeline-carmodel">
-                          
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+                      </li>
+                      <li className="timeline-item bmw">
+                        <div className="p-timeline-item">
+                          <span className="p-timeline-date">Giao hàng thành công</span>
+                          <span className="p-timeline-carmodel"></span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item bmw">
-                      <div className="p-timeline-item">
-                        <time className="p-timeline-date">Giao hàng thất bại</time>
-                        <span className="p-timeline-carmodel" >
-                          
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                      </li>
+                      <li className="timeline-item bmw">
+                        <div className="p-timeline-item">
+                          <time className="p-timeline-date">Giao hàng thất bại</time>
+                          <span className="p-timeline-carmodel"></span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                    <li className="timeline-item mini">
-                      <div className="p-timeline-item">
-                        <time className="p-timeline-date">Thanh toán thành công</time>
-                        <span className="p-timeline-carmodel">
-                         
-                        </span>
-                        <div className="p-timeline-block">
-                        <i style={{marginTop: 27}} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                      </li>
+                      <li className="timeline-item mini">
+                        <div className="p-timeline-item">
+                          <time className="p-timeline-date">Thanh toán thành công</time>
+                          <span className="p-timeline-carmodel"></span>
+                          <div className="p-timeline-block">
+                            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  </ul>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </Col>
+            </Row>
 
             {/* //button */}
             {/* xac nhan don hang */}
@@ -551,7 +695,7 @@ function DonHangCT() {
                   <div className="col-5">
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
                       <div className="col-5">
-                        <div className="d-flex justify-content-end">
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="justify-content-end">
                           <button onClick={handleShow} className="btn btn-dark" data-bs-placement="right">
                             <i className="fa-solid fa-pen-to-square fa-bounce fa-lg"></i>
                             <span> | </span>

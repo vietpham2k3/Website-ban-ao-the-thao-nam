@@ -16,7 +16,7 @@
     font-size: 14px;
     line-height: 21px;
     max-width: 1840px;
-    padding: 0 40px;
+    padding: 0 20px;
     margin: 0 auto;
     position: relative;
   }
@@ -187,9 +187,9 @@
   .p-timeline-content time{font-size:1em;}
 }
 /*Tablet - Portrait*/
-@media screen and (max-width: 1020px){
+@media screen and (max-width: 1050px){
   .p-timeline-carmodel{margin:0;}
-   .wrap{padding:0 40px;} 
+   .wrap{padding:0 20px;} 
   .timeline-wrap{padding:0;}
   .p-timeline-content{display:flex;flex-flow: column;}
   .i-is-active.p-timeline-content .timeline-content-card, .i-is-active.p-timeline-content .timeline-content-card, .i-is-active.p-timeline-content .timeline-content-image{width:100%;}
