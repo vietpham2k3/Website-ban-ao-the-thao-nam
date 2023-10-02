@@ -1,5 +1,6 @@
 import React from 'react';
 // import { Image } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
 import '../../scss/Content.scss';
 import { getAll, getAllSPNEW } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
@@ -46,13 +47,18 @@ function Content() {
               data.slice(0, 8).map((product, index) => {
                 return (
                   <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
-                    <div className="card">
-                      <img src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`} className="card-img-top" alt="..." />
-                      <div className="card-body">
-                        <h5 className="tenAo">{product.sanPham.ten}</h5>
-                        <p className="giaBan">{convertToCurrency(product.giaBan)}</p>
-                      </div>
-                    </div>
+                    <Card style={{ width: '260px', height: '400px' }}>
+                      <Card.Img
+                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
+                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                      />
+                      <Card.Body>
+                        <Card.Title>{product.sanPham.ten}</Card.Title>
+                        <Card.Text>
+                          <span>{convertToCurrency(product.giaBan)}</span>
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
                   </div>
                 );
               })}
@@ -69,13 +75,18 @@ function Content() {
               productNew.slice(0, 8).map((product, i) => {
                 return (
                   <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={i}>
-                    <div className="card">
-                      <img src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`} className="card-img-top" alt="..." />
-                      <div className="card-body">
-                        <h5 className="tenAo">{product.sanPham.ten}</h5>
-                        <p className="giaBan">{convertToCurrency(product.giaBan)}</p>
-                      </div>
-                    </div>
+                    <Card style={{ width: '260px', height: '400px' }}>
+                      <Card.Img
+                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
+                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                      />
+                      <Card.Body>
+                        <Card.Title>{product.sanPham.ten}</Card.Title>
+                        <Card.Text>
+                          <span>{convertToCurrency(product.giaBan)}</span>
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
                   </div>
                 );
               })}
