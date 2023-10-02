@@ -8,7 +8,6 @@ const App1 = () => {
       <Route path="/trang-chu" element={<TrangChu />}></Route>
       <Route path="/san-pham/web" element={<SanPham />}></Route>
     </Routes>
-    
   );
 };
 

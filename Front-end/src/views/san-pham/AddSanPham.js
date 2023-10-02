@@ -423,9 +423,7 @@ function AddSanPham() {
           <div className="col-12">
             <h2>Thuộc tính</h2>
           </div>
-          <div className="col-12">
-            
-          </div>
+          <div className="col-12"></div>
         </div>
       </MainCard>
     </div>
