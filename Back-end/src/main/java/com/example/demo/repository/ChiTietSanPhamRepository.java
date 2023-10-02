@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -39,5 +40,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             @Param("max") Double max,
             Pageable pageable
     );
+
+    @Query(value = "SELECT * FROM ChiTietSanPham WHERE trang_thai = 1", nativeQuery = true)
+    List<ChiTietSanPham>getAll();
 
 }

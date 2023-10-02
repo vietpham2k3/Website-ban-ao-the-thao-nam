@@ -141,7 +141,7 @@ public class KhachHangController {
                                  @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = new KhachHang();
-      String ma = "CL" + new Random().nextInt(100000);
+      String ma = "KH" + new Random().nextInt(100000);
         khachHang.setMaKhachHang(ma);
         khachHang.setTenKhachHang(tenKhachHang);
         khachHang.setSdt(sdt);
