@@ -24,6 +24,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> getAllSPNEW() {
+        return repository.getAllSPNew();
+    }
+
+    @Override
     public Page<ChiTietSanPham> page(Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
         return repository.getAll(pageable);

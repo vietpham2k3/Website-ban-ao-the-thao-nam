@@ -54,7 +54,19 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             Pageable pageable
     );
 
-    @Query(value = "SELECT * FROM ChiTietSanPham WHERE trang_thai = 1", nativeQuery = true)
-    List<ChiTietSanPham>getAll();
+    @Query(value = "SELECT ctsp.*, SUM(hdct.so_luong) FROM ChiTietSanPham ctsp\n" +
+            "JOIN HoaDonChiTiet hdct ON hdct.id_ctsp = ctsp.id\n" +
+            "WHERE ctsp.trang_thai = 1\n" +
+            "GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc, ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp\n" +
+            ",ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai\n" +
+            "ORDER BY SUM(hdct.so_luong) DESC", nativeQuery = true)
+    List<ChiTietSanPham> getAll();
+
+    @Query(value = "SELECT ctsp.*\n" +
+            "FROM ChiTietSanPham ctsp\n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "WHERE ctsp.trang_thai = 1\n" +
+            "ORDER BY sp.ngay_tao DESC", nativeQuery = true)
+    List<ChiTietSanPham> getAllSPNew();
 
 }
