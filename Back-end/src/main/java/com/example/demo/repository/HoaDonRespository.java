@@ -30,16 +30,30 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay) " +
             "AND ((:min IS NULL OR HD.tong_tien_sau_khi_giam >= :min) " +
             "AND (:max IS NULL OR HD.tong_tien_sau_khi_giam <= :max)) " +
-            "AND (:trangThai IS NULL OR HD.trang_thai = :trangThai)"+
+            "AND ((:trangThai1 IS NULL OR HD.trang_thai = :trangThai1) " +
+            "OR (:trangThai2 IS NULL OR HD.trang_thai = :trangThai2) " +
+            "OR (:trangThai3 IS NULL OR HD.trang_thai = :trangThai3) " +
+            "OR (:trangThai4 IS NULL OR HD.trang_thai = :trangThai4) " +
+            "OR (:trangThai5 IS NULL OR HD.trang_thai = :trangThai5) " +
+            "OR (:trangThai6 IS NULL OR HD.trang_thai = :trangThai6) " +
+            "OR (:trangThai7 IS NULL OR HD.trang_thai = :trangThai7) " +
+            "OR (:trangThai8 IS NULL OR HD.trang_thai = :trangThai8)) " +
             "AND (:loaiDon IS NULL OR HD.loai_don = :loaiDon) " +
-            "AND (:tenHinhThuc IS NULL OR HTTT.ten LIKE CONCAT('%', :tenHinhThuc , '%')) "
-            ,nativeQuery = true)
+            "AND (:tenHinhThuc IS NULL OR HTTT.ten LIKE CONCAT('%', :tenHinhThuc , '%')) ",
+            nativeQuery = true)
     public Page<HoaDonCustom> findVIP(@Param("key") String key,
                                       @Param("tuNgay") Date tuNgay,
                                       @Param("denNgay") Date denNgay,
                                       @Param("min") Double min,
                                       @Param("max") Double max,
-                                      @Param("trangThai") Integer trangThai,
+                                      @Param("trangThai1") Integer trangThai1,
+                                      @Param("trangThai2") Integer trangThai2,
+                                      @Param("trangThai3") Integer trangThai3,
+                                      @Param("trangThai4") Integer trangThai4,
+                                      @Param("trangThai5") Integer trangThai5,
+                                      @Param("trangThai6") Integer trangThai6,
+                                      @Param("trangThai7") Integer trangThai7,
+                                      @Param("trangThai8") Integer trangThai8,
                                       @Param("loaiDon") Integer loaiDon,
                                       @Param("tenHinhThuc") String tenHinhThuc,
                                       Pageable pageable);

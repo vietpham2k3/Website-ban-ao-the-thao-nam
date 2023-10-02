@@ -100,7 +100,14 @@ public class HoaDonController {
 
     @GetMapping("hien-thi-page-find")
     public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Double min, Double max,
-                                     Integer trangThai, Integer loaiDon, String tenHinhThuc,
+                                     Integer trangThai1,
+                                      Integer trangThai2,
+                                     Integer trangThai3,
+                                     @Param("trangThai4") Integer trangThai4,
+                                     @Param("trangThai5") Integer trangThai5,
+                                     @Param("trangThai6") Integer trangThai6,
+                                     @Param("trangThai7") Integer trangThai7,
+                                     @Param("trangThai8") Integer trangThai8,, Integer loaiDon, String tenHinhThuc,
                                      @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
