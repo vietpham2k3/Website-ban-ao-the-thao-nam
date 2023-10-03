@@ -1,19 +1,21 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
+import { deleteMSKC } from 'services/SanPhamService';
 import { toast } from 'react-toastify';
-import { deleteMSKCCTSP } from 'services/SanPhamService';
 
 const ConfirmDelete = (props) => {
-  const { handleClose, show, dataDelete, getAll, id } = props;
+  const { handleClose, show, getAll, id, dataDelete } = props;
 
   const handleConfirm = async () => {
-    let res = await deleteMSKCCTSP(dataDelete);
-    if (res) {
-      toast.success('Delete success!');
-      handleClose();
-      getAll(id);
-    } else {
+    let res = await deleteMSKC(dataDelete);
+    try {
+      if (res) {
+        toast.success('Delete success!');
+        handleClose();
+        getAll(id);
+      }
+    } catch (error) {
       toast.error('Error!');
     }
   };
@@ -33,16 +35,14 @@ const ConfirmDelete = (props) => {
           <Modal.Title>Thông báo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="body-add-new">
-            Bạn có chắc muốn xoá <strong>vĩnh viễn</strong> thuộc tính này không?
-          </div>
+          <div className="body-add-new">Bạn có chắc muốn ngừng kinh doanh thuộc tính này không?</div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Đóng
           </Button>
           <Button variant="danger" onClick={() => handleConfirm()}>
-            Xoá
+            Xác nhận
           </Button>
         </Modal.Footer>
       </Modal>

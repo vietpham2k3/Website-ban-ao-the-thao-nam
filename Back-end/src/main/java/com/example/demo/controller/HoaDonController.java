@@ -62,7 +62,7 @@ public class HoaDonController {
         hoaDon.setMa(ma);
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
-        hoaDon.setTrangThai(1);
+        hoaDon.setTrangThai(0);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                 .ma(maLSHD)
                 .ten("Tạo hoá đơn")

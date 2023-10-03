@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
@@ -30,12 +31,11 @@ function DonHang() {
   //select trangThai
   const [selectedOptions, setSelectedOptions] = useState([]);
   //so luong
-   const [valuesSL, setValuesSL] = useState([MINSL, MAXSL]);
+  const [valuesSL, setValuesSL] = useState([MINSL, MAXSL]);
   // tong tien
   const [valuesTT, setValuesTT] = useState([MIN, MAX]);
   //hien thi
   const [data, setData] = useState([]);
-
 
   const animatedComponents = makeAnimated();
 
@@ -72,12 +72,12 @@ function DonHang() {
   };
 
   //fillter DH
-  const search = async (key, tuNgay, denNgay, minSL, maxSL, minTT,maxTT,trangThai, loaiDon, page = 0) => {
-    const res = await findVIP(key, tuNgay, denNgay, minSL, maxSL, minTT,maxTT, trangThai, loaiDon, page);
+  const search = async (key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page = 0) => {
+    const res = await findVIP(key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
-  
+
       if (res.data.content.length === 0 && currentPage !== 0) {
         setCurrentPage(0);
       } else {
@@ -85,25 +85,24 @@ function DonHang() {
       }
     }
   };
-  
+
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
       search(term, tuNgay, denNgay, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], selectedValues, loaiDon, page);
     } else {
-      search('', null, null, valuesSL[0], valuesSL[1],valuesTT[0], valuesTT[1], null, '', '', page);
+      search('', null, null, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], null, '', '', page);
     }
-  
+
     if (data.length === 0) {
       setCurrentPage(0);
     }
   }, []);
-  
+
   useEffect(() => {
     handleSearchDH(currentPage);
-  }, [term, tuNgay, denNgay, valuesSL,valuesTT, selectedOptions, loaiDon, currentPage]);
+  }, [term, tuNgay, denNgay, valuesSL, valuesTT, selectedOptions, loaiDon, currentPage]);
 
-  
   const handleInputChange = (e) => {
     setTerm(e.target.value);
   };
@@ -251,22 +250,18 @@ function DonHang() {
                 </div>
               </div>
 
-              <div style={{  marginLeft: 100 }} className="box col-auto col-4">
-                <div style={{  marginTop: 5 }} className="values">
+              <div style={{ marginLeft: 100 }} className="box col-auto col-4">
+                <div style={{ marginTop: 5 }} className="values">
                   <strong>Số lượng:</strong> {convertToCurrency(valuesSL[0]) + ' - ' + convertToCurrency(valuesSL[1])}
                 </div>
                 <br />
                 <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
               </div>
-
-             
             </div>
             <br></br>
             <div className="row">
-       
-
-            <div className="box col-auto col-6">
-                <div  className="values">
+              <div className="box col-auto col-6">
+                <div className="values">
                   <strong>Loại đơn:</strong>
                 </div>
                 <FormGroup style={{ marginTop: 15 }}>
@@ -320,7 +315,7 @@ function DonHang() {
                       color: 'white',
                       fontSize: '15px',
                       fontWeight: 'bold',
-                       marginLeft: '5px'
+                      marginLeft: '5px'
                     }}
                     className="btn-text"
                   >

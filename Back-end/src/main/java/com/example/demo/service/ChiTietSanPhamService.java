@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAll();
 
+    List<ChiTietSanPham> getAllByIdSP(UUID id);
+
     List<ChiTietSanPham> getAllSPNEW();
 
     Page<ChiTietSanPham> page(Integer page);
@@ -20,6 +22,8 @@ public interface ChiTietSanPhamService {
     ChiTietSanPham detail(UUID id);
 
     void delete(UUID id);
+
+    void deleteMSKC(UUID id);
 
     void update(Integer soLuong ,UUID id);
 

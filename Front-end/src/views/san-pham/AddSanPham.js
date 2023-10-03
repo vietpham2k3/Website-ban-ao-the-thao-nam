@@ -133,7 +133,7 @@ function AddSanPham() {
     const res = await postCTSP(value);
     if (res) {
       toast.success('Thêm thành công');
-      navigate('/san-pham/chi-tiet-san-pham/detail/' + res.data.id);
+      navigate(`/san-pham/chi-tiet-san-pham/detail/${res.data.id}/${res.data.sanPham.id}`);
     }
   };
 

@@ -91,7 +91,7 @@ const MainRoutes = {
           element: <AddChiTietSanPham />
         },
         {
-          path: 'chi-tiet-san-pham/detail/:id',
+          path: 'chi-tiet-san-pham/detail/:id/:idSP',
           element: <UpdateSanPham />
         },
         //màu sắc
