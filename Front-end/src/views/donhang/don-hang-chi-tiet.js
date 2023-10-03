@@ -450,60 +450,73 @@ function DonHangCT() {
                     <ul className="timeline">
                       {lichSuHoaDon.map((lshd, index) => (
                         <React.Fragment key={index}>
-                          <li className="timeline-item bmw">
-                            <div className="p-timeline-item">
-                              <span className="p-timeline-date">Tạo hóa đơn</span>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-                              </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item mini">
-                            <div className="p-timeline-item">
-                              <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
-                              </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item mini">
-                            <div className="p-timeline-item">
-                              <span className="p-timeline-date">Đã hủy đơn hàng</span>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
-                              </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item bmw">
-                            <div className="p-timeline-item">
-                              <time className="p-timeline-date">Chờ giao hàng</time>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-                              </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item bmw">
-                            <div className="p-timeline-item">
-                              <time className="p-timeline-date">Đang giao hàng</time>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
-                              </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item bmw">
-                            <div className="p-timeline-item">
-                              <span className="p-timeline-date">Giao hàng thành công</span>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
-                              </div>
-                            </div>
-                          </li>
+                         {lshd.hoaDon.trangThai === 0 && (
+      <li className="timeline-item bmw">
+        <div className="p-timeline-item">
+          <span className="p-timeline-date">Tạo hóa đơn</span>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+          </div>
+        </div>
+      </li>
+    )}
+    {lshd.hoaDon.trangThai === 1 && (
+      <li className="timeline-item mini">
+        <div className="p-timeline-item">
+          <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+          </div>
+        </div>
+      </li>
+    )}
+    {lshd.trangThai === 2 && (
+      <li className="timeline-item mini">
+        <div className="p-timeline-item">
+          <span className="p-timeline-date">Đã hủy đơn hàng</span>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+          </div>
+        </div>
+      </li>
+    )}
+
+    {/* {lshd.trangThai === 'cho_giao_hang' && (
+      <li className="timeline-item bmw">
+        <div className="p-timeline-item">
+          <time className="p-timeline-date">Chờ giao hàng</time>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+          </div>
+        </div>
+      </li>
+    )}
+    {lshd.trangThai === 'dang_giao_hang' && (
+      <li className="timeline-item bmw">
+        <div className="p-timeline-item">
+          <time className="p-timeline-date">Đang giao hàng</time>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+          </div>
+        </div>
+      </li>
+    )}
+    {lshd.trangThai === 'giao_hang_thanh_cong' && (
+      <li className="timeline-item bmw">
+        <div className="p-timeline-item">
+          <span className="p-timeline-date">Giao hàng thành công</span>
+          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+          <div className="p-timeline-block">
+            <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+          </div>
+        </div>
+      </li>
+    )}
                           <li className="timeline-item bmw">
                             <div className="p-timeline-item">
                               <time className="p-timeline-date">Giao hàng thất bại</time>
@@ -521,7 +534,7 @@ function DonHangCT() {
                                 <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
                               </div>
                             </div>
-                          </li>
+                          </li> */}
                         </React.Fragment>
                       ))}
                     </ul>
