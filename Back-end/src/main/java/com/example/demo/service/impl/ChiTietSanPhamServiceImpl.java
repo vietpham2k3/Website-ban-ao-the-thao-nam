@@ -20,12 +20,22 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
     @Override
     public List<ChiTietSanPham> getAll() {
-        return repository.getAll();
+        return repository.findAll();
+    }
+
+    @Override
+    public List<ChiTietSanPham> getAllBestseller() {
+        return repository.getAllBestseller();
     }
 
     @Override
     public List<ChiTietSanPham> getAllSPNEW() {
         return repository.getAllSPNew();
+    }
+
+    @Override
+    public List<ChiTietSanPham> getAllProduct() {
+        return repository.getAllProduct();
     }
 
     @Override

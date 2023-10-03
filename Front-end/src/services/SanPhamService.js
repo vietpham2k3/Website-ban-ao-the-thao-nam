@@ -1,12 +1,16 @@
 // import axios from 'axios'
 import axios from '../custommize-axios';
 
-const getAll = () => {
-  return axios.get('/api/chi-tiet-san-pham/getAllCTSP');
+const getAllBestseller = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllBestseller');
 };
 
 const getAllSPNEW = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
+};
+
+const getAllProduct = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllProduct');
 };
 
 const getAllCTSP = (page) => {
@@ -86,7 +90,7 @@ const detailMSKCCTSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/detailMSKCCTSP/${id}`);
 };
 export {
-  getAll,
+  getAllBestseller,
   getAllCTSP,
   getAllListKC,
   deleteCTSP,
@@ -107,5 +111,6 @@ export {
   getAllListMS,
   getAllListLSP,
   getAllListNSX,
-  getAllSPNEW
+  getAllSPNEW,
+  getAllProduct
 };

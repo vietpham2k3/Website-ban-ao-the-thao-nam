@@ -58,9 +58,14 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
     }
 
-    @GetMapping("getAllCTSP")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(chiTietSanPhamService.getAll());
+    @GetMapping("getAllBestseller")
+    public ResponseEntity<?> getAllBestseller() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllBestseller());
+    }
+
+    @GetMapping("getAllProduct")
+    public ResponseEntity<?> getAllProduct() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllProduct());
     }
 
     @GetMapping("getAllSPNEW")

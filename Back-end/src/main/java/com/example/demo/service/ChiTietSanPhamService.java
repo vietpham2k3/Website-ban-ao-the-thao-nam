@@ -9,7 +9,11 @@ import java.util.UUID;
 public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAll();
 
+    List<ChiTietSanPham> getAllBestseller();
+
     List<ChiTietSanPham> getAllSPNEW();
+
+    List<ChiTietSanPham> getAllProduct();
 
     Page<ChiTietSanPham> page(Integer page);
 
