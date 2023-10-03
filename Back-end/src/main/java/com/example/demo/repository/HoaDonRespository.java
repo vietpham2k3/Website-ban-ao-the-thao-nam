@@ -21,7 +21,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "FROM HoaDon HD\n" +
             "JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
             "GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien, HD.trang_thai, HD.loai_don\n" +
-            "ORDER By HD.ngay_tao DESC",
+            "ORDER BY HD.ngay_tao DESC",
             nativeQuery = true)
     public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
@@ -42,7 +42,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "       AND (:maxSL IS NULL OR SUM(HDCT.so_luong) <= :maxSL)) \n" +
             "       AND ((:minTT IS NULL OR SUM(HDCT.so_luong * HDCT.don_gia) >= :minTT) \n" +
             "       AND (:maxTT IS NULL OR SUM(HDCT.so_luong * HDCT.don_gia) <= :maxTT))\n" +
-            "\t   ORDER By HD.ngay_tao DESC",
+            "\t   ORDER BY HD.ngay_tao DESC",
             nativeQuery = true)
     public Page<HoaDonCustom> findVIP(@Param("key") String key,
                                       @Param("tuNgay") Date tuNgay,

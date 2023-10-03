@@ -72,10 +72,6 @@ const MainRoutes = {
       element: <DonHang />
     },
     {
-      path: '/don-hang/print-excel',
-      element: <DonHang />
-    },
-    {
       path: '/don-hang/chi-tiet/:id',
       element: <DonHangCT />
     },

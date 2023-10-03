@@ -231,169 +231,209 @@ function DonHangCT() {
                       </div>
                     </div>
 
-                    <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show1} onHide={handleClose1}>
+                    <Modal
+                      size="lg"
+                      aria-labelledby="contained-modal-title-vcenter"
+                      centered
+                      style={{ marginLeft: 150 }}
+                      show={show1}
+                      onHide={handleClose1}
+                    >
                       <Modal.Header closeButton>
-                        <Modal.Title style={{ marginLeft: 125 }}>Lịch Sử Đơn Hàng</Modal.Title>
+                        <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 300 }}>
+                          Lịch Sử Đơn Hàng
+                        </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <section className="navbar-expand-lg navbar-light bg-light">
-                          <Table id="myTable" className="table" style={{ textAlign: 'center' }}>
-                            <thead>
-                              <tr style={{ textAlign: 'center' }}>
-                                <th>Trạng Thái</th>
-                                <th>Thời gian</th>
-                                <th>Người xác nhận</th>
-                                <th>Ghi chú</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {lichSuHoaDon.map((item, index) => (
-                                <tr key={index}>
-                                  <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
-                                    {item.trangThai === 0 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                                      >
-                                        Đang chờ xác nhận
-                                      </span>
-                                    )}
-                                    {item.trangThai === 1 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-primary status-completed"
-                                      >
-                                        Đã xác nhận
-                                      </span>
-                                    )}
-                                    {item.trangThai === 2 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                                      >
-                                        Đã hủy đơn
-                                      </span>
-                                    )}
-                                    {item.trangThai === 3 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                                      >
-                                        Chờ giao hàng
-                                      </span>
-                                    )}
-                                    {item.trangThai === 4 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                                      >
-                                        Đang giao hàng
-                                      </span>
-                                    )}
-                                    {item.trangThai === 5 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-info status-completed"
-                                      >
-                                        Giao hàng thành công
-                                      </span>
-                                    )}
-                                    {item.trangThai === 6 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                                      >
-                                        Giao hàng thất bại
-                                      </span>
-                                    )}
-                                    {item.trangThai === 7 && (
-                                      <span
-                                        style={{
-                                          width: '200px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn btn-info status-completed"
-                                      >
-                                        Thanh toán thành công
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td>{formatDate(item.ngayTao)}</td>
-                                  <td>{item.nguoiTao}</td>
-                                  <td>{item.ghiChu}</td>
+                          <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            <Table id="myTable" className="table" style={{ textAlign: 'center' }}>
+                              <thead>
+                                <tr style={{ textAlign: 'center' }}>
+                                  <th></th>
+                                  <th>Trạng Thái</th>
+                                  <th>Thời gian</th>
+                                  <th>Người xác nhận</th>
+                                  <th>Ghi chú</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </Table>
+                              </thead>
+                              <tbody>
+                                {lichSuHoaDon.map((item, index) => (
+                                  <tr key={index}>
+                                    <td>
+                                      <div style={{ marginTop: 5 }}>
+                                        {item.trangThai === 0 && (
+                                          <i style={{ color: 'gray' }} className="fa-solid fa-spinner fa-spin fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 1 && (
+                                          <i style={{ color: 'blue' }} className="fa-solid fa-check fa-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 2 && (
+                                          <i style={{ color: 'red' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 3 && (
+                                          <i style={{ color: 'gray' }} className="fa-solid fa-spinner fa-spin fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 4 && (
+                                          <i style={{ color: 'orange' }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 5 && (
+                                          <i style={{ color: 'darkblue' }} className="fa-solid fa-check-double fa-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 6 && (
+                                          <i style={{ color: 'red' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 7 && (
+                                          <i style={{ color: 'green' }} className="fa-regular fa-circle-check fa-beat fa-lg"></i>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
+                                      {item.trangThai === 0 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                                        >
+                                          Đang chờ xác nhận
+                                        </span>
+                                      )}
+                                      {item.trangThai === 1 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                                        >
+                                          Đã xác nhận
+                                        </span>
+                                      )}
+                                      {item.trangThai === 2 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                                        >
+                                          Đã hủy đơn
+                                        </span>
+                                      )}
+                                      {item.trangThai === 3 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
+                                        >
+                                          Chờ giao hàng
+                                        </span>
+                                      )}
+                                      {item.trangThai === 4 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                                        >
+                                          Đang giao hàng
+                                        </span>
+                                      )}
+                                      {item.trangThai === 5 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-info status-completed"
+                                        >
+                                          Giao hàng thành công
+                                        </span>
+                                      )}
+                                      {item.trangThai === 6 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                                        >
+                                          Giao hàng thất bại
+                                        </span>
+                                      )}
+                                      {item.trangThai === 7 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-info status-completed"
+                                        >
+                                          Thanh toán thành công
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td>{formatDate(item.ngayTao)}</td>
+                                    <td>{item.hoaDon.nhanVien.ten}</td>
+                                    <td>{item.ghiChu}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </Table>
+                          </div>
                         </section>
                       </Modal.Body>
                     </Modal>
@@ -408,87 +448,91 @@ function DonHangCT() {
                 <div className="wrap">
                   <div className="timeline-wrap">
                     <ul className="timeline">
-                      <li className="timeline-item bmw">
-                        <div className="p-timeline-item">
-                          <span className="p-timeline-date">Tạo hóa đơn</span>
-                          <span className="p-timeline-carmodel">10/10/2023</span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item mini">
-                        <div className="p-timeline-item">
-                          <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
-                          <span className="p-timeline-carmodel">10/10/2023</span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item mini">
-                        <div className="p-timeline-item">
-                          <span className="p-timeline-date">Đã hủy đơn hàng</span>
-                          <span className="p-timeline-carmodel">10/10/2023</span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item bmw">
-                        <div className="p-timeline-item">
-                          <time className="p-timeline-date">Chờ giao hàng</time>
-                          <span className="p-timeline-carmodel"></span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item bmw">
-                        <div className="p-timeline-item">
-                          <time className="p-timeline-date">Đang giao hàng</time>
-                          <span className="p-timeline-carmodel"></span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item bmw">
-                        <div className="p-timeline-item">
-                          <span className="p-timeline-date">Giao hàng thành công</span>
-                          <span className="p-timeline-carmodel"></span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item bmw">
-                        <div className="p-timeline-item">
-                          <time className="p-timeline-date">Giao hàng thất bại</time>
-                          <span className="p-timeline-carmodel"></span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="timeline-item mini">
-                        <div className="p-timeline-item">
-                          <time className="p-timeline-date">Thanh toán thành công</time>
-                          <span className="p-timeline-carmodel"></span>
-                          <div className="p-timeline-block">
-                            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
-                          </div>
-                        </div>
-                      </li>
+                      {lichSuHoaDon.map((lshd, index) => (
+                        <React.Fragment key={index}>
+                          <li className="timeline-item bmw">
+                            <div className="p-timeline-item">
+                              <span className="p-timeline-date">Tạo hóa đơn</span>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item mini">
+                            <div className="p-timeline-item">
+                              <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item mini">
+                            <div className="p-timeline-item">
+                              <span className="p-timeline-date">Đã hủy đơn hàng</span>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item bmw">
+                            <div className="p-timeline-item">
+                              <time className="p-timeline-date">Chờ giao hàng</time>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item bmw">
+                            <div className="p-timeline-item">
+                              <time className="p-timeline-date">Đang giao hàng</time>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item bmw">
+                            <div className="p-timeline-item">
+                              <span className="p-timeline-date">Giao hàng thành công</span>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item bmw">
+                            <div className="p-timeline-item">
+                              <time className="p-timeline-date">Giao hàng thất bại</time>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                          <li className="timeline-item mini">
+                            <div className="p-timeline-item">
+                              <time className="p-timeline-date">Thanh toán thành công</time>
+                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                              <div className="p-timeline-block">
+                                <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                              </div>
+                            </div>
+                          </li>
+                        </React.Fragment>
+                      ))}
                     </ul>
                   </div>
                 </div>
               </Col>
             </Row>
 
-            {/* //button */}
-            {/* xac nhan don hang */}
+            {/* //button modal*/}
             <div className="row">
+              {/* xac nhan don hang */}
               <div className="col-3">
                 <button
                   onClick={handleShow2}
