@@ -5,16 +5,14 @@ import '../../scss/SearchResult.scss';
 import { Table } from 'react-bootstrap';
 import TableKCMS from './TableKCMS';
 import { useState } from 'react';
-import { getAllMSKCCTSP, detailMSKCCTSP } from 'services/SanPhamService';
-import { useEffect } from 'react';
 import { addSP } from 'services/ServiceDonHang';
 import { toast } from 'react-toastify';
 
 function SearchResult(props) {
   const { result, id, getAllById, handleSearchUsers } = props;
   const [show, setShow] = useState(false);
-  const [idCTSP, setidCTSP] = useState('');
-  const [values, setValues] = useState([]);
+  // const [idCTSP, setidCTSP] = useState('');
+  // const [values, setValues] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
   const [inputDetail, setInputDetail] = useState(null);
   const [valuesAdd, setValuesAdd] = useState({
@@ -77,17 +75,6 @@ function SearchResult(props) {
       },
       soLuong: ''
     });
-  };
-
-  useEffect(() => {
-    getAllByIdCTSP(idCTSP);
-  }, [idCTSP]);
-
-  const getAllByIdCTSP = async (id) => {
-    const res = await getAllMSKCCTSP(id);
-    if (res) {
-      setValues(res.data);
-    }
   };
 
   const handleDetail = (id) => {

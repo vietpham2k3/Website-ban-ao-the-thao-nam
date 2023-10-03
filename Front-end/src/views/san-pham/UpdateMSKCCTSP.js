@@ -114,6 +114,39 @@ function UpdateMSKCCTSP(props) {
             </div>
           </div>
           <div className="col-12">
+            <div className="form-inline">
+              <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                Trạng thái:{' '}
+              </label>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id="inlineRadio1"
+                  defaultValue={values.trangThai}
+                  checked={values.trangThai === 1}
+                  onChange={() => setValues({ ...values, trangThai: 1 })}
+                />
+                <label className="form-check-label" htmlFor="inlineRadio1">
+                  Kinh doanh
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  id="inlineRadio2"
+                  defaultValue={values.trangThai}
+                  checked={values.trangThai === 0}
+                  onChange={() => setValues({ ...values, trangThai: 0 })}
+                />
+                <label className="form-check-label" htmlFor="inlineRadio2">
+                  Ngừng kinh doanh
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className="col-12">
             <Button type="submit" className="btn btn-primary" onClick={onHide}>
               Thêm
             </Button>

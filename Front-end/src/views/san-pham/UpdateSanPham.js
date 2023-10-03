@@ -14,10 +14,8 @@ import {
   listAnh,
   deleteAnh,
   addAnh,
-  getAllMSKCCTSP,
-  addAllMSKCCTSP,
-  putMSKCCTSP,
-  detailMSKCCTSP
+  getAllByIdSP,
+  postCTSP
 } from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
@@ -28,7 +26,6 @@ import { postCreate } from 'services/ServiceChatLieu';
 import { postCreate as postCa } from 'services/ServiceCoAo';
 import { add } from 'services/LoaiSanPhamService';
 import { postNSX } from 'services/NhaSanXuatService';
-import { postCreate as postKC } from 'services/KichCoService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 import AddMSKCCTSP from './AddMSKCCTSP';
 import { useRef } from 'react';
@@ -47,10 +44,8 @@ function UpdateSanPham() {
   const [listNSX, setListNSX] = useState([]);
   const [listLSP, setListLSP] = useState([]);
   const [listCA, setListCA] = useState([]);
-  const [listMSKCCTSP, setListMSKCCTSP] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [isShow, setIsShow] = useState(false);
-  const [dataDelete, setDataDelete] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
   const [modalShowLSP, setModalShowLSP] = useState(false);
   const [modalShowNSX, setModalShowNSX] = useState(false);
@@ -58,15 +53,15 @@ function UpdateSanPham() {
   const [modalShowMS, setModalShowMS] = useState(false);
   const [show, setShow] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  const { id } = useParams();
+  const { id, idSP } = useParams();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
-  const [idMSKCCTSP, setIdMSKCCTSP] = useState('');
   const [imageList, setImageList] = useState([]);
+  const [listMSKC, setListMSKC] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const inputRef = useRef(null);
-
-  const [valuesUpdate, setValuesUpdate] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [idCTSP, setIdCTSP] = useState(true);
 
   const [values, setValues] = useState({
     chatLieu: {
@@ -96,6 +91,23 @@ function UpdateSanPham() {
     trangThai: 1
   });
 
+  useEffect(() => {
+    getAllMSKC(idSP);
+  }, [idSP]);
+
+  const getAllMSKC = async (id) => {
+    try {
+      const res = await getAllByIdSP(id);
+      if (res && res.data) {
+        setListMSKC(res.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleAddMS = (event) => {
     event.preventDefault();
     addMS(valuesCL);
@@ -105,19 +117,6 @@ function UpdateSanPham() {
     const res = postMS(value);
     if (res) {
       closeModal();
-    }
-  };
-
-  const handleAddKC = (event) => {
-    event.preventDefault();
-    addKC(valuesCL);
-  };
-
-  const addKC = (value) => {
-    const res = postKC(value);
-    if (res) {
-      closeModal();
-      detailmskcctsp(idMSKCCTSP);
     }
   };
 
@@ -145,75 +144,13 @@ function UpdateSanPham() {
     }
   };
 
-  useEffect(() => {
-    detailmskcctsp(idMSKCCTSP);
-  }, [idMSKCCTSP]);
-
-  const detailmskcctsp = async (idCTSP) => {
-    const res = await detailMSKCCTSP(idCTSP);
-    if (res) {
-      setValuesUpdate(res.data);
-    }
-  };
-
-  const handleIdMSKCCTSP = (idSP) => {
-    setIdMSKCCTSP(idSP);
-    setShowUpdate(true);
-  };
-
-  const [valuesMSKCCTSP, setValuesMSKCCTSP] = useState({
-    chiTietSanPham: {
-      id: id
-    },
-    kichCo: {
-      id: ''
-    },
-    mauSac: {
-      id: ''
-    },
-    soLuong: ''
-  });
-
   const handleDelete = (id) => {
     setIsShow(true);
-    setDataDelete(id);
+    setIdCTSP(id);
   };
 
   const handleClose = () => {
     setIsShow(false);
-  };
-
-  const handleUpdate = (event) => {
-    event.preventDefault();
-    updateAllByIdCTSP(idMSKCCTSP, valuesUpdate);
-  };
-
-  const updateAllByIdCTSP = async (idCTSP, value) => {
-    const res = await putMSKCCTSP(idCTSP, value);
-    if (res) {
-      toast.success('Sửa thành công');
-      getAllByIdCTSP(id);
-    }
-  };
-
-  const addAllByIdCTSP = async (value) => {
-    const res = await addAllMSKCCTSP(value);
-    if (res) {
-      toast.success('Thêm thành công');
-      getAllByIdCTSP(id);
-    }
-  };
-
-  const handleAdd = (event) => {
-    event.preventDefault();
-    addAllByIdCTSP(valuesMSKCCTSP);
-  };
-
-  const getAllByIdCTSP = async (id) => {
-    const res = await getAllMSKCCTSP(id);
-    if (res) {
-      setListMSKCCTSP(res.data);
-    }
   };
 
   const anh = async (value) => {
@@ -302,7 +239,7 @@ function UpdateSanPham() {
   useEffect(() => {
     detail(id);
     getAllAnh(id);
-    getAllByIdCTSP(id);
+    // getAllByIdCTSP(id);
   }, [id]);
 
   const detail = async (idCTSP) => {
@@ -343,9 +280,30 @@ function UpdateSanPham() {
     }
   };
 
+  const putctspmodal = async (idCTSP, idSP, value) => {
+    const res = await putCTSP(idCTSP, value);
+    if (res) {
+      toast.success('Thành công');
+      getAllMSKC(idSP);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     await putctsp(id, values);
+  };
+
+  const handleSubmitUpdate = async (event) => {
+    try {
+      event.preventDefault();
+      await putctspmodal(idCTSP, idSP, values);
+      const updatedList = await getAllByIdSP(idSP);
+      if (updatedList && updatedList.data) {
+        setListMSKC(updatedList.data);
+      }
+    } catch (error) {
+      toast.error('Lỗi');
+    }
   };
 
   const getAllList = async () => {
@@ -360,6 +318,26 @@ function UpdateSanPham() {
       setListNSX(resNSX.data);
     }
   };
+
+  const handleUpdate = (id) => {
+    setShowUpdate(true);
+    setIdCTSP(id);
+  };
+
+  const postctsp = async (id, value) => {
+    const res = await postCTSP(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      getAllMSKC(id);
+    }
+  };
+
+  const handleSubmitAdd = async (event) => {
+    event.preventDefault();
+    await postctsp(idSP, values);
+  };
+
+  console.log(values);
 
   return (
     <div>
@@ -421,10 +399,10 @@ function UpdateSanPham() {
               aria-label="Default select example"
               onChange={(e) => setValues({ ...values, trangThai: e.target.value })}
             >
-              <option value="1" selected={values.trangThai === 1}>
+              <option value="1" selected={values.sanPham.trangThai === 1}>
                 Kinh doanh
               </option>
-              <option value="0" selected={values.trangThai === 0}>
+              <option value="0" selected={values.sanPham.trangThai === 0}>
                 Ngừng kinh doanh
               </option>
             </select>
@@ -460,7 +438,7 @@ function UpdateSanPham() {
               }}
             >
               {listCL.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values.chatLieu.id}>
+                <option key={c.id} value={c.id} selected={c.id === values && values.chatLieu.id}>
                   {c.ten}
                 </option>
               ))}
@@ -497,7 +475,7 @@ function UpdateSanPham() {
               }}
             >
               {listLSP.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values.loaiSanPham.id}>
+                <option key={c.id} value={c.id} selected={c.id === values && values.loaiSanPham.id}>
                   {c.ten}
                 </option>
               ))}
@@ -534,7 +512,7 @@ function UpdateSanPham() {
               }}
             >
               {listCA.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values.coAo.id}>
+                <option key={c.id} value={c.id} selected={c.id === values && values.coAo.id}>
                   {c.ten}
                 </option>
               ))}
@@ -571,7 +549,7 @@ function UpdateSanPham() {
               }}
             >
               {listNSX.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values.nhaSanXuat.id}>
+                <option key={c.id} value={c.id} selected={c.id === values && values.nhaSanXuat.id}>
                   {c.ten}
                 </option>
               ))}
@@ -618,12 +596,19 @@ function UpdateSanPham() {
             <h2>Thuộc tính</h2>
           </div>
           <div className="col-2 d-flex justify-content-end align-items-center">
-            <button type="submit" className="btn btn-primary" onClick={() => setShow(true)}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={() => {
+                setShow(true);
+                setValues({ ...values, id: '' });
+              }}
+            >
               Thêm thuộc tính
             </button>
           </div>
           <div className="col-12">
-            <Table striped hover className="my-4">
+            <Table hover className="my-4">
               <thead>
                 <tr className="text-center">
                   <th>
@@ -664,25 +649,37 @@ function UpdateSanPham() {
                 </tr>
               </thead>
               <tbody>
-                {listMSKCCTSP.map((d, i) => (
-                  <tr key={d.id} className="text-center">
-                    <td>{i + 1}</td>
-                    <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                    </td>
-                    <td>{d.kichCo.ten}</td>
-                    <td>{d.soLuong}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          handleIdMSKCCTSP(d.id);
-                        }}
-                        className="fa-solid fa-pen"
-                      ></button>
-                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="8" className="text-center">
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div className="spinner-border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  listMSKC.map((d, i) => (
+                    <tr key={d.id} className="text-center">
+                      <td>{i + 1}</td>
+                      <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {d.mauSac && d.kichCo ? (
+                          <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                        ) : (
+                          <p>Chưa có màu sắc nào</p>
+                        )}
+                      </td>
+                      <td>{d.kichCo ? d.kichCo.ten : 'Chưa có kích cỡ nào'}</td>
+                      <td>{d.soLuong || 0}</td>
+                      <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
+                      <td>
+                        <button onClick={() => handleUpdate(d.id)} className="fa-solid fa-pen"></button>
+                        <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
           </div>
@@ -763,25 +760,18 @@ function UpdateSanPham() {
           </div>
         </form>
       </MainCard>
-      <AddMSKCCTSP
-        show={show}
-        onHide={() => setShow(false)}
-        handleSubmit={handleAdd}
-        values={valuesMSKCCTSP}
-        setValues={setValuesMSKCCTSP}
-      />
+      <AddMSKCCTSP show={show} onHide={() => setShow(false)} values={values} setValues={setValues} handleSubmit={handleSubmitAdd} />
       <UpdateMSKCCTSP
         show={showUpdate}
         onHide={() => setShowUpdate(false)}
-        handleSubmit={handleUpdate}
-        values={valuesUpdate}
-        setValues={setValuesUpdate}
-        id={idMSKCCTSP}
+        values={values}
+        setValues={setValues}
+        handleSubmit={handleSubmitUpdate}
       />
       <MyVerticallyCenteredModal
         show={modalShowKC}
         onHide={() => setModalShowKC(false)}
-        handleSubmit={handleAddKC}
+        handleSubmit={handleSubmit}
         values={valuesCL}
         setValues={setValuesCL}
       />
@@ -792,7 +782,7 @@ function UpdateSanPham() {
         values={valuesCL}
         setValues={setValuesCL}
       />
-      <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={dataDelete} getAll={getAllByIdCTSP} id={id} />
+      <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={idCTSP} getAll={getAllMSKC} id={idSP} />
     </div>
   );
 }

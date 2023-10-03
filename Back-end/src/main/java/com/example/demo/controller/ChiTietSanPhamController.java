@@ -63,6 +63,11 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.getAll());
     }
 
+    @GetMapping("getAllByIdSP/{id}")
+    public ResponseEntity<?> getAllByIdSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllByIdSP(id));
+    }
+
     @GetMapping("getAllSPNEW")
     public ResponseEntity<?> getAllSPNEW() {
         return ResponseEntity.ok(chiTietSanPhamService.getAllSPNEW());
@@ -101,6 +106,7 @@ public class ChiTietSanPhamController {
         chiTietSanPham.setMa(ma);
 
         SanPham sanPham = new SanPham().builder()
+                .id(chiTietSanPham.getSanPham().getId())
                 .ma(maSP)
                 .ten(chiTietSanPham.getSanPham().getTen())
                 .moTa(chiTietSanPham.getSanPham().getMoTa())
@@ -211,6 +217,7 @@ public class ChiTietSanPhamController {
         SanPham spct = sanPhamRepository.detail(chiTietSanPham.getSanPham().getId());
 
         SanPham sanPham = new SanPham().builder()
+                .id(spct.getId())
                 .ma(spct.getMa())
                 .ten(chiTietSanPham.getSanPham().getTen())
                 .moTa(chiTietSanPham.getSanPham().getMoTa())
@@ -249,6 +256,12 @@ public class ChiTietSanPhamController {
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         chiTietSanPhamService.delete(id);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PutMapping("/deleteMSKC/{id}")
+    public ResponseEntity<?> deleteMSKC(@PathVariable UUID id) {
+        chiTietSanPhamService.deleteMSKC(id);
         return ResponseEntity.ok("ok");
     }
 
