@@ -30,6 +30,11 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
 
     @Override
     public List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id) {
+        return res.findALLLichSuHoaDonByHoaDonId(id);
+    }
+
+    @Override
+    public LichSuHoaDon findLSHDByIDsHD(UUID id) {
         return res.findLichSuHoaDonByHoaDonId(id);
     }
 }

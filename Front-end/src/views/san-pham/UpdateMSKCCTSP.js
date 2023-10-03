@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import '../../scss/AddQuickly.scss';

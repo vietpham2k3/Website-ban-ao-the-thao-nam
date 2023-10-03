@@ -17,11 +17,7 @@
     "apexcharts": "^3.35.3",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
-<<<<<<< HEAD
-    "file-saver": "^2.0.5",
-=======
     "date-fns": "^2.30.0",
->>>>>>> e380b97133cc8cc000a996e2f89bb2ee96a84d1e
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
     "jquery": "^3.7.1",

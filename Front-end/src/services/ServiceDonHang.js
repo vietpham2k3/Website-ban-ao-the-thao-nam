@@ -21,12 +21,24 @@ const detailLSHD = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
 };
 
-const printExcel = (values) => {
-  return axios.get('/api/hoa-don/print-excel', values);
-};
-
 const updateKHDH = (id, values) => {
   return axios.put(`/api/hoa-don/updateKH/` + id, values);
+};
+
+const xacNhanDH = (id, values) => {
+  return axios.post(`/api/hoa-don/xac-nhan/` + id, values);
+};
+
+const huyDonHang = (id, values) => {
+  return axios.put(`/api/hoa-don/huy-don/` + id, values);
+};
+
+const xacNhanGiao = (id, values) => {
+  return axios.put(`/api/hoa-don/xac-nhan-giao-hang/` + id, values);
+};
+
+const xacNhanThanhToan = (id, values) => {
+  return axios.put(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
 
 const addHD = () => {
@@ -49,4 +61,4 @@ const getALLTT = (id, idSP) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailLSHD, detailHD, addHD, getById, addSP, findVIP, getALLTT };
+export { getAllHD, getAllPageDH, updateKHDH, detailLSHD, xacNhanDH,huyDonHang,xacNhanGiao,xacNhanThanhToan,detailHD, addHD, getById, addSP, findVIP, getALLTT };

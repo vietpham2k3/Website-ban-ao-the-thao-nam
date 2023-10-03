@@ -15,6 +15,16 @@ public interface LichSuHoaDonRepository extends JpaRepository<LichSuHoaDon, UUID
     @Query(value = "SELECT LSHD.id,LSHD.ma,LSHD.ten,LSHD.nguoi_tao,LSHD.trang_thai,\n" +
             "LSHD.ngay_tao,LSHD.ghi_chu,LSHD.id_hd\n" +
             "  FROM LichSuHoaDon LSHD JOIN HoaDon HD ON LSHD.id_hd = HD.id\n" +
-            "  WHERE HD.id = :id",nativeQuery = true)
-    List<LichSuHoaDon> findLichSuHoaDonByHoaDonId(UUID id);
+            "  WHERE HD.id = :id " +
+            "ORDER BY LSHD.ngay_tao ASC"
+            ,nativeQuery = true)
+    List<LichSuHoaDon> findALLLichSuHoaDonByHoaDonId(UUID id);
+
+    @Query(value = "SELECT LSHD.id,LSHD.ma,LSHD.ten,LSHD.nguoi_tao,LSHD.trang_thai,\n" +
+            "LSHD.ngay_tao,LSHD.ghi_chu,LSHD.id_hd\n" +
+            "  FROM LichSuHoaDon LSHD JOIN HoaDon HD ON LSHD.id_hd = HD.id\n" +
+            "  WHERE HD.id = :id" +
+            "ORDER BY LSHD.ngay_tao ASC"
+            ,nativeQuery = true)
+    LichSuHoaDon findLichSuHoaDonByHoaDonId(UUID id);
 }

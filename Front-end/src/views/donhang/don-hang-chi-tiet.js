@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import $ from 'jquery';
 import '../../scss/TimeLine.scss';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { detailHD, detailLSHD, updateKHDH } from 'services/ServiceDonHang';
+import { detailHD, detailLSHD, updateKHDH, xacNhanDH, huyDonHang, xacNhanGiao, xacNhanThanhToan } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
 
@@ -17,68 +16,7 @@ function DonHangCT() {
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
 
-  //timeLine kaka
-
-  var item = '.timeline-item';
-  var content = '.p-timeline-content';
-  var active = 'i-is-active';
-
-  //Handling events
-  $('.timeline-item').on('click', function () {
-    showTimelineContent(this);
-  });
-  $('.close').on('click', function () {
-    closeCurrentContent(this);
-  });
-
-  function showTimelineContent(element) {
-    var itemId = $(element).find('.p-timeline-carmodel').attr('data-car');
-    // var highlighted = $(element).find('.p-timeline-carmodel');
-
-    //Prevent having multiple items with the class i-is-active
-    if ($(item).hasClass(active)) {
-      $(item).removeClass(active);
-    }
-
-    //grab the id from the data attribute of each contentblock
-    $(content).each(function () {
-      var contentid = $(this).attr('data-car');
-
-      //check if timeline item id is equal to the content id
-      //If they're equal, show the content associated to that timeline item
-      if (itemId == contentid) {
-        var current = $(content + '[data-car="' + contentid + '"]');
-        $(current).addClass(active);
-        $(element).addClass(active);
-
-        //If the content is not the selected (current) one
-        $(content).not(current).removeClass(active);
-
-        //Scroll to shown content
-        var target = $(current);
-        $('html, body').stop().animate({ scrollTop: target.offset().top }, 1000);
-      }
-    });
-  }
-
-  function closeCurrentContent(event) {
-    var contentblock = $(event).parents(content);
-    var contentid = $(contentblock).attr('data-car');
-    $(item).each(function () {
-      var itemId = $(this).find('.p-timeline-carmodel').attr('data-car');
-
-      if (itemId == contentid) {
-        //move page back to timeline
-        var target = $('.timeline-title');
-        $('html, body').stop().animate({ scrollTop: target.offset().top }, 1000);
-
-        //remove class i-is-active from highlighted item
-        // var currentItem = $(this).removeClass(active);
-        contentblock.removeClass(active);
-      }
-    });
-  }
-
+  // modal
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -108,6 +46,22 @@ function DonHangCT() {
     tenNguoiNhan: '',
     diaChi: '',
     soDienThoai: ''
+  });
+
+  const [lshd, setLshd] = useState({
+    ghiChu: ''
+  });
+
+  const [lshd1, setLshd1] = useState({
+    ghiChu: ''
+  });
+
+  const [lshd2, setLshd2] = useState({
+    ghiChu: ''
+  });
+
+  const [lshd3, setLshd3] = useState({
+    ghiChu: ''
   });
 
   const updateKH = async (id, value) => {
@@ -153,6 +107,68 @@ function DonHangCT() {
       setLichSuHoaDon(res.data);
       console.log(lichSuHoaDon);
     }
+  };
+
+  //Ghi chu and more haha
+  //xac nhan don
+  const xacNhan = async (id, value) => {
+    const res = await xacNhanDH(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow2(false);
+      window.location.reload();
+    }
+  };
+
+  const handleXacNhanDH = async (event) => {
+    event.preventDefault();
+    await xacNhan(id, lshd);
+  };
+  // huy don
+  const huyDon = async (id, value) => {
+    const res = await huyDonHang(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow3(false);
+      window.location.reload();
+    }
+  };
+
+  const handleHuyDon = async (event) => {
+    event.preventDefault();
+    await huyDon(id, lshd1);
+  };
+
+  // xac nhan giao hang
+
+  const giaoHang = async (id, value) => {
+    const res = await xacNhanGiao(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow4(false);
+      window.location.reload();
+    }
+  };
+
+  const handleXacNhanGiaoHang = async (event) => {
+    event.preventDefault();
+    await giaoHang(id, lshd2);
+  };
+
+  // xac nhan thanh toan
+
+  const thanhToan = async (id, value) => {
+    const res = await xacNhanThanhToan(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow5(false);
+      window.location.reload();
+    }
+  };
+
+  const handleXacNhanThanhToan = async (event) => {
+    event.preventDefault();
+    await thanhToan(id, lshd3);
   };
 
   function convertToCurrency(number) {
@@ -428,7 +444,8 @@ function DonHangCT() {
                                       )}
                                     </td>
                                     <td>{formatDate(item.ngayTao)}</td>
-                                    <td>{item.hoaDon.nhanVien.ten}</td>
+                                    {/* <td>{item.hoaDon.nhanVien.ten}</td> */}
+                                    <td>Phạm Quốc Việt</td>
                                     <td>{item.ghiChu}</td>
                                   </tr>
                                 ))}
@@ -451,91 +468,119 @@ function DonHangCT() {
                     <ul className="timeline">
                       {lichSuHoaDon.map((lshd, index) => (
                         <React.Fragment key={index}>
-                         {lshd.hoaDon.trangThai === 0 && (
-      <li className="timeline-item bmw">
-        <div className="p-timeline-item">
-          <span className="p-timeline-date">Tạo hóa đơn</span>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-          </div>
-        </div>
-      </li>
-    )}
-    {lshd.hoaDon.trangThai === 1 && (
-      <li className="timeline-item mini">
-        <div className="p-timeline-item">
-          <span className="p-timeline-date">Đã xác thực thông tin người dùng</span>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
-          </div>
-        </div>
-      </li>
-    )}
-    {lshd.trangThai === 2 && (
-      <li className="timeline-item mini">
-        <div className="p-timeline-item">
-          <span className="p-timeline-date">Đã hủy đơn hàng</span>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
-          </div>
-        </div>
-      </li>
-    )}
+                          {lshd.trangThai === 0 && (
+                            <li className={`timeline-item bmw`}>
+                              <div className="p-timeline-item">
+                                <span className="p-timeline-date">{lshd.ten}</span>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 0 ? { backgroundColor: 'yellow', color: 'black' } : {}}
+                                  className={'p-timeline-block'}
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                          {lshd.trangThai === 1 && (
+                            <li className={`timeline-item mini`}>
+                              <div className="p-timeline-item">
+                                <span className="p-timeline-date">{lshd.ten}</span>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 1 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                          {lshd.trangThai === 2 && (
+                            <li className="timeline-item mini">
+                              <div className="p-timeline-item">
+                                <span className="p-timeline-date">{lshd.ten}</span>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 2 ? { backgroundColor: 'orangered', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
 
-    {/* {lshd.trangThai === 'cho_giao_hang' && (
-      <li className="timeline-item bmw">
-        <div className="p-timeline-item">
-          <time className="p-timeline-date">Chờ giao hàng</time>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-          </div>
-        </div>
-      </li>
-    )}
-    {lshd.trangThai === 'dang_giao_hang' && (
-      <li className="timeline-item bmw">
-        <div className="p-timeline-item">
-          <time className="p-timeline-date">Đang giao hàng</time>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
-          </div>
-        </div>
-      </li>
-    )}
-    {lshd.trangThai === 'giao_hang_thanh_cong' && (
-      <li className="timeline-item bmw">
-        <div className="p-timeline-item">
-          <span className="p-timeline-date">Giao hàng thành công</span>
-          <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-          <div className="p-timeline-block">
-            <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
-          </div>
-        </div>
-      </li>
-    )}
-                          <li className="timeline-item bmw">
-                            <div className="p-timeline-item">
-                              <time className="p-timeline-date">Giao hàng thất bại</time>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                          {lshd.trangThai === 3 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">Chờ giao hàng</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 3 ? { backgroundColor: 'yellow', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                          <li className="timeline-item mini">
-                            <div className="p-timeline-item">
-                              <time className="p-timeline-date">Thanh toán thành công</time>
-                              <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                              <div className="p-timeline-block">
-                                <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                            </li>
+                          )}
+                          {lshd.trangThai === 4 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 4 ? { backgroundColor: 'yellow', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
+                                </div>
                               </div>
-                            </div>
-                          </li> */}
+                            </li>
+                          )}
+                          {lshd.trangThai === 5 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <span className="p-timeline-date">Giao hàng thành công</span>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 5 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                          {lshd.trangThai === 6 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">Giao hàng thất bại</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 6 ? { backgroundColor: 'orangered', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                          {lshd.trangThai === 7 && (
+                            <li className="timeline-item mini">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 7 ? { backgroundColor: 'aqua', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
                         </React.Fragment>
                       ))}
                     </ul>
@@ -544,179 +589,356 @@ function DonHangCT() {
               </Col>
             </Row>
 
-            {/* //button modal*/}
+            {/* button */}
             <div className="row">
               {/* xac nhan don hang */}
               <div className="col-3">
-                <button
-                  onClick={handleShow2}
-                  style={{
-                    background: '#0ad406',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'black' }} className="btn-icon">
-                    <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'black', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
+                {hoaDon.trangThai === 0 && (
+                  <button
+                    onClick={handleShow2}
                     style={{
-                      marginBottom: '3px',
-                      marginLeft: '5px',
-                      color: 'black',
-                      fontSize: '15px',
-                      fontWeight: 'bold'
+                      background: '#0ad406',
+                      borderRadius: '50px',
+                      border: '1px solid black',
+                      justifyItems: 'center'
                     }}
-                    className="btn-text"
+                    type="button"
+                    className="btn btn-labeled shadow-button"
                   >
-                    Xác nhận đơn hàng
-                  </span>
-                </button>
+                    <span style={{ marginBottom: '3px', color: 'black' }} className="btn-icon">
+                      <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
+                    </span>
+                    <span style={{ marginBottom: '3px', color: 'black', marginLeft: '5px' }} className="separator">
+                      |
+                    </span>
+                    <span
+                      style={{
+                        marginBottom: '3px',
+                        marginLeft: '5px',
+                        color: 'black',
+                        fontSize: '15px',
+                        fontWeight: 'bold'
+                      }}
+                      className="btn-text"
+                    >
+                      Xác nhận đơn hàng
+                    </span>
+                  </button>
+                )}
 
-                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show2} onHide={handleClose2}>
-                  <Modal.Header closeButton>
-                    <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body></Modal.Body>
-                  {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
-                </Modal>
-              </div>
-
-              {/* //huy don */}
-              <div className="col-3">
-                <button
-                  onClick={handleShow3}
-                  style={{
-                    background: 'orangered',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
-                    <i className="fa-solid fa-xmark fa-fade fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
+                {/* //xac nhan giao hang */}
+                {hoaDon.trangThai === 1 && (
+                  <button
+                    onClick={handleShow4}
                     style={{
-                      marginBottom: '3px',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 'bold',
+                      background: 'yellow',
+                      borderRadius: '50px',
+                      border: '1px solid black',
+                      justifyItems: 'center',
                       marginLeft: '5px'
                     }}
-                    className="btn-text"
+                    type="button"
+                    className="btn btn-labeled shadow-button"
                   >
-                    Hủy đơn hàng
-                  </span>
-                </button>
+                    <span style={{ marginBottom: '3px', color: 'black' }} className="btn-icon">
+                      <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
+                    </span>
+                    <span style={{ marginBottom: '3px', color: 'black', marginLeft: '5px' }} className="separator">
+                      |
+                    </span>
+                    <span
+                      style={{
+                        marginBottom: '3px',
+                        color: 'black',
+                        fontSize: '15px',
+                        fontWeight: 'bold',
+                        marginLeft: '5px'
+                      }}
+                      className="btn-text"
+                    >
+                      Xác nhận giao hàng
+                    </span>
+                  </button>
+                )}
+                {/* //xac nhan thanh toan */}
 
+                {hoaDon.trangThai === 4 && (
+                  <button
+                    onClick={handleShow5}
+                    style={{
+                      background: '#FF00FF',
+                      borderRadius: '50px',
+                      border: '1px solid black',
+                      justifyItems: 'center'
+                    }}
+                    type="button"
+                    className="btn btn-labeled shadow-button"
+                  >
+                    <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
+                      <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
+                    </span>
+                    <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
+                      |
+                    </span>
+                    <span
+                      style={{
+                        marginBottom: '3px',
+                        color: 'white',
+                        fontSize: '15px',
+                        fontWeight: 'bold',
+                        marginLeft: '5px'
+                      }}
+                      className="btn-text"
+                    >
+                      Xác nhận thanh toán
+                    </span>
+                  </button>
+                )}
+              </div>
+              {/* //modal*/}
+              {/* //xac nhan don hang */}
+              <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show2} onHide={handleClose2}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className="needs-validation" noValidate>
+                    <div className="form-group row">
+                      <div className="col-sm-12">
+                        <textarea
+                          className="form-control"
+                          rows="4"
+                          name="diaChi"
+                          placeholder=""
+                          value={lshd.ghiChu}
+                          onChange={(e) => {
+                            setLshd({ ghiChu: e.target.value });
+                          }}
+                          required
+                        ></textarea>
+                        <div className="invalid-feedback">Không được để trống!</div>
+                      </div>
+                    </div>
+                    <br></br>
+                    <div className="text-center">
+                      <button
+                        onClick={handleXacNhanDH}
+                        type="submit"
+                        className="btn btn-labeled shadow-button"
+                        style={{
+                          background: 'deepskyblue',
+                          borderRadius: '50px',
+                          border: '1px solid black',
+                          justifyItems: 'center'
+                        }}
+                      >
+                        <span
+                          style={{
+                            marginBottom: '3px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn-text"
+                        >
+                          Ghi Chú
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </Modal.Body>
+                {/* <Modal.Footer>
+                       
+                      </Modal.Footer> */}
+              </Modal>
+              {/* //xac nhan giao hang */}
+              <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className="needs-validation" noValidate>
+                    <div className="form-group row">
+                      <div className="col-sm-12">
+                        <textarea
+                          className="form-control"
+                          rows="4"
+                          name="diaChi"
+                          placeholder=""
+                          value={lshd2.ghiChu}
+                          onChange={(e) => {
+                            setLshd2({ ghiChu: e.target.value });
+                          }}
+                          required
+                        ></textarea>
+                        <div className="invalid-feedback">Không được để trống!</div>
+                      </div>
+                    </div>
+                    <br></br>
+                    <div className="text-center">
+                      <button
+                        onClick={handleXacNhanGiaoHang}
+                        type="submit"
+                        className="btn btn-labeled shadow-button"
+                        style={{
+                          background: 'deepskyblue',
+                          borderRadius: '50px',
+                          border: '1px solid black',
+                          justifyItems: 'center'
+                        }}
+                      >
+                        <span
+                          style={{
+                            marginBottom: '3px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn-text"
+                        >
+                          Ghi Chú
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </Modal.Body>
+              </Modal>
+              {/* //xac nhan thanh toan */}
+              <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show5} onHide={handleClose5}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className="needs-validation" noValidate>
+                    <div className="form-group row">
+                      <div className="col-sm-12">
+                        <textarea
+                          className="form-control"
+                          rows="4"
+                          name="diaChi"
+                          placeholder=""
+                          value={lshd3.ghiChu}
+                          onChange={(e) => {
+                            setLshd3({ ghiChu: e.target.value });
+                          }}
+                          required
+                        ></textarea>
+                        <div className="invalid-feedback">Không được để trống!</div>
+                      </div>
+                    </div>
+                    <br></br>
+                    <div className="text-center">
+                      <button
+                        onClick={handleXacNhanThanhToan}
+                        type="submit"
+                        className="btn btn-labeled shadow-button"
+                        style={{
+                          background: 'deepskyblue',
+                          borderRadius: '50px',
+                          border: '1px solid black',
+                          justifyItems: 'center'
+                        }}
+                      >
+                        <span
+                          style={{
+                            marginBottom: '3px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn-text"
+                        >
+                          Ghi Chú
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </Modal.Body>
+              </Modal>
+              {/* //huy don */}
+              <div className="col-3">
+                {hoaDon.trangThai === 0 && (
+                  <button
+                    onClick={handleShow3}
+                    style={{
+                      background: 'orangered',
+                      borderRadius: '50px',
+                      border: '1px solid black',
+                      justifyItems: 'center'
+                    }}
+                    type="button"
+                    className="btn btn-labeled shadow-button"
+                  >
+                    <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
+                      <i className="fa-solid fa-xmark fa-fade fa-lg"></i>
+                    </span>
+                    <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
+                      |
+                    </span>
+                    <span
+                      style={{
+                        marginBottom: '3px',
+                        color: 'white',
+                        fontSize: '15px',
+                        fontWeight: 'bold',
+                        marginLeft: '5px'
+                      }}
+                      className="btn-text"
+                    >
+                      Hủy đơn hàng
+                    </span>
+                  </button>
+                )}
                 <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show3} onHide={handleClose3}>
                   <Modal.Header closeButton>
                     <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body></Modal.Body>
-                  {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
-                </Modal>
-              </div>
-
-              {/* //xac nhan giao hang */}
-              <div className="col-3">
-                <button
-                  onClick={handleShow4}
-                  style={{
-                    background: 'yellow',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center',
-                    marginLeft: '5px'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'black' }} className="btn-icon">
-                    <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'black', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
-                    style={{
-                      marginBottom: '3px',
-                      color: 'black',
-                      fontSize: '15px',
-                      fontWeight: 'bold',
-                      marginLeft: '5px'
-                    }}
-                    className="btn-text"
-                  >
-                    Xác nhận giao hàng
-                  </span>
-                </button>
-
-                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
-                  <Modal.Header closeButton>
-                    <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body></Modal.Body>
-                  {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
-                </Modal>
-              </div>
-
-              {/* //xac nhan thanh toan */}
-              <div className="col 3">
-                <button
-                  onClick={handleShow5}
-                  style={{
-                    background: '#FF00FF',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
-                    <i className="fa-regular fa-square-check fa-beat fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
-                    style={{
-                      marginBottom: '3px',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 'bold',
-                      marginLeft: '5px'
-                    }}
-                    className="btn-text"
-                  >
-                    Xác nhận thanh toán
-                  </span>
-                </button>
-
-                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show5} onHide={handleClose5}>
-                  <Modal.Header closeButton>
-                    <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body></Modal.Body>
+                  <Modal.Body>
+                    <form className="needs-validation" noValidate>
+                      <div className="form-group row">
+                        <div className="col-sm-12">
+                          <textarea
+                            className="form-control"
+                            rows="4"
+                            name="diaChi"
+                            placeholder=""
+                            value={lshd1.ghiChu}
+                            onChange={(e) => {
+                              setLshd1({ ghiChu: e.target.value });
+                            }}
+                            required
+                          ></textarea>
+                          <div className="invalid-feedback">Không được để trống!</div>
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="text-center">
+                        <button
+                          onClick={handleHuyDon}
+                          type="submit"
+                          className="btn btn-labeled shadow-button"
+                          style={{
+                            background: 'deepskyblue',
+                            borderRadius: '50px',
+                            border: '1px solid black',
+                            justifyItems: 'center'
+                          }}
+                        >
+                          <span
+                            style={{
+                              marginBottom: '3px',
+                              color: 'white',
+                              fontSize: '15px',
+                              fontWeight: 'bold'
+                            }}
+                            className="btn-text"
+                          >
+                            Ghi Chú
+                          </span>
+                        </button>
+                      </div>
+                    </form>
+                  </Modal.Body>
                   {/* <Modal.Footer>
                        
                       </Modal.Footer> */}
@@ -754,11 +976,13 @@ function DonHangCT() {
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
                       <div className="col-5">
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="justify-content-end">
-                          <button onClick={handleShow} className="btn btn-dark" data-bs-placement="right">
-                            <i className="fa-solid fa-pen-to-square fa-bounce fa-lg"></i>
-                            <span> | </span>
-                            <span>Cập Nhật</span>
-                          </button>
+                          {hoaDon.trangThai === 0 && (
+                            <button onClick={handleShow} className="btn btn-dark" data-bs-placement="right">
+                              <i className="fa-solid fa-pen-to-square fa-bounce fa-lg"></i>
+                              <span> | </span>
+                              <span>Cập Nhật</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -919,7 +1143,8 @@ function DonHangCT() {
                             fontSize: '15px'
                           }}
                         >
-                          {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''}
+                          {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
+                          Phạm Quốc Việt
                         </span>
                       </Col>
                     </Col>
@@ -1307,6 +1532,28 @@ function DonHangCT() {
                 </Container>
               </div>
             )}
+          </div>
+        </Card>
+        <br></br>
+        <br></br>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+            <div className="row">
+              <div className="col-12">
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
+                  <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
+                    <h3 className="col-6" style={{ fontWeight: 'bold', color: 'darkslategrey' }}>
+                      Cập Nhật Sản Phẩm
+                    </h3>
+                  </div>
+
+                
+                </div>
+              </div>
+            </div>
+            <hr />
+            {/* noi dung */}
+
           </div>
         </Card>
       </MainCard>

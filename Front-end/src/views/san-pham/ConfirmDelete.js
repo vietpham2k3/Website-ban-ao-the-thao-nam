@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
 import { deleteMSKC } from 'services/SanPhamService';
 import { toast } from 'react-toastify';

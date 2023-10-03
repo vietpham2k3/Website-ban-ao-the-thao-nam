@@ -13,4 +13,6 @@ public interface LichSuHoaDonService {
     LichSuHoaDon detail(UUID id);
 
     List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id);
+
+    LichSuHoaDon findLSHDByIDsHD(UUID id);
 }
