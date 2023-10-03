@@ -20,7 +20,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public List<HoaDon> listHD() {
-        return res.findAll();
+        return res.getAllHD();
     }
 
     @Override

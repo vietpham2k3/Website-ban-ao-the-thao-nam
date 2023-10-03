@@ -61,4 +61,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "sdt = :soDienThoai, dia_chi = :diaChi WHERE id = :id", nativeQuery = true)
     public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
+    @Query(value = "select h from HoaDon h where h.trangThai = 0")
+    List<HoaDon> getAllHD();
+
 }

@@ -59,7 +59,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "JOIN ( " +
             "SELECT id_sp, SUM(so_luong) AS so_luong " +
             "FROM ChiTietSanPham " +
-            "where ChiTietSanPham.trang_thai = 1 " +
+            "WHERE ChiTietSanPham.trang_thai = 1 " +
             "GROUP BY id_sp " +
             ") AS T " +
             "ON C.id_sp = T.id_sp " +
@@ -70,16 +70,19 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             ") AS MinIDs " +
             "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
             "JOIN SanPham S ON S.id = C.id_sp " +
-            "WHERE (:key IS NULL OR LOWER(s.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
-            "AND (:trangThai IS NULL OR s.trang_thai = :trangThai) " +
-            "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max))" +
-            "order by c.ngay_tao desc",
+            "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+            "AND (:trangThai IS NULL OR S.trang_thai = :trangThai) " +
+            "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max)) " +
+            "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
+            "c.id_ca, c.ma, T.so_luong, " +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+            "ORDER BY c.ngay_tao DESC",
             countQuery = "SELECT COUNT(*) " +
                     "FROM ChiTietSanPham C " +
                     "JOIN ( " +
                     "SELECT id_sp, SUM(so_luong) AS so_luong " +
                     "FROM ChiTietSanPham " +
-                    "where ChiTietSanPham.trang_thai = 1 " +
+                    "WHERE ChiTietSanPham.trang_thai = 1 " +
                     "GROUP BY id_sp " +
                     ") AS T " +
                     "ON C.id_sp = T.id_sp " +
@@ -90,10 +93,13 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
                     ") AS MinIDs " +
                     "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
                     "JOIN SanPham S ON S.id = C.id_sp " +
-                    "WHERE (:key IS NULL OR LOWER(s.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
-                    "AND (:trangThai IS NULL OR s.trang_thai = :trangThai) " +
-                    "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max))" +
-                    "order by c.ngay_tao desc",
+                    "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+                    "AND (:trangThai IS NULL OR S.trang_thai = :trangThai) " +
+                    "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max)) " +
+                    "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
+                    "c.id_ca, c.ma, T.so_luong, " +
+                    "c.gia_ban,c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+                    "ORDER BY c.ngay_tao DESC",
             nativeQuery = true)
     Page<ChiTietSanPham> search(
             @Param("key") String key,

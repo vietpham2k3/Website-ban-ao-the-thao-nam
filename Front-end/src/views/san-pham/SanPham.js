@@ -87,6 +87,8 @@ function SanPham() {
     const res = await searchCTSP(term, status, values[0], values[1], '0');
     if (res && res.data) {
       setData(res.data.content);
+    } else {
+      getAll(0);
     }
   }, 100);
 
