@@ -237,6 +237,10 @@ function UpdateSanPham() {
   };
 
   useEffect(() => {
+    detail(idCTSP);
+  }, [idCTSP]);
+
+  useEffect(() => {
     detail(id);
     getAllAnh(id);
     // getAllByIdCTSP(id);
