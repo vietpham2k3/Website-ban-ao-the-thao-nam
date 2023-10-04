@@ -176,7 +176,8 @@ function DonHangCT() {
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow2(false);
-      window.location.reload();
+      detail(id);
+      detailListLSHD(id);
     }
   };
 
@@ -191,7 +192,8 @@ function DonHangCT() {
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow3(false);
-      window.location.reload();
+      detail(id);
+      detailListLSHD(id);
     }
   };
 
@@ -207,7 +209,8 @@ function DonHangCT() {
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow4(false);
-      window.location.reload();
+      detail(id);
+      detailListLSHD(id);
     }
   };
 
@@ -223,7 +226,8 @@ function DonHangCT() {
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow5(false);
-      window.location.reload();
+      detail(id);
+      detailListLSHD(id);
     }
   };
 
@@ -808,9 +812,6 @@ function DonHangCT() {
                     </div>
                   </form>
                 </Modal.Body>
-                {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
               </Modal>
               {/* //xac nhan giao hang */}
               <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
@@ -1000,9 +1001,6 @@ function DonHangCT() {
                       </div>
                     </form>
                   </Modal.Body>
-                  {/* <Modal.Footer>
-                       
-                      </Modal.Footer> */}
                 </Modal>
               </div>
             </div>

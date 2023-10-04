@@ -2,8 +2,9 @@ import React from 'react';
 // import { Image } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import '../../scss/Content.scss';
-import { getAll, getAllSPNEW } from '../../services/SanPhamService';
+import { getAllBestseller, getAllSPNEW, getAllProduct } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function Content() {
   const [data, setData] = useState([]);
@@ -15,10 +16,17 @@ function Content() {
   }, []);
 
   const getAllCTSP = async () => {
-    const res = await getAll();
-    if (res && res.data) {
+    let allProduct;
+    const res = await getAllBestseller();
+
+    if (res && res.data && res.data.length > 0) {
       setData(res.data);
+    } else {
+      allProduct = await getAllProduct();
+      setData(allProduct);
     }
+
+    console.log(allProduct);
   };
 
   const getAllSP = async () => {
@@ -43,15 +51,17 @@ function Content() {
         <h1 className="title">Sản Phẩm Bán Chạy</h1>
         <div className="container">
           <div className="row">
-            {data &&
+            {Array.isArray(data) &&
               data.slice(0, 8).map((product, index) => {
                 return (
                   <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
                     <Card style={{ width: '260px', height: '400px' }}>
-                      <Card.Img
-                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
-                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                      />
+                      <Link to={`/detail/${product.id}`}>
+                        <Card.Img
+                          style={{ textAlign: 'center', width: '250px', height: '300px' }}
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                        />
+                      </Link>
                       <Card.Body>
                         <Card.Title>{product.sanPham.ten}</Card.Title>
                         <Card.Text>
@@ -71,25 +81,24 @@ function Content() {
         <h1 className="title">Sản Phẩm Mới Nhất</h1>
         <div className="container">
           <div className="row">
-            {productNew &&
-              productNew.slice(0, 8).map((product, i) => {
-                return (
-                  <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={i}>
-                    <Card style={{ width: '260px', height: '400px' }}>
-                      <Card.Img
-                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
-                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                      />
-                      <Card.Body>
-                        <Card.Title>{product.sanPham.ten}</Card.Title>
-                        <Card.Text>
-                          <span>{convertToCurrency(product.giaBan)}</span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                );
-              })}
+            {productNew.slice(0, 8).map((product, i) => {
+              return (
+                <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={i}>
+                  <Card style={{ width: '260px', height: '400px' }}>
+                    <Card.Img
+style={{ textAlign: 'center', width: '250px', height: '300px' }}
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                    />
+                    <Card.Body>
+                      <Card.Title>{product.sanPham.ten}</Card.Title>
+                      <Card.Text>
+                        <span>{convertToCurrency(product.giaBan)}</span>
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
           <div className="text-center">
             <button className="btn btn1">Xem tất cả </button>
