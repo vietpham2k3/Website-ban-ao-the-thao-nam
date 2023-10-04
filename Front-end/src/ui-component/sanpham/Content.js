@@ -148,9 +148,9 @@ function ContentSanPham() {
             <h3 style={{ textAlign: 'center' }}>Sản Phẩm</h3>
             {data.map((d, i) => (
               <div key={i} className="col-md-3">
-                <Card style={{ width: '260px', height: '340px' }}>
+                <Card style={{ width: '260px', height: '400px' }}>
                   <Card.Img
-                    style={{ textAlign: 'center', width: '250px', height: '260px' }}
+                    style={{ textAlign: 'center', width: '260px', height: '300px' }}
                     src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
                   />
                   <Card.Body>
