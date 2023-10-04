@@ -6,14 +6,30 @@ import com.example.demo.service.LichSuHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
-
-    @Autowired
-    private LichSuHoaDonRepository repository;
+    @Autowired private LichSuHoaDonRepository res;
 
     @Override
-    public LichSuHoaDon add(LichSuHoaDon lichSuHoaDon) {
-        return repository.save(lichSuHoaDon);
+    public LichSuHoaDon createLichSuDonHang(LichSuHoaDon lichSuHoaDon) {
+        return res.save(lichSuHoaDon);
+    }
+
+    @Override
+    public List<LichSuHoaDon> getAll() {
+        return res.findAll();
+    }
+
+    @Override
+    public LichSuHoaDon detail(UUID id) {
+        return res.findLichSuHoaDonById(id);
+    }
+
+    @Override
+    public List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id) {
+        return res.findLichSuHoaDonByHoaDonId(id);
     }
 }

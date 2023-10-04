@@ -5,7 +5,9 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class HoaDonRequest {
@@ -23,7 +25,7 @@ public class HoaDonRequest {
 
     private Double tongTienKhiGiam;
 
-    private Integer trangThai;
+    List<Integer> listTrangThai = new ArrayList<>();
 
     private String tenNguoiNhan;
 

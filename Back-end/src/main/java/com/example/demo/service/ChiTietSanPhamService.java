@@ -11,6 +11,8 @@ public interface ChiTietSanPhamService {
 
     List<ChiTietSanPham> getAllBestseller();
 
+    List<ChiTietSanPham> getAllByIdSP(UUID id);
+
     List<ChiTietSanPham> getAllSPNEW();
 
     List<ChiTietSanPham> getAllProduct();
@@ -24,6 +26,8 @@ public interface ChiTietSanPhamService {
     ChiTietSanPham detail(UUID id);
 
     void delete(UUID id);
+
+    void deleteMSKC(UUID id);
 
     void update(Integer soLuong ,UUID id);
 

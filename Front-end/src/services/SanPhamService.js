@@ -4,6 +4,9 @@ import axios from '../custommize-axios';
 const getAllBestseller = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllBestseller');
 };
+const getAll = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllCTSP?sort=ngay_tao,desc');
+};
 
 const getAllSPNEW = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
@@ -27,6 +30,10 @@ const putCTSP = (id, values) => {
 
 const deleteCTSP = (id) => {
   return axios.put('/api/chi-tiet-san-pham/delete/' + id);
+};
+
+const deleteMSKC = (id) => {
+  return axios.put('/api/chi-tiet-san-pham/deleteMSKC/' + id);
 };
 
 const searchCTSP = (key, trangThai, min, max, page) => {
@@ -71,39 +78,24 @@ const listAnh = (id) => {
 const deleteAnh = (id) => {
   return axios.delete(`/api/chi-tiet-san-pham/delete-img/${id}`);
 };
-const getAllMSKCCTSP = (id) => {
-  return axios.get(`/api/chi-tiet-san-pham/getAllMSKCCTSP/${id}`);
-};
-const addAllMSKCCTSP = (values) => {
-  return axios.post('/api/chi-tiet-san-pham/addAllMSKCCTSP', values);
+
+const getAllByIdSP = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllByIdSP/${id}`);
 };
 
-const deleteMSKCCTSP = (id) => {
-  return axios.delete(`/api/chi-tiet-san-pham/deleteAllMSKCCTSP/${id}`);
-};
-
-const putMSKCCTSP = (id, values) => {
-  return axios.put('/api/chi-tiet-san-pham/updateAllMSKCCTSP/' + id, values);
-};
-
-const detailMSKCCTSP = (id) => {
-  return axios.get(`/api/chi-tiet-san-pham/detailMSKCCTSP/${id}`);
-};
 export {
   getAllBestseller,
+  getAll,
+  deleteMSKC,
+  getAllByIdSP,
   getAllCTSP,
   getAllListKC,
   deleteCTSP,
-  detailMSKCCTSP,
-  addAllMSKCCTSP,
-  putMSKCCTSP,
-  getAllMSKCCTSP,
   listAnh,
   addAnh,
   postCTSP,
   deleteAnh,
   putCTSP,
-  deleteMSKCCTSP,
   searchCTSP,
   detailCTSP,
   getAllListCO,

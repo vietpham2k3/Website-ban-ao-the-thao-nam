@@ -29,6 +29,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> getAllByIdSP(UUID id) {
+        return repository.getAllByIdSP(id);
+    }
+
+    @Override
     public List<ChiTietSanPham> getAllSPNEW() {
         return repository.getAllSPNew();
     }
@@ -63,6 +68,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public void delete(UUID id) {
         repository.delete(id);
+    }
+
+    @Override
+    public void deleteMSKC(UUID id) {
+        repository.deleteMSKC(id);
     }
 
     @Override

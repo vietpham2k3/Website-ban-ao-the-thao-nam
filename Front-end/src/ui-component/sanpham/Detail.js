@@ -1,24 +1,49 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
 import { Card } from 'react-bootstrap';
 import './Detail.scss';
+import './product-image-slider.scss';
+// import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+// import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
 
 function Detail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [data, setData] = useState([]);
+  // const [imageList, setImageList] = useState([]);
+  // const [activeThumb, setActiveThumb] = useState();
+
+  // const handleCarouselItemClick = (event) => {
+  //   const imgUrl = event.target.getAttribute('data-mdb-img');
+  //   setMainImage(imgUrl);
+  // };
 
   useEffect(() => {
     getAllCTSP();
   }, []);
 
+  useEffect(() => {
+    getAllAnh(id);
+  }, [id]);
+
   const getAllCTSP = async () => {
     const res = await getAllProduct();
     if (res && res.data) {
       setData(res.data);
+    }
+  };
+
+  const getAllAnh = async (id) => {
+    const res = await listAnh(id);
+    if (res) {
+      setImageList(res.data);
     }
   };
 
@@ -80,38 +105,57 @@ function Detail() {
       <div className="card">
         <div className="container-fliud">
           <div className="wrapper row">
-            <div className="preview col-md-6" style={{ backgroundColor: 'rgb(255, 255, 255)' }}>
-              <div className="ecommerce-gallery vertical" data-mdb-zoom-effect="true">
-                <div className="row">
-                  <div className="col-md-12">
-                    <Card.Img
-                      style={{ textAlign: 'center', width: '250px', height: '300px' }}
-                      src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                    />
-                  </div>
-                </div>
+            <div className="preview col-md-6" style={{ backgroundColor: 'rgb(255, 255, 255)', display: 'flex' }}>
+              <div className="col-6">
+                {/* <Swiper
+                  style={{
+                    '--swiper-navigation-color': '#fff',
+                    '--swiper-slide-shadow': '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
+                    '--swiper-slide-border-radius': '10px'
+                  }}
+                  spaceBetween={10}
+                  navigation={true}
+                  thumbs={{ swiper: activeThumb }}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper2"
+                >
+                  <SwiperSlide>
+                    {imageList.map((image) => (
+                      <img
+                        key={image.id}
+                        style={{ width: '300px', height: '450px' }}
+                        src={`data:image/jpeg;base64,${image.tenBase64}`}
+                        alt={image.ma}
+                      />
+                    ))}
+                  </SwiperSlide>
+                </Swiper>
+                <Swiper
+                  onSwiper={setActiveThumb}
+                  spaceBetween={10}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper"
+                >
+                  <SwiperSlide>
+                    {imageList.map((image) => (
+                      <img
+                        key={image.id}
+                        style={{ width: '100px', height: '150px' }}
+                        src={`data:image/jpeg;base64,${image.tenBase64}`}
+                        alt={image.ma}
+                      />
+                    ))}
+                  </SwiperSlide>
+                </Swiper> */}
               </div>
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-              <div style={{ display: 'flex' }}>
-                <p style={{ fontStyle: 'italic', paddingRight: 90 }}>Mã sản phẩm: {product.ma}</p>
-                <p style={{ fontStyle: 'italic', paddingRight: 90 }}>Nhà Sản Xuất: {product.nhaSanXuat.ten}</p>
-                <p style={{ fontStyle: 'italic' }}>Loại Sản Phẩm: {product.loaiSanPham.ten}</p>
-              </div>
+              <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
               <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
-              {/* <p style={{ fontSize: '15px', color: 'red' }}>
-                <del style={{ color: 'rgb(113, 105, 105)', fontWeight: 'bold', paddingRight: '30px' }}>
-                  450,000<ins>đ</ins>
-                </del>
-                Giảm 27%
-              </p> */}
-              <p style={{ color: 'grey', fontSize: 17, fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif' }}>
-                Chất liệu: <span style={{ color: 'black', paddingLeft: '15px' }}>{product.chatLieu.ten}</span>
-              </p>
-              <p style={{ color: 'grey', fontSize: 17, fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif' }}>
-                Cổ áo: <span style={{ color: 'black', paddingLeft: '15px' }}>{product.coAo.ten}</span>
-              </p>
               <div style={{ display: 'flex' }}>
                 <p style={{ color: 'grey', fontSize: 17, fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif' }}>
                   Màu sắc:
@@ -172,6 +216,7 @@ function Detail() {
                   Mua Ngay
                 </button>
               </div>
+              <label style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 20 }}>Mô tả: {product.sanPham.moTa}</label>
             </div>
           </div>
         </div>
