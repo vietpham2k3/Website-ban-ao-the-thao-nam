@@ -13,9 +13,9 @@ function Header() {
         </div>
         <div>
           <form className="d-flex" role="search" style={{ width: 700, paddingLeft: 150 }}>
-            <div className="box-search">
+            <div className="box-search1">
               <i className="fa-solid fa-magnifying-glass"></i>
-              <input type="search" placeholder="Tìm kiếm sản phẩm..." className="input-seach" style={{ width: '100%' }} />
+              <input type="search" placeholder="Tìm kiếm sản phẩm..." className="input-seach1" style={{ width: '100%' }} />
             </div>
           </form>
         </div>
