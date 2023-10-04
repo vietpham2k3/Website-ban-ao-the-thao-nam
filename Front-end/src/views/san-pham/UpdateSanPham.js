@@ -158,7 +158,7 @@ function UpdateSanPham() {
     const res = await addAnh(value);
     if (res) {
       toast.success('Thêm thành công');
-      getAllAnh(id);
+      getAllAnh(idCTSP);
     }
   };
 
@@ -173,7 +173,7 @@ function UpdateSanPham() {
     const formData = new FormData();
     file.forEach((file) => {
       formData.append('files', file);
-      formData.append('id', id);
+      formData.append('id', idCTSP);
     });
 
     // Gửi formData đến server để xử lý
@@ -188,7 +188,7 @@ function UpdateSanPham() {
     const res = await deleteAnh(idAnh);
     if (res) {
       toast.success('Xoá thành công');
-      getAllAnh(id);
+      getAllAnh(idCTSP);
     }
   };
 
