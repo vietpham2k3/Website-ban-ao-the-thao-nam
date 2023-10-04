@@ -27,3 +27,14 @@ li {
   height: auto;
   margin: 5px;
 }
+.main-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.main-card.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
+}

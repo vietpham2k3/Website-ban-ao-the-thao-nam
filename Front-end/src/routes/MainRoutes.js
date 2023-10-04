@@ -21,6 +21,7 @@ import UpdateNSX from 'views/nha-san-xuat/NSXupdate';
 
 //
 import AddKichCo from 'views/kich-co/addKichCo';
+import BanHangTaiQuay from 'views/ban-hang-tai-quay/BanHangTaiQuay';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -71,10 +72,6 @@ const MainRoutes = {
       element: <DonHang />
     },
     {
-      path: '/don-hang/print-excel',
-      element: <DonHang />
-    },
-    {
       path: '/don-hang/chi-tiet/:id',
       element: <DonHangCT />
     },
@@ -90,7 +87,7 @@ const MainRoutes = {
           element: <AddChiTietSanPham />
         },
         {
-          path: 'chi-tiet-san-pham/detail/:id',
+          path: 'chi-tiet-san-pham/detail/:id/:idSP',
           element: <UpdateSanPham />
         },
         //màu sắc
@@ -282,6 +279,11 @@ const MainRoutes = {
     {
       path: '/thong-ke',
       element: <DashboardDefault />
+    },
+    // Bán hàng tại quầy
+    {
+      path: '/ban-hang-tai-quay',
+      element: <BanHangTaiQuay />
     }
   ]
 };

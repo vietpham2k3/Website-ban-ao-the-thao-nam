@@ -13,6 +13,6 @@ public interface AnhRepository extends JpaRepository<Anh, UUID> {
 
     Anh findFirstByChiTietSanPhamId(UUID id);
 
-    @Query("SELECT a FROM Anh a WHERE a.chiTietSanPham.id = :chiTietSanPhamId")
+    @Query("SELECT DISTINCT a FROM Anh a WHERE a.chiTietSanPham.id = :chiTietSanPhamId")
     List<Anh> findAllByChiTietSanPhamId(UUID chiTietSanPhamId);
 }

@@ -28,6 +28,7 @@ function SanPham() {
   const [term, setTerm] = useState('');
   const [status, setStatus] = useState('');
   const [radio, setRadio] = useState('');
+  // const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -38,9 +39,15 @@ function SanPham() {
 
   const getAll = async (page) => {
     const res = await getAllCTSP(page);
-    if (res) {
-      setData(res.data.content);
-      setTotalPages(res.data.totalPages);
+    try {
+      if (res) {
+        setData(res.data.content);
+        setTotalPages(res.data.totalPages);
+      }
+    } catch (error) {
+      // Errors
+    } finally {
+      // setIsLoading(false);
     }
   };
 
@@ -80,6 +87,8 @@ function SanPham() {
     const res = await searchCTSP(term, status, values[0], values[1], '0');
     if (res && res.data) {
       setData(res.data.content);
+    } else {
+      getAll(0);
     }
   }, 100);
 
@@ -99,6 +108,11 @@ function SanPham() {
   const handleAllClick = () => {
     setStatus('');
     setRadio('');
+  };
+
+  const handleUpdate = (idSp, id) => {
+    navigate(`/san-pham/chi-tiet-san-pham/detail/${id}/${idSp}`);
+    localStorage.setItem('idSP', idSp);
   };
 
   return (
@@ -187,14 +201,14 @@ function SanPham() {
                         style={{ width: '70px', height: '100px' }}
                       />
                     </td>
-                    <td>{d.ma}</td>
+                    <td>{d.sanPham.ma}</td>
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
-                    <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
+                    <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
-                      <button onClick={() => navigate(`/san-pham/chi-tiet-san-pham/detail/${d.id}`)} className="fa-solid fa-pen"></button>
-                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash"></button>
+                      <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>
+                      <button onClick={() => handleDelete(d.sanPham.id)} className="fa-solid fa-trash mx-3"></button>
                     </td>
                   </tr>
                 ))}

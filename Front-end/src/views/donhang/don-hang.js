@@ -1,29 +1,70 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-import '../../scss/MauSac.scss';
-import { getAllPageDH } from 'services/ServiceDonHang';
-
-// import _ from 'lodash';
+import '../../scss/DonHang.scss';
+import { getAllPageDH, findVIP } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
+import { DateRangePicker } from 'rsuite';
+import Slider from 'react-slider';
+import Select from 'react-select';
+import { FormCheck, FormGroup } from 'react-bootstrap';
+import { format } from 'date-fns';
+import makeAnimated from 'react-select/animated';
+import * as XLSX from 'xlsx';
+
+const MIN = 0;
+const MAX = 9999999;
+
+const MINSL = 0;
+const MAXSL = 999;
 
 function DonHang() {
-  // const [filterStatus, setFilterStatus] = useState('');
-  // const [currentPage, setCurrentPage] = useState(0);
-
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [tuNgay, setTuNgay] = useState(null);
+  const [denNgay, setDenNgay] = useState(null);
+  const navigate = useNavigate();
+  const [term, setTerm] = useState('');
+  const [loaiDon, setLoaiDon] = useState('');
+  const [radioLoai, setRadioLoai] = useState('');
+  //select trangThai
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  //so luong
+  const [valuesSL, setValuesSL] = useState([MINSL, MAXSL]);
+  // tong tien
+  const [valuesTT, setValuesTT] = useState([MIN, MAX]);
   //hien thi
   const [data, setData] = useState([]);
-  const [totalPages, setTotalPages] = useState();
+
+  const animatedComponents = makeAnimated();
+
+  //ngayTao
+  const currentDate = new Date();
+  const nextYear = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+
+  const optionList = [
+    { value: '0', label: 'Đang chờ xác nhận' },
+    { value: '1', label: 'Đã xác nhận' },
+    { value: '2', label: 'Đã hủy đơn' },
+    { value: '3', label: 'Chờ giao hàng' },
+    { value: '4', label: 'Đang giao hàng' },
+    { value: '5', label: 'Giao hàng thành công' },
+    { value: '6', label: 'Giao hàng thất bại' },
+    { value: '7', label: 'Thanh toán thành công' }
+  ];
+
+  function handleSelect(selectedOptions) {
+    setSelectedOptions(selectedOptions);
+  }
 
   useEffect(() => {
     getAll(0);
   }, []);
 
-  const navigate = useNavigate();
-
   const getAll = async (page) => {
+    setCurrentPage(page);
     const res = await getAllPageDH(page);
     if (res && res.data) {
       setData(res.data.content);
@@ -31,43 +72,86 @@ function DonHang() {
     }
   };
 
-  //in hoa don
+  //fillter DH
+  const search = async (key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page = 0) => {
+    const res = await findVIP(key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page);
+    if (res) {
+      setData(res.data.content);
+      setTotalPages(res.data.totalPages);
 
-  // const [values, setValues] = useState({});
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   setValues(values);
-  //   post(values);
-  // };
+      if (res.data.content.length === 0 && currentPage !== 0) {
+        setCurrentPage(0);
+      } else {
+        setCurrentPage(page);
+      }
+    }
+  };
 
-  // const post = async (value) => {
-  //   const res = await printExcel(value);
-  //   if (res) {
-  //     toast.success('In hóa đơn thành công !');
-  //     navigate('/don-hang');
-  //   }
-  // };
+  const handleSearchDH = _.debounce(async (page = 0) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    if (term || selectedValues !== 0) {
+      search(term, tuNgay, denNgay, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], selectedValues, loaiDon, page);
+    } else {
+      search('', null, null, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], null, '', '', page);
+    }
 
-  // const search = async (key, trangThai, page) => {
-  //   setCurrentPage(page);
-  //   const res = await searchMS(key, trangThai, page);
-  //   if (res) {
-  //     setData(res.data.content);
-  //     setTotalPages(res.data.totalPages);
-  //   }
-  // };
+    if (data.length === 0) {
+      setCurrentPage(0);
+    }
+  }, []);
 
-  // const handleSearchMS = _.debounce(async (e) => {
-  //   let term = e.target.value;
-  //   if (term || filterStatus !== 0) {
-  //     search(term, filterStatus, currentPage);
-  //   } else {
-  //     search('', 0, currentPage);
-  //   }
-  // }, 100);
+  useEffect(() => {
+    handleSearchDH(currentPage);
+  }, [term, tuNgay, denNgay, valuesSL, valuesTT, selectedOptions, loaiDon, currentPage]);
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
+  };
+
+  const handleRadioChange1 = (e) => {
+    setLoaiDon(e.target.value);
+    setRadioLoai(e.target.value);
+  };
+
+  const handleAllClickLoai = () => {
+    setLoaiDon('');
+    setRadioLoai('');
+  };
+
+  const handleDateChange = (selectedRange) => {
+    if (selectedRange && selectedRange[0] && selectedRange[1]) {
+      const startDate = format(selectedRange[0], 'dd/MM/yyyy HH:mm aa');
+      const endDate = format(selectedRange[1], 'dd/MM/yyyy HH:mm aa');
+
+      setTuNgay(startDate);
+      setDenNgay(endDate);
+    }
+  };
+
+  //Phan trang
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
 
   const handlePageClick = (event) => {
-    getAll(event.selected);
+    handlePageChange(event.selected);
+  };
+
+  //refesh
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  //export
+  const handleOnExport = () => {
+    const table = document.getElementById('table-to-xls');
+    const workbook = XLSX.utils.table_to_book(table);
+
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+
+    const fileName = `Hóa đơn in ngày ${formattedDate.replace(/_/g, '-')}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
   };
 
   function convertToCurrency(number) {
@@ -82,7 +166,7 @@ function DonHang() {
 
   function formatDate(dateString) {
     if (dateString === null) {
-      return ''; // Trả về chuỗi rỗng nếu giá trị là null
+      return '';
     }
 
     const dateObject = new Date(dateString);
@@ -91,11 +175,20 @@ function DonHang() {
     const month = dateObject.getMonth() + 1;
     const year = dateObject.getFullYear();
 
-    const hours = dateObject.getHours();
+    let hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-    // const seconds = dateObject.getSeconds();
+    let meridian = 'AM';
 
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    if (hours >= 12) {
+      meridian = 'PM';
+      hours = hours % 12; // Chuyển sang định dạng 12 giờ
+    }
+
+    // Đảm bảo hiển thị đúng định dạng hh:mm
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    const formattedDate = `${day}/${month}/${year} ${formattedHours}:${formattedMinutes} ${meridian}`;
 
     return formattedDate;
   }
@@ -103,48 +196,162 @@ function DonHang() {
   return (
     <div>
       <MainCard>
-        <div className="col-12 row">
-          <div className="page-title-box">
-            <div className="page-title-center">
-              <h1 className="page-title" style={{ textAlign: 'center', fontSize: '200%', marginBottom: '50px', fontWeight: 'bold' }}>
-                Đơn Hàng
-              </h1>
+        {/* fillter */}
+        <Card>
+          <div style={{ height: 280 }} className="w-auto rounded bg-white border shadow p-4">
+            <div className="row">
+              <div className="box col-auto col-4">
+                <div className="values">
+                  <strong>Mã đơn hàng hoặc tên khách hàng :</strong>
+                </div>
+                <div style={{ marginTop: 10 }} className="search">
+                  <input
+                    style={{ borderRadius: 15, width: 300, height: 30 }}
+                    type="text"
+                    className="input-search"
+                    placeholder="Nhập mã đơn hoặc tên khách hàng cần tìm..."
+                    value={term}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="box col-auto col-5">
+                <div className="field">
+                  <div className="values">
+                    <strong>Ngày tạo đơn :</strong>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <DateRangePicker
+                      format="dd:MM:yyyy hh:mm aa"
+                      showMeridian
+                      defaultCalendarValue={[currentDate, nextYear]}
+                      onChange={handleDateChange}
+                      onClean={() => {
+                        setTuNgay(null);
+                        setDenNgay(null);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="box col-auto col-3">
+                <div className="values">
+                  <strong>Tổng tiền:</strong> {convertToCurrency(valuesTT[0]) + ' - ' + convertToCurrency(valuesTT[1])}
+                </div>
+                <br />
+                <Slider className="slider" onChange={setValuesTT} value={valuesTT} min={MIN} max={MAX}></Slider>
+              </div>
+            </div>
+            <br></br>
+            <div className="row">
+              <div className="box col-auto col-6">
+                <div className="values">
+                  <strong>Trạng thái:</strong>
+                </div>
+                <div className="dropdown-container">
+                  <Select
+                    options={optionList}
+                    components={animatedComponents}
+                    placeholder="Chọn trạng thái đơn cần tìm ...."
+                    value={selectedOptions}
+                    onChange={handleSelect}
+                    isSearchable={true}
+                    isMulti
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginLeft: 100 }} className="box col-auto col-4">
+                <div style={{ marginTop: 5 }} className="values">
+                  <strong>Số lượng:</strong> {valuesSL[0] + ' - ' + valuesSL[1]}
+                </div>
+                <br />
+                <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
+              </div>
+            </div>
+            <br></br>
+            <div className="row">
+              <div className="box col-auto col-6">
+                <div className="values">
+                  <strong>Loại đơn:</strong>
+                </div>
+                <FormGroup style={{ marginTop: 15 }}>
+                  <FormCheck inline>
+                    <FormCheck.Input
+                      type="radio"
+                      name="radioLoai"
+                      checked={radioLoai === ''}
+                      value=""
+                      onClick={handleAllClickLoai}
+                      onChange={handleRadioChange1}
+                    />
+                    <FormCheck.Label style={{ marginLeft: 15 }}>Tất Cả</FormCheck.Label>
+                  </FormCheck>
+
+                  <FormCheck inline>
+                    <FormCheck.Input type="radio" name="radioLoai" checked={radioLoai === '0'} value="0" onChange={handleRadioChange1} />
+                    <FormCheck.Label>Tại Quầy</FormCheck.Label>
+                  </FormCheck>
+
+                  <FormCheck inline style={{ marginLeft: 15 }}>
+                    <FormCheck.Input type="radio" name="radioLoai" checked={radioLoai === '1'} value="1" onChange={handleRadioChange1} />
+                    <FormCheck.Label>Đặt hàng online</FormCheck.Label>
+                  </FormCheck>
+                </FormGroup>
+              </div>
+
+              <div style={{ marginLeft: 320, marginTop: 20 }} className="box col-auto col-2">
+                <button
+                  onClick={handleRefresh}
+                  data-toggle="tooltip"
+                  title="Làm mới"
+                  style={{
+                    background: '#0ad406',
+                    borderRadius: '50px',
+                    border: '1px solid black',
+                    justifyItems: 'center'
+                  }}
+                  type="button"
+                  className="btn btn-labeled shadow-button"
+                >
+                  <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
+                    <i className="fa-solid fa-arrows-rotate fa-spin fa-lg"></i>
+                  </span>
+                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
+                    |
+                  </span>
+                  <span
+                    style={{
+                      marginBottom: '3px',
+                      color: 'white',
+                      fontSize: '15px',
+                      fontWeight: 'bold',
+                      marginLeft: '5px'
+                    }}
+                  >
+                    Refresh
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </Card>
+        <br></br>
+        {/* table */}
         <Card>
           <div className="w-auto rounded bg-white border shadow p-4">
-            {/* <form className="export-form">
-              <button
-                onClick={handleSubmit}
-                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
-                data-toggle="tooltip"
-                title="In hóa đơn Excel"
-                className="shadow-button"
-                type="submit"
-                
-              >
-                <button
-                onClick={() => navigate(`/don-hang/print-excel`)}>
-                  <img  width="30px" height="30px" alt="" />
-                </button>
-                <span className="separator">|</span>
-                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
-                  In Excel
-                </span>
-              </button>
-            </form> */}
-
-            <table style={{ textAlign: 'center', alignItems: 'center' }} className="table table-hover">
+            <table id="table-to-xls" style={{ textAlign: 'center', alignItems: 'center', cursor: 'pointer' }} className="table table-hover">
               <tr>
                 <th>#</th>
-                <th>Mã Đơn Hàng</th>
-                <th>Tên Khách Hàng</th>
+                <th>Mã Đơn</th>
+                <th>Khách Hàng</th>
                 <th>Ngày Tạo Đơn</th>
+                <th>Số Luợng</th>
                 <th>Tổng tiền</th>
                 <th>Trạng Thái</th>
                 <th>Loại Đơn</th>
-                <th>Hình Thức Thanh Toán</th>
               </tr>
               <tbody>
                 {data.map((d, i) => (
@@ -153,11 +360,9 @@ function DonHang() {
                     <td>{d.ma}</td>
                     <td>{d.ten_nguoi_nhan}</td>
                     <td>{formatDate(d.ngay_tao)}</td>
-                    <td>{convertToCurrency(d.tong_tien_sau_khi_giam)}</td>
-                    <td
-                      style={{ fontSize: '14px', fontWeight: 'bold', justifyContent: 'center', display: 'flex' }}
-                      className="align-middle"
-                    >
+                    <td>{d.tong_so_luong}</td>
+                    <td>{convertToCurrency(d.tong_tien)}</td>
+                    <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
                       {d.trang_thai === 0 && (
                         <span
                           style={{
@@ -297,7 +502,7 @@ function DonHang() {
                     </td>
                     <td
                       style={{
-                        fontSize: '14px',
+                        fontSize: '12px',
                         fontWeight: 'bold',
                         textAlign: 'center',
                         verticalAlign: 'middle'
@@ -353,6 +558,23 @@ function DonHang() {
               </tbody>
             </table>
 
+            {totalPages === 0 && currentPage === 0 && (
+              <div className="col-sm-12">
+                <div
+                  style={{ background: 'whitesmoke' }}
+                  className="alert fade alert-simple alert-danger alert-dismissible text-left font__family-montserrat font__size-28 font__weight-light brk-library-rendered rendered show"
+                  role="alert"
+                  data-brk-library="component__alert"
+                >
+                  <div className="start-icon far fa-times-circle faa-pulse animated fa-times">
+                    <strong style={{ fontFamily: 'Arial' }} className="font__weight-semibold">
+                      Không tìm thấy dữ liệu!
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
@@ -368,9 +590,25 @@ function DonHang() {
               nextLinkClassName="page-link"
               breakClassName="page-item"
               breakLinkClassName="page-link"
-              containerClassName="pagination justify-content-center"
+              containerClassName="pagination justify-content-center po"
               activeClassName="active"
             />
+
+            <form style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
+              <button
+                className="button-85"
+                onClick={handleOnExport}
+                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
+                data-toggle="tooltip"
+                title="In hóa đơn Excel"
+                // className="shadow-button"
+                type="submit"
+              >
+                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
+                  In Excel
+                </span>
+              </button>
+            </form>
           </div>
         </Card>
       </MainCard>

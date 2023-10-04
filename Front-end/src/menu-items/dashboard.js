@@ -1,22 +1,22 @@
 // assets
-import { IconDashboard } from '@tabler/icons';
+import { IconDashboard, IconShoppingCart, IconShirt } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard };
+const icons = { IconDashboard, IconShirt, IconShoppingCart };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
-  id: 'hoa-don',
-  title: 'Hoá đơn',
+  id: 'don-hang',
+  title: 'Đơn hàng',
   type: 'group',
   children: [
     {
-      id: 'default',
+      id: 'don-hang',
       title: 'Quản lý đơn hàng',
       type: 'item',
       url: '/don-hang',
-      icon: icons.IconDashboard,
+      icon: icons.IconShoppingCart,
       breadcrumbs: false
     }
   ]

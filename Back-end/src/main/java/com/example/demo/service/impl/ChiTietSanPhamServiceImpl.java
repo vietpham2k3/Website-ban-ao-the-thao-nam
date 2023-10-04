@@ -20,13 +20,23 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
     @Override
     public List<ChiTietSanPham> getAll() {
-        return repository.findAll();
+        return repository.getAll();
+    }
+
+    @Override
+    public List<ChiTietSanPham> getAllByIdSP(UUID id) {
+        return repository.getAllByIdSP(id);
+    }
+
+    @Override
+    public List<ChiTietSanPham> getAllSPNEW() {
+        return repository.getAllSPNew();
     }
 
     @Override
     public Page<ChiTietSanPham> page(Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
-        return repository.findAll(pageable);
+        return repository.getAll(pageable);
     }
 
     @Override
@@ -48,6 +58,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public void delete(UUID id) {
         repository.delete(id);
+    }
+
+    @Override
+    public void deleteMSKC(UUID id) {
+        repository.deleteMSKC(id);
     }
 
     @Override
