@@ -773,15 +773,12 @@ function DonHangCT() {
                         <textarea
                           className="form-control"
                           rows="4"
-                          name="diaChi"
                           placeholder="Nhập ghi chú (nếu có)"
                           value={lshd.ghiChu}
                           onChange={(e) => {
                             setLshd({ ghiChu: e.target.value });
                           }}
-                          required
                         ></textarea>
-                        <div className="invalid-feedback">Không được để trống!</div>
                       </div>
                     </div>
                     <br></br>
@@ -825,15 +822,12 @@ function DonHangCT() {
                         <textarea
                           className="form-control"
                           rows="4"
-                          name="diaChi"
                           placeholder="Nhập ghi chú (nếu có)"
                           value={lshd2.ghiChu}
                           onChange={(e) => {
                             setLshd2({ ghiChu: e.target.value });
                           }}
-                          required
                         ></textarea>
-                        <div className="invalid-feedback">Không được để trống!</div>
                       </div>
                     </div>
                     <br></br>
@@ -883,9 +877,8 @@ function DonHangCT() {
                           onChange={(e) => {
                             setLshd3({ ghiChu: e.target.value });
                           }}
-                          required
+                          
                         ></textarea>
-                        <div className="invalid-feedback">Không được để trống!</div>
                       </div>
                     </div>
                     <br></br>
@@ -968,9 +961,7 @@ function DonHangCT() {
                             onChange={(e) => {
                               setLshd1({ ghiChu: e.target.value });
                             }}
-                            required
                           ></textarea>
-                          <div className="invalid-feedback">Không được để trống!</div>
                         </div>
                       </div>
                       <br></br>

@@ -47,7 +47,7 @@ public class HoaDonController {
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.res.findAll());
+        return ResponseEntity.ok(service.listHD());
     }
 
     @GetMapping("getById/{id}")
