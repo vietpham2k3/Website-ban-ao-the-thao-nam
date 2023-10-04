@@ -159,7 +159,7 @@ function DonHang(props) {
                       >
                         <InputSpinner
                           type={'real'}
-                          max={d.chiTietSanPham.soLuong + 1}
+                          max={d.chiTietSanPham.soLuong + d.soLuong}
                           min={0}
                           step={1}
                           value={d.soLuong}
@@ -168,6 +168,13 @@ function DonHang(props) {
                           size="sm"
                         />
                       </div>
+                      {d.chiTietSanPham.soLuong < 10 ? (
+                        <span style={{ color: 'red' }}>
+                          Số sản phẩm còn lại: <strong>{d.chiTietSanPham.soLuong}</strong>
+                        </span>
+                      ) : (
+                        ''
+                      )}
                     </td>
                     <td>{convertToCurrency(d.donGia)}</td>
                     <td>{convertToCurrency(d.soLuong * d.donGia)}</td>

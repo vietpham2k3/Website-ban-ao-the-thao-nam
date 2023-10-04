@@ -12,6 +12,7 @@ import Select from 'react-select';
 import { FormCheck, FormGroup } from 'react-bootstrap';
 import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
+import * as XLSX from 'xlsx';
 
 const MIN = 0;
 const MAX = 9999999;
@@ -141,6 +142,18 @@ function DonHang() {
     window.location.reload();
   };
 
+  //export
+  const handleOnExport = () => {
+    const table = document.getElementById('table-to-xls');
+    const workbook = XLSX.utils.table_to_book(table);
+
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+
+    const fileName = `Hóa đơn in ngày ${formattedDate.replace(/_/g, '-')}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+  };
+
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
     const formatter = new Intl.NumberFormat('vi-VN', {
@@ -252,7 +265,7 @@ function DonHang() {
 
               <div style={{ marginLeft: 100 }} className="box col-auto col-4">
                 <div style={{ marginTop: 5 }} className="values">
-                  <strong>Số lượng:</strong> {convertToCurrency(valuesSL[0]) + ' - ' + convertToCurrency(valuesSL[1])}
+                  <strong>Số lượng:</strong> {valuesSL[0] + ' - ' + valuesSL[1]}
                 </div>
                 <br />
                 <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
@@ -317,7 +330,6 @@ function DonHang() {
                       fontWeight: 'bold',
                       marginLeft: '5px'
                     }}
-                    className="btn-text"
                   >
                     Refresh
                   </span>
@@ -330,27 +342,7 @@ function DonHang() {
         {/* table */}
         <Card>
           <div className="w-auto rounded bg-white border shadow p-4">
-            {/* <form className="export-form">
-              <button
-                onClick={handleSubmit}
-                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
-                data-toggle="tooltip"
-                title="In hóa đơn Excel"
-                className="shadow-button"
-                type="submit"
-                
-              >
-                <button
-                onClick={() => navigate(`/don-hang/print-excel`)}>
-                  <img  width="30px" height="30px" alt="" />
-                </button>
-                <span className="separator">|</span>
-                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
-                  In Excel
-                </span>
-              </button>
-            </form> */}
-            <table style={{ textAlign: 'center', alignItems: 'center', cursor: 'pointer' }} className="table table-hover">
+            <table id="table-to-xls" style={{ textAlign: 'center', alignItems: 'center', cursor: 'pointer' }} className="table table-hover">
               <tr>
                 <th>#</th>
                 <th>Mã Đơn</th>
@@ -601,6 +593,22 @@ function DonHang() {
               containerClassName="pagination justify-content-center po"
               activeClassName="active"
             />
+
+            <form style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
+              <button
+                className="button-85"
+                onClick={handleOnExport}
+                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
+                data-toggle="tooltip"
+                title="In hóa đơn Excel"
+                // className="shadow-button"
+                type="submit"
+              >
+                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
+                  In Excel
+                </span>
+              </button>
+            </form>
           </div>
         </Card>
       </MainCard>

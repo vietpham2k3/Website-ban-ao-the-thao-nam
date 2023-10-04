@@ -24,7 +24,7 @@ function AddMauSac() {
 
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    ma: '',
+    ma: '#ffffffff',
     trangThai: 0
   });
 

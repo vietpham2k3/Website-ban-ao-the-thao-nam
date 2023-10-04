@@ -87,30 +87,8 @@ h3 {
   transform: scale(1.1);
   transition: transform 0.3s ease;
 }
-.bmw:hover time,
-.bmw.i-is-active time,
-.timeline-content-title.bmw {
-  color: #1c69d4;
-}
-.mini:hover time,
-.mini.i-is-active time,
-.timeline-content-title.mini {
-  color: #ed9300;
-}
-.bmw:hover time,
-.mini:hover time,
-.bmw time,
-.mini time {
-  transition: color 0.3s ease;
-}
 .p-timeline-item.i-is-active {
   cursor: default;
-}
-.bmw:hover .p-timeline-block {
-  background-color: #1c69d4;
-}
-.mini:hover .p-timeline-block {
-  background-color: #ed9300;
 }
 .bmw .p-timeline-block,
 .mini .p-timeline-block,
@@ -125,7 +103,7 @@ h3 {
 }
 .p-timeline-date {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
 }
 .p-timeline-carmodel {
   margin-top: 5px;
@@ -338,7 +316,7 @@ h3 {
     margin: 0;
   }
   .wrap {
-    padding: 0 40px;
+    padding: 0 20px;
   }
   .timeline-wrap {
     padding: 0;
@@ -412,6 +390,6 @@ h3 {
     font-size: 1.5em;
   }
   .timeline::-webkit-scrollbar {
-    height: 4px;
+    height: 5px;
   }
 }

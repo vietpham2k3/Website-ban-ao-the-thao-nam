@@ -185,93 +185,83 @@ public class HoaDonController {
 
     @PutMapping("updateKH/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
-        hoaDon.setNgaySua(new Date());
         service.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi());
         return ResponseEntity.ok("ok");
     }
 
-//    @PostMapping("print-excel")
-//    public ResponseEntity<byte[]> exportToExcel(HttpServletResponse response,
-//                                                @RequestBody List<HoaDon> hoaDons)
-//            throws IOException {
-//        XSSFWorkbook workbook = new XSSFWorkbook();
-//        XSSFSheet sheet = workbook.createSheet("Danh sách đơn hàng");
-//        XSSFRow headerRow = sheet.createRow(0);
-//        headerRow.createCell(0).setCellValue("Mã Đơn Hàng");
-//        headerRow.createCell(1).setCellValue("Ngày Đặt Hàng");
-//        headerRow.createCell(2).setCellValue("Hình Thức Thanh Toán");
-//        headerRow.createCell(3).setCellValue("Loại Đơn");
-//        headerRow.createCell(4).setCellValue("Khách Hàng");
-//        headerRow.createCell(5).setCellValue("Số Điện Thoại");
-//        headerRow.createCell(6).setCellValue("Địa Chỉ");
-//        headerRow.createCell(7).setCellValue("Trạng Thái");
-//        headerRow.createCell(8).setCellValue("Tổng Tiền Sau Khi Giảm");
-//
-//        CellStyle dateCellStyle = workbook.createCellStyle();
-//        CreationHelper creationHelper = workbook.getCreationHelper();
-//        dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd-MM-yyyy"));
-//
-//        for (int i = 0; i < headerRow.getLastCellNum(); i++) {
-//            sheet.autoSizeColumn(i);
-//        }
-//
-//        hoaDons = service.getExcel();
-//        int rowNum = 1;
-//        for (HoaDon hoaDon : hoaDons) {
-//            XSSFRow row = sheet.createRow(rowNum++);
-//            row.createCell(0).setCellValue(hoaDon.getMa());
-//            Cell ngayThanhToanCell = row.createCell(1);
-//            ngayThanhToanCell.setCellValue(hoaDon.getNgayTao());
-//            ngayThanhToanCell.setCellStyle(dateCellStyle);
-//            row.createCell(2).setCellValue(hoaDon.getHinhThucThanhToan().getTen());
-//            row.createCell(3).setCellValue(hoaDon.getLoaiDon());
-//            row.createCell(4).setCellValue(hoaDon.getTenNguoiNhan());
-//            row.createCell(5).setCellValue(hoaDon.getSoDienThoai());
-//            row.createCell(6).setCellValue(hoaDon.getDiaChi());
-//            row.createCell(7).setCellValue(getTrangThaiHoaDonString(hoaDon.getTrangThai()));
-//            row.createCell(8).setCellValue(hoaDon.getTongTienKhiGiam() + " VND");
-//        }
-//
-//        // Code tạo workbook và sheet
-////        OutputStream outputStream = response.getOutputStream();
-////        workbook.write(outputStream);
-////        workbook.close();
-////        outputStream.close();
-////        response.setHeader("Content-Disposition", "attachment; filename=danhsachhoadon.xlsx");
-////        response.setContentType("application/vnd.ms-excel");
-//
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        workbook.write(byteArrayOutputStream);
-//        workbook.close();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        headers.setContentDispositionFormData("attachment", "danhsachhoadon.xlsx");
-//
-//        return new ResponseEntity<>(byteArrayOutputStream.toByteArray(), headers, HttpStatus.OK);
-//    }
-//
-//    private String getTrangThaiHoaDonString(int trangThai) {
-//        switch (trangThai) {
-//            case 0:
-//                return "Đang chờ xác nhận";
-//            case 1:
-//                return "Đã xác nhận";
-//            case 2:
-//                return "Đã hủy đơn";
-//            case 3:
-//                return "Chờ giao hàng";
-//            case 4:
-//                return "Đang giao hàng";
-//            case 5:
-//                return "Giao hàng thành công";
-//            case 6:
-//                return "Giao hàng thất bại";
-//            default:
-//                return "Thanh toán thành công";
-//        }
-//    }
+    @PostMapping("xac-nhan/{id}")
+    public ResponseEntity<?> xacNhan(@PathVariable UUID id,
+                                     @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = service.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(1);
+        hoaDon.setTrangThai(1);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Đã xác thực thông tin người dùng");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PutMapping("huy-don/{id}")
+    public ResponseEntity<?> huyDon(@PathVariable UUID id,
+                                    @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = service.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(2);
+        hoaDon.setTrangThai(2);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Đã hủy đơn hàng");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PutMapping("xac-nhan-giao-hang/{id}")
+    public ResponseEntity<?> xacNhanGiao(@PathVariable UUID id,
+                                         @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = service.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(4);
+        hoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Đang giao hàng");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PutMapping("xac-nhan-thanh-toan/{id}")
+    public ResponseEntity<?> xacNhanTT(@PathVariable UUID id,
+                                       @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = service.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(7);
+        hoaDon.setTrangThai(7);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        hoaDon.setNgayThanhToan(new Date());
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Thanh toán thành công");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
 
 
 }

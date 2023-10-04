@@ -8,7 +8,7 @@ const icons = { IconDashboard, IconShirt, IconShoppingCart };
 
 const dashboard = {
   id: 'don-hang',
-  title: 'Hoá đơn',
+  title: 'Đơn hàng',
   type: 'group',
   children: [
     {
