@@ -37,16 +37,38 @@ const getById = (id) => {
   return axios.get(`/api/hoa-don/getById/${id}`);
 };
 
-const addSP = (id, values) => {
-  return axios.post(`/api/hoa-don/add-sp/${id}`, values);
+const addSP = (values) => {
+  return axios.post(`/api/hoa-don/add-sp`, values);
+};
+
+const updateSL = (id, values) => {
+  return axios.put(`/api/hoa-don/update-sl/${id}`, values);
 };
 
 const getALLTT = (id, idSP) => {
   return axios.get(`/api/api/hoa-don/getAllTT?id=${id}&idSP=${idSP}`);
 };
 
+const deleteHDCT = (id) => {
+  return axios.delete(`/api/hoa-don/delete-hdct/${id}`);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
-export { getAllHD, getAllPageDH, printExcel, updateKHDH, detailLSHD, detailHD, addHD, getById, addSP, findVIP, getALLTT };
+export {
+  getAllHD,
+  getAllPageDH,
+  printExcel,
+  updateKHDH,
+  detailLSHD,
+  detailHD,
+  addHD,
+  getById,
+  addSP,
+  findVIP,
+  getALLTT,
+  updateSL,
+  deleteHDCT
+};

@@ -74,17 +74,18 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
-    @PostMapping("add-sp/{id}")
-    public ResponseEntity<?> addSP(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+    @PostMapping("add-sp")
+    public ResponseEntity<?> addSP(@RequestBody HoaDonChiTiet hoaDon) {
         List<HoaDonChiTiet> list = hoaDonChiTietService.findAll();
         for (HoaDonChiTiet h : list) {
             if (h.getChiTietSanPham().getId().equals(hoaDon.getChiTietSanPham().getId()) &&
-                    h.getHoaDon().getId().equals(hoaDon.getHoaDon().getId())  ) {
+                    h.getHoaDon().getId().equals(hoaDon.getHoaDon().getId())) {
                 // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
                 ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
                 hoaDon.setDonGia(sp.getGiaBan());
                 // Tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu
                 hoaDonChiTietService.update(hoaDon.getSoLuong(), h.getId());
+                chiTietSanPhamService.update(sp.getSoLuong() - hoaDon.getSoLuong(), hoaDon.getChiTietSanPham().getId());
                 return ResponseEntity.ok("ok");
             }
         }
@@ -93,7 +94,33 @@ public class HoaDonController {
         ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
         hoaDon.setDonGia(sp.getGiaBan());
         hoaDonChiTietService.add(hoaDon);
+        chiTietSanPhamService.update(sp.getSoLuong() - hoaDon.getSoLuong(), hoaDon.getChiTietSanPham().getId());
         return ResponseEntity.ok(hoaDon.getId());
+    }
+
+    @PutMapping("update-sl/{id}")
+    public ResponseEntity<?> updateSL(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDon) {
+        HoaDonChiTiet hd = hoaDonChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+        if (hoaDon.getSoLuong() > hd.getSoLuong()) {
+            chiTietSanPhamService.update(sp.getSoLuong() - (hoaDon.getSoLuong() - hd.getSoLuong()), hoaDon.getChiTietSanPham().getId());
+            hoaDonChiTietService.updateSL(hoaDon.getSoLuong(), hd.getId());
+            return ResponseEntity.ok("Tang cthd, giam ctsp");
+        } else {
+            // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+            chiTietSanPhamService.update(sp.getSoLuong() + (hd.getSoLuong() - hoaDon.getSoLuong()), hoaDon.getChiTietSanPham().getId());
+            hoaDonChiTietService.updateSL(hoaDon.getSoLuong(), hd.getId());
+            return ResponseEntity.ok("Giam cthd, tang ctsp");
+        }
+    }
+
+    @DeleteMapping("delete-hdct/{id}")
+    public ResponseEntity<?> deleteHDCT(@PathVariable UUID id) {
+        HoaDonChiTiet hd = hoaDonChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hd.getChiTietSanPham().getId());
+        chiTietSanPhamService.update(sp.getSoLuong() + hd.getSoLuong(), sp.getId());
+        hoaDonChiTietService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("hien-thi-page")

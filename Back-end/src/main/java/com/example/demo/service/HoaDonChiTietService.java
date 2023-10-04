@@ -15,7 +15,11 @@ public interface HoaDonChiTietService {
 
     HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet);
 
+    void delete(UUID id);
+
     void update(Integer soLuong, UUID id);
+
+    void updateSL(Integer soLuong, UUID id);
 
     List<HoaDonChiTiet> existsById(ChiTietSanPham chiTietSanPham, HoaDon hoaDon);
 

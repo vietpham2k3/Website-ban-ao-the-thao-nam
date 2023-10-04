@@ -62,6 +62,7 @@ function UpdateSanPham() {
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [idCTSP, setIdCTSP] = useState(true);
+  const mainCardRef = useRef(null);
 
   const [values, setValues] = useState({
     chatLieu: {
@@ -238,11 +239,14 @@ function UpdateSanPham() {
 
   useEffect(() => {
     detail(idCTSP);
+    getAllAnh(idCTSP);
+    if (idCTSP !== null && mainCardRef.current) {
+      mainCardRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [idCTSP]);
 
   useEffect(() => {
     detail(id);
-    getAllAnh(id);
     // getAllByIdCTSP(id);
   }, [id]);
 
@@ -339,6 +343,14 @@ function UpdateSanPham() {
   const handleSubmitAdd = async (event) => {
     event.preventDefault();
     await postctsp(idSP, values);
+  };
+
+  const handleChangeId = (id) => {
+    if (idCTSP === id) {
+      toast.warning('Bạn đang xem ảnh của sản phẩm này');
+    } else {
+      setIdCTSP(id);
+    }
   };
 
   console.log(values);
@@ -665,7 +677,14 @@ function UpdateSanPham() {
                   </tr>
                 ) : (
                   listMSKC.map((d, i) => (
-                    <tr key={d.id} className="text-center">
+                    <tr
+                      key={d.id}
+                      className="text-center"
+                      onClick={() => {
+                        handleChangeId(d.id);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <td>{i + 1}</td>
                       <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {d.mauSac && d.kichCo ? (
@@ -689,7 +708,7 @@ function UpdateSanPham() {
           </div>
         </div>
       </MainCard>
-      <MainCard className="my-3">
+      <MainCard className={`my-3 ${idCTSP !== null ? 'show' : ''}`} ref={mainCardRef}>
         <form onSubmit={handleAddAnh}>
           <div className="justify-content-center">
             {file.length === 0 ? (

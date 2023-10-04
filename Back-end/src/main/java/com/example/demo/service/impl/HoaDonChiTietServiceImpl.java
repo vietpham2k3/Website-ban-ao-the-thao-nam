@@ -33,8 +33,18 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
+    public void delete(UUID id) {
+        repository.deleteById(id);
+    }
+
+    @Override
     public void update(Integer soLuong, UUID id) {
         repository.update(soLuong, id);
+    }
+
+    @Override
+    public void updateSL(Integer soLuong, UUID id) {
+        repository.updateSL(soLuong, id);
     }
 
 

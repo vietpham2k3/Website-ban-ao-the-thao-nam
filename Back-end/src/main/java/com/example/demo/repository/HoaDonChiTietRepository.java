@@ -26,5 +26,8 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Query(value = "update HoaDonChiTiet c set c.soLuong = c.soLuong + :soLuong  where c.id = :id")
     void update(Integer soLuong, UUID id);
 
-
+    @Transactional
+    @Modifying
+    @Query(value = "update HoaDonChiTiet c set c.soLuong = :soLuong  where c.id = :id")
+    void updateSL(Integer soLuong, UUID id);
 }

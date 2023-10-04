@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import '../../scss/DonHang.scss';
@@ -7,15 +8,28 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById } from 'services/ServiceDonHang';
-import { toast } from 'react-toastify';
+import { getById, updateSL, deleteHDCT } from 'services/ServiceDonHang';
+// import { toast } from 'react-toastify';
+import InputSpinner from 'react-bootstrap-input-spinner';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id } = props;
   const [inputValue, setInputValue] = useState('');
+  const [inputKH, setInputKH] = useState('');
+  const [idHDCT, setIdHDCT] = useState('');
   const [values, setValues] = useState([]);
   const [valuesSanPham, setValuesSanPham] = useState([]);
+  // const [debouncedUpdate, setDebouncedUpdate] = useState(null);
+  const [valuesUpdate, setValuesUpdate] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    hoaDon: {
+      id: id
+    },
+    soLuong: ''
+  });
 
   useEffect(() => {
     handleSearchUsers();
@@ -34,18 +48,42 @@ function DonHang(props) {
     }
   };
 
+  const handleUpdateSl = (id, idHD, idCTSP, soLuong) => {
+    setIdHDCT(id);
+    setValuesUpdate({
+      ...valuesUpdate,
+      chiTietSanPham: {
+        id: idCTSP
+      },
+      hoaDon: {
+        id: idHD
+      },
+      soLuong: soLuong
+    });
+  };
+
   useEffect(() => {
-    const selectedId = localStorage.getItem('selectedId');
-    // Làm gì đó với giá trị selectedId ở đây
-    // Ví dụ: setValuesAdd({ ...valuesAdd, selectedId });
-    // hoặc handleDetail(selectedId);
-    toast.success(selectedId);
-  }, []);
+    update(idHDCT, valuesUpdate);
+  }, [valuesUpdate]);
+
+  const update = async (idHDCT, values) => {
+    const res = await updateSL(idHDCT, values);
+    if (res) {
+      getAllById(id);
+    }
+  };
+
+  const deleteHD = async (idHDCT) => {
+    const res = await deleteHDCT(idHDCT);
+    if (res) {
+      getAllById(id);
+    }
+  };
 
   const handleSearchUsers = _.debounce(async () => {
     if (inputValue !== '') {
       // Kiểm tra nếu inputValue không rỗng
-      const res = await searchCTSP(inputValue, '', '', '', '');
+      const res = await searchCTSP(inputValue, '1', '', '', '');
       if (res && res.data) {
         setValues(res.data.content);
       }
@@ -64,8 +102,8 @@ function DonHang(props) {
     return formatter.format(number);
   }
 
-  const handleUpdateSoLuong = (id) => {
-    toast.success(id);
+  const handleDelete = (id) => {
+    deleteHD(id);
   };
 
   return (
@@ -89,7 +127,7 @@ function DonHang(props) {
           )}
           <div className="table-container">
             <Table striped hover className="my-4">
-              <tr className="text-center">
+              <tr className="ps-3">
                 <th>#</th>
                 <th>Mã</th>
                 <th>Ảnh</th>
@@ -100,9 +138,9 @@ function DonHang(props) {
               </tr>
               <tbody>
                 {valuesSanPham.map((d, i) => (
-                  <tr key={i} className="text-center" style={{ cursor: 'pointer' }} onClick={() => handleUpdateSoLuong(d.id)}>
+                  <tr key={i}>
                     <td>{i + 1}</td>
-                    <td>{d.chiTietSanPham.ma}</td>
+                    <td>{d.chiTietSanPham.sanPham.ma}</td>
                     <td>
                       <img
                         src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
@@ -110,17 +148,51 @@ function DonHang(props) {
                         style={{ width: '70px', height: '100px' }}
                       />
                     </td>
-                    <td>{d.chiTietSanPham.sanPham.ten}</td>
-                    <td>{d.soLuong}</td>
+                    <td>
+                      {d.chiTietSanPham.sanPham.ten} <br /> {d.chiTietSanPham.kichCo.ten} <br />
+                      <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px' }}>&nbsp;</div>
+                    </td>
+                    <td>
+                      <div
+                        className="input-spinner"
+                        style={{ display: 'flex', alignItems: 'center', width: 120, justifyContent: 'center' }}
+                      >
+                        <InputSpinner
+                          type={'real'}
+                          max={d.chiTietSanPham.soLuong + 1}
+                          min={0}
+                          step={1}
+                          value={d.soLuong}
+                          onChange={(e) => handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e)}
+                          variant={'dark'}
+                          size="sm"
+                        />
+                      </div>
+                    </td>
                     <td>{convertToCurrency(d.donGia)}</td>
                     <td>{convertToCurrency(d.soLuong * d.donGia)}</td>
+                    <td>
+                      <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
           </div>
         </div>
-        <div className="col-4"></div>
+        <div className="col-4">
+          <div className="box-search" style={{ width: '100%' }}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              className="input-seach"
+              value={inputKH}
+              onChange={(e) => setInputKH(e.target.value)}
+            />
+            <button className="fa-solid fa-plus mx-3"></button>
+          </div>
+        </div>
       </div>
     </div>
   );

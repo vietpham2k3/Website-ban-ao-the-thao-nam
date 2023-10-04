@@ -5,14 +5,17 @@ import '../../scss/SearchResult.scss';
 import { Table } from 'react-bootstrap';
 import TableKCMS from './TableKCMS';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { detailCTSP, getAllByIdSP } from 'services/SanPhamService';
 import { addSP } from 'services/ServiceDonHang';
 import { toast } from 'react-toastify';
 
 function SearchResult(props) {
-  const { result, id, getAllById, handleSearchUsers } = props;
+  const { result, id, handleSearchUsers, getAllById } = props;
   const [show, setShow] = useState(false);
-  // const [idCTSP, setidCTSP] = useState('');
-  // const [values, setValues] = useState([]);
+  const [idSP, setidSP] = useState('');
+  const [idCTSP, setidCTSP] = useState('');
+  const [values, setValues] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
   const [inputDetail, setInputDetail] = useState(null);
   const [valuesAdd, setValuesAdd] = useState({
@@ -34,8 +37,9 @@ function SearchResult(props) {
     return formatter.format(number);
   }
 
-  const handleAddSoLuong = (id) => {
+  const handleAddSoLuong = (id, idSP) => {
     setShow(true);
+    setidSP(idSP);
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
@@ -46,16 +50,16 @@ function SearchResult(props) {
       toast.error('Đã vượt quá số lượng hiện có !');
       return;
     }
-    add(dataDetail.id, valuesAdd);
+    add(valuesAdd);
   };
 
-  const add = async (idMSKC, value) => {
-    const res = await addSP(idMSKC, value);
+  const add = async (value) => {
+    const res = await addSP(value);
     try {
       if (res) {
         handleSearchUsers();
-        toast.success('Thêm sản phẩm thành công');
         getAllById(id);
+        toast.success('Thêm sản phẩm thành công');
         handleClose();
       }
     } catch (error) {
@@ -79,13 +83,31 @@ function SearchResult(props) {
 
   const handleDetail = (id) => {
     setInputDetail(id);
-    detail(id);
+    setidCTSP(id);
+    setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
 
-  const detail = async (id) => {
-    let res = await detailMSKCCTSP(id);
+  console.log(valuesAdd);
+
+  useEffect(() => {
+    getAllMSKC(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    detail(idCTSP);
+  }, [idCTSP]);
+
+  const detail = async (idCTSP) => {
+    const res = await detailCTSP(idCTSP);
     if (res) {
       setDataDetail(res.data);
+    }
+  };
+
+  const getAllMSKC = async (id) => {
+    let res = await getAllByIdSP(id);
+    if (res) {
+      setValues(res.data);
     }
   };
 
@@ -93,33 +115,40 @@ function SearchResult(props) {
     <div className="results-list">
       <Table hover>
         <tbody>
-          {result.map((d, i) => (
-            <tr key={i} onClick={() => handleAddSoLuong(d.id)} style={{ cursor: 'pointer' }}>
-              <td>
-                <img
-                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                  className="product-image"
-                  style={{ width: '70px', height: '100px' }}
-                />
-              </td>
-              <td>{d.ma}</td>
-              <td>{d.sanPham.ten}</td>
-              <td>{d.soLuong || 0}</td>
-              <td>{convertToCurrency(d.giaBan)}</td>
+          {result.length > 0 ? (
+            result.map((d, i) => (
+              <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
+                <td>
+                  <img
+                    src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                    className="product-image"
+                    style={{ width: '70px', height: '100px' }}
+                  />
+                </td>
+                <td>{d.sanPham.ma}</td>
+                <td>{d.sanPham.ten}</td>
+                <td>{d.soLuong || 0}</td>
+                <td>{convertToCurrency(d.giaBan)}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5}>Không có dữ liệu</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
       <TableKCMS
         show={show}
         handleClose={handleClose}
-        values={values}
         setValuesAdd={setValuesAdd}
+        values={values}
         handleAdd={handleAdd}
         valuesAdd={valuesAdd}
         handleDetail={handleDetail}
         dataDetail={dataDetail}
         inputDetail={inputDetail}
+        idCTSP={idCTSP}
       ></TableKCMS>
     </div>
   );

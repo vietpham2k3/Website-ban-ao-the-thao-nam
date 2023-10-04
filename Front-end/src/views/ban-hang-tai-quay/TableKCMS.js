@@ -4,7 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import '../../scss/TableMSKC.scss';
 
 const TableKCMS = (props) => {
-  const { handleClose, show, values, setValuesAdd, handleAdd, valuesAdd, handleDetail, dataDetail, inputDetail } = props;
+  const { handleClose, show, values, setValuesAdd, handleAdd, valuesAdd, handleDetail, dataDetail } = props;
 
   return (
     <div>
@@ -32,10 +32,12 @@ const TableKCMS = (props) => {
                     className="form-check-input"
                     type="radio"
                     name="flexRadioDefault"
-                    id="flexRadioDefault1"
+                    id={d.id}
+                    value={d.id}
+                    checked={d.id === dataDetail.id}
                     onChange={() => handleDetail(d.id)}
                   />
-                  <label className="form-check-label custom-label" htmlFor="flexRadioDefault1">
+                  <label className="form-check-label custom-label" htmlFor={d.id}>
                     <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>&nbsp;- {d.kichCo.ten}
                   </label>
                 </div>
@@ -52,7 +54,6 @@ const TableKCMS = (props) => {
                 className="form-control"
                 id="exampleFormControlTextarea1"
                 type="number"
-                style={{ display: `${inputDetail !== null ? '' : 'none'}` }}
                 onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
               ></input>
             </div>
