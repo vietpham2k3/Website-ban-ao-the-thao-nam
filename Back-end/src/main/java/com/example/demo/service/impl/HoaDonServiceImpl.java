@@ -19,8 +19,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Autowired public HoaDonRespository res;
 
     @Override
-    public List<HoaDon> listHD(UUID id) {
-        return res.getAllHDLSTT(id);
+    public List<HoaDon> listHD() {
+        return res.findAll();
     }
 
     @Override

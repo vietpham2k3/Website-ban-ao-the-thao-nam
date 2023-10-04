@@ -64,7 +64,4 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "select h from HoaDon h where h.trangThai = 0")
     List<HoaDon> getAllHD();
 
-    @Query(value = "select h from HoaDon h where h.id = :id")
-    List<HoaDon> getAllHDLSTT(@Param("id") UUID id);
-
 }

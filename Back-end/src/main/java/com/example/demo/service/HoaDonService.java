@@ -11,7 +11,7 @@ import java.util.*;
 
 public interface HoaDonService {
 
-    List<HoaDon> listHD(UUID id);
+    List<HoaDon> listHD();
 
     Page<HoaDon> pageHD(Pageable pageable);
 
