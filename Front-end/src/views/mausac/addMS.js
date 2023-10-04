@@ -52,7 +52,7 @@ function AddMauSac() {
                   Mã Màu:{' '}
                 </span>
                 <br></br>
-                <InputColor initialValue={values.ma} onChange={ handleColorChange} placement="right" />
+                <InputColor initialValue={values.ma} onChange={handleColorChange} placement="right" />
                 <div
                   style={{
                     width: 300,

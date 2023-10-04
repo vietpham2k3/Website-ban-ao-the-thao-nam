@@ -73,6 +73,17 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.getAllSPNEW());
     }
 
+
+    @GetMapping("getAllBestseller")
+    public ResponseEntity<?> getAllBestseller() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllBestseller());
+    }
+
+    @GetMapping("getAllProduct")
+    public ResponseEntity<?> getAllProduct() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllProduct());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
         Anh image = anhService.viewById(id);
@@ -119,16 +130,6 @@ public class ChiTietSanPhamController {
 
         chiTietSanPham.setSanPham(sanPham);
         return ResponseEntity.ok(chiTietSanPhamService.add(chiTietSanPham));
-    }
-
-    @GetMapping("getAllBestseller")
-    public ResponseEntity<?> getAllBestseller() {
-        return ResponseEntity.ok(chiTietSanPhamService.getAllBestseller());
-    }
-
-    @GetMapping("getAllProduct")
-    public ResponseEntity<?> getAllProduct() {
-        return ResponseEntity.ok(chiTietSanPhamService.getAllProduct());
     }
 
     @PostMapping("/upload")
