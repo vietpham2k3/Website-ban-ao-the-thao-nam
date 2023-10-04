@@ -19,8 +19,8 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Autowired public HoaDonRespository res;
 
     @Override
-    public List<HoaDon> listHD() {
-        return res.getAllHD();
+    public List<HoaDon> listHD(UUID id) {
+        return res.getAllHDLSTT(id);
     }
 
     @Override
@@ -38,11 +38,6 @@ public class HoaDonServiceImpl implements HoaDonService {
                                         Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                         Double maxTT, Pageable pageable) {
         return res.findVIP(key,tuNgay,denNgay,trangThai,loaiDon,minSL,maxSL,minTT,maxTT,pageable);
-    }
-
-    @Override
-    public List<HoaDon> getExcel() {
-        return res.findAll();
     }
 
     @Override

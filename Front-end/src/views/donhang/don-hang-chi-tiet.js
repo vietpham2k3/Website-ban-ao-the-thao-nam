@@ -152,15 +152,14 @@ function DonHangCT() {
     setValues(hoaDon);
   }, [hoaDon]);
 
-  // getListLSHDbyIDHD
   const detail = async (id) => {
     const res = await detailHD(id);
     if (res && res.data) {
       setHoaDon(res.data);
-      console.log(res);
     }
   };
 
+  // getListLSHDbyIDHD
   const detailListLSHD = async (id) => {
     const res = await detailLSHD(id);
     if (res && res.data) {
@@ -526,6 +525,7 @@ function DonHangCT() {
             </div>
             <hr />
 
+            {/* //time line  */}
             <Row>
               <Col>
                 <div className="wrap">
@@ -1606,6 +1606,107 @@ function DonHangCT() {
                 <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
                   <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
                     <h3 className="col-6" style={{ fontWeight: 'bold', color: 'black' }}>
+                      Lịch Sử Thanh Toán
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            {/* noi dung */}
+            <section className="navbar-expand-lg navbar-light bg-light">
+                          <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            <Table id="myTable" className="table" style={{ textAlign: 'center' }}>
+                              <thead>
+                                <tr style={{ textAlign: 'center' }}>
+                                  <th>Số Tiền</th>
+                                  <th>Trạng Thái</th>
+                                  <th>Thời gian</th>
+                                  <th>Phương thức</th>
+                                  <th>Người xác nhận</th>
+                                  <th>Ghi chú</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {hoaDon && (
+                                  <tr>
+                                    <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.tien ? convertToCurrency(hoaDon.hinhThucThanhToan.tien) : ''}</td>
+                                    <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
+                                      {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 0 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                                        >
+                                          Đang chờ thanh toán
+                                        </span>
+                                      )}
+                                      {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 1 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                                        >
+                                          Đã thanh toán
+                                        </span>
+                                      )}
+                                      {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 2 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn btn-danger status-completed"
+                                        >
+                                          Thanh toán thất bại
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ngaySua ? formatDate(hoaDon.hinhThucThanhToan.ngaySua) : ''}</td>
+                                    <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : '' }</td>
+                                    {/* <td>{item.hoaDon.nhanVien.ten}</td> */}
+                                    <td>Phạm Quốc Việt</td>
+                                    <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ghiChu ? hoaDon.hinhThucThanhToan.ghiChu : ''}</td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </Table>
+                          </div>
+                        </section>
+
+          </div>
+        </Card>
+        <br></br>
+        <br></br>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+            <div className="row">
+              <div className="col-12">
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
+                  <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
+                    <h3 className="col-6" style={{ fontWeight: 'bold', color: 'crimson' }}>
                       Cập Nhật Sản Phẩm
                     </h3>
                   </div>
@@ -1614,6 +1715,8 @@ function DonHangCT() {
             </div>
             <hr />
             {/* noi dung */}
+
+
           </div>
         </Card>
       </MainCard>

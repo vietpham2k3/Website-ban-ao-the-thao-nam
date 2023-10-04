@@ -11,7 +11,7 @@ import java.util.*;
 
 public interface HoaDonService {
 
-    List<HoaDon> listHD();
+    List<HoaDon> listHD(UUID id);
 
     Page<HoaDon> pageHD(Pageable pageable);
 
@@ -20,9 +20,6 @@ public interface HoaDonService {
     public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer trangThai,
                                         Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                         Double maxTT, Pageable pageable);
-
-    public List<HoaDon> getExcel();
-
 
     HoaDon detailHD(UUID id);
 
