@@ -40,6 +40,16 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> getAllBestseller() {
+        return repository.getAllBestseller();
+    }
+
+    @Override
+    public List<ChiTietSanPham> getAllProduct() {
+        return repository.getAllProduct();
+    }
+
+    @Override
     public Page<ChiTietSanPham> search(String key, Integer trangThai, Double min, Double max, Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
         return repository.search(key, trangThai,min, max, pageable);

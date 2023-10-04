@@ -121,6 +121,16 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.add(chiTietSanPham));
     }
 
+    @GetMapping("getAllBestseller")
+    public ResponseEntity<?> getAllBestseller() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllBestseller());
+    }
+
+    @GetMapping("getAllProduct")
+    public ResponseEntity<?> getAllProduct() {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllProduct());
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImages(
             @RequestParam("files") MultipartFile[] files,

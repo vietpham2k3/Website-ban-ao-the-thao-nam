@@ -1,0 +1,92 @@
+.product-count {
+  display: flex;
+}
+.product-count .qtyminus,
+.product-count .qtyplus {
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 30px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.product-count .qtyminus {
+  font-size: 30px;
+  border-radius: 3px 0 0 3px;
+}
+.product-count .qtyplus {
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+}
+.product-count .qty {
+  text-align: center;
+  width: 50px;
+  border: 1px solid #ccc;
+}
+.textInput {
+  text-align: center;
+  padding-left: 12px;
+}
+
+.add-to-cart2,
+.like {
+  background: #ff9f1a;
+  padding: 1.2em 1.5em;
+  border: none;
+  text-transform: UPPERCASE;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 15px;
+}
+.add-to-cart2:hover,
+.like:hover {
+  background: #b36800;
+  color: #fff;
+}
+
+.add-to-cart1,
+.like {
+  background: #b61717;
+  padding: 1.2em 1.5em;
+  border: none;
+  text-transform: UPPERCASE;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 15px;
+  margin-left: 20px;
+}
+.add-to-cart1:hover,
+.like:hover {
+  background: #802525;
+  color: #fff;
+}
+.action {
+  padding-top: 30px;
+}
+.size {
+  display: inline-block;
+  border: 1px solid grey;
+  padding: 10px 13px;
+  font-weight: 700;
+  margin-left: 10px;
+  color: black;
+  font-size: 15px;
+  cursor: pointer;
+}
+.trangChu {
+  text-decoration: none;
+  padding-right: 10px;
+}
+.sanPham {
+  text-decoration: none;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.trangChu:hover {
+  color: #f06be9;
+  font-weight: 600;
+}
+.sanPham:hover {
+  color: #f06be9;
+  font-weight: 600;
+}

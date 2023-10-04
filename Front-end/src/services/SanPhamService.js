@@ -5,8 +5,16 @@ const getAll = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllCTSP?sort=ngay_tao,desc');
 };
 
+const getAllBestseller = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllBestseller');
+};
+
 const getAllSPNEW = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
+};
+
+const getAllProduct = () => {
+  return axios.get('/api/chi-tiet-san-pham/getAllProduct');
 };
 
 const getAllCTSP = (page) => {
@@ -95,5 +103,7 @@ export {
   getAllListMS,
   getAllListLSP,
   getAllListNSX,
-  getAllSPNEW
+  getAllSPNEW,
+  getAllBestseller,
+  getAllProduct
 };
