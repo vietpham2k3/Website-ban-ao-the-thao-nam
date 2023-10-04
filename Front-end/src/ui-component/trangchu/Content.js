@@ -86,7 +86,7 @@ function Content() {
                 <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={i}>
                   <Card style={{ width: '260px', height: '400px' }}>
                     <Card.Img
-style={{ textAlign: 'center', width: '250px', height: '300px' }}
+                      style={{ textAlign: 'center', width: '250px', height: '300px' }}
                       src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
                     />
                     <Card.Body>

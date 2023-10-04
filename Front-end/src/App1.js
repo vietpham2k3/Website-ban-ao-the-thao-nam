@@ -1,23 +1,23 @@
-import { Route, Routes } from 'react-router';
+// import { Route, Router, Routes } from 'react-router';
 
-import Cart from 'views/giohang/gio-hang';
+// import Cart from 'views/giohang/gio-hang';
 
-import DetailSanPham from 'views/sanpham/DetailSanPham';
+// import DetailSanPham from 'views/sanpham/DetailSanPham';
 
-import TrangChu from 'views/home/TrangChu';
-import SanPham from 'views/sanpham/SanPham';
+// import TrangChu from 'views/home/TrangChu';
+// import SanPham from 'views/sanpham/SanPham';
 
-const App1 = () => {
-  return (
-    <Routes>
-      <Route path="/trang-chu" element={<TrangChu />}></Route>
+// const App1 = () => {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/trang-chu" element={<TrangChu />}></Route>
+//         <Route path="/cart" element={<Cart />}></Route>
+//         <Route path="/san-pham/web" element={<SanPham />}></Route>
+//         <Route path="/detail/:id" element={<DetailSanPham />}></Route>
+//       </Routes>
+//     </Router>
+//   );
+// };
 
-      <Route path="/cart" element={<Cart />}></Route>
-
-      <Route path="/san-pham/web" element={<SanPham />}></Route>
-      <Route path="/detail/:id" element={<DetailSanPham />}></Route>
-    </Routes>
-  );
-};
-
-export default App1;
+// export default App1;
