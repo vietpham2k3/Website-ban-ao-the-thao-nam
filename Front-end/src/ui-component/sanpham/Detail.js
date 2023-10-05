@@ -1,30 +1,52 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
+import InputSpinner from 'react-bootstrap-input-spinner';
 
 function Detail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
+  const thumbnailContainerRef = useRef(null);
+  const [quantity, setQuantity] = useState(1);
 
   const handleClick = (id) => {
     setVal(id);
   };
 
   const handleNext = () => {
-    let index = val < imageList.length ? val + 1 : 0;
-    setVal(index);
+    let nextVal = val + 1;
+    if (nextVal >= imageList.length + 1) {
+      nextVal = 0;
+    }
+    setVal(nextVal);
+    const thumbnailContainer = thumbnailContainerRef.current;
+    const thumbnailWidth = thumbnailContainer.offsetWidth / imageList.length;
+    const scrollLeft = thumbnailWidth * nextVal;
+    thumbnailContainer.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth'
+    });
   };
 
   const handlePrevious = () => {
-    let index = val > 0 ? val - 1 : imageList.length;
-    setVal(index);
+    let prevVal = val - 1;
+    if (prevVal < 0) {
+      prevVal = imageList.length;
+    }
+    setVal(prevVal);
+    const thumbnailContainer = thumbnailContainerRef.current;
+    const thumbnailWidth = thumbnailContainer.offsetWidth / imageList.length;
+    const scrollLeft = thumbnailWidth * prevVal;
+    thumbnailContainer.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth'
+    });
   };
 
   useEffect(() => {
@@ -47,20 +69,6 @@ function Detail() {
     if (res && res.data) {
       setImageList(res.data);
       setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
-    }
-  };
-
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
     }
   };
 
@@ -114,7 +122,7 @@ function Detail() {
             >
               <div className="actionImage">
                 <button className="btns" onClick={handlePrevious}>
-                  P
+                  <i className="fa-solid fa-angle-left"></i>
                 </button>
                 <Image
                   src={
@@ -126,12 +134,12 @@ function Detail() {
                   width="300"
                 />
                 <button className="btns" onClick={handleNext}>
-                  N
+                  <i className="fa-solid fa-angle-right"></i>
                 </button>
               </div>
-              <div className="flex_row">
+              <div className="flex_row  d-flex align-items-center justify-content-center" ref={thumbnailContainerRef}>
                 {imageList.map((image, index) => (
-                  <div className="thumbnail" key={image.id}>
+                  <div className="thumbnailAnh" key={image.id}>
                     <Image
                       className={val === index + 1 ? 'clicked' : ''}
                       src={`data:image/jpeg;base64,${image.tenBase64}`}
@@ -191,13 +199,18 @@ function Detail() {
                 >
                   Số lượng:{' '}
                 </p>
-                <button type="button" className="qtyminus" onClick={handleDecreaseQuantity}>
-                  -
-                </button>
-                <input type="number" className="qty textInput" value={quantity} min="1" onChange={handleQuantityChange} />
-                <button type="button" className="qtyplus" onClick={handleIncreaseQuantity}>
-                  +
-                </button>
+                <div className="inputSpinner" style={{ width: 110 }}>
+                  <InputSpinner
+                    min={1}
+                    className="input-spinner"
+                    step={1}
+                    variant={'dark'}
+                    type="real"
+                    size="md"
+                    value={quantity}
+                    onChange={(value) => setQuantity(value)}
+                  />
+                </div>
               </div>
               <div className="action">
                 <button className="add-to-cart2 btn btn-default" type="button">
