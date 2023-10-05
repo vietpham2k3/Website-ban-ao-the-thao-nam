@@ -4,15 +4,33 @@ import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../../scss/TimeLine.scss';
+import '../../scss/TableMSKC.scss';
+import '../../scss/SearchResult.scss';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
+import { detailCTSP, getAllByIdSP } from 'services/SanPhamService';
 import Modal from 'react-bootstrap/Modal';
-import { detailHD, detailLSHD, updateKHDH, xacNhanDH, huyDonHang, xacNhanGiao, xacNhanThanhToan } from 'services/ServiceDonHang';
+import {
+  detailHD,
+  detailLSHD,
+  updateKHDH,
+  xacNhanDH,
+  huyDonHang,
+  xacNhanGiao,
+  xacNhanThanhToan,
+  getById,
+  deleteHDCT,
+  updateSL,
+  getAllSP,
+  searchCTSPofDH,
+  addSP
+} from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
 import * as yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/ErrorMessage.scss';
+import InputSpinner from 'react-bootstrap-input-spinner';
 
 const schema = yup.object().shape({
   tenNguoiNhan: yup
@@ -31,6 +49,194 @@ function DonHangCT() {
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
 
+  //sp
+  const [valuesSanPham, setValuesSanPham] = useState([]);
+  const [inputDetail, setInputDetail] = useState(null);
+  const [dataSP, setDataSP] = useState([]);
+  const [mauSacKC, setMauSacKC] = useState([]);
+  const [dataDetail, setDataDetail] = useState({});
+  const [idHDCT, setIdHDCT] = useState('');
+  const [idSP, setidSP] = useState('');
+  const [idCTSP, setidCTSP] = useState('');
+  const [valuesUpdate, setValuesUpdate] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    hoaDon: {
+      id: id
+    },
+    soLuong: ''
+  });
+
+  const [valuesAdd, setValuesAdd] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    hoaDon: {
+      id: id
+    },
+    soLuong: ''
+  });
+
+  useEffect(() => {
+    getAll(0);
+  }, []);
+
+  const getAll = async () => {
+    const res = await getAllSP();
+    if (res && res.data) {
+      setDataSP(res.data);
+    }
+  };
+
+  //searchSPinDH
+  const [term, setTerm] = useState('');
+
+  const searchSPofDH = async (term) => {
+    const res = await searchCTSPofDH(term);
+    if (res) {
+      setDataSP(res.data);
+    }
+  };
+
+  const handleSearchSPofDH = _.debounce(async () => {
+    if (term) {
+      searchSPofDH(term);
+    }
+  }, 100);
+
+  useEffect(() => {
+    handleSearchSPofDH();
+  }, [term]);
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
+  };
+
+  const deleteHD = async (idHDCT) => {
+    const res = await deleteHDCT(idHDCT);
+    if (res) {
+      getAllById(id);
+    }
+  };
+
+  const handleDelete = (id) => {
+    deleteHD(id);
+  };
+
+  useEffect(() => {
+    getAllById(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const getAllById = async (idHD) => {
+    const res = await getById(idHD);
+    if (res) {
+      setValuesSanPham(res.data);
+    }
+  };
+
+  const handleUpdateSl = (id, idHD, idCTSP, soLuong) => {
+    setIdHDCT(id);
+    setValuesUpdate({
+      ...valuesUpdate,
+      chiTietSanPham: {
+        id: idCTSP
+      },
+      hoaDon: {
+        id: idHD
+      },
+      soLuong: soLuong
+    });
+  };
+
+  useEffect(() => {
+    update(idHDCT, valuesUpdate);
+  }, [valuesUpdate]);
+
+  const update = async (idHDCT, values) => {
+    const res = await updateSL(idHDCT, values);
+    if (res) {
+      getAllById(id);
+    }
+  };
+
+  // kcmssp
+  const handleAddSoLuong = (id, idSP) => {
+    setShow7(true);
+    setidSP(idSP);
+    setidCTSP(id);
+    setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
+  };
+
+  const handleAdd = () => {
+    // getAllById(id);
+    if (parseInt(valuesAdd.soLuong) > parseInt(dataDetail.soLuong)) {
+      toast.error('Đã vượt quá số lượng hiện có !');
+      return;
+    }
+    add(valuesAdd);
+    getAllById(id);
+  };
+
+  const add = async (value) => {
+    const res = await addSP(value);
+    if (res) {
+      toast.success('Thêm sản phẩm thành công');
+      getAllById(id);
+      handleCloseSPofDH();
+    }
+  };
+
+  const handleCloseSPofDH = () => {
+    setShow7(false);
+    // chuachac dong
+    setShow6(false);
+    //
+    setInputDetail(null);
+    inputDetail(null);
+    getAllById(id);
+    setValuesAdd({
+      chiTietSanPham: {
+        id: ''
+      },
+      hoaDon: {
+        id: id
+      },
+      soLuong: ''
+    });
+  };
+
+  const handleDetail = (id) => {
+    setInputDetail(id);
+    setidCTSP(id);
+    setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
+  };
+
+  console.log(valuesAdd);
+
+  useEffect(() => {
+    getAllMSKC(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    detail2(idCTSP);
+  }, [idCTSP]);
+
+  const detail2 = async (idCTSP) => {
+    const res = await detailCTSP(idCTSP);
+    if (res) {
+      setDataDetail(res.data);
+    }
+  };
+
+  const getAllMSKC = async (id) => {
+    let res = await getAllByIdSP(id);
+    if (res) {
+      setMauSacKC(res.data);
+    }
+  };
+
   // modal
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
@@ -38,6 +244,8 @@ function DonHangCT() {
   const [show3, setShow3] = useState(false);
   const [show4, setShow4] = useState(false);
   const [show5, setShow5] = useState(false);
+  const [show6, setShow6] = useState(false);
+  const [show7, setShow7] = useState(false);
 
   // const handleClose = () => {
   //   setShow(false);
@@ -58,6 +266,12 @@ function DonHangCT() {
 
   const handleClose5 = () => setShow5(false);
   const handleShow5 = () => setShow5(true);
+
+  const handleClose6 = () => setShow6(false);
+  const handleShow6 = () => setShow6(true);
+
+  const handleClose7 = () => setShow7(false);
+  // const handleShow7 = () => setShow7(true);
 
   const [lshd, setLshd] = useState({
     ghiChu: ''
@@ -1705,11 +1919,223 @@ function DonHangCT() {
                       Cập Nhật Sản Phẩm
                     </h3>
                   </div>
+
+                  <div className="col-5">
+                    <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
+                      {hoaDon.trangThai === 0 && (
+                        <button
+                          className="button-85"
+                          onClick={handleShow6}
+                          style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
+                          data-toggle="tooltip"
+                          title="Thêm sản phẩm"
+                          // className="shadow-button"
+                          type="submit"
+                        >
+                          <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
+                            Thêm sản phẩm
+                          </span>
+                        </button>
+                      )}
+
+                      <Modal
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        style={{ marginLeft: 150 }}
+                        show={show6}
+                        onHide={handleClose6}
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 300 }}>
+                            Thêm Sản Phẩm
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="box col-auto col-4">
+                            <div style={{ marginTop: 10 }} className="search">
+                              <input
+                                style={{ borderRadius: 15, width: 800, height: 35 }}
+                                type="text"
+                                className="input-search results-list"
+                                placeholder="Nhập mã hoặc tên sản phẩm cần tìm..."
+                                value={term}
+                                onChange={handleInputChange}
+                              />
+                            </div>
+                          </div>
+                          <section className="navbar-expand-lg navbar-light bg-light">
+                            <div>
+                              <div className="results-list">
+                                <Table hover>
+                                  <tbody>
+                                    {dataSP.length > 0 ? (
+                                      dataSP.map((d, i) => (
+                                        <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
+                                          <td>
+                                            <img
+                                              src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                                              className="product-image"
+                                              style={{ width: '70px', height: '100px' }}
+                                              alt='"none"'
+                                            />
+                                          </td>
+                                          <td>{d.sanPham.ma}</td>
+                                          <td>{d.sanPham.ten}</td>
+                                          <td>{d.soLuong || 0}</td>
+                                          <td>{convertToCurrency(d.giaBan)}</td>
+                                        </tr>
+                                      ))
+                                    ) : (
+                                      <tr>
+                                        <td colSpan={5}>Không có dữ liệu</td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </Table>
+
+                                <Modal
+                                  show={show7}
+                                  onHide={handleClose7}
+                                  style={{ marginLeft: 150 }}
+                                  backdrop="static"
+                                  keyboard={false}
+                                  size="md"
+                                  aria-labelledby="contained-modal-title-vcenter"
+                                  centered
+                                >
+                                  <Modal.Header closeButton>
+                                    <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
+                                  </Modal.Header>
+                                  <Modal.Body>
+                                    <div className="body-add-new">
+                                      <div className="mb-3">
+                                        <label htmlFor="exampleFormControlInput1" className="form-label">
+                                          Thuộc tính
+                                        </label>
+                                        {mauSacKC.map((d, i) => (
+                                          <div className="form-check" key={i}>
+                                            <input
+                                              className="form-check-input"
+                                              type="radio"
+                                              name="flexRadioDefault"
+                                              id={d.id}
+                                              value={d.id}
+                                              checked={d.id === dataDetail.id}
+                                              onChange={() => handleDetail(d.id)}
+                                            />
+                                            <label className="form-check-label custom-label" htmlFor={d.id}>
+                                              <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                              &nbsp;- {d.kichCo.ten}
+                                            </label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="mb-3">
+                                        <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                                          Số lượng:{' '}
+                                          <small>
+                                            Còn lại <strong>{dataDetail.soLuong}</strong>
+                                          </small>
+                                        </label>
+                                        <input
+                                          className="form-control"
+                                          id="exampleFormControlTextarea1"
+                                          type="number"
+                                          onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+                                        ></input>
+                                      </div>
+                                    </div>
+                                  </Modal.Body>
+                                  <Modal.Footer>
+                                    <Button variant="primary" onClick={() => handleAdd()}>
+                                      Thêm
+                                    </Button>
+                                  </Modal.Footer>
+                                </Modal>
+                              </div>
+                            </div>
+                          </section>
+                        </Modal.Body>
+                      </Modal>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <hr />
             {/* noi dung */}
+            <div className="table-container">
+              <Table style={{ textAlign: 'center' }} hover className="my-4">
+                <tr className="ps-3">
+                  <th>#</th>
+                  <th>Mã</th>
+                  <th>Ảnh</th>
+                  <th>Sản phẩm</th>
+                  <th>Số lượng</th>
+                  <th>Đơn giá</th>
+                  <th>Tổng tiền</th>
+                </tr>
+                <tbody>
+                  {valuesSanPham.map((d, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{d.chiTietSanPham.sanPham.ma}</td>
+                      <td>
+                        <img
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                          className="product-image"
+                          style={{ width: '70px', height: '100px' }}
+                          alt="vai"
+                        />
+                      </td>
+                      <td>
+                        <div style={{ fontWeight: 'bold', fontSize: 16 }}> {d.chiTietSanPham.sanPham.ten} </div> <br />
+                        <div style={{ fontStyle: 'italic' }}> {d.chiTietSanPham.kichCo.ten} </div> <br />
+                        <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px', marginLeft: 80 }}>
+                          &nbsp;
+                        </div>
+                      </td>
+                      <td>
+                        <div
+                          className="input-spinner"
+                          style={{ alignItems: 'center', width: 120, justifyContent: 'center', marginLeft: 90, marginTop: 20 }}
+                        >
+                          {hoaDon.trangThai === 0 ? (
+                            <InputSpinner
+                              type={'real'}
+                              max={d.chiTietSanPham.soLuong + d.soLuong}
+                              min={0}
+                              key={d.id}
+                              step={1}
+                              value={d.soLuong}
+                              onChange={(e) => handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e)}
+                              variant={'dark'}
+                              size="sm"
+                            />
+                          ) : (
+                            <span style={{fontWeight: 'bold',fontSize: 16, justifyContent: 'center',marginLeft: 20}}>{d.soLuong}</span>
+                          )}
+                        </div>
+                        {d.chiTietSanPham.soLuong < 10 && hoaDon.trangThai === 0  ? (
+                          <span style={{ color: 'red' }}>
+                            Số sản phẩm còn lại: <strong>{d.chiTietSanPham.soLuong}</strong>
+                          </span>
+                        ) : (
+                          ''
+                        )}
+
+                      </td>
+                      <td>{convertToCurrency(d.donGia)}</td>
+                      <td>{convertToCurrency(d.soLuong * d.donGia)}</td>
+                      <td>
+                        {hoaDon.trangThai === 0 && <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
           </div>
         </Card>
       </MainCard>

@@ -47,6 +47,25 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "order by c.ngay_tao desc", nativeQuery = true)
     Page<ChiTietSanPham> getAll(Pageable pageable);
 
+
+    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id,\n" +
+            "SUM(ChiTietSanPham.so_luong) AS so_luong\n" +
+            "FROM ChiTietSanPham\n" +
+            "JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
+            "where ChiTietSanPham.trang_thai = 1\n" +
+            "GROUP BY ChiTietSanPham.id_sp\n" +
+            ") AS T\n" +
+            "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp\n" +
+            "order by c.ngay_tao desc", nativeQuery = true)
+    List<ChiTietSanPham> getAllSP();
+
+
+
     @Transactional
     @Modifying
     @Query(value = "update ChiTietSanPham c set c.soLuong = :soLuong where c.id = :id")
@@ -108,6 +127,54 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             @Param("max") Double max,
             Pageable pageable
     );
+
+    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
+            "c.id_ca, c.ma, T.so_luong, " +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+            "FROM ChiTietSanPham C " +
+            "JOIN ( " +
+            "SELECT id_sp, SUM(so_luong) AS so_luong " +
+            "FROM ChiTietSanPham " +
+            "WHERE ChiTietSanPham.trang_thai = 1 " +
+            "GROUP BY id_sp " +
+            ") AS T " +
+            "ON C.id_sp = T.id_sp " +
+            "JOIN ( " +
+            "SELECT id_sp, MIN(id) AS min_id " +
+            "FROM ChiTietSanPham " +
+            "GROUP BY id_sp " +
+            ") AS MinIDs " +
+            "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
+            "JOIN SanPham S ON S.id = C.id_sp " +
+            "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+            "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
+            "c.id_ca, c.ma, T.so_luong, " +
+            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+            "ORDER BY c.ngay_tao DESC",
+            countQuery = "SELECT COUNT(*) " +
+                    "FROM ChiTietSanPham C " +
+                    "JOIN ( " +
+                    "SELECT id_sp, SUM(so_luong) AS so_luong " +
+                    "FROM ChiTietSanPham " +
+                    "WHERE ChiTietSanPham.trang_thai = 1 " +
+                    "GROUP BY id_sp " +
+                    ") AS T " +
+                    "ON C.id_sp = T.id_sp " +
+                    "JOIN ( " +
+                    "SELECT id_sp, MIN(id) AS min_id " +
+                    "FROM ChiTietSanPham " +
+                    "GROUP BY id_sp " +
+                    ") AS MinIDs " +
+                    "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
+                    "JOIN SanPham S ON S.id = C.id_sp " +
+                    "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+                    "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
+                    "c.id_ca, c.ma, T.so_luong, " +
+                    "c.gia_ban,c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+                    "ORDER BY c.ngay_tao DESC",
+            nativeQuery = true)
+    List<ChiTietSanPham> searchSPofHDCT(
+            @Param("key") String key);
 
     @Query(value = "SELECT ctsp.*, SUM(hdct.so_luong) FROM ChiTietSanPham ctsp\n" +
             "JOIN HoaDonChiTiet hdct ON hdct.id_ctsp = ctsp.id\n" +

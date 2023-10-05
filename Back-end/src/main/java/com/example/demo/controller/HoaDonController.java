@@ -50,6 +50,16 @@ public class HoaDonController {
         return ResponseEntity.ok(service.listHD());
     }
 
+    @GetMapping("hien-thi-san-pham")
+    public ResponseEntity<?> getAllSP() {
+        return ResponseEntity.ok(service.getAllSP());
+    }
+
+    @GetMapping("/searchSP")
+    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key) {
+        return ResponseEntity.ok(service.searchSPofHDCT(key));
+    }
+
     @GetMapping("getById/{id}")
     public ResponseEntity<?> getAllById(@PathVariable UUID id) {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));

@@ -13,6 +13,14 @@ const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
 
+const getAllSP = () => {
+  return axios.get('/api/hoa-don/hien-thi-san-pham');
+};
+
+const searchCTSPofDH = (key) => {
+  return axios.get(`/api/hoa-don/searchSP?key=${key}`);
+};
+
 const detailHD = (id) => {
   return axios.get(`/api/hoa-don/detail/` + id);
 };
@@ -85,5 +93,7 @@ export {
   getALLTT,
   updateSL,
   deleteHDCT,
-  xacNhanDH
+  xacNhanDH,
+  getAllSP,
+  searchCTSPofDH
 };
