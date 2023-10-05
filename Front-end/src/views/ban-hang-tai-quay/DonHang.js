@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
@@ -8,19 +10,29 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById, updateSL, deleteHDCT } from 'services/ServiceDonHang';
+import { getById, updateSL, deleteHDCT, updateHD } from 'services/ServiceDonHang';
 // import { toast } from 'react-toastify';
 import InputSpinner from 'react-bootstrap-input-spinner';
+import TableKM from './TableKM';
+import { getAllKM } from 'services/ServiceKhuyenMai';
+// import { toast } from 'react-toastify';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id } = props;
   const [inputValue, setInputValue] = useState('');
+  const [show, setShow] = useState(false);
   const [inputKH, setInputKH] = useState('');
   const [idHDCT, setIdHDCT] = useState('');
   const [values, setValues] = useState([]);
+  const [dataKM, setDataKM] = useState([]);
   const [valuesSanPham, setValuesSanPham] = useState([]);
-  // const [debouncedUpdate, setDebouncedUpdate] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [tongSoLuong, setTongSoLuong] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [valuesUpdateHD, setValuesUpdateHD] = useState({
+    tongTien: ''
+  });
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
       id: ''
@@ -32,6 +44,24 @@ function DonHang(props) {
   });
 
   useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    let count = 0;
+    valuesSanPham.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+      count += d.soLuong;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+    setTongSoLuong(count);
+  }, [valuesSanPham]);
+
+  useEffect(() => {
+    setValuesUpdateHD({ ...valuesUpdateHD, tongTien: totalAmount });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalAmount]);
+
+  useEffect(() => {
     handleSearchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
@@ -41,10 +71,37 @@ function DonHang(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  useEffect(() => {
+    update(idHDCT, valuesUpdate);
+  }, [valuesUpdate]);
+
+  useEffect(() => {
+    handleUpdateHD();
+  }, [valuesUpdateHD]);
+
+  useEffect(() => {
+    getKM();
+  }, []);
+
+  const handleUpdateHD = () => {
+    updateTTHD(id, valuesUpdateHD);
+  };
+
+  const updateTTHD = async (idHD, value) => {
+    await updateHD(idHD, value);
+  };
+
   const getAllById = async (idHD) => {
     const res = await getById(idHD);
     if (res) {
       setValuesSanPham(res.data);
+    }
+  };
+
+  const getKM = async () => {
+    const res = await getAllKM();
+    if (res) {
+      setDataKM(res.data);
     }
   };
 
@@ -61,10 +118,6 @@ function DonHang(props) {
       soLuong: soLuong
     });
   };
-
-  useEffect(() => {
-    update(idHDCT, valuesUpdate);
-  }, [valuesUpdate]);
 
   const update = async (idHDCT, values) => {
     const res = await updateSL(idHDCT, values);
@@ -106,6 +159,34 @@ function DonHang(props) {
     deleteHD(id);
   };
 
+  const handleAddKM = () => {
+    setShow(false);
+    setActiveIndex(null);
+  };
+
+  const handleDivClick = (index) => {
+    setActiveIndex(index);
+  };
+
+  function formatDate(dateString) {
+    if (dateString === null) {
+      return ''; // Trả về chuỗi rỗng nếu giá trị là null
+    }
+
+    const dateObject = new Date(dateString);
+
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1;
+    const year = dateObject.getFullYear();
+
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+    return formattedDate;
+  }
+
   return (
     <div>
       <div className="row">
@@ -122,7 +203,14 @@ function DonHang(props) {
           </div>
           {values.length > 0 && (
             <div className="search-result">
-              <SearchResult result={values} id={id} getAllById={getAllById} handleSearchUsers={handleSearchUsers} />
+              <SearchResult
+                result={values}
+                id={id}
+                getAllById={getAllById}
+                handleSearchUsers={handleSearchUsers}
+                setInputValue={setInputValue}
+                setValuesSearch={setValues}
+              />
             </div>
           )}
           <div className="table-container">
@@ -160,7 +248,7 @@ function DonHang(props) {
                         <InputSpinner
                           type={'real'}
                           max={d.chiTietSanPham.soLuong + d.soLuong}
-                          min={0}
+                          min={1}
                           step={1}
                           value={d.soLuong}
                           onChange={(e) => handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e)}
@@ -192,15 +280,97 @@ function DonHang(props) {
             <i className="fa-solid fa-magnifying-glass"></i>
             <input
               type="text"
-              placeholder="Tìm kiếm sản phẩm..."
+              placeholder="Tìm kiếm khách hàng..."
               className="input-seach"
               value={inputKH}
               onChange={(e) => setInputKH(e.target.value)}
             />
             <button className="fa-solid fa-plus mx-3"></button>
           </div>
+          <br /> <br />
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Mã giảm giá</h6>
+            </div>
+            <div>
+              <p>
+                <input type="text" disabled={true} style={{ border: 'none', borderBottom: '1px solid gray' }} />{' '}
+                <button className="fa-solid fa-plus" onClick={() => setShow(true)}></button>
+              </p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Số lượng sản phẩm</h6>
+            </div>
+            <div>
+              <p>{tongSoLuong}</p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Tổng tiền</h6>
+            </div>
+            <div>
+              <p>{convertToCurrency(totalAmount)}</p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h5>Khách phải trả</h5>
+            </div>
+            <div>
+              <p style={{ fontSize: 'large', fontWeight: 'bold' }}>0</p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Tiền khách đưa</h6>
+            </div>
+            <div>
+              <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Tiền thừa</h6>
+            </div>
+            <div>
+              <p>0</p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            {dataKM.map((d, i) => (
+              <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
+                <h6 style={{ color: 'red', wordWrap: 'break-word' }}>
+                  Giảm {convertToCurrency(d.mucGiam)} cho đơn tối thiểu {convertToCurrency(d.tien)}
+                </h6>
+                <div className="text-voucher">
+                  <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
+                  <button type="button" className="btn btn-outline-primary">
+                    Áp dụng
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="button-thanh-toan">
+            <button type="button" className="btn btn-success">
+              Thanh toán
+            </button>
+          </div>
         </div>
       </div>
+      <TableKM
+        show={show}
+        handleClose={() => setShow(false)}
+        dataKM={dataKM}
+        convertToCurrency={convertToCurrency}
+        handleDivClick={handleDivClick}
+        activeIndex={activeIndex}
+        handleAddKM={handleAddKM}
+        formatDate={formatDate}
+      ></TableKM>
     </div>
   );
 }

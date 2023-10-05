@@ -1,0 +1,42 @@
+.card-voucher {
+  width: 100%;
+  border: 1px solid gray;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  padding-top: 12px;
+}
+
+.card-voucher.active {
+  background-color: yellow;
+}
+
+.ma-giam-gia {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.card-width {
+  padding-left: 10px;
+  flex: 0 0 auto;
+  width: 250px; /* Định nghĩa chiều rộng của mỗi div card-voucher */
+  margin-right: 10px; /* Khoảng cách giữa các div card-voucher */
+}
+
+.text-voucher {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.text-voucher .btn {
+  display: flex;
+  align-items: center;
+  width: 75px;
+  height: 30px;
+  font-size: small;
+  margin-bottom: 10px;
+}

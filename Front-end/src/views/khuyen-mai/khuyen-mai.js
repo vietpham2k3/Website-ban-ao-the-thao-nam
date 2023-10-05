@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import React from 'react';
-import { Card } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +42,15 @@ function KhuyenMai() {
       setTotalPages(res.data.totalPages);
     }
   };
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(number);
+  }
   //Xoas
   const del = async (id, values) => {
     const res = await deleteKM(id, values);
@@ -106,64 +114,63 @@ function KhuyenMai() {
 
   return (
     <MainCard>
-      <Card>
-        {/* //noi dung */}
-        <div className="search">
-          <input
-            style={{ borderRadius: 15, width: 300 }}
-            type="text"
-            className="input-search"
-            placeholder=" Nhập tên, mã màu cần tìm..."
-            onChange={handleSearchKM}
-          />
-        </div>
-        <div style={{ marginRight: 50 }}>
-          <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
-            Trạng Thái:
-          </span>
+      {/* //noi dung */}
+      <div className="search">
+        <input
+          style={{ borderRadius: 15, width: 300 }}
+          type="text"
+          className="input-search"
+          placeholder=" Nhập tên, mã màu cần tìm..."
+          onChange={handleSearchKM}
+        />
+      </div>
+      <div style={{ marginRight: 50 }}>
+        <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+          Trạng Thái:
+        </span>
 
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              checked={filterStatus === ''}
-              onChange={() => {
-                setFilterStatus('');
-                search('', '', 0);
-              }}
-            />
-            <span style={{ marginLeft: 10 }} className="form-check-label">
-              Tất Cả
-            </span>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              checked={filterStatus === 0}
-              onChange={() => {
-                setFilterStatus(0);
-                search('', 0, 0);
-              }}
-            />
-            <span className="form-check-label">Đang kích hoạt</span>
-          </div>
-          <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              checked={filterStatus === 1}
-              onChange={() => {
-                setFilterStatus(1);
-                search('', 1, 0);
-              }}
-            />
-            <span className="form-check-label">Ngừng kích hoạt</span>
-          </div>
-          {/* <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            checked={filterStatus === ''}
+            onChange={() => {
+              setFilterStatus('');
+              search('', '', 0);
+            }}
+          />
+          <span style={{ marginLeft: 10 }} className="form-check-label">
+            Tất Cả
+          </span>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            checked={filterStatus === 0}
+            onChange={() => {
+              setFilterStatus(0);
+              search('', 0, 0);
+            }}
+          />
+          <span className="form-check-label">Đang kích hoạt</span>
+        </div>
+        <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            checked={filterStatus === 1}
+            onChange={() => {
+              setFilterStatus(1);
+              search('', 1, 0);
+            }}
+          />
+          <span className="form-check-label">Ngừng kích hoạt</span>
+        </div>
+        {/* <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             <span className="form-check-label">Ngày bắt đầu</span>
           </div>
@@ -172,86 +179,84 @@ function KhuyenMai() {
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             <span className="form-check-label">Ngày kết thúc</span>
           </div> */}
-        </div>
+      </div>
 
-        <div className="d-flex justify-content-end">
-          {/* <Link to="/khuyen-mai/add" className="btn btn-primary">
+      <div className="d-flex justify-content-end">
+        {/* <Link to="/khuyen-mai/add" className="btn btn-primary">
             Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
           </Link> */}
-          <button onClick={() => navigate('/voucher/add')} className="btn btn-primary">
-            Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
-          </button>
-        </div>
+        <button onClick={() => navigate('/voucher/add')} className="btn btn-primary">
+          Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
+        </button>
+      </div>
 
-        <Table style={{ textAlign: 'center', marginTop: 50 }} className="table table-hover">
-          <tr>
-            <th>#</th>
-            <th>Mã</th>
-            <th>Tên</th>
-            <th>Mức giảm</th>
-            <th>Tối thiểu</th>
-            <th>Bắt đầu</th>
-            <th>Kết thúc</th>
-            <th>Mô tả</th>
-            <th>Trạng Thái</th>
-            <th>Action</th>
-          </tr>
-          <tbody>
-            {data.map((d, i) => (
-              <tr key={i}>
-                <td>{i + 1}</td>
-                <td>
-                  {' '}
-                  <span className="color-code">{d.ma}</span>
-                </td>
-                <td className="color-code">{d.ten}</td>
-                <td className="color-code">{d.mucGiam}</td>
-                <td className="color-code">{d.tien}</td>
-                <td>{formatDate(d.thoiGianBatDau)}</td>
-                <td>{formatDate(d.thoiGianKetThuc)}</td>
-                <td className="color-code">{d.moTa}</td>
-                <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
-                <td>
-                  {/* <Link className="mx-2" to={`/khuyen-mai/detail/${d.id}`}>
+      <Table style={{ textAlign: 'center', marginTop: 50 }} className="table table-hover">
+        <tr>
+          <th>#</th>
+          <th>Mã</th>
+          <th>Tên</th>
+          <th>Mức giảm</th>
+          <th>Tối thiểu</th>
+          <th>Bắt đầu</th>
+          <th>Kết thúc</th>
+          <th>Mô tả</th>
+          <th>Trạng Thái</th>
+          <th>Action</th>
+        </tr>
+        <tbody>
+          {data.map((d, i) => (
+            <tr key={i}>
+              <td>{i + 1}</td>
+              <td>
+                {' '}
+                <span className="color-code">{d.ma}</span>
+              </td>
+              <td className="color-code">{d.ten}</td>
+              <td className="color-code">{convertToCurrency(d.mucGiam)}</td>
+              <td className="color-code">{convertToCurrency(d.tien)}</td>
+              <td>{formatDate(d.thoiGianBatDau)}</td>
+              <td>{formatDate(d.thoiGianKetThuc)}</td>
+              <td className="color-code">{d.moTa}</td>
+              <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
+              <td>
+                {/* <Link className="mx-2" to={`/khuyen-mai/detail/${d.id}`}>
                     <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                   </Link> */}
-                  <button className="mx-2" onClick={() => navigate(`/voucher/detail/${d.id}`)}>
-                    <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
-                  </button>
-                  {/* <Link className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
+                <button className="mx-2" onClick={() => navigate(`/voucher/detail/${d.id}`)}>
+                  <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
+                </button>
+                {/* <Link className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
                     <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                   </Link> */}
-                  <button className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
-                    <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
-                  </button>
+                <button className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
+                  <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
+                </button>
 
-                  {/* <Link><i className="fa-solid fa-trash" 
+                {/* <Link><i className="fa-solid fa-trash" 
                     onClick={() => handleDelete(d.id)}></i></Link> */}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="Next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={totalPages}
-          previousLabel="< Previous"
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination justify-content-center"
-          activeClassName="active"
-        />
-        {/* //end  */}
-      </Card>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="Next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={totalPages}
+        previousLabel="< Previous"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination justify-content-center"
+        activeClassName="active"
+      />
     </MainCard>
   );
 }
