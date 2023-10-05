@@ -1916,7 +1916,7 @@ function DonHangCT() {
                 <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
                   <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
                     <h3 className="col-6" style={{ fontWeight: 'bold', color: 'crimson' }}>
-                      Cập Nhật Sản Phẩm
+                     Sản Phẩm
                     </h3>
                   </div>
 
@@ -2114,7 +2114,7 @@ function DonHangCT() {
                               size="sm"
                             />
                           ) : (
-                            <span style={{fontWeight: 'bold',fontSize: 16, justifyContent: 'center',marginLeft: 20}}>{d.soLuong}</span>
+                            <span style={{fontWeight: 'bold',fontSize: 16, justifyContent: 'center',marginLeft: 20,fontStyle: 'italic'}}>{d.soLuong}</span>
                           )}
                         </div>
                         {d.chiTietSanPham.soLuong < 10 && hoaDon.trangThai === 0  ? (
