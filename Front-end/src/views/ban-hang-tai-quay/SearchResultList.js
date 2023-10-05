@@ -11,7 +11,7 @@ import { addSP } from 'services/ServiceDonHang';
 import { toast } from 'react-toastify';
 
 function SearchResult(props) {
-  const { result, id, handleSearchUsers, getAllById } = props;
+  const { result, id, getAllById, setInputValue } = props;
   const [show, setShow] = useState(false);
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
@@ -57,10 +57,11 @@ function SearchResult(props) {
     const res = await addSP(value);
     try {
       if (res) {
-        handleSearchUsers();
+        // handleSearchUsers();
         getAllById(id);
         toast.success('Thêm sản phẩm thành công');
         handleClose();
+        setInputValue('');
       }
     } catch (error) {
       toast.error('Lỗi');
@@ -86,8 +87,6 @@ function SearchResult(props) {
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
-
-  console.log(valuesAdd);
 
   useEffect(() => {
     getAllMSKC(idSP);

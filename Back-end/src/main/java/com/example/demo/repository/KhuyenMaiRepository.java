@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -18,4 +19,7 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, UUID> {
             "      AND (:key IS NULL OR ten LIKE CONCAT('%', :key , '%'))\n" +
             "      AND (:trangThai IS NULL OR trang_thai = :trangThai)", nativeQuery = true)
     Page<KhuyenMai> search(@Param("key") String key, Integer trangThai, Pageable pageable);
+
+    @Query(value = "select k from KhuyenMai k where k.trangThai = 0")
+    List<KhuyenMai> getAll();
 }

@@ -84,6 +84,19 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
+    @PutMapping("update-hd/{id}")
+    public ResponseEntity<?> updateHD(@PathVariable UUID id ,@RequestBody HoaDon hoaDon) {
+        HoaDon hd = service.detailHD(id);
+        hoaDon.setId(id);
+        hoaDon.setNgayTao(hd.getNgayTao());
+        hoaDon.setNgaySua(new Date());
+        hoaDon.setMa(hd.getMa());
+        hoaDon.setLoaiDon(0);
+        hoaDon.setTrangThai(0);
+
+        return ResponseEntity.ok(service.add(hoaDon));
+    }
+
     @PostMapping("add-sp")
     public ResponseEntity<?> addSP(@RequestBody HoaDonChiTiet hoaDon) {
         List<HoaDonChiTiet> list = hoaDonChiTietService.findAll();

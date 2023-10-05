@@ -37,14 +37,7 @@ public class KhuyenMaiController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody KhuyenMai khuyenMai) {
-        khuyenMai.setMa(khuyenMai.getMa());
-        khuyenMai.setTen(khuyenMai.getTen());
-        khuyenMai.setMucGiam(khuyenMai.getMucGiam());
-        khuyenMai.setTien(khuyenMai.getTien());
-        khuyenMai.setMoTa(khuyenMai.getMoTa());
         khuyenMai.setNgayTao(new Date());
-        khuyenMai.setThoiGianBatDau(khuyenMai.getThoiGianBatDau());
-        khuyenMai.setThoiGianKetThuc(khuyenMai.getThoiGianKetThuc());
         return ResponseEntity.ok(service.add(khuyenMai));
     }
 
@@ -55,15 +48,9 @@ public class KhuyenMaiController {
 
     @PutMapping("update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody KhuyenMai khuyenMai) {
+        KhuyenMai km = service.detail(id);
         khuyenMai.setId(id);
-        khuyenMai.setMa(khuyenMai.getMa());
-        khuyenMai.setTen(khuyenMai.getTen());
-        khuyenMai.setMucGiam(khuyenMai.getMucGiam());
-        khuyenMai.setTien(khuyenMai.getTien());
-        khuyenMai.setMoTa(khuyenMai.getMoTa());
-        khuyenMai.setNgayTao(new Date());
-        khuyenMai.setThoiGianBatDau(khuyenMai.getThoiGianBatDau());
-        khuyenMai.setThoiGianKetThuc(khuyenMai.getThoiGianKetThuc());
+        khuyenMai.setNgayTao(km.getNgayTao());
         khuyenMai.setNgaySua(new Date());
         return ResponseEntity.ok(service.add(khuyenMai));
     }
