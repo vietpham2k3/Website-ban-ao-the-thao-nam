@@ -65,6 +65,11 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
     }
 
+    @GetMapping("getAllByIdCTSP/{id}")
+    public ResponseEntity<?> getAllByIdCTSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllByIdCTSP(id));
+    }
+
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) {
         String ma = "HD" + new Random().nextInt(100000);

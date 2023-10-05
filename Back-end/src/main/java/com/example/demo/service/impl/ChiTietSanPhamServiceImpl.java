@@ -29,6 +29,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> getAllByIdCTSP(UUID id) {
+        return repository.getAllByIdCTSP(id);
+    }
+
+    @Override
     public List<ChiTietSanPham> getAllSPNEW() {
         return repository.getAllSPNew();
     }

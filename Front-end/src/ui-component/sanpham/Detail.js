@@ -5,9 +5,12 @@ import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamServic
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
+import { getAllByIdSP } from '../../services/SanPhamService';
+import { Button, ButtonToolbar } from 'rsuite';
+import { toast } from 'react-toastify';
 
 function Detail() {
-  const { id } = useParams();
+  const { id, idSP } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
@@ -15,8 +18,8 @@ function Detail() {
   const thumbnailContainerRef = useRef(null);
   const [quantity, setQuantity] = useState(1);
 
-  const handleClick = (id) => {
-    setVal(id);
+  const handleClick = (idSP) => {
+    setVal(idSP);
   };
 
   const handleNext = () => {
@@ -53,6 +56,47 @@ function Detail() {
     getAllCTSP();
   }, []);
 
+  // ms kc
+  const [isActive, setIsActive] = useState(false);
+  const [idCTSP, setIdCTSP] = useState(true);
+
+  const handleClick2 = () => {
+    setIsActive(true);
+    setTimeout(() => {
+      setIsActive(false);
+    }, 200);
+  };
+
+  const [listMSKC, setListMSKC] = useState([]);
+
+  useEffect(() => {
+    getAllMSKC(idSP);
+    // console.log(idSP);
+  }, [idSP]);
+
+  const getAllMSKC = async (id) => {
+    try {
+      const res = await getAllByIdSP(id);
+      if (res && res.data) {
+        setListMSKC(res.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const handleChangeId = (id) => {
+    if (idCTSP === id) {
+      toast.warning('Bạn đang xem ảnh của sản phẩm này');
+    } else {
+      setIdCTSP(id);
+      getAllAnh(id);
+      setVal(0);
+      console.log(id);
+    }
+  };
+  ////////
+
   useEffect(() => {
     getAllAnh(id);
   }, [id]);
@@ -68,6 +112,7 @@ function Detail() {
     const res = await listAnh(id);
     if (res && res.data) {
       setImageList(res.data);
+      console.log(imageList);
       setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
     }
   };
@@ -126,8 +171,8 @@ function Detail() {
                 </button>
                 <Image
                   src={
-                    val === 0
-                      ? `http://localhost:8080/api/chi-tiet-san-pham/${product.id}`
+                    val === 0 && `data:image/jpeg;base64,${imageList[0].tenBase64}`
+                      ? `data:image/jpeg;base64,${imageList[0].tenBase64}`
                       : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
                   }
                   height="350"
@@ -141,9 +186,9 @@ function Detail() {
                 {imageList.map((image, index) => (
                   <div className="thumbnailAnh" key={image.id}>
                     <Image
-                      className={val === index + 1 ? 'clicked' : ''}
+                      className={index === 0 ? 'clicked' : ''}
                       src={`data:image/jpeg;base64,${image.tenBase64}`}
-                      onClick={() => handleClick(index + 1)}
+                      onClick={() => handleClick(index)}
                       height="100"
                       width="100"
                     />
@@ -155,38 +200,76 @@ function Detail() {
               <h3 className="product-title">{product.sanPham.ten}</h3>
               <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
               <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
-              <div style={{ display: 'flex' }}>
-                <p style={{ color: 'grey', fontSize: 17, fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif' }}>
-                  Màu sắc:
-                </p>
-                <p style={{ backgroundColor: product.mauSac.ten, color: product.mauSac.ten, width: 30, height: 20, marginLeft: 25 }}>.</p>
+              <br></br>
+              <div>
+                <div style={{ display: 'flex' }}>
+                  <p
+                    style={{
+                      color: 'grey',
+                      fontSize: 17,
+                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
+                      marginTop: 3
+                    }}
+                  >
+                    Màu sắc:
+                  </p>
+                  <ButtonToolbar>
+                    {listMSKC.map((d) => (
+                      <div style={{ marginLeft: 15, height: 30 }} key={d.id}>
+                        {d.mauSac ? (
+                          <Button
+                            className="custom-button"
+                            onClick={() => {
+                              handleChangeId(d.id);
+                            }}
+                            style={{ backgroundColor: d.mauSac.ten, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
+                            tabIndex={0}
+                          >
+                            &nbsp;
+                          </Button>
+                        ) : (
+                          <p>Chưa có màu sắc nào</p>
+                        )}
+                      </div>
+                    ))}
+                  </ButtonToolbar>
+                </div>
               </div>
-              <h5
-                style={{
-                  color: 'grey',
-                  fontSize: 17,
-                  paddingBottom: 10,
-                  fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'
-                }}
-                className="sizes"
-              >
-                Kích cỡ:
-                <span className="size" data-toggle="tooltip" title="small">
-                  S
-                </span>
-                <span className="size" data-toggle="tooltip" title="medium">
-                  M
-                </span>
-                <span className="size" data-toggle="tooltip" title="large">
-                  L
-                </span>
-                <span className="size" data-toggle="tooltip" title="xtra large">
-                  XL
-                </span>
-                <span className="size" data-toggle="tooltip" title="xtra large">
-                  XXL
-                </span>
-              </h5>
+              <br></br>
+              <div>
+                <div style={{ display: 'flex' }}>
+                  <p
+                    style={{
+                      color: 'grey',
+                      fontSize: 17,
+                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
+                      marginTop: 8
+                    }}
+                  >
+                    Kích cỡ:
+                  </p>
+                  <ButtonToolbar>
+                    {listMSKC.map((d) => (
+                      <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
+                        {d.mauSac ? (
+                          <Button
+                            className="custom-button"
+                            appearance="ghost"
+                            onClick={handleClick2}
+                            style={{ '--background-color': isActive ? 'black' : 'transparent' }}
+                          >
+                            {d.kichCo.ten}
+                          </Button>
+                        ) : (
+                          <p>Chưa có kích cỡ nào</p>
+                        )}
+                      </div>
+                    ))}
+                  </ButtonToolbar>
+                </div>
+              </div>
+              <br></br>
+
               <div className="product-count">
                 <p
                   style={{

@@ -30,6 +30,9 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
+    @Query(value = "SELECT DISTINCT sp.kichCo.ten ,sp from ChiTietSanPham sp where sp.id = :id")
+    List<ChiTietSanPham> getAllByIdCTSP(UUID id);
+
 
     @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
             "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
@@ -178,7 +181,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
 
     @Query(value = "SELECT ctsp.*, SUM(hdct.so_luong) FROM ChiTietSanPham ctsp\n" +
             "JOIN HoaDonChiTiet hdct ON hdct.id_ctsp = ctsp.id\n" +
-            "WHERE ctsp.trang_thai = 1\n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "WHERE sp.trang_thai = 1\n" +
             "GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc, ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp\n" +
             ",ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai\n" +
             "ORDER BY SUM(hdct.so_luong) DESC", nativeQuery = true)
@@ -187,7 +191,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT ctsp.*\n" +
             "FROM ChiTietSanPham ctsp\n" +
             "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
-            "WHERE ctsp.trang_thai = 1\n" +
+            "WHERE sp.trang_thai = 1\n" +
             "ORDER BY sp.ngay_tao DESC", nativeQuery = true)
     List<ChiTietSanPham> getAllSPNew();
 

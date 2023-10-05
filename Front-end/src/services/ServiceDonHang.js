@@ -17,6 +17,11 @@ const getAllSP = () => {
   return axios.get('/api/hoa-don/hien-thi-san-pham');
 };
 
+
+const getAllByIdCTSP = (id) => {
+  return axios.get(`/api/hoa-don/getAllByIdCTSP/${id}`);
+};
+
 const searchCTSPofDH = (key) => {
   return axios.get(`/api/hoa-don/searchSP?key=${key}`);
 };
@@ -100,5 +105,6 @@ export {
   deleteHDCT,
   xacNhanDH,
   getAllSP,
-  searchCTSPofDH
+  searchCTSPofDH,
+  getAllByIdCTSP
 };

@@ -15,7 +15,7 @@ import makeAnimated from 'react-select/animated';
 import * as XLSX from 'xlsx';
 
 const MIN = 0;
-const MAX = 9999999;
+const MAX = 999999999;
 
 const MINSL = 0;
 const MAXSL = 999;
