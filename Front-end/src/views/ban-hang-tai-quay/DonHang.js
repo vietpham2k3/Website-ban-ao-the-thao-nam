@@ -246,6 +246,7 @@ function DonHang(props) {
                         style={{ display: 'flex', alignItems: 'center', width: 120, justifyContent: 'center' }}
                       >
                         <InputSpinner
+                          key={d.id} // Đặt key duy nhất cho mỗi InputSpinner
                           type={'real'}
                           max={d.chiTietSanPham.soLuong + d.soLuong}
                           min={1}
@@ -320,7 +321,7 @@ function DonHang(props) {
               <h5>Khách phải trả</h5>
             </div>
             <div>
-              <p style={{ fontSize: 'large', fontWeight: 'bold' }}>0</p>
+              <p style={{ fontSize: 'large', fontWeight: 'bold' }}>{convertToCurrency(totalAmount)}</p>
             </div>
           </div>
           <div className="ma-giam-gia">
@@ -329,6 +330,14 @@ function DonHang(props) {
             </div>
             <div>
               <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <select className="form-select" aria-label="Default select example">
+                <option selected>Tiền mặt</option>
+                <option value="1">QR</option>
+              </select>
             </div>
           </div>
           <div className="ma-giam-gia">

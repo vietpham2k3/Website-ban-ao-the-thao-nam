@@ -83,8 +83,4 @@ public class KhuyenMai {
 
     @Column(name = "nguoi_sua")
     private String nguoiSua;
-
-    @ManyToOne
-    @JoinColumn(name = "id_hd", referencedColumnName = "id")
-    private HoaDon hoaDon;
 }
