@@ -20,7 +20,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
     @Override
     public List<KhuyenMai> getAllKM() {
-        return khuyenMaiRepository.findAll();
+        return khuyenMaiRepository.getAll();
     }
 
     @Override
@@ -36,7 +36,6 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
     @Override
     public KhuyenMai add(KhuyenMai khuyenMai) {
-        khuyenMai.setTen(khuyenMai.getMa());
         return khuyenMaiRepository.save(khuyenMai);
     }
 

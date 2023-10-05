@@ -47,7 +47,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public HoaDon detailHD(UUID id) {
-        res.findAll();
         return res.findById(id).orElse(null);
     }
 

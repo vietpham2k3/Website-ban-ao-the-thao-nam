@@ -25,6 +25,8 @@ function UpdateKhuyenMai() {
     trangThai: 0
   });
 
+  console.log(values);
+
   const { id } = useParams();
 
   useEffect(() => {
