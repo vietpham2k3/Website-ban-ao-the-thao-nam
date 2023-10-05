@@ -90,3 +90,29 @@
   color: #f06be9;
   font-weight: 600;
 }
+
+
+.flex_row {
+  justify-content: center;
+  display: flex;
+  padding-top: 20px;
+}
+
+.thumbnail {
+  padding-left: 20px;
+}
+.clicked {
+  border: 3px solid gray;
+}
+.btns {
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.actionImage {
+  display: flex;
+  text-align: center;
+  padding-left: 140px;
+}
