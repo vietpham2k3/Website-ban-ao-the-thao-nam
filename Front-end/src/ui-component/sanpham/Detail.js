@@ -1,25 +1,53 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
-import { Card } from 'react-bootstrap';
-import './Detail.scss';
-import './product-image-slider.scss';
-// import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
-// import { Swiper, SwiperSlide } from 'swiper/react';
+import { Card, Image } from 'react-bootstrap';
+import '../../scss/Detail.scss';
+import InputSpinner from 'react-bootstrap-input-spinner';
 
 function Detail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const [data, setData] = useState([]);
-  // const [imageList, setImageList] = useState([]);
-  // const [activeThumb, setActiveThumb] = useState();
+  const [imageList, setImageList] = useState([]);
+  const [val, setVal] = useState(0);
+  const thumbnailContainerRef = useRef(null);
+  const [quantity, setQuantity] = useState(1);
 
-  // const handleCarouselItemClick = (event) => {
-  //   const imgUrl = event.target.getAttribute('data-mdb-img');
-  //   setMainImage(imgUrl);
-  // };
+  const handleClick = (id) => {
+    setVal(id);
+  };
+
+  const handleNext = () => {
+    let nextVal = val + 1;
+    if (nextVal >= imageList.length + 1) {
+      nextVal = 0;
+    }
+    setVal(nextVal);
+    const thumbnailContainer = thumbnailContainerRef.current;
+    const thumbnailWidth = thumbnailContainer.offsetWidth / imageList.length;
+    const scrollLeft = thumbnailWidth * nextVal;
+    thumbnailContainer.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth'
+    });
+  };
+
+  const handlePrevious = () => {
+    let prevVal = val - 1;
+    if (prevVal < 0) {
+      prevVal = imageList.length;
+    }
+    setVal(prevVal);
+    const thumbnailContainer = thumbnailContainerRef.current;
+    const thumbnailWidth = thumbnailContainer.offsetWidth / imageList.length;
+    const scrollLeft = thumbnailWidth * prevVal;
+    thumbnailContainer.scrollTo({
+      left: scrollLeft,
+      behavior: 'smooth'
+    });
+  };
 
   useEffect(() => {
     getAllCTSP();
@@ -38,22 +66,9 @@ function Detail() {
 
   const getAllAnh = async (id) => {
     const res = await listAnh(id);
-    if (res) {
+    if (res && res.data) {
       setImageList(res.data);
-    }
-  };
-
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handleIncreaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
     }
   };
 
@@ -101,51 +116,39 @@ function Detail() {
       <div className="card">
         <div className="container-fliud">
           <div className="wrapper row">
-            <div className="preview col-md-6" style={{ backgroundColor: 'rgb(255, 255, 255)', display: 'flex' }}>
-              <div className="col-6">
-                {/* <Swiper
-                  style={{
-                    '--swiper-navigation-color': '#fff',
-                    '--swiper-slide-shadow': '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-                    '--swiper-slide-border-radius': '10px'
-                  }}
-                  spaceBetween={10}
-                  navigation={true}
-                  thumbs={{ swiper: activeThumb }}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper2"
-                >
-                  <SwiperSlide>
-                    {imageList.map((image) => (
-                      <img
-                        key={image.id}
-                        style={{ width: '300px', height: '450px' }}
-                        src={`data:image/jpeg;base64,${image.tenBase64}`}
-                        alt={image.ma}
-                      />
-                    ))}
-                  </SwiperSlide>
-                </Swiper>
-                <Swiper
-                  onSwiper={setActiveThumb}
-                  spaceBetween={10}
-                  slidesPerView={4}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper"
-                >
-                  <SwiperSlide>
-                    {imageList.map((image) => (
-                      <img
-                        key={image.id}
-                        style={{ width: '100px', height: '150px' }}
-                        src={`data:image/jpeg;base64,${image.tenBase64}`}
-                        alt={image.ma}
-                      />
-                    ))}
-                  </SwiperSlide>
-                </Swiper> */}
+            <div
+              className="preview col-md-6 imageDetail"
+              style={{ backgroundColor: 'rgb(255, 255, 255)', marginTop: 10, marginBottom: 40 }}
+            >
+              <div className="actionImage">
+                <button className="btns" onClick={handlePrevious}>
+                  <i className="fa-solid fa-angle-left"></i>
+                </button>
+                <Image
+                  src={
+                    val === 0
+                      ? `http://localhost:8080/api/chi-tiet-san-pham/${product.id}`
+                      : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
+                  }
+                  height="350"
+                  width="300"
+                />
+                <button className="btns" onClick={handleNext}>
+                  <i className="fa-solid fa-angle-right"></i>
+                </button>
+              </div>
+              <div className="flex_row  d-flex align-items-center justify-content-center" ref={thumbnailContainerRef}>
+                {imageList.map((image, index) => (
+                  <div className="thumbnailAnh" key={image.id}>
+                    <Image
+                      className={val === index + 1 ? 'clicked' : ''}
+                      src={`data:image/jpeg;base64,${image.tenBase64}`}
+                      onClick={() => handleClick(index + 1)}
+                      height="100"
+                      width="100"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
             <div className="details col-md-6">
@@ -196,13 +199,18 @@ function Detail() {
                 >
                   Số lượng:{' '}
                 </p>
-                <button type="button" className="qtyminus" onClick={handleDecreaseQuantity}>
-                  -
-                </button>
-                <input type="number" className="qty textInput" value={quantity} min="1" onChange={handleQuantityChange} />
-                <button type="button" className="qtyplus" onClick={handleIncreaseQuantity}>
-                  +
-                </button>
+                <div className="inputSpinner" style={{ width: 110 }}>
+                  <InputSpinner
+                    min={1}
+                    className="input-spinner"
+                    step={1}
+                    variant={'dark'}
+                    type="real"
+                    size="md"
+                    value={quantity}
+                    onChange={(value) => setQuantity(value)}
+                  />
+                </div>
               </div>
               <div className="action">
                 <button className="add-to-cart2 btn btn-default" type="button">
@@ -212,7 +220,9 @@ function Detail() {
                   Mua Ngay
                 </button>
               </div>
-              <label style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 20 }}>Mô tả: {product.sanPham.moTa}</label>
+              <h1 style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}>Mô tả</h1>
+              <hr></hr>
+              <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
             </div>
           </div>
         </div>
