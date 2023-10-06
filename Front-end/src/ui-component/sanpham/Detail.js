@@ -62,11 +62,13 @@ function Detail() {
   // ms kc
   const [isActive, setIsActive] = useState(false);
 
-  const handleClick2 = () => {
+  const handleClick2 = (idCTSP) => {
     setIsActive(true);
     setTimeout(() => {
       setIsActive(false);
     }, 200);
+    
+    console.log(idCTSP);
   };
 
   const [listKC, setListKC] = useState([]);
@@ -115,7 +117,7 @@ function Detail() {
       // localStorage.setItem("idMS",idMS);
       getAllAnh(id);
       setVal(0);
-      console.log(id);
+      // console.log(id);
     }
   };
   ////////
@@ -280,18 +282,24 @@ function Detail() {
                     Kích cỡ:
                   </p>
                   <ButtonToolbar>
-                    {listKC.map((d) => (
+                    {listKC.map((d) => {
+                      const sizeData = d.split(',');
+                      const idCTSP = sizeData[1];
+                      const size = sizeData[0];
+
+                      return (
                       <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
                         <Button
                           className="custom-button"
                           appearance="ghost"
-                          onClick={handleClick2}
+                          onClick={() => handleClick2(idCTSP)}
                           style={{ '--background-color': isActive ? 'black' : 'transparent' }}
                         >
-                          {d}
+                          {size}
                         </Button>
                       </div>
-                    ))}
+                      )
+                      })}
                   </ButtonToolbar>
                 </div>
               </div>

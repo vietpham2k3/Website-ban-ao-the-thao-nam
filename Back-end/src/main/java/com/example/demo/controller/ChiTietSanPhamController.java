@@ -84,7 +84,7 @@ public class ChiTietSanPhamController {
     public ResponseEntity<?> hienThiPageWeb(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chiTietSanPhamService.pageWeb(page));
     }
-    
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> detail(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(chiTietSanPhamService.detail(id));
