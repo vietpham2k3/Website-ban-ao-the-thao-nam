@@ -10,13 +10,11 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById, updateSL, deleteHDCT, updateHD } from 'services/ServiceDonHang';
-// import { toast } from 'react-toastify';
+import { getById, updateSL, deleteHDCT, updateHD, addKM, getKmById, detailHD } from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
-import { getAllKM } from 'services/ServiceKhuyenMai';
-// import { toast } from 'react-toastify';
-
+import { detailKM, getAllKM } from 'services/ServiceKhuyenMai';
+import { toast } from 'react-toastify';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id } = props;
@@ -24,14 +22,29 @@ function DonHang(props) {
   const [show, setShow] = useState(false);
   const [inputKH, setInputKH] = useState('');
   const [idHDCT, setIdHDCT] = useState('');
+  const [idKM, setIdKM] = useState('');
   const [values, setValues] = useState([]);
   const [dataKM, setDataKM] = useState([]);
   const [valuesSanPham, setValuesSanPham] = useState([]);
+  const [dataHDKM, setDataHDKM] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [tongSoLuong, setTongSoLuong] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [dataDetailHD, setDataDetailHD] = useState({});
+  const [dataDetailKM, setDataDetailKM] = useState({});
+  const [valuesAddKM, setValuesAddKM] = useState({
+    khuyenMai: {
+      id: ''
+    },
+    hoaDon: {
+      id: id
+    },
+    tienGiam: 0
+  });
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
-    tongTien: ''
+    tongTien: '',
+    tongTienKhiGiam: '',
+    trangThai: 0
   });
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
@@ -57,7 +70,18 @@ function DonHang(props) {
   }, [valuesSanPham]);
 
   useEffect(() => {
-    setValuesUpdateHD({ ...valuesUpdateHD, tongTien: totalAmount });
+    if (dataDetailHD.tongTienKhiGiam === null) {
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        tongTien: totalAmount,
+        tongTienKhiGiam: totalAmount
+      }));
+    } else {
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        tongTien: totalAmount
+      }));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalAmount]);
 
@@ -67,7 +91,9 @@ function DonHang(props) {
   }, [inputValue]);
 
   useEffect(() => {
+    findAllKM(id);
     getAllById(id);
+    detailHDById(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -80,15 +106,79 @@ function DonHang(props) {
   }, [valuesUpdateHD]);
 
   useEffect(() => {
-    getKM();
-  }, []);
+    getKM(totalAmount);
+  }, [totalAmount]);
+
+  useEffect(() => {
+    detailMaKM(idKM);
+  }, [idKM]);
+
+  useEffect(() => {
+    if (dataDetailHD.tongTienKhiGiam === 0) {
+      toast.error('Mày mà spam là t cho m bay acc fb');
+    } else {
+      postKM(valuesAddKM);
+    }
+  }, [valuesAddKM]);
+
+  const detailMaKM = async (id) => {
+    const res = await detailKM(id);
+    if (res) {
+      setDataDetailKM(res.data);
+    }
+  };
+
+  const findAllKM = async (id) => {
+    const res = await getKmById(id);
+    if (res) {
+      setDataHDKM(res.data);
+    }
+  };
+
+  const detailHDById = async (id) => {
+    const res = await detailHD(id);
+    if (res) {
+      setDataDetailHD(res.data);
+    }
+  };
+
+  const handleAddValueKm = (id, tienGiam) => {
+    setIdKM(id);
+    setValuesAddKM({
+      ...valuesAddKM,
+      khuyenMai: {
+        id: id
+      },
+      tienGiam: tienGiam
+    });
+
+    setValuesUpdateHD((prevValuesUpdateHD) => ({
+      ...prevValuesUpdateHD,
+      tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
+    }));
+  };
+
+  const postKM = async (value) => {
+    const res = await addKM(value);
+    if (res.data === 'Mày thích spam không ?') {
+      toast.warning('Mày như nào ?');
+      return;
+    } else if (res.data !== 'Mày thích spam không ?') {
+      detailHDById(id);
+      toast.success('Thêm mã giảm giá thành công');
+      findAllKM(id);
+    }
+  };
 
   const handleUpdateHD = () => {
     updateTTHD(id, valuesUpdateHD);
   };
 
   const updateTTHD = async (idHD, value) => {
-    await updateHD(idHD, value);
+    const res = await updateHD(idHD, value);
+    if (res) {
+      detailHDById(id);
+    }
   };
 
   const getAllById = async (idHD) => {
@@ -98,8 +188,8 @@ function DonHang(props) {
     }
   };
 
-  const getKM = async () => {
-    const res = await getAllKM();
+  const getKM = async (tien) => {
+    const res = await getAllKM(tien);
     if (res) {
       setDataKM(res.data);
     }
@@ -145,16 +235,13 @@ function DonHang(props) {
     }
   }, 100);
 
-  function convertToCurrency(number) {
-    // Chuyển đổi số thành định dạng tiền Việt Nam
+  const convertToCurrency = (value) => {
     const formatter = new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     });
-
-    return formatter.format(number);
-  }
-
+    return formatter.format(value);
+  };
   const handleDelete = (id) => {
     deleteHD(id);
   };
@@ -187,6 +274,12 @@ function DonHang(props) {
     return formattedDate;
   }
 
+  const handleChangeValueTien = (e) => {
+    console.log(e);
+  };
+
+  console.log(idKM);
+
   return (
     <div>
       <div className="row">
@@ -197,7 +290,7 @@ function DonHang(props) {
               type="search"
               placeholder="Tìm kiếm sản phẩm..."
               className="input-seach"
-              value={inputValue}
+              defaultValue={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
           </div>
@@ -283,7 +376,7 @@ function DonHang(props) {
               type="text"
               placeholder="Tìm kiếm khách hàng..."
               className="input-seach"
-              value={inputKH}
+              defaultValue={inputKH}
               onChange={(e) => setInputKH(e.target.value)}
             />
             <button className="fa-solid fa-plus mx-3"></button>
@@ -295,8 +388,8 @@ function DonHang(props) {
             </div>
             <div>
               <p>
-                <input type="text" disabled={true} style={{ border: 'none', borderBottom: '1px solid gray' }} />{' '}
-                <button className="fa-solid fa-plus" onClick={() => setShow(true)}></button>
+                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+                <button className="fa-solid fa-plus" onClick={() => setShow(true)} defaultValue={dataDetailKM.ma}></button>
               </p>
             </div>
           </div>
@@ -316,12 +409,22 @@ function DonHang(props) {
               <p>{convertToCurrency(totalAmount)}</p>
             </div>
           </div>
+          {dataHDKM.map((d) => (
+            <div key={d.id} className="ma-giam-gia" style={{ color: 'red' }}>
+              <div>
+                <h6>Tiền giảm</h6>
+              </div>
+              <div>
+                <p>-{convertToCurrency(d.tienGiam)}</p>
+              </div>
+            </div>
+          ))}
           <div className="ma-giam-gia">
             <div>
               <h5>Khách phải trả</h5>
             </div>
             <div>
-              <p style={{ fontSize: 'large', fontWeight: 'bold' }}>{convertToCurrency(totalAmount)}</p>
+              <p style={{ fontSize: 'large', fontWeight: 'bold' }}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</p>
             </div>
           </div>
           <div className="ma-giam-gia">
@@ -329,14 +432,18 @@ function DonHang(props) {
               <h6>Tiền khách đưa</h6>
             </div>
             <div>
-              <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />
+              <input
+                type="text"
+                style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                onChange={(e) => handleChangeValueTien(e.target.value)}
+              />
             </div>
           </div>
           <div className="ma-giam-gia">
             <div>
               <select className="form-select" aria-label="Default select example">
                 <option selected>Tiền mặt</option>
-                <option value="1">QR</option>
+                <option defaultValue="1">QR</option>
               </select>
             </div>
           </div>
@@ -356,7 +463,7 @@ function DonHang(props) {
                 </h6>
                 <div className="text-voucher">
                   <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn btn-outline-primary" onClick={() => handleAddValueKm(d.id, d.mucGiam)}>
                     Áp dụng
                   </button>
                 </div>

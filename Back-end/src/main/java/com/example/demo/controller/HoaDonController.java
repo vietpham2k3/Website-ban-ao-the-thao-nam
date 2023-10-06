@@ -2,14 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.service.HoaDon_KhuyenMaiService;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
+import com.example.demo.service.impl.HoaDon_KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,8 @@ public class HoaDonController {
     @Autowired
     public HoaDonServiceImpl service;
     @Autowired
+    public HoaDon_KhuyenMaiServiceImpl hoaDon_khuyenMaiService;
+    @Autowired
     public LichSuHoaDonServiceImpl serviceLSHD;
     @Autowired
     public HoaDonChiTietServiceImpl hoaDonChiTietService;
@@ -53,6 +58,23 @@ public class HoaDonController {
     @GetMapping("getById/{id}")
     public ResponseEntity<?> getAllById(@PathVariable UUID id) {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
+    }
+
+    @GetMapping("getKmById/{id}")
+    public ResponseEntity<?> getKmById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hoaDon_khuyenMaiService.getAll(id));
+    }
+
+    @PostMapping("addKM")
+    public ResponseEntity<?> add(@RequestBody HoaDon_KhuyenMai hoaDon) {
+        List<HoaDon_KhuyenMai> list = hoaDon_khuyenMaiService.getAllNotById();
+        for (HoaDon_KhuyenMai h : list) {
+            if (hoaDon.getHoaDon().getId().equals(h.getHoaDon().getId())
+                    && hoaDon.getKhuyenMai().getId().equals(h.getKhuyenMai().getId())) {
+                return ResponseEntity.ok("Mày thích spam không ?");
+            }
+        }
+        return ResponseEntity.ok(hoaDon_khuyenMaiService.add(hoaDon));
     }
 
     @PostMapping("add")
@@ -75,14 +97,13 @@ public class HoaDonController {
     }
 
     @PutMapping("update-hd/{id}")
-    public ResponseEntity<?> updateHD(@PathVariable UUID id ,@RequestBody HoaDon hoaDon) {
+    public ResponseEntity<?> updateHD(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         HoaDon hd = service.detailHD(id);
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
-        hoaDon.setTrangThai(0);
 
         return ResponseEntity.ok(service.add(hoaDon));
     }

@@ -69,6 +69,14 @@ const updateHD = (id, values) => {
   return axios.put(`/api/hoa-don/update-hd/${id}`, values);
 };
 
+const getKmById = (id) => {
+  return axios.get(`/api/hoa-don/getKmById/${id}`);
+};
+
+const addKM = (values) => {
+  return axios.post(`/api/hoa-don/addKM`, values);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
@@ -76,6 +84,8 @@ const updateHD = (id, values) => {
 export {
   getAllHD,
   updateHD,
+  addKM,
+  getKmById,
   getAllPageDH,
   xacNhanThanhToan,
   xacNhanGiao,

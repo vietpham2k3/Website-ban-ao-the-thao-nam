@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface KhuyenMaiService {
-    public List<KhuyenMai> getAllKM();
+    public List<KhuyenMai> getAllKM(Double tien);
 
     public Page<KhuyenMai> pageKM(Pageable pageable);
 

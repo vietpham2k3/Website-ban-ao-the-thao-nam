@@ -61,7 +61,7 @@ function UpdateSanPham() {
   const [previewImages, setPreviewImages] = useState([]);
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [idCTSP, setIdCTSP] = useState(true);
+  const [idCTSP, setIdCTSP] = useState(null);
   const mainCardRef = useRef(null);
 
   const [values, setValues] = useState({
@@ -158,7 +158,7 @@ function UpdateSanPham() {
     const res = await addAnh(value);
     if (res) {
       toast.success('Thêm thành công');
-      getAllAnh(idCTSP);
+      getAllAnh(idCTSP !== null ? idCTSP : id);
     }
   };
 
@@ -173,7 +173,7 @@ function UpdateSanPham() {
     const formData = new FormData();
     file.forEach((file) => {
       formData.append('files', file);
-      formData.append('id', idCTSP);
+      formData.append('id', idCTSP !== null ? idCTSP : id);
     });
 
     // Gửi formData đến server để xử lý
@@ -239,11 +239,13 @@ function UpdateSanPham() {
 
   useEffect(() => {
     detail(idCTSP);
-    getAllAnh(idCTSP);
+    getAllAnh(idCTSP !== null ? idCTSP : id);
     if (idCTSP !== null && mainCardRef.current) {
       mainCardRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [idCTSP]);
+
+  console.log(idCTSP);
 
   useEffect(() => {
     detail(id);
@@ -352,8 +354,6 @@ function UpdateSanPham() {
       setIdCTSP(id);
     }
   };
-
-  console.log(values);
 
   return (
     <div>

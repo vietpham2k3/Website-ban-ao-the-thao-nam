@@ -19,8 +19,8 @@ public class KhuyenMaiController {
     private KhuyenMaiServiceImpl service;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> hienThi() {
-        return ResponseEntity.ok(service.getAllKM());
+    public ResponseEntity<?> hienThi(@RequestParam("tien") Double tien) {
+        return ResponseEntity.ok(service.getAllKM(tien));
     }
 
     @GetMapping("hien-thi-page")
