@@ -102,8 +102,10 @@ function DonHangCT() {
   const handleSearchSPofDH = _.debounce(async () => {
     if (term) {
       searchSPofDH(term);
+    }else{
+      searchSPofDH('');
     }
-  }, 100);
+  }, []);
 
   useEffect(() => {
     handleSearchSPofDH();

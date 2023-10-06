@@ -56,7 +56,7 @@ function Content() {
                 return (
                   <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
                     <Card style={{ width: '260px', height: '400px' }}>
-                      <Link to={`/detail/${product.id}/${product.sanPham.id}`}>
+                      <Link to={`/detail/${product.id}/${product.sanPham.id}/${product.mauSac.id}`}>
                         <Card.Img
                           style={{ textAlign: 'center', width: '260px', height: '300px' }}
                           src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}

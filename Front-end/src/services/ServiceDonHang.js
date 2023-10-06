@@ -18,8 +18,12 @@ const getAllSP = () => {
 };
 
 
-const getAllByIdCTSP = (id) => {
-  return axios.get(`/api/hoa-don/getAllByIdCTSP/${id}`);
+const getKCByIdMS = (id) => {
+  return axios.get(`/api/hoa-don/getKCByIdMS/${id}`);
+};
+
+const getAllMSByIdSP = (id) => {
+  return axios.get(`/api/hoa-don/getAllMSByIdSP/${id}`);
 };
 
 const searchCTSPofDH = (key) => {
@@ -106,5 +110,6 @@ export {
   xacNhanDH,
   getAllSP,
   searchCTSPofDH,
-  getAllByIdCTSP
+  getKCByIdMS,
+  getAllMSByIdSP
 };

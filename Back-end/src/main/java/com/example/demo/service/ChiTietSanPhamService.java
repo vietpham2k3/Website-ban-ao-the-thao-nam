@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.KichCo;
+import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -11,7 +13,9 @@ public interface ChiTietSanPhamService {
 
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
-    List<ChiTietSanPham> getAllByIdCTSP(UUID id);
+    List<String> getAllMSByIdSP(UUID id);
+
+    List<String> getKCByIdMS(UUID id);
 
     List<ChiTietSanPham> getAllSPNEW();
 

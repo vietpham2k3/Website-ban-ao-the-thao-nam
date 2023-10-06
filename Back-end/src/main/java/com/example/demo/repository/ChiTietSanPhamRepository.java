@@ -2,6 +2,8 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.KhuyenMai;
+import com.example.demo.entity.KichCo;
+import com.example.demo.entity.SanPham;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +32,22 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
-    @Query(value = "SELECT DISTINCT sp.kichCo.ten ,sp from ChiTietSanPham sp where sp.id = :id")
-    List<ChiTietSanPham> getAllByIdCTSP(UUID id);
+    @Query(value = "SELECT MS.id, MS.ma, GROUP_CONCAT(CTSP.id), SP.id\n" +
+            "FROM ChiTietSanPham CTSP\n" +
+            "JOIN MauSac MS ON CTSP.id_ms = MS.id\n" +
+            "JOIN SanPham SP ON CTSP.id_sp = SP.id\n" +
+            "WHERE SP.id = :id\n" +
+            "GROUP BY MS.id, MS.ma, SP.id"
+            , nativeQuery = true)
+    List<String> getAllMSByIdSP(UUID id);
 
+    @Query(value = "SELECT KC.ten\n" +
+            "FROM ChiTietSanPham CTSP\n" +
+            "JOIN KichCo KC ON CTSP.id_kc = KC.id\n" +
+            "WHERE CTSP.id_ms = :id\n" +
+            "GROUP BY KC.id, KC.ten"
+            , nativeQuery = true)
+    List<String> getKCByIdMS(UUID id);
 
     @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
             "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +

@@ -1,10 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.LichSuHoaDon;
-import com.example.demo.entity.NhanVien;
-import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.entity.*;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
@@ -65,9 +61,14 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
     }
 
-    @GetMapping("getAllByIdCTSP/{id}")
+    @GetMapping("getKCByIdMS/{id}")
     public ResponseEntity<?> getAllByIdCTSP(@PathVariable UUID id) {
-        return ResponseEntity.ok(chiTietSanPhamService.getAllByIdCTSP(id));
+        return ResponseEntity.ok(chiTietSanPhamService.getKCByIdMS(id));
+    }
+
+    @GetMapping("getAllMSByIdSP/{id}")
+    public ResponseEntity<?> getAllByIdSP2(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllMSByIdSP(id));
     }
 
     @PostMapping("add")

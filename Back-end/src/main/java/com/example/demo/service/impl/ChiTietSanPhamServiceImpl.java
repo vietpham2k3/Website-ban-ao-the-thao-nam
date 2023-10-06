@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.KichCo;
+import com.example.demo.entity.SanPham;
 import com.example.demo.repository.ChiTietSanPhamRepository;
 import com.example.demo.service.ChiTietSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,13 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
-    public List<ChiTietSanPham> getAllByIdCTSP(UUID id) {
-        return repository.getAllByIdCTSP(id);
+    public List<String> getAllMSByIdSP(UUID id) {
+        return repository.getAllMSByIdSP(id);
+    }
+
+    @Override
+    public List<String> getKCByIdMS(UUID id) {
+        return repository.getKCByIdMS(id);
     }
 
     @Override

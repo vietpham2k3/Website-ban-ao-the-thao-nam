@@ -5,12 +5,13 @@ import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamServic
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
-import { getAllByIdSP } from '../../services/SanPhamService';
+// import { getAllByIdSP } from '../../services/SanPhamService';
+import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
 
 function Detail() {
-  const { id, idSP } = useParams();
+  const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
@@ -67,18 +68,48 @@ function Detail() {
     }, 200);
   };
 
-  const [listMSKC, setListMSKC] = useState([]);
+  // const [listMSKC, setListMSKC] = useState([]);
+  const [listKC, setListKC] = useState([]);
+  const [listMS, setListMS] = useState([]);
 
   useEffect(() => {
-    getAllMSKC(idSP);
+    // getAllMSKC(idSP);
+    getAllMS(idSP);
     // console.log(idSP);
   }, [idSP]);
 
-  const getAllMSKC = async (id) => {
+  useEffect(() => {
+    getAllKC(idMS);
+    // console.log(idSP);
+  }, [idMS]);
+
+  const getAllKC = async (id) => {
     try {
-      const res = await getAllByIdSP(id);
+      const res = await getKCByIdMS(id);
       if (res && res.data) {
-        setListMSKC(res.data);
+        setListKC(res.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  // const getAllMSKC = async (id) => {
+  //   try {
+  //     const res = await getAllByIdSP(id);
+  //     if (res && res.data) {
+  //       setListMSKC(res.data);
+  //     }
+  //   } catch (error) {
+  //     // Xử lý lỗi nếu cần
+  //   }
+  // };
+
+  const getAllMS = async (id) => {
+    try {
+      const res = await getAllMSByIdSP(id);
+      if (res && res.data) {
+        setListMS(res.data);
       }
     } catch (error) {
       // Xử lý lỗi nếu cần
@@ -92,7 +123,6 @@ function Detail() {
       setIdCTSP(id);
       getAllAnh(id);
       setVal(0);
-      console.log(id);
     }
   };
   ////////
@@ -214,24 +244,32 @@ function Detail() {
                     Màu sắc:
                   </p>
                   <ButtonToolbar>
-                    {listMSKC.map((d) => (
-                      <div style={{ marginLeft: 15, height: 30 }} key={d.id}>
-                        {d.mauSac ? (
-                          <Button
-                            className="custom-button"
-                            onClick={() => {
-                              handleChangeId(d.id);
-                            }}
-                            style={{ backgroundColor: d.mauSac.ten, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
-                            tabIndex={0}
-                          >
-                            &nbsp;
-                          </Button>
-                        ) : (
-                          <p>Chưa có màu sắc nào</p>
-                        )}
-                      </div>
-                    ))}
+                    {listMS.map((d) => {
+                      const colorData = d.split(',');
+                      const id = colorData[0];
+                      const color = colorData[1];
+                      const idCTSP = colorData[2];
+                      const idSP = colorData[3];
+
+                      return (
+                        <div style={{ marginLeft: 15, height: 30 }} key={id}>
+                          {color ? (
+                            <Button
+                              className="custom-button"
+                              onClick={() => {
+                                handleChangeId(idCTSP,idSP);
+                              }}
+                              style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
+                              tabIndex={0}
+                            >
+                              &nbsp;
+                            </Button>
+                          ) : (
+                            <p>Chưa có màu sắc nào</p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </ButtonToolbar>
                 </div>
               </div>
@@ -249,20 +287,16 @@ function Detail() {
                     Kích cỡ:
                   </p>
                   <ButtonToolbar>
-                    {listMSKC.map((d) => (
+                    {listKC.map((d) => (
                       <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
-                        {d.mauSac ? (
-                          <Button
-                            className="custom-button"
-                            appearance="ghost"
-                            onClick={handleClick2}
-                            style={{ '--background-color': isActive ? 'black' : 'transparent' }}
-                          >
-                            {d.kichCo.ten}
-                          </Button>
-                        ) : (
-                          <p>Chưa có kích cỡ nào</p>
-                        )}
+                        <Button
+                          className="custom-button"
+                          appearance="ghost"
+                          onClick={handleClick2}
+                          style={{ '--background-color': isActive ? 'black' : 'transparent' }}
+                        >
+                          {d}
+                        </Button>
                       </div>
                     ))}
                   </ButtonToolbar>
