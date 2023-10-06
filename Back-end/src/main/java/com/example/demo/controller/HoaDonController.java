@@ -106,12 +106,22 @@ public class HoaDonController {
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
         hoaDon.setTrangThai(0);
+        HinhThucThanhToan httt = new HinhThucThanhToan().builder()
+                .ma(ma)
+                .ten("Tiền mặt")
+                .ngayTao(new Date())
+                .tien(0.0)
+                .trangThai(0)
+                .build();
+        httt = serviceHttt.add(httt);
+        hoaDon.setHinhThucThanhToan(httt);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                 .ma(maLSHD)
                 .ten("Tạo hoá đơn")
                 .trangThai(0)
                 .ngayTao(new Date())
                 .hoaDon(hoaDon)
+                .ghiChu("Tạo hoá đơn")
                 .build();
         service.add(hoaDon);
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
@@ -119,7 +129,7 @@ public class HoaDonController {
 
     @PutMapping("update-hd/{id}")
     public ResponseEntity<?> updateHD(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
-        String ma = "httt" + new Random().nextInt(100000);
+        String ma = "HTTT" + new Random().nextInt(100000);
 
         HoaDon hd = service.detailHD(id);
         HinhThucThanhToan h = serviceHttt.detail(hd.hinhThucThanhToan.getId());
@@ -134,15 +144,29 @@ public class HoaDonController {
                 .build();
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
+        hoaDon.setNgayThanhToan(new Date());
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
-
         httt = serviceHttt.add(httt);
-
         hoaDon.setHinhThucThanhToan(httt);
-
         return ResponseEntity.ok(service.add(hoaDon));
+    }
+
+
+    @PutMapping("/thanh-toan/{id}")
+    public ResponseEntity<?> thanhToan(@PathVariable UUID id){
+        HoaDon hd = service.detailHD(id);
+        String maLS = "LSHD" + new Random().nextInt(100000);
+        LichSuHoaDon ls = serviceLSHD.detail(hd.getId()).builder()
+                .trangThai(7)
+                .ma(maLS)
+                .ten("Thanh toán thành công")
+                .ngayTao(new Date())
+                .hoaDon(hd)
+                .ghiChu("Đã thanh toán")
+                .build();
+        return ResponseEntity.ok(serviceLSHD.add(ls));
     }
 
     @PostMapping("add-sp")

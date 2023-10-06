@@ -37,4 +37,9 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
     public LichSuHoaDon findLSHDByIDsHD(UUID id) {
         return res.findLichSuHoaDonByHoaDonId(id);
     }
+
+    @Override
+    public LichSuHoaDon add(LichSuHoaDon lichSuHoaDon) {
+        return res.save(lichSuHoaDon);
+    }
 }

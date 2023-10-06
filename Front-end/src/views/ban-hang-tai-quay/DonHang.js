@@ -10,14 +10,14 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById, updateSL, deleteHDCT, updateHD, addKM, getKmById, detailHD } from 'services/ServiceDonHang';
+import { getById, updateSL, deleteHDCT, updateHD, addKM, getKmById, detailHD, thanhToan } from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
 import { detailKM, getAllKM } from 'services/ServiceKhuyenMai';
 import { toast } from 'react-toastify';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id } = props;
+  const { id, getAll } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
   const [inputKH, setInputKH] = useState('');
@@ -28,7 +28,7 @@ function DonHang(props) {
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [dataHDKM, setDataHDKM] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [tienThua, setTienThua] = useState(null);
+  const [tienThua, setTienThua] = useState(0);
   const [tongSoLuong, setTongSoLuong] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
@@ -76,20 +76,22 @@ function DonHang(props) {
   }, [valuesSanPham]);
 
   useEffect(() => {
-    if (dataDetailHD.tongTienKhiGiam === null) {
-      setValuesUpdateHD((prevValuesUpdateHD) => ({
-        ...prevValuesUpdateHD,
-        tongTien: totalAmount,
-        tongTienKhiGiam: totalAmount
-      }));
-    } else {
-      setValuesUpdateHD((prevValuesUpdateHD) => ({
-        ...prevValuesUpdateHD,
-        tongTien: totalAmount
-      }));
-    }
+    setValuesUpdateHD((prevValuesUpdateHD) => ({
+      ...prevValuesUpdateHD,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalAmount]);
+
+  useEffect(() => {
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      ...valuesUpdateHD.hinhThucThanhToan,
+      tongTienKhiGiam: totalAmount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valuesUpdateHD.tongTien]);
 
   useEffect(() => {
     handleSearchUsers();
@@ -118,8 +120,6 @@ function DonHang(props) {
   useEffect(() => {
     detailMaKM(idKM);
   }, [idKM]);
-
-  console.log(dataDetailKM);
 
   useEffect(() => {
     setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
@@ -191,6 +191,14 @@ function DonHang(props) {
     const res = await updateHD(idHD, value);
     if (res) {
       detailHDById(id);
+    }
+  };
+
+  const ThanhToanHD = async (idHD) => {
+    const res = await thanhToan(idHD);
+    if (res) {
+      toast.success('Thanh toán thành công');
+      getAll();
     }
   };
 
@@ -289,7 +297,15 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    toast.success('123');
+    ThanhToanHD(id);
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      ...valuesUpdateHD.hinhThucThanhToan,
+      trangThai: 7,
+      hinhThucThanhToan: {
+        trangThai: 1
+      }
+    });
   };
 
   const handleChangeValueTien = (e) => {

@@ -93,12 +93,17 @@ const addKM = (values) => {
   return axios.post(`/api/hoa-don/addKM`, values);
 };
 
+const thanhToan = (id) => {
+  return axios.put(`/api/hoa-don/thanh-toan/${id}`);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
 export {
   getAllHD,
+  thanhToan,
   updateHD,
   addKM,
   getKmById,

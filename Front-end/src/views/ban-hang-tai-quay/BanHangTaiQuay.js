@@ -61,7 +61,6 @@ export default function BanHangTaiQuay() {
     const res = await getAllHD(); // Sử dụng await để chờ kết quả trả về
     if (res) {
       setValues(res.data);
-      console.log(res.data);
     }
   };
 
@@ -84,7 +83,7 @@ export default function BanHangTaiQuay() {
         </Box>
         {values.map((d, i) => (
           <CustomTabPanel key={i} value={value} index={i}>
-            <DonHang id={d.id}></DonHang>
+            <DonHang id={d.id} getAll={getAll}></DonHang>
           </CustomTabPanel>
         ))}
       </Box>
