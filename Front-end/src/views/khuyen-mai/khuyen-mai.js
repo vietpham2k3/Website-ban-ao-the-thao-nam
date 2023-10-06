@@ -155,7 +155,7 @@ function KhuyenMai() {
               search('', 0, 0);
             }}
           />
-          <span className="form-check-label">Đang kích hoạt</span>
+          <span className="form-check-label">Sắp diễn ra</span>
         </div>
         <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
           <input
@@ -168,7 +168,20 @@ function KhuyenMai() {
               search('', 1, 0);
             }}
           />
-          <span className="form-check-label">Ngừng kích hoạt</span>
+          <span className="form-check-label">Đã kết thúc</span>
+        </div>
+        <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="inlineRadioOptions"
+            checked={filterStatus === 2}
+            onChange={() => {
+              setFilterStatus(2);
+              search('', 2, 0);
+            }}
+          />
+          <span className="form-check-label">Đang diễn ra</span>
         </div>
         {/* <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -217,7 +230,11 @@ function KhuyenMai() {
               <td>{formatDate(d.thoiGianBatDau)}</td>
               <td>{formatDate(d.thoiGianKetThuc)}</td>
               <td className="color-code">{d.moTa}</td>
-              <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>
+              <td>
+                {d.trangThai === 0 && <span>Sắp diễn ra</span>}
+                {d.trangThai === 1 && <span>Đã kết thúc</span>}
+                {d.trangThai !== 0 && d.trangThai !== 1 && <span>Đang diễn ra</span>}
+              </td>
               <td>
                 {/* <Link className="mx-2" to={`/khuyen-mai/detail/${d.id}`}>
                     <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>

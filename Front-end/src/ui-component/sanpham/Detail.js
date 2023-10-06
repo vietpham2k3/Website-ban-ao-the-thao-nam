@@ -18,6 +18,8 @@ function Detail() {
   const [val, setVal] = useState(0);
   const thumbnailContainerRef = useRef(null);
   const [quantity, setQuantity] = useState(1);
+  const idMStest = localStorage.getItem("idMS")
+  console.log(idMStest);
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -123,6 +125,7 @@ function Detail() {
       setIdCTSP(id);
       getAllAnh(id);
       setVal(0);
+      console.log(id);
     }
   };
   ////////
@@ -201,8 +204,8 @@ function Detail() {
                 </button>
                 <Image
                   src={
-                    val === 0 && `data:image/jpeg;base64,${imageList[0].tenBase64}`
-                      ? `data:image/jpeg;base64,${imageList[0].tenBase64}`
+                    val === 0
+                      ? `data:image/jpeg;base64,${imageList[0] && imageList[0].tenBase64}`
                       : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
                   }
                   height="350"
@@ -257,7 +260,7 @@ function Detail() {
                             <Button
                               className="custom-button"
                               onClick={() => {
-                                handleChangeId(idCTSP,idSP);
+                                handleChangeId(idSP,idCTSP);
                               }}
                               style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
                               tabIndex={0}

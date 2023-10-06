@@ -32,19 +32,18 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
-    @Query(value = "SELECT MS.id, MS.ma, GROUP_CONCAT(CTSP.id), SP.id\n" +
+    @Query(value = "SELECT MS.id, MS.ma,  CTSP.id, SP.id\n" +
             "FROM ChiTietSanPham CTSP\n" +
             "JOIN MauSac MS ON CTSP.id_ms = MS.id\n" +
             "JOIN SanPham SP ON CTSP.id_sp = SP.id\n" +
-            "WHERE SP.id = :id\n" +
-            "GROUP BY MS.id, MS.ma, SP.id"
+            "WHERE CTSP.id_sp = :id AND CTSP.trang_thai = 1"
             , nativeQuery = true)
     List<String> getAllMSByIdSP(UUID id);
 
     @Query(value = "SELECT KC.ten\n" +
             "FROM ChiTietSanPham CTSP\n" +
             "JOIN KichCo KC ON CTSP.id_kc = KC.id\n" +
-            "WHERE CTSP.id_ms = :id\n" +
+            "WHERE CTSP.id_ms = :id AND CTSP.trang_thai = 1\n" +
             "GROUP BY KC.id, KC.ten"
             , nativeQuery = true)
     List<String> getKCByIdMS(UUID id);
@@ -81,8 +80,6 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "JOIN SanPham S ON S.id = C.id_sp\n" +
             "order by c.ngay_tao desc", nativeQuery = true)
     List<ChiTietSanPham> getAllSP();
-
-
 
     @Transactional
     @Modifying
@@ -205,22 +202,43 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
 
     @Query(value = "SELECT ctsp.*\n" +
             "FROM ChiTietSanPham ctsp\n" +
-            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
-            "WHERE sp.trang_thai = 1\n" +
-            "ORDER BY sp.ngay_tao DESC", nativeQuery = true)
+            "JOIN (\n" +
+            "  SELECT ctsp.id_sp, MAX(ctsp.id) AS max_id\n" +
+            "  FROM ChiTietSanPham ctsp\n" +
+            "  JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "  WHERE ctsp.trang_thai = 1\n" +
+            "  GROUP BY ctsp.id_sp\n" +
+            ") AS sp ON sp.max_id = ctsp.id\n" +
+            "ORDER BY ctsp.ngay_tao DESC", nativeQuery = true)
     List<ChiTietSanPham> getAllSPNew();
 
-    @Query(value = "SELECT ctsp.*, SUM(hdct.so_luong) FROM ChiTietSanPham ctsp\n" +
+    @Query(value = "SELECT\n" +
+            "  ctsp.*,\n" +
+            "  SUM(hdct.so_luong)\n" +
+            "FROM ChiTietSanPham ctsp\n" +
             "JOIN HoaDonChiTiet hdct ON hdct.id_ctsp = ctsp.id\n" +
+            "JOIN (\n" +
+            "  SELECT id_sp, MAX(id) AS max_id\n" +
+            "  FROM ChiTietSanPham\n" +
+            "  WHERE trang_thai = 1\n" +
+            "  GROUP BY id_sp\n" +
+            ") AS subquery ON subquery.max_id = ctsp.id\n" +
             "WHERE ctsp.trang_thai = 1\n" +
-            "GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc, ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp\n" +
-            ",ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai\n" +
+            "GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc, ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp,\n" +
+            "ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai\n" +
             "ORDER BY SUM(hdct.so_luong) DESC", nativeQuery = true)
     List<ChiTietSanPham> getAllBestseller();
 
 
-    @Query(value = "SELECT * FROM ChiTietSanPham\n" +
-            "WHERE trang_thai = 1", nativeQuery = true)
+    @Query(value = "SELECT ctsp.*\n" +
+            "FROM ChiTietSanPham ctsp\n" +
+            "JOIN (\n" +
+            "  SELECT id_sp, MAX(id) AS max_id\n" +
+            "  FROM ChiTietSanPham\n" +
+            "  WHERE trang_thai = 1\n" +
+            "  GROUP BY id_sp\n" +
+            ") AS subquery ON subquery.max_id = ctsp.id\n" +
+            "WHERE ctsp.trang_thai = 1", nativeQuery = true)
     List<ChiTietSanPham> getAllProduct();
 
 }

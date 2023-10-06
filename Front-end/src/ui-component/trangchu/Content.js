@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import '../../scss/Content.scss';
 import { getAllBestseller, getAllSPNEW, getAllProduct } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 function Content() {
   const [data, setData] = useState([]);
@@ -36,6 +36,13 @@ function Content() {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleDetail = (idCTSP,idSP,idMS) =>{
+      navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
+      localStorage.setItem("idMS",idMS);
+  }
+
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
     const formatter = new Intl.NumberFormat('vi-VN', {
@@ -55,13 +62,11 @@ function Content() {
               data.slice(0, 8).map((product, index) => {
                 return (
                   <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
-                    <Card style={{ width: '260px', height: '400px' }}>
-                      <Link to={`/detail/${product.id}/${product.sanPham.id}/${product.mauSac.id}`}>
+                    <Card onClick={() => handleDetail(product.id,product.sanPham.id,product.mauSac.id)} style={{ width: '260px', height: '400px' }}>
                         <Card.Img
                           style={{ textAlign: 'center', width: '260px', height: '300px' }}
                           src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
                         />
-                      </Link>
                       <Card.Body>
                         <Card.Title>{product.sanPham.ten}</Card.Title>
                         <Card.Text>
