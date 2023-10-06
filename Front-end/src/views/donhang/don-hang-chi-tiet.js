@@ -1435,7 +1435,7 @@ function DonHangCT() {
                       </Col>
                       <Col sm={3}>
                         <span style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {convertToCurrency(hoaDon.tongTienKhiGiam)}
+                          {convertToCurrency(hoaDon.tongTien)}
                         </span>
                       </Col>
                     </Col>
@@ -2107,7 +2107,7 @@ function DonHangCT() {
                             <InputSpinner
                               type={'real'}
                               max={d.chiTietSanPham.soLuong + d.soLuong}
-                              min={0}
+                              min={1}
                               key={d.id}
                               step={1}
                               value={d.soLuong}

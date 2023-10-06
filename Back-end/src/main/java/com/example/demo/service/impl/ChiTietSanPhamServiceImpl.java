@@ -91,4 +91,10 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     public void update(Integer soLuong, UUID id) {
         repository.update(soLuong, id);
     }
+
+    @Override
+    public Page<ChiTietSanPham> pageWeb(Integer page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return repository.getAll(pageable);
+    }
 }

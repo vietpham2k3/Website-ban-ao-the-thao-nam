@@ -36,4 +36,6 @@ public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAllProduct();
 
     List<ChiTietSanPham> getAllBestseller();
+
+    Page<ChiTietSanPham> pageWeb(Integer page);
 }

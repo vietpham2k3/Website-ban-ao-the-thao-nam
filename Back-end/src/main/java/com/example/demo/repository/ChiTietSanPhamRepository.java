@@ -32,11 +32,12 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
-    @Query(value = "SELECT MS.id, MS.ma,  CTSP.id, SP.id\n" +
+    @Query(value = "SELECT MS.id, MS.ma, STRING_AGG(CONVERT(NVARCHAR(36), CTSP.id), ',') AS id_ctsp, SP.id\n" +
             "FROM ChiTietSanPham CTSP\n" +
             "JOIN MauSac MS ON CTSP.id_ms = MS.id\n" +
             "JOIN SanPham SP ON CTSP.id_sp = SP.id\n" +
-            "WHERE CTSP.id_sp = :id AND CTSP.trang_thai = 1"
+            "WHERE CTSP.id_sp = :id AND CTSP.trang_thai = 1\n" +
+            "GROUP BY MS.id, MS.ma, SP.id;"
             , nativeQuery = true)
     List<String> getAllMSByIdSP(UUID id);
 

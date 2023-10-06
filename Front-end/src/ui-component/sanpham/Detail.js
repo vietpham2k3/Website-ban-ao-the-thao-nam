@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
@@ -61,7 +61,6 @@ function Detail() {
 
   // ms kc
   const [isActive, setIsActive] = useState(false);
-  const [idCTSP, setIdCTSP] = useState(true);
 
   const handleClick2 = () => {
     setIsActive(true);
@@ -70,7 +69,6 @@ function Detail() {
     }, 200);
   };
 
-  // const [listMSKC, setListMSKC] = useState([]);
   const [listKC, setListKC] = useState([]);
   const [listMS, setListMS] = useState([]);
 
@@ -96,16 +94,7 @@ function Detail() {
     }
   };
 
-  // const getAllMSKC = async (id) => {
-  //   try {
-  //     const res = await getAllByIdSP(id);
-  //     if (res && res.data) {
-  //       setListMSKC(res.data);
-  //     }
-  //   } catch (error) {
-  //     // Xử lý lỗi nếu cần
-  //   }
-  // };
+  const navigate = useNavigate();
 
   const getAllMS = async (id) => {
     try {
@@ -118,11 +107,12 @@ function Detail() {
     }
   };
 
-  const handleChangeId = (id) => {
+  const handleChangeId = (idCTSP,idSP,idMS) => {
     if (idCTSP === id) {
       toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
-      setIdCTSP(id);
+      navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
+      // localStorage.setItem("idMS",idMS);
       getAllAnh(id);
       setVal(0);
       console.log(id);
@@ -260,7 +250,7 @@ function Detail() {
                             <Button
                               className="custom-button"
                               onClick={() => {
-                                handleChangeId(idSP,idCTSP);
+                                handleChangeId(idCTSP,idSP,id);
                               }}
                               style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
                               tabIndex={0}
