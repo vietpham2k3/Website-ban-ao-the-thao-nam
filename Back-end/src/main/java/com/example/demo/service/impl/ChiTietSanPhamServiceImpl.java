@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.KichCo;
+import com.example.demo.entity.SanPham;
 import com.example.demo.repository.ChiTietSanPhamRepository;
 import com.example.demo.service.ChiTietSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,16 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<String> getAllMSByIdSP(UUID id) {
+        return repository.getAllMSByIdSP(id);
+    }
+
+    @Override
+    public List<String> getKCByIdMS(UUID id) {
+        return repository.getKCByIdMS(id);
+    }
+
+    @Override
     public List<ChiTietSanPham> getAllSPNEW() {
         return repository.getAllSPNew();
     }
@@ -57,7 +69,7 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public Page<ChiTietSanPham> search(String key, Integer trangThai, Double min, Double max, Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
-        return repository.search(key, trangThai,min, max, pageable);
+        return repository.search(key, trangThai, min, max, pageable);
     }
 
     @Override
@@ -83,5 +95,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     @Override
     public void update(Integer soLuong, UUID id) {
         repository.update(soLuong, id);
+    }
+
+    @Override
+    public Page<ChiTietSanPham> pageWeb(Integer page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return repository.getAll(pageable);
     }
 }

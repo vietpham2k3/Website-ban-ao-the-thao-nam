@@ -13,6 +13,22 @@ const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
 
+const getAllSP = () => {
+  return axios.get('/api/hoa-don/hien-thi-san-pham');
+};
+
+const getKCByIdMS = (id) => {
+  return axios.get(`/api/hoa-don/getKCByIdMS/${id}`);
+};
+
+const getAllMSByIdSP = (id) => {
+  return axios.get(`/api/hoa-don/getAllMSByIdSP/${id}`);
+};
+
+const searchCTSPofDH = (key) => {
+  return axios.get(`/api/hoa-don/searchSP?key=${key}`);
+};
+
 const detailHD = (id) => {
   return axios.get(`/api/hoa-don/detail/` + id);
 };
@@ -100,5 +116,9 @@ export {
   getALLTT,
   updateSL,
   deleteHDCT,
-  xacNhanDH
+  xacNhanDH,
+  getAllSP,
+  searchCTSPofDH,
+  getKCByIdMS,
+  getAllMSByIdSP
 };

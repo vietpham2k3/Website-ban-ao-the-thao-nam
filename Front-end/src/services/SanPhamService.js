@@ -13,6 +13,10 @@ const getAllSPNEW = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
 };
 
+const getAllCTSPWeb = (page) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllWeb?page=${page}`);
+};
+
 const getAllProduct = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllProduct');
 };
@@ -110,5 +114,6 @@ export {
   getAllListNSX,
   getAllSPNEW,
   getAllBestseller,
-  getAllProduct
+  getAllProduct,
+  getAllCTSPWeb
 };

@@ -22,4 +22,8 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, UUID> {
 
     @Query(value = "select k from KhuyenMai k where k.trangThai = 0 and k.tien <= :tien")
     List<KhuyenMai> getAll(Double tien);
+
+    @Query(value = "select k from KhuyenMai k where k.trangThai = 0")
+    List<KhuyenMai> getAll();
+
 }

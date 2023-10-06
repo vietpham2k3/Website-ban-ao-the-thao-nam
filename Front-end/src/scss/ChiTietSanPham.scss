@@ -2,71 +2,107 @@
 
 /* Thiết lập kiểu cho thẻ Card */
 .card {
-    margin: 20px; /* Khoảng cách giữa các thẻ Card */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiển thị bóng đổ mỏng */
-  }
-  
-  /* Thiết lập kiểu cho hình ảnh trong thẻ Card */
-  .card img {
-    cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua hình ảnh */
-  }
-  
-  /* Thiết lập kiểu cho tiêu đề của thẻ Card */
-  .card-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  /* Thiết lập kiểu cho giá tiền */
-  .card-text span {
-    color: #e74c3c; /* Màu đỏ */
-    font-weight: bold;
-    font-size: 16px;
-  }
-  
-  /* Thiết lập kiểu cho nút "Mua Ngay" và "Thêm Giỏ Hàng" */
-  // .card .btn {
-  //   margin-top: 10px; /* Khoảng cách giữa các nút */
-  // }
-  
-  /* Thiết lập kiểu cho phần nội dung collapsible */
-  .collapse {
-    margin-top: 10px; /* Khoảng cách giữa phần nội dung collapsible và các thông tin sản phẩm */
-  }
-  
-  /* Thiết lập kiểu cho phần phân trang */
-  .pagination {
-    margin-top: 20px; /* Khoảng cách giữa phân trang và các sản phẩm */
-  }
-  
-  /* Thiết lập kiểu cho nút phân trang */
-  .page-item {
-    display: inline-block; /* Hiển thị nút phân trang cạnh nhau */
-    margin: 2px; /* Khoảng cách giữa các nút phân trang */
-    cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua nút */
-  }
-  
-  /* Thiết lập kiểu cho nút phân trang được chọn */
-  .page-item.active .page-link {
-    background-color: #007bff; /* Màu nền cho nút phân trang được chọn */
-    border-color: #007bff; /* Màu viền cho nút phân trang được chọn */
-    color: #fff; /* Màu chữ cho nút phân trang được chọn */
-    font-weight: bold;
-  }
-  
-  /* Thiết lập kiểu cho mũi tên của nút phân trang */
-  .page-link::before {
-    content: none; /* Ẩn mũi tên */
-  }
-  
+  margin: 20px; /* Khoảng cách giữa các thẻ Card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiển thị bóng đổ mỏng */
+}
 
-  .button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px; /* Điều chỉnh khoảng cách giữa hai hàng */
+/* Thiết lập kiểu cho hình ảnh trong thẻ Card */
+.card img {
+  cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua hình ảnh */
+}
+
+/* Thiết lập kiểu cho tiêu đề của thẻ Card */
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Thiết lập kiểu cho giá tiền */
+.card-text span {
+  color: #e74c3c; /* Màu đỏ */
+  font-weight: bold;
+  font-size: 16px;
+}
+
+
+/* Thiết lập kiểu cho phần nội dung collapsible */
+.collapse {
+  margin-top: 10px; /* Khoảng cách giữa phần nội dung collapsible và các thông tin sản phẩm */
+}
+
+/* Thiết lập kiểu cho phần phân trang */
+.pagination {
+  margin-top: 20px; /* Khoảng cách giữa phân trang và các sản phẩm */
+}
+
+/* Thiết lập kiểu cho nút phân trang */
+.page-item {
+  display: inline-block; /* Hiển thị nút phân trang cạnh nhau */
+  margin: 2px; /* Khoảng cách giữa các nút phân trang */
+  cursor: pointer; /* Biểu tượng con trỏ khi di chuột qua nút */
+}
+
+/* Thiết lập kiểu cho nút phân trang được chọn */
+.page-item.active .page-link {
+  background-color: #007bff; /* Màu nền cho nút phân trang được chọn */
+  border-color: #007bff; /* Màu viền cho nút phân trang được chọn */
+  color: #fff; /* Màu chữ cho nút phân trang được chọn */
+  font-weight: bold;
+}
+
+/* Thiết lập kiểu cho mũi tên của nút phân trang */
+.page-link::before {
+  content: none; /* Ẩn mũi tên */
+}
+
+// ColorFilters.scss
+
+.color-filter-container {
+display: flex;
+flex-direction: column;
+align-items: flex-start; // Căn theo trục Y sang trái
+}
+
+.color-filter {
+display: flex;
+align-items: center; // Căn theo trục Y vào giữa
+margin-bottom: 10px; // Khoảng cách giữa các màu
+}
+
+.color-code {
+width: 20px; // Độ rộng của hộp màu
+height: 20px; // Chiều cao của hộp màu
+margin-right: 10px; // Khoảng cách giữa hộp màu và checkbox
+border: 1px solid #000; // Viền xung quanh hộp màu
+}
+
+/* Trong tệp CSS của bạn (hoặc SCSS) */
+
+.round-checkbox {
+appearance: none;
+-webkit-appearance: none;
+-moz-appearance: none;
+width: 20px; /* Độ rộng của checkbox */
+height: 20px; /* Chiều cao của checkbox */
+border: 2px solid #000; /* Viền của checkbox */
+border-radius: 50%; /* Để biến checkbox thành hình tròn */
+outline: none;
+cursor: pointer;
+}
+
+.round-checkbox:checked {
+  background-color: #000; /* Màu nền khi checkbox được chọn */
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 240px; /* Độ rộng tối đa của container */
 }
 
 .custom-button {
-    flex: 1;
-    margin-right: 5px; /* Điều chỉnh khoảng cách giữa các nút */
+  width: calc(33.33% - 10px); /* 33.33% để chia đều thành 3 cột và trừ đi khoảng cách giữa chúng */
+  margin-bottom: 10px; /* Khoảng cách dưới mỗi nút */
 }

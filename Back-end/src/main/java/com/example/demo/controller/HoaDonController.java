@@ -3,36 +3,36 @@ package com.example.demo.controller;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HinhThucThanhToan;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
-import com.example.demo.entity.NhanVien;
-import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.LichSuHoaDon;
-import com.example.demo.service.HoaDon_KhuyenMaiService;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.HoaDon_KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Random;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -56,6 +56,16 @@ public class HoaDonController {
         return ResponseEntity.ok(service.listHD());
     }
 
+    @GetMapping("hien-thi-san-pham")
+    public ResponseEntity<?> getAllSP() {
+        return ResponseEntity.ok(service.getAllSP());
+    }
+
+    @GetMapping("/searchSP")
+    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key) {
+        return ResponseEntity.ok(service.searchSPofHDCT(key));
+    }
+
     @GetMapping("getById/{id}")
     public ResponseEntity<?> getAllById(@PathVariable UUID id) {
         return ResponseEntity.ok(hoaDonChiTietService.getAll(id));
@@ -76,6 +86,16 @@ public class HoaDonController {
             }
         }
         return ResponseEntity.ok(hoaDon_khuyenMaiService.add(hoaDon));
+    }
+
+    @GetMapping("getKCByIdMS/{id}")
+    public ResponseEntity<?> getAllByIdCTSP(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getKCByIdMS(id));
+    }
+
+    @GetMapping("getAllMSByIdSP/{id}")
+    public ResponseEntity<?> getAllByIdSP2(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllMSByIdSP(id));
     }
 
     @PostMapping("add")
@@ -107,8 +127,8 @@ public class HoaDonController {
                 .id(hd.hinhThucThanhToan.getId())
                 .ma(ma)
                 .ten("Tiền mặt")
-                .ngay_tao(h.getNgay_tao())
-                .ngay_sua(new Date())
+                .ngayTao(h.getNgayTao())
+                .ngaySua(new Date())
                 .trangThai(hoaDon.getHinhThucThanhToan().getTrangThai())
                 .tien(hoaDon.getHinhThucThanhToan().getTien())
                 .build();
