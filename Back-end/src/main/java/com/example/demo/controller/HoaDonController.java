@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.HinhThucThanhToan;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
@@ -98,12 +99,28 @@ public class HoaDonController {
 
     @PutMapping("update-hd/{id}")
     public ResponseEntity<?> updateHD(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
+        String ma = "httt" + new Random().nextInt(100000);
+
         HoaDon hd = service.detailHD(id);
+        HinhThucThanhToan h = serviceHttt.detail(hd.hinhThucThanhToan.getId());
+        HinhThucThanhToan httt = new HinhThucThanhToan().builder()
+                .id(hd.hinhThucThanhToan.getId())
+                .ma(ma)
+                .ten("Tiền mặt")
+                .ngay_tao(h.getNgay_tao())
+                .ngay_sua(new Date())
+                .trangThai(hoaDon.getHinhThucThanhToan().getTrangThai())
+                .tien(hoaDon.getHinhThucThanhToan().getTien())
+                .build();
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
+
+        httt = serviceHttt.add(httt);
+
+        hoaDon.setHinhThucThanhToan(httt);
 
         return ResponseEntity.ok(service.add(hoaDon));
     }

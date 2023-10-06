@@ -30,6 +30,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
+    @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id and sp.trangThai = 1")
+    List<ChiTietSanPham> getAllByIdSPTT(UUID id);
 
     @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
             "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +

@@ -68,6 +68,11 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.getAllByIdSP(id));
     }
 
+    @GetMapping("getAllByIdSPTT/{id}")
+    public ResponseEntity<?> getAllByIdSPTT(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllByIdSPTT(id));
+    }
+
     @GetMapping("getAllSPNEW")
     public ResponseEntity<?> getAllSPNEW() {
         return ResponseEntity.ok(chiTietSanPhamService.getAllSPNEW());

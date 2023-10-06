@@ -11,6 +11,8 @@ public interface ChiTietSanPhamService {
 
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
+    List<ChiTietSanPham> getAllByIdSPTT(UUID id);
+
     List<ChiTietSanPham> getAllSPNEW();
 
     Page<ChiTietSanPham> page(Integer page);

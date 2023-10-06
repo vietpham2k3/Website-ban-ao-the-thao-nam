@@ -307,7 +307,7 @@ function UpdateSanPham() {
     try {
       event.preventDefault();
       await putctspmodal(idCTSP, idSP, values);
-      const updatedList = await getAllByIdSP(idSP);
+      const updatedList = await getAllByIdSP(idSP, '');
       if (updatedList && updatedList.data) {
         setListMSKC(updatedList.data);
       }

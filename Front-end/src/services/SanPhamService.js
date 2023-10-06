@@ -84,9 +84,14 @@ const getAllByIdSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/getAllByIdSP/${id}`);
 };
 
+const getAllByIdSPTT = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllByIdSPTT/${id}`);
+};
+
 export {
   getAll,
   deleteMSKC,
+  getAllByIdSPTT,
   getAllByIdSP,
   getAllCTSP,
   getAllListKC,
