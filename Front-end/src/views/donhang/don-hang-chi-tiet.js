@@ -1254,7 +1254,7 @@ function DonHangCT() {
 
                     <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show} onHide={handleUpdate}>
                       <Modal.Header onClick={handleUpdate}>
-                        <Modal.Title style={{ marginLeft: 120 }}>Cập Nhật Khách Hàng</Modal.Title>
+                        <Modal.Title style={{ marginLeft: 66 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <form className="needs-validation" noValidate onSubmit={handleUpdate}>
@@ -1637,7 +1637,7 @@ function DonHangCT() {
                             fontWeight: 'bold'
                           }}
                         >
-                          Khách Hàng:
+                          Người Nhận:
                         </span>
                       </Col>
                       <Col sm={3}>
@@ -1803,112 +1803,7 @@ function DonHangCT() {
             )}
           </div>
         </Card>
-        <br></br>
-        <br></br>
-        <Card>
-          <div className="w-auto rounded bg-white border shadow p-4">
-            <div className="row">
-              <div className="col-12">
-                <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
-                  <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
-                    <h3 className="col-6" style={{ fontWeight: 'bold', color: 'black' }}>
-                      Lịch Sử Thanh Toán
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr />
-            {/* noi dung */}
-            <section className="navbar-expand-lg navbar-light bg-light">
-              <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                <Table id="myTable" className="table table-hover" style={{ textAlign: 'center' }}>
-                  <thead>
-                    <tr style={{ textAlign: 'center' }}>
-                      <th>Số Tiền</th>
-                      <th>Trạng Thái</th>
-                      <th>Thời gian</th>
-                      <th>Phương thức</th>
-                      <th>Người xác nhận</th>
-                      <th>Ghi chú</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {hoaDon && (
-                      <tr>
-                        <td>
-                          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.tien
-                            ? convertToCurrency(hoaDon.hinhThucThanhToan.tien)
-                            : ''}
-                        </td>
-                        <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
-                          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 0 && (
-                            <span
-                              style={{
-                                width: '200px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                            >
-                              Đang chờ thanh toán
-                            </span>
-                          )}
-                          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 1 && (
-                            <span
-                              style={{
-                                width: '200px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-primary status-completed"
-                            >
-                              Đã thanh toán
-                            </span>
-                          )}
-                          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.trangThai === 2 && (
-                            <span
-                              style={{
-                                width: '200px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-danger status-completed"
-                            >
-                              Thanh toán thất bại
-                            </span>
-                          )}
-                        </td>
-                        <td>
-                          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ngaySua ? formatDate(hoaDon.hinhThucThanhToan.ngaySua) : ''}
-                        </td>
-                        <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : ''}</td>
-                        {/* <td>{item.hoaDon.nhanVien.ten}</td> */}
-                        <td>Phạm Quốc Việt</td>
-                        <td>{hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ghiChu ? hoaDon.hinhThucThanhToan.ghiChu : ''}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
-              </div>
-            </section>
-          </div>
-        </Card>
+
         <br></br>
         <br></br>
         <Card>
@@ -1954,10 +1849,10 @@ function DonHangCT() {
                           </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                          <div className="box col-auto col-4">
-                            <div style={{ marginTop: 10 }} className="search">
+                          <div className="box col-auto col-6">
+                            <div className="search">
                               <input
-                                style={{ borderRadius: 15, width: 800, height: 35 }}
+                                style={{ borderRadius: 15, width: 900, height: 35 }}
                                 type="text"
                                 className="input-search results-list"
                                 placeholder="Nhập mã hoặc tên sản phẩm cần tìm..."

@@ -4,9 +4,9 @@ const getAllPageDH = (page) => {
   return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`);
 };
 
-const findVIP = (key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page) => {
+const findVIP = (key, tuNgay, denNgay, trangThai, loaiDon, page) => {
   return axios.get(`/api/hoa-don/hien-thi-page-find?key=${key}&tuNgay=${tuNgay}&denNgay=${denNgay}
-  &trangThai=${trangThai}&loaiDon=${loaiDon}&minSL=${minSL}&maxSL=${maxSL}&minTT=${minTT}&maxTT=${maxTT}&page=${page}`);
+  &trangThai=${trangThai}&loaiDon=${loaiDon}&page=${page}`);
 };
 
 const getAllHD = () => {
