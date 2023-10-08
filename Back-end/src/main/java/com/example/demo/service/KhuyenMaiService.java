@@ -21,6 +21,4 @@ public interface KhuyenMaiService {
 
     public KhuyenMai xoa(UUID id);
 
-
-
 }
