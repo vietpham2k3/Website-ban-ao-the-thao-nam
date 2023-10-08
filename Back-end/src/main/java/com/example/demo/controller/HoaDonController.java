@@ -154,20 +154,20 @@ public class HoaDonController {
     }
 
 
-//    @PutMapping("/thanh-toan/{id}")
-//    public ResponseEntity<?> thanhToan(@PathVariable UUID id){
-//        HoaDon hd = service.detailHD(id);
-//        String maLS = "LSHD" + new Random().nextInt(100000);
-//        LichSuHoaDon ls = serviceLSHD.detail(hd.getId()).builder()
-//                .trangThai(7)
-//                .ma(maLS)
-//                .ten("Thanh toán thành công")
-//                .ngayTao(new Date())
-//                .hoaDon(hd)
-//                .ghiChu("Đã thanh toán")
-//                .build();
-//        return ResponseEntity.ok(serviceLSHD.add(ls));
-//    }
+    @PutMapping("/thanh-toan/{id}")
+    public ResponseEntity<?> thanhToan(@PathVariable UUID id){
+        HoaDon hd = service.detailHD(id);
+        String maLS = "LSHD" + new Random().nextInt(100000);
+        LichSuHoaDon ls = serviceLSHD.detail(hd.getId()).builder()
+                .trangThai(7)
+                .ma(maLS)
+                .ten("Thanh toán thành công")
+                .ngayTao(new Date())
+                .hoaDon(hd)
+                .ghiChu("Đã thanh toán")
+                .build();
+        return ResponseEntity.ok(serviceLSHD.add(ls));
+    }
 
     @PostMapping("add-sp")
     public ResponseEntity<?> addSP(@RequestBody HoaDonChiTiet hoaDon) {
