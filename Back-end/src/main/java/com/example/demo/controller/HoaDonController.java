@@ -220,7 +220,7 @@ public class HoaDonController {
 
     @GetMapping("hien-thi-page")
     public ResponseEntity<?> getPageHD(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 10);
         return ResponseEntity.ok(service.hienThiPageHD(pageable));
     }
 
@@ -263,7 +263,7 @@ public class HoaDonController {
                                      Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                      Double maxTT,
                                      @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 10);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
         Date tuNgayDate = null;
         Date denNgayDate = null;

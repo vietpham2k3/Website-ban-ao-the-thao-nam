@@ -27,22 +27,9 @@ import {
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
-import * as yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/ErrorMessage.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
-
-const schema = yup.object().shape({
-  tenNguoiNhan: yup
-    .string()
-    .required('Tên không được để trống')
-    .matches(/^[a-zA-Z\s]{1,20}$/, 'Tên không hợp lệ, tối đa 20 ký tự'),
-  soDienThoai: yup
-    .string()
-    .required('Số điện thoại không được để trống')
-    .matches(/^0\d{9}$/, 'Số điện thoại không hợp lệ'),
-  diaChi: yup.string().required('Địa chỉ không được để trống').max(250, 'Địa chỉ tối đa 250 ký tự')
-});
 
 function DonHangCT() {
   const { id } = useParams();
@@ -128,7 +115,6 @@ function DonHangCT() {
 
   useEffect(() => {
     getAllById(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const getAllById = async (idHD) => {
@@ -163,7 +149,7 @@ function DonHangCT() {
     }
   };
 
-  // kcmssp
+  // kcms sp
   const handleAddSoLuong = (id, idSP) => {
     setShow7(true);
     setidSP(idSP);
@@ -306,54 +292,50 @@ function DonHangCT() {
     }
   };
 
+  const [none, setNone] = useState(true);
+  const [none1, setNone1] = useState(true);
+  const [none2, setNone2] = useState(true);
+  const [none3, setNone3] = useState(true);
+  const [none4, setNone4] = useState(true);
+  const [none5, setNone5] = useState(true);
+
   const handleUpdate = async (event) => {
     event.preventDefault();
-    let validationErrors = {}; // Tạo một đối tượng để lưu trữ lỗi
 
-    try {
-      await schema.validate(values, { abortEarly: false });
-      await updateKH(id, values);
-    } catch (error) {
-      if (error.inner) {
-        error.inner.forEach((err) => {
-          validationErrors[err.path] = err.message; // Lưu trữ lỗi vào đối tượng validationErrors
-        });
-      }
-
-      const errorMessage = `
-        <div>
-          <strong>Thông tin không hợp lệ:</strong>
-          <ul>
-            <li>Trường " Họ và Tên ":
-              <ul>
-                <li>Không được để trống.</li>
-                <li>Không được chứa ký tự đặc biệt hoặc số.</li>
-                <li>Tối đa 20 ký tự.</li>
-              </ul>
-            </li>
-            <li>Trường " Số điện thoại ":
-              <ul>
-                <li>Không được để trống.</li>
-                <li>Phải là số.</li>
-                <li>Phải bắt đầu bằng số 0.</li>
-                <li>Tối đa 10 ký tự.</li>
-              </ul>
-            </li>
-            <li>Trường " Địa chỉ ":
-              <ul>
-                <li>Không được để trống.</li>
-                <li>Tối đa 250 ký tự.</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      `;
-
-      toast.error(<div dangerouslySetInnerHTML={{ __html: errorMessage }} />, {
-        autoClose: 3000,
-        className: 'custom-toast-error'
-      });
+    if (values.tenNguoiNhan === '') {
+      setNone(false);
+      return;
     }
+
+    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\s]+$/.test(values.tenNguoiNhan)) {
+      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái và khoảng trắng
+      setNone1(false);
+      return;
+    }
+
+    if (values.soDienThoai === '') {
+      setNone2(false);
+      return;
+    }
+
+    // Kiểm tra định dạng số điện thoại
+    const phoneRegex = /^0[0-9]{9}$/;
+    if (!phoneRegex.test(values.soDienThoai)) {
+      setNone3(false);
+      return;
+    }
+
+    if (values.diaChi === '') {
+      setNone4(false);
+      return;
+    }
+
+    if (values.diaChi.length > 250) {
+      setNone5(false);
+      return;
+    }
+
+    await updateKH(id, values);
   };
 
   // detailHD
@@ -1256,7 +1238,7 @@ function DonHangCT() {
                       <Modal.Header onClick={handleUpdate}>
                         <Modal.Title style={{ marginLeft: 66 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
                       </Modal.Header>
-                      <Modal.Body>
+                      <Modal.Body style={{ width: 500 }}>
                         <form className="needs-validation" noValidate onSubmit={handleUpdate}>
                           <div className="form-group row">
                             <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
@@ -1271,12 +1253,12 @@ function DonHangCT() {
                                 value={hoaDon.tenNguoiNhan}
                                 onChange={(e) => {
                                   setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
+                                  setNone(true);
+                                  setNone1(true);
                                 }}
-                                required
-                                pattern="^[a-zA-Z\s]{1,20}$"
-                                title="Tên không được để trống, không chứa ký tự đặc biệt và số, tối đa 20 ký tự"
                               />
-                              <div className="invalid-feedback">Tên không hợp lệ!</div>
+                              {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
+                              {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>}
                             </div>
                           </div>
                           <br></br>
@@ -1293,12 +1275,14 @@ function DonHangCT() {
                                 value={hoaDon.soDienThoai}
                                 onChange={(e) => {
                                   setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
+                                  setNone2(true);
+                                  setNone3(true);
                                 }}
-                                required
-                                pattern="^0\d{9}$"
-                                title="Số điện thoại không được để trống, phải là số, và bắt đầu bằng số 0"
                               />
-                              <div className="invalid-feedback">Số điện thoại không hợp lệ!</div>
+                              {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
+                              {!none3 && (
+                                <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>
+                              )}
                             </div>
                           </div>
                           <br></br>
@@ -1315,12 +1299,12 @@ function DonHangCT() {
                                 value={hoaDon.diaChi}
                                 onChange={(e) => {
                                   setHoaDon({ ...hoaDon, diaChi: e.target.value });
+                                  setNone4(true);
+                                  setNone5(true);
                                 }}
-                                required
-                                maxLength="250"
-                                title="Địa chỉ không được để trống, tối đa 250 ký tự"
                               ></textarea>
-                              <div className="invalid-feedback">Địa chỉ không hợp lệ!</div>
+                              {!none4 && <div style={{ color: 'red' }}>Địa chỉ không được để trống !</div>}
+                              {!none5 && <div style={{ color: 'red' }}>Địa chỉ không được vượt quá 250 ký tự !</div>}
                             </div>
                           </div>
                           <br></br>
@@ -1819,14 +1803,13 @@ function DonHangCT() {
 
                   <div className="col-5">
                     <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
-                      {hoaDon.trangThai === 0 && (
+                      {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
                         <button
                           className="button-85"
                           onClick={handleShow6}
                           style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
                           data-toggle="tooltip"
                           title="Thêm sản phẩm"
-                          // className="shadow-button"
                           type="submit"
                         >
                           <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
@@ -1834,7 +1817,6 @@ function DonHangCT() {
                           </span>
                         </button>
                       )}
-
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -1998,7 +1980,7 @@ function DonHangCT() {
                           className="input-spinner"
                           style={{ alignItems: 'center', width: 120, justifyContent: 'center', marginLeft: 90, marginTop: 20 }}
                         >
-                          {hoaDon.trangThai === 0 ? (
+                          {hoaDon.trangThai === 0 || hoaDon.trangThai === 1 ? (
                             <InputSpinner
                               type={'real'}
                               max={d.chiTietSanPham.soLuong + d.soLuong}
@@ -2029,7 +2011,9 @@ function DonHangCT() {
                       <td>{convertToCurrency(d.donGia)}</td>
                       <td>{convertToCurrency(d.soLuong * d.donGia)}</td>
                       <td>
-                        {hoaDon.trangThai === 0 && <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>}
+                        {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
+                          <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                        )}
                       </td>
                     </tr>
                   ))}

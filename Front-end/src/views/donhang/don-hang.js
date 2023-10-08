@@ -138,11 +138,6 @@ function DonHang() {
     handlePageChange(event.selected);
   };
 
-  //refesh
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
   //export
   const handleOnExport = () => {
     const table = document.getElementById('table-to-xls');
@@ -290,42 +285,7 @@ function DonHang() {
               </div>
 
             </div>
-            <br></br>
-            <div className="row">
-              <div style={{ marginTop: 20,marginLeft: 95 }} className="box col-auto col-3">
-                <button
-                  onClick={handleRefresh}
-                  data-toggle="tooltip"
-                  title="Làm mới"
-                  style={{
-                    background: '#0ad406',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
-                    <i className="fa-solid fa-arrows-rotate fa-spin fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
-                    style={{
-                      marginBottom: '3px',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 'bold',
-                      marginLeft: '5px'
-                    }}
-                  >
-                    Refresh
-                  </span>
-                </button>
-              </div>
-            </div>
+
           </div>
         </Card>
         <br></br>
