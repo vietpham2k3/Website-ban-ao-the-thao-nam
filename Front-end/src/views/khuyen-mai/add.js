@@ -54,6 +54,7 @@ function AddKhuyenMai() {
                   className="form-control"
                   type="text"
                   value={values.ma}
+                  disabled
                   onChange={(event) => setValues({ ...values, ma: event.target.value })}
                   style={{ fontWeight: 'bold' }}
                 />
