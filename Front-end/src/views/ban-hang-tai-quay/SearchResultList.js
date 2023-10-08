@@ -49,6 +49,9 @@ function SearchResult(props) {
     if (parseInt(valuesAdd.soLuong) > parseInt(dataDetail.soLuong)) {
       toast.error('Đã vượt quá số lượng hiện có !');
       return;
+    } else if (parseInt(valuesAdd.soLuong) <= 0 || valuesAdd.soLuong === '') {
+      toast.error('Vui lòng nhập số lượng');
+      return;
     }
     add(valuesAdd);
   };
