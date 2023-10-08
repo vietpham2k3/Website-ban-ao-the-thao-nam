@@ -13,6 +13,22 @@ const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
 
+const getAllSP = () => {
+  return axios.get('/api/hoa-don/hien-thi-san-pham');
+};
+
+const getKCByIdMS = (id) => {
+  return axios.get(`/api/hoa-don/getKCByIdMS/${id}`);
+};
+
+const getAllMSByIdSP = (id) => {
+  return axios.get(`/api/hoa-don/getAllMSByIdSP/${id}`);
+};
+
+const searchCTSPofDH = (key) => {
+  return axios.get(`/api/hoa-don/searchSP?key=${key}`);
+};
+
 const detailHD = (id) => {
   return axios.get(`/api/hoa-don/detail/` + id);
 };
@@ -69,13 +85,28 @@ const updateHD = (id, values) => {
   return axios.put(`/api/hoa-don/update-hd/${id}`, values);
 };
 
+const getKmById = (id) => {
+  return axios.get(`/api/hoa-don/getKmById/${id}`);
+};
+
+const addKM = (values) => {
+  return axios.post(`/api/hoa-don/addKM`, values);
+};
+
+const thanhToan = (id) => {
+  return axios.put(`/api/hoa-don/thanh-toan/${id}`);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
 
 export {
   getAllHD,
+  thanhToan,
   updateHD,
+  addKM,
+  getKmById,
   getAllPageDH,
   xacNhanThanhToan,
   xacNhanGiao,
@@ -90,5 +121,9 @@ export {
   getALLTT,
   updateSL,
   deleteHDCT,
-  xacNhanDH
+  xacNhanDH,
+  getAllSP,
+  searchCTSPofDH,
+  getKCByIdMS,
+  getAllMSByIdSP
 };

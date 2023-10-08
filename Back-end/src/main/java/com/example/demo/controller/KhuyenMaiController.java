@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -19,8 +20,8 @@ public class KhuyenMaiController {
     private KhuyenMaiServiceImpl service;
 
     @GetMapping("hien-thi")
-    public ResponseEntity<?> hienThi() {
-        return ResponseEntity.ok(service.getAllKM());
+    public ResponseEntity<?> hienThi(@RequestParam("tien") Double tien) {
+        return ResponseEntity.ok(service.getAllKM(tien));
     }
 
     @GetMapping("hien-thi-page")
@@ -37,7 +38,17 @@ public class KhuyenMaiController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody KhuyenMai khuyenMai) {
+        String ma = "KM" + new Random().nextInt(100000);
+        khuyenMai.setMa(ma);
         khuyenMai.setNgayTao(new Date());
+        Date today = new Date();
+        if(today.before(khuyenMai.getThoiGianBatDau())){
+            khuyenMai.setTrangThai(0);
+        }else if(today.after(khuyenMai.getThoiGianKetThuc())){
+            khuyenMai.setTrangThai(1);
+        }else{
+            khuyenMai.setTrangThai(2);
+        }
         return ResponseEntity.ok(service.add(khuyenMai));
     }
 
@@ -51,6 +62,14 @@ public class KhuyenMaiController {
         KhuyenMai km = service.detail(id);
         khuyenMai.setId(id);
         khuyenMai.setNgayTao(km.getNgayTao());
+        Date today = new Date();
+        if(today.before(khuyenMai.getThoiGianBatDau())){
+            khuyenMai.setTrangThai(0);
+        }else if(today.after(khuyenMai.getThoiGianKetThuc())){
+            khuyenMai.setTrangThai(1);
+        }else{
+            khuyenMai.setTrangThai(2);
+        }
         khuyenMai.setNgaySua(new Date());
         return ResponseEntity.ok(service.add(khuyenMai));
     }

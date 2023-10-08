@@ -23,7 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@Table(name = "HoaDonChiTiet")
+@Table(name = "HoaDon_KhuyenMai")
 public class HoaDon_KhuyenMai {
 
     @Id

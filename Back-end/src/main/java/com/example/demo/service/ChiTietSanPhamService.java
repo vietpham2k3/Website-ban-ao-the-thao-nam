@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.KichCo;
+import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -10,6 +12,13 @@ public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAll();
 
     List<ChiTietSanPham> getAllByIdSP(UUID id);
+
+    List<ChiTietSanPham> getAllByIdSPTT(UUID id);
+
+    List<String> getAllMSByIdSP(UUID id);
+
+    List<String> getKCByIdMS(UUID id);
+
 
     List<ChiTietSanPham> getAllSPNEW();
 
@@ -30,4 +39,6 @@ public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAllProduct();
 
     List<ChiTietSanPham> getAllBestseller();
+
+    Page<ChiTietSanPham> pageWeb(Integer page);
 }

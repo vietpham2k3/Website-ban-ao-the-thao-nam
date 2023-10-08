@@ -19,8 +19,8 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
     private KhuyenMaiRepository khuyenMaiRepository;
 
     @Override
-    public List<KhuyenMai> getAllKM() {
-        return khuyenMaiRepository.getAll();
+    public List<KhuyenMai> getAllKM(Double tien) {
+        return khuyenMaiRepository.getAll(tien);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
     @Override
     public Page<KhuyenMai> pageSearchKM(String key, Integer trangThai, Pageable pageable) {
-        return khuyenMaiRepository.search(key,trangThai,pageable);
+        return khuyenMaiRepository.search(key, trangThai, pageable);
     }
 
     @Override

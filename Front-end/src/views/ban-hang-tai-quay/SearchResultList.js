@@ -6,7 +6,7 @@ import { Table } from 'react-bootstrap';
 import TableKCMS from './TableKCMS';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { detailCTSP, getAllByIdSP } from 'services/SanPhamService';
+import { detailCTSP, getAllByIdSPTT } from 'services/SanPhamService';
 import { addSP } from 'services/ServiceDonHang';
 import { toast } from 'react-toastify';
 
@@ -104,12 +104,11 @@ function SearchResult(props) {
   };
 
   const getAllMSKC = async (id) => {
-    let res = await getAllByIdSP(id);
+    let res = await getAllByIdSPTT(id);
     if (res) {
       setValues(res.data);
     }
   };
-
   return (
     <div className="results-list">
       <Table hover>

@@ -4,8 +4,8 @@ const getAllPageKM = (page) => {
   return axios.get(`/api/khuyen-mai/hien-thi-page?page=${page}`);
 };
 
-const getAllKM = () => {
-  return axios.get('/api/khuyen-mai/hien-thi');
+const getAllKM = (tien) => {
+  return axios.get(`/api/khuyen-mai/hien-thi?tien=${tien}`);
 };
 
 const detailKM = (id) => {

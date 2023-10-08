@@ -33,10 +33,10 @@ public class HinhThucThanhToan {
     @Column(name = "ngay_tao")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ngay_tao;
+    private Date ngayTao;
 
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date ngay_sua;
+    private Date ngaySua;
 }

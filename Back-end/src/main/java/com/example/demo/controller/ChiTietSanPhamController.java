@@ -68,6 +68,11 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.getAllByIdSP(id));
     }
 
+    @GetMapping("getAllByIdSPTT/{id}")
+    public ResponseEntity<?> getAllByIdSPTT(@PathVariable UUID id) {
+        return ResponseEntity.ok(chiTietSanPhamService.getAllByIdSPTT(id));
+    }
+
     @GetMapping("getAllSPNEW")
     public ResponseEntity<?> getAllSPNEW() {
         return ResponseEntity.ok(chiTietSanPhamService.getAllSPNEW());
@@ -78,6 +83,11 @@ public class ChiTietSanPhamController {
         Anh image = anhService.viewById(id);
         byte[] imageData = convertBlobToBytes(image.getTen());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+    }
+
+    @GetMapping("getAllWeb")
+    public ResponseEntity<?> hienThiPageWeb(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.pageWeb(page));
     }
 
     @GetMapping("/detail/{id}")

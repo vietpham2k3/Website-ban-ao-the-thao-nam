@@ -27,7 +27,7 @@ function Header() {
               </a>
             </li>
             <li className="nav-item me-5">
-              <a className="nav-link active" aria-current="page" href="#">
+              <a className="nav-link active" aria-current="page" href="/gio-hang">
                 <i className="fa-solid fa-cart-shopping"></i>Giỏ hàng
               </a>
             </li>

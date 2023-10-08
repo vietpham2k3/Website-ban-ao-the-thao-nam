@@ -13,6 +13,10 @@ const getAllSPNEW = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllSPNEW');
 };
 
+const getAllCTSPWeb = (page) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllWeb?page=${page}`);
+};
+
 const getAllProduct = () => {
   return axios.get('/api/chi-tiet-san-pham/getAllProduct');
 };
@@ -84,9 +88,14 @@ const getAllByIdSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/getAllByIdSP/${id}`);
 };
 
+const getAllByIdSPTT = (id) => {
+  return axios.get(`/api/chi-tiet-san-pham/getAllByIdSPTT/${id}`);
+};
+
 export {
   getAll,
   deleteMSKC,
+  getAllByIdSPTT,
   getAllByIdSP,
   getAllCTSP,
   getAllListKC,
@@ -105,5 +114,6 @@ export {
   getAllListNSX,
   getAllSPNEW,
   getAllBestseller,
-  getAllProduct
+  getAllProduct,
+  getAllCTSPWeb
 };

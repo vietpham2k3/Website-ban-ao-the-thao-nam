@@ -1,22 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
+// import { getAllByIdSP } from '../../services/SanPhamService';
+import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
+import { Button, ButtonToolbar } from 'rsuite';
+import { toast } from 'react-toastify';
 
 function Detail() {
-  const { id } = useParams();
+  const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
   const thumbnailContainerRef = useRef(null);
   const [quantity, setQuantity] = useState(1);
+  const idMStest = localStorage.getItem('idMS');
+  console.log(idMStest);
 
-  const handleClick = (id) => {
-    setVal(id);
+  const handleClick = (idSP) => {
+    setVal(idSP);
   };
 
   const handleNext = () => {
@@ -53,6 +60,69 @@ function Detail() {
     getAllCTSP();
   }, []);
 
+  // ms kc
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClick2 = (idCTSP) => {
+    setIsActive(true);
+    setTimeout(() => {
+      setIsActive(false);
+    }, 200);
+
+    console.log(idCTSP);
+  };
+
+  const [listKC, setListKC] = useState([]);
+  const [listMS, setListMS] = useState([]);
+
+  useEffect(() => {
+    // getAllMSKC(idSP);
+    getAllMS(idSP);
+    // console.log(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    getAllKC(idMS);
+    // console.log(idSP);
+  }, [idMS]);
+
+  const getAllKC = async (id) => {
+    try {
+      const res = await getKCByIdMS(id);
+      if (res && res.data) {
+        setListKC(res.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const getAllMS = async (id) => {
+    try {
+      const res = await getAllMSByIdSP(id);
+      if (res && res.data) {
+        setListMS(res.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const handleChangeId = (idCTSP, idSP, idMS) => {
+    if (idCTSP === id) {
+      toast.warning('Bạn đang xem ảnh của sản phẩm này');
+    } else {
+      navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
+      // localStorage.setItem("idMS",idMS);
+      getAllAnh(idCTSP);
+      setVal(0);
+      // console.log(id);
+    }
+  };
+  ////////
+
   useEffect(() => {
     getAllAnh(id);
   }, [id]);
@@ -68,6 +138,7 @@ function Detail() {
     const res = await listAnh(id);
     if (res && res.data) {
       setImageList(res.data);
+      console.log(imageList);
       setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
     }
   };
@@ -127,7 +198,7 @@ function Detail() {
                 <Image
                   src={
                     val === 0
-                      ? `http://localhost:8080/api/chi-tiet-san-pham/${product.id}`
+                      ? `data:image/jpeg;base64,${imageList[0] && imageList[0].tenBase64}`
                       : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
                   }
                   height="350"
@@ -141,9 +212,9 @@ function Detail() {
                 {imageList.map((image, index) => (
                   <div className="thumbnailAnh" key={image.id}>
                     <Image
-                      className={val === index + 1 ? 'clicked' : ''}
+                      className={index === 0 ? 'clicked' : ''}
                       src={`data:image/jpeg;base64,${image.tenBase64}`}
-                      onClick={() => handleClick(index + 1)}
+                      onClick={() => handleClick(index)}
                       height="100"
                       width="100"
                     />
@@ -155,38 +226,86 @@ function Detail() {
               <h3 className="product-title">{product.sanPham.ten}</h3>
               <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
               <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
-              <div style={{ display: 'flex' }}>
-                <p style={{ color: 'grey', fontSize: 17, fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif' }}>
-                  Màu sắc:
-                </p>
-                <p style={{ backgroundColor: product.mauSac.ten, color: product.mauSac.ten, width: 30, height: 20, marginLeft: 25 }}>.</p>
+              <br></br>
+              <div>
+                <div style={{ display: 'flex' }}>
+                  <p
+                    style={{
+                      color: 'grey',
+                      fontSize: 17,
+                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
+                      marginTop: 3
+                    }}
+                  >
+                    Màu sắc:
+                  </p>
+                  <ButtonToolbar>
+                    {listMS.map((d) => {
+                      const colorData = d.split(',');
+                      const id = colorData[0];
+                      const color = colorData[1];
+                      const idCTSP = colorData[2];
+                      const idSP = colorData[3];
+
+                      return (
+                        <div style={{ marginLeft: 15, height: 30 }} key={id}>
+                          {color ? (
+                            <Button
+                              className="custom-button"
+                              onClick={() => {
+                                handleChangeId(idCTSP, idSP, id);
+                              }}
+                              style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
+                              tabIndex={0}
+                            >
+                              &nbsp;
+                            </Button>
+                          ) : (
+                            <p>Chưa có màu sắc nào</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </ButtonToolbar>
+                </div>
               </div>
-              <h5
-                style={{
-                  color: 'grey',
-                  fontSize: 17,
-                  paddingBottom: 10,
-                  fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'
-                }}
-                className="sizes"
-              >
-                Kích cỡ:
-                <span className="size" data-toggle="tooltip" title="small">
-                  S
-                </span>
-                <span className="size" data-toggle="tooltip" title="medium">
-                  M
-                </span>
-                <span className="size" data-toggle="tooltip" title="large">
-                  L
-                </span>
-                <span className="size" data-toggle="tooltip" title="xtra large">
-                  XL
-                </span>
-                <span className="size" data-toggle="tooltip" title="xtra large">
-                  XXL
-                </span>
-              </h5>
+              <br></br>
+              <div>
+                <div style={{ display: 'flex' }}>
+                  <p
+                    style={{
+                      color: 'grey',
+                      fontSize: 17,
+                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
+                      marginTop: 8
+                    }}
+                  >
+                    Kích cỡ:
+                  </p>
+                  <ButtonToolbar>
+                    {listKC.map((d) => {
+                      const sizeData = d.split(',');
+                      const idCTSP = sizeData[1];
+                      const size = sizeData[0];
+
+                      return (
+                        <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
+                          <Button
+                            className="custom-button"
+                            appearance="ghost"
+                            onClick={() => handleClick2(idCTSP)}
+                            style={{ '--background-color': isActive ? 'black' : 'transparent' }}
+                          >
+                            {size}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </ButtonToolbar>
+                </div>
+              </div>
+              <br></br>
+
               <div className="product-count">
                 <p
                   style={{
