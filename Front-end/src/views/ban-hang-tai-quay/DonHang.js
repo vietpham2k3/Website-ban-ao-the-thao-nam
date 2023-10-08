@@ -20,7 +20,6 @@ function DonHang(props) {
   const { id, getAll } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
-  const [inputKH, setInputKH] = useState('');
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
   const [values, setValues] = useState([]);
@@ -29,6 +28,7 @@ function DonHang(props) {
   const [dataHDKM, setDataHDKM] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [tienThua, setTienThua] = useState(0);
+  const [tienKhachDua, setTienKhachDua] = useState(0);
   const [tongSoLuong, setTongSoLuong] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
@@ -78,21 +78,21 @@ function DonHang(props) {
   useEffect(() => {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
-      tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount
+      tongTien: totalAmount
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalAmount]);
 
   useEffect(() => {
-    setValuesUpdateHD({
-      ...valuesUpdateHD,
-      ...valuesUpdateHD.hinhThucThanhToan,
-      tongTienKhiGiam: totalAmount
-    });
+    setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    setValuesUpdateHD((prevValuesUpdateHD) => ({
+      ...prevValuesUpdateHD,
+      ...prevValuesUpdateHD.hinhThucThanhToan,
+      tongTienKhiGiam: totalAmount - totalGiam
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valuesUpdateHD.tongTien]);
-
+  }, [totalAmount, dataKM]);
   useEffect(() => {
     handleSearchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,10 +176,11 @@ function DonHang(props) {
     if (res.data === 'Mày thích spam không ?') {
       toast.warning('Mày như nào ?');
       return;
-    } else if (res.data !== 'Mày thích spam không ?') {
+    } else {
       detailHDById(id);
       toast.success('Thêm mã giảm giá thành công');
       findAllKM(id);
+      setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
     }
   };
 
@@ -303,12 +304,14 @@ function DonHang(props) {
       ...valuesUpdateHD.hinhThucThanhToan,
       trangThai: 7,
       hinhThucThanhToan: {
+        tien: tienKhachDua,
         trangThai: 1
       }
     });
   };
 
   const handleChangeValueTien = (e) => {
+    setTienKhachDua(e);
     setValuesUpdateHD({
       ...valuesUpdateHD.hinhThucThanhToan,
       ...valuesUpdateHD,
@@ -409,18 +412,33 @@ function DonHang(props) {
           </div>
         </div>
         <div className="col-4 thong-tin-ban-hang">
-          <div className="box-search" style={{ width: '100%' }}>
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              placeholder="Tìm kiếm khách hàng..."
-              className="input-seach"
-              defaultValue={inputKH}
-              onChange={(e) => setInputKH(e.target.value)}
-            />
+          <div>
+            <button type="button" className="btn btn-outline-primary">
+              Chọn khách hàng
+            </button>
             <button className="fa-solid fa-plus mx-3"></button>
           </div>
           <br /> <br />
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Tên khách hàng</h6>
+            </div>
+            <div>
+              <p>
+                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+              </p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Số điện thoại</h6>
+            </div>
+            <div>
+              <p>
+                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+              </p>
+            </div>
+          </div>
           <div className="ma-giam-gia">
             <div>
               <h6>Mã giảm giá</h6>
@@ -476,7 +494,7 @@ function DonHang(props) {
             </div>
             <div>
               <input
-                type="text"
+                type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
               />
@@ -506,7 +524,12 @@ function DonHang(props) {
                 </h6>
                 <div className="text-voucher">
                   <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
-                  <button type="button" className="btn btn-outline-primary" onClick={() => handleAddValueKm(d.id, d.mucGiam)}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => handleAddValueKm(d.id, d.mucGiam)}
+                    // disabled={true} // Thêm disabled vào đây
+                  >
                     Áp dụng
                   </button>
                 </div>
@@ -517,7 +540,7 @@ function DonHang(props) {
             <button
               type="button"
               className="btn btn-success"
-              disabled={tienThua < 0 || tienThua === null}
+              disabled={tienThua < 0 || tienKhachDua === 0}
               onClick={() => handleThanhToan()}
             >
               Thanh toán
