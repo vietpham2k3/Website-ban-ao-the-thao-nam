@@ -31,6 +31,16 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
+    public List<KhachHang> getAllKH() {
+        return khRepo.getAllKH();
+    }
+
+    @Override
+    public List<KhachHang> searchKHinBH(String key) {
+        return khRepo.searchKHinBH(key);
+    }
+
+    @Override
     public Page<KhachHang> getAll(Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
         return khRepo.findAll(pageable);

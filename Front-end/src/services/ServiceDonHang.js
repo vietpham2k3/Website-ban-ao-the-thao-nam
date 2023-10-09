@@ -17,6 +17,10 @@ const getAllSP = () => {
   return axios.get('/api/hoa-don/hien-thi-san-pham');
 };
 
+const getAllKH = () => {
+  return axios.get('/api/khach-hang/getAll');
+};
+
 const getKCByIdMS = (id) => {
   return axios.get(`/api/hoa-don/getKCByIdMS/${id}`);
 };
@@ -27,6 +31,10 @@ const getAllMSByIdSP = (id) => {
 
 const searchCTSPofDH = (key) => {
   return axios.get(`/api/hoa-don/searchSP?key=${key}`);
+};
+
+const searchKHofDH = (key) => {
+  return axios.get(`/api/khach-hang/searchKHinBH?key=${key}`);
 };
 
 const detailHD = (id) => {
@@ -125,5 +133,7 @@ export {
   getAllSP,
   searchCTSPofDH,
   getKCByIdMS,
-  getAllMSByIdSP
+  getAllMSByIdSP,
+  getAllKH,
+  searchKHofDH
 };

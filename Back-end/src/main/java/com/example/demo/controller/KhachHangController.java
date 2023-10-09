@@ -18,16 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/khach-hang")
@@ -93,12 +87,12 @@ public class KhachHangController {
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> detail(@PathVariable UUID id) {
-            KhachHang khachHang = khService.getOne(id);
-            if (khachHang == null) {
-                return ResponseEntity.notFound().build();
-            }
+        KhachHang khachHang = khService.getOne(id);
+        if (khachHang == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-            // Convert Blob to byte array
+        // Convert Blob to byte array
         byte[] anhBytes = null;
         Blob anhBlob = khachHang.getAnh();
         if (anhBlob != null) {
@@ -115,20 +109,20 @@ public class KhachHangController {
             anhBase64 = Base64.getEncoder().encodeToString(anhBytes);
         }
 
-            // Create a DTO object
-            KhachHangDTO khachHangDTO = new KhachHangDTO();
-            khachHangDTO.setId(khachHang.getId());
-            khachHangDTO.setMaKhachHang(khachHang.getMaKhachHang());
-            khachHangDTO.setTenKhachHang(khachHang.getTenKhachHang());
-            khachHangDTO.setSdt(khachHang.getSdt());
-            khachHangDTO.setEmail(khachHang.getEmail());
-            khachHangDTO.setNgaySinh(khachHang.getNgaySinh());
-            khachHangDTO.setMatKhau(khachHang.getMatKhau());
-            khachHangDTO.setTrangThai(khachHang.getTrangThai());
-            khachHangDTO.setAnh(anhBase64);
+        // Create a DTO object
+        KhachHangDTO khachHangDTO = new KhachHangDTO();
+        khachHangDTO.setId(khachHang.getId());
+        khachHangDTO.setMaKhachHang(khachHang.getMaKhachHang());
+        khachHangDTO.setTenKhachHang(khachHang.getTenKhachHang());
+        khachHangDTO.setSdt(khachHang.getSdt());
+        khachHangDTO.setEmail(khachHang.getEmail());
+        khachHangDTO.setNgaySinh(khachHang.getNgaySinh());
+        khachHangDTO.setMatKhau(khachHang.getMatKhau());
+        khachHangDTO.setTrangThai(khachHang.getTrangThai());
+        khachHangDTO.setAnh(anhBase64);
 
-            return ResponseEntity.ok(khachHangDTO);
-        }
+        return ResponseEntity.ok(khachHangDTO);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestParam("anh") MultipartFile anh,
@@ -141,7 +135,7 @@ public class KhachHangController {
                                  @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = new KhachHang();
-      String ma = "KH" + new Random().nextInt(100000);
+        String ma = "KH" + new Random().nextInt(100000);
         khachHang.setMaKhachHang(ma);
         khachHang.setTenKhachHang(tenKhachHang);
         khachHang.setSdt(sdt);
@@ -224,8 +218,8 @@ public class KhachHangController {
 
     @GetMapping("/searchKH")
     public ResponseEntity<?> getAll(@RequestParam(value = "key", required = false) String key,
-                                         @RequestParam(value = "trangThai", required = false) Integer trangThai,
-                                         @RequestParam(defaultValue = "0") Integer page) throws IOException {
+                                    @RequestParam(value = "trangThai", required = false) Integer trangThai,
+                                    @RequestParam(defaultValue = "0") Integer page) throws IOException {
         Pageable pageable = PageRequest.of(page, 5);
         Page<KhachHang> khachHangPage = khService.searchKH(key, trangThai, pageable);
         // Convert the Page<KhachHang> to byte array
@@ -268,4 +262,87 @@ public class KhachHangController {
 
         return khachHangDTO;
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<byte[]> getAllKH() throws IOException {
+        List<KhachHang> listKH = khService.getAllKH();
+
+        // Convert the Page<KhachHang> to byte array
+        byte[] khachHangBytes = convertPageToByteArray2(listKH);
+
+        // Set the content type as application/octet-stream
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "khachhang.json");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(khachHangBytes);
+    }
+
+    /**
+     * Convert the Page<KhachHang> to byte array.
+     */
+    private byte[] convertPageToByteArray2(List<KhachHang> khachHangPage) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(ByteArrayInputStream.class, new AnhKH());
+        objectMapper.registerModule(module);
+        byte[] khachHangBytes = objectMapper.writeValueAsBytes(khachHangPage);
+        return khachHangBytes;
+    }
+
+    @GetMapping("/searchKHinBH")
+    public ResponseEntity<byte[]> searchKhinBH(String key) throws IOException {
+        List<KhachHang> listKH = khService.searchKHinBH(key);
+
+        // Convert the Page<KhachHang> to byte array
+        byte[] khachHangBytes = convertPageToByteArray2(listKH);
+
+        // Set the content type as application/octet-stream
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "khachhang.json");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(khachHangBytes);
+    }
+
+
+    @PostMapping("/addKHinBH")
+    public ResponseEntity<?> addKHinBH(MultipartFile anh,
+                                       String maKhachHang,
+                                       String tenKhachHang,
+                                       String sdt,
+                                       String email,
+                                       Boolean gioiTinh) throws IOException, SQLException {
+        // Create a new KhachHang object
+        KhachHang khachHang = new KhachHang();
+        if (khachHang.getMaKhachHang() == null) {
+            String ma = "KH" + new Random().nextInt(100000);
+            khachHang.setMaKhachHang(ma);
+        }
+        khachHang.setMaKhachHang(maKhachHang);
+        khachHang.setTenKhachHang(tenKhachHang);
+        khachHang.setSdt(sdt);
+        khachHang.setEmail(email);
+        khachHang.setGioiTinh(gioiTinh);
+
+        // Check if a file is provided
+        if (anh != null) {
+            // Get the input stream of the file
+            InputStream inputStream = anh.getInputStream();
+            Blob imageBlob = khService.createBlob(inputStream);
+
+            // Set the image blob to the KhachHang object
+            khachHang.setAnh(imageBlob);
+        }
+
+        // Save the KhachHang object
+        KhachHang savedKhachHang = khService.add(khachHang);
+        KhachHangDTO savedKhachHangDTO = convertToDto(savedKhachHang);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHangDTO);
+    }
+
 }

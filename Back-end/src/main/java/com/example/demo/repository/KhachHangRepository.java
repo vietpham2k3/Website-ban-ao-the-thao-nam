@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -33,4 +34,17 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
 
     @Query(value = "SELECT kh.id, kh.ma, kh.ten, kh.sdt, kh.email, kh.ngay_sinh, kh.trang_thai FROM KhachHang kh", nativeQuery = true)
     Page<KhachHang> pageKH(Pageable pageable);
+
+
+    @Query(value = "SELECT * " +
+            "  FROM KhachHang WHERE trang_thai = 1 ORDER BY ma", nativeQuery = true)
+    List<KhachHang> getAllKH();
+
+    @Query(value = "SELECT * FROM KhachHang WHERE trang_thai = 1 " +
+            "AND ((:key is null or ma LIKE lower(CONCAT('%', :key, '%'))) " +
+            "or (:key is null or ten LIKE lower(CONCAT('%', :key, '%'))) " +
+            "or (:key is null or sdt LIKE lower(CONCAT('%', :key, '%'))) " +
+            "or (:key is null or email LIKE lower(CONCAT('%', :key, '%')))) " +
+            "ORDER BY ma", nativeQuery = true)
+    List<KhachHang> searchKHinBH(@Param("key") String key);
 }

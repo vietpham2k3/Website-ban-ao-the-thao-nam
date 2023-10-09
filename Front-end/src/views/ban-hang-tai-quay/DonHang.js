@@ -20,7 +20,10 @@ import {
   detailHD,
   thanhToan,
   searchCTSPofDH,
-  addSP
+  addSP,
+  getAllKH,
+  getAllSP,
+  searchKHofDH
 } from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
@@ -716,6 +719,44 @@ function DonHang(props) {
   };
 
   // khach hang
+  const [kh, setKH] = useState([]);
+
+  useEffect(() => {
+    hienThiKH(0);
+  }, []);
+
+  const hienThiKH = async () => {
+    const res = await getAllKH();
+    if (res && res.data) {
+      setKH(res.data);
+    }
+  };
+
+  // searchKHofDH;
+  const [termKH, setTermKH] = useState('');
+
+  const searchKH = async (termKH) => {
+    const res = await searchKHofDH(termKH);
+    if (res) {
+      setKH(res.data);
+    }
+  };
+
+  const handleSearchKHofDH = _.debounce(async () => {
+    if (termKH) {
+      searchKH(termKH);
+    } else {
+      searchKH('');
+    }
+  }, []);
+
+  useEffect(() => {
+    handleSearchKHofDH();
+  }, [termKH]);
+
+  const handleInputChangeKH = (e) => {
+    setTermKH(e.target.value);
+  };
 
   return (
     <div>
@@ -723,11 +764,17 @@ function DonHang(props) {
         <div className="col-8">
           <div className="col-5">
             <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
-            <button onClick={handleShow1} style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
-              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-              <span className="relative text-black group-hover:text-white">Thêm sản phẩm</span>
-            </button>
+              <button onClick={handleShow1} className="relative inline-block text-base group">
+                <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                  <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                  <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                  <span className="relative">Thêm sản phẩm</span>
+                </span>
+                <span
+                  className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                  data-rounded="rounded-lg"
+                ></span>
+              </button>
               <Modal
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
@@ -928,134 +975,103 @@ function DonHang(props) {
         </div>
         <div className="col-4 thong-tin-ban-hang">
           <div>
-            <button onClick={handleShow4} style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
-              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-              <span className="relative text-black group-hover:text-white">Thêm khách hàng</span>
+            <button onClick={handleShow4} className="relative inline-block text-base group">
+              <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                <span className="relative">Thêm khách hàng</span>
+              </span>
+              <span
+                className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                data-rounded="rounded-lg"
+              ></span>
             </button>
-            <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
+            <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show4} onHide={handleClose4}>
               <Modal.Header closeButton>
                 <Modal.Title style={{ marginLeft: 175 }}>Khách Hàng</Modal.Title>
               </Modal.Header>
-              <Modal.Body style={{ width: 500 }}>
-                <div className="text-voucher">
-                  <h6>
-                    <strong>Phạm Quốc Việt </strong>|{' '}
-                    <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
-                      {' '}
-                      0964420243
-                    </label>
-                  </h6>
-                  <div>
-                    <p style={{ fontSize: 14, fontStyle: 'inherit' }}>Nam</p>{' '}
-                    <button style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
-                      <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-                      <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-                      <span className="relative text-black group-hover:text-white">Chọn</span>
-                    </button>
+              <div style={{ paddingLeft: 25 }} className="search">
+                <input
+                  style={{ borderRadius: 15, width: 438, height: 35 }}
+                  type="text"
+                  className="input-search results-list"
+                  placeholder="Nhập mã, số điện thoại hoặc tên khách hàng cần tìm..."
+                  value={termKH}
+                  onChange={handleInputChangeKH}
+                />
+              </div>
+              <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'auto' }}>
+                {kh.map((k, index) => (
+                  <div
+                    key={k.id}
+                    style={{
+                      border: '2px solid skyblue',
+                      borderRadius: 10,
+                      height: 85,
+                      paddingTop: 8,
+                      marginTop: index > 0 ? 20 : 0 // Thêm khoảng cách 20px cho phần tử từ thứ 2 trở đi
+                    }}
+                  >
+                    <h7 style={{ paddingLeft: 15 }}>
+                      <strong style={{ fontSize: 16 }}>{k.tenKhachHang}</strong> |{' '}
+                      <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
+                        {' '}
+                        {k.sdt}
+                      </label>
+                    </h7>
+                    <br></br>
+                    <div className="row">
+                      <div className="col-6" style={{ paddingLeft: 27, marginTop: 15 }}>
+                        <p style={{ fontSize: 12, fontStyle: 'italic' }}>Mã: {k.maKhachHang}</p>
+                      </div>
+                      <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
+                        <button className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
+                          <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                          <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                            <svg
+                              className="w-5 h-5 text-green-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                          </span>
+                          <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                            <svg
+                              className="w-5 h-5 text-green-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                          </span>
+                          <span className="relative2 text-left group-hover:text-white">Chọn</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </Modal.Body>
             </Modal>
             <button className="fa-solid fa-plus mx-3" onClick={handleShow3}></button>
-            <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show3} onHide={handleClose3}>
+            <Modal
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              style={{ marginLeft: 150, paddingBottom: 320 }}
+              show={show3}
+              onHide={handleClose3}
+            >
               <Modal.Header closeButton>
-                <Modal.Title style={{ marginLeft: 145 }}>Thêm Khách Hàng</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 290 }}>
+                  Thêm mới khách hàng
+                </Modal.Title>
               </Modal.Header>
-              <Modal.Body style={{ width: 500 }}>
-                <form className="needs-validation" noValidate>
-                  <div className="form-group row">
-                    <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
-                      Họ Và Tên:
-                    </label>
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="tenNguoiNhan"
-                        placeholder=""
-                        // value={hoaDon.tenNguoiNhan}
-                        // onChange={(e) => {
-                        //   setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
-                        //   setNone(true);
-                        //   setNone1(true);
-                        // }}
-                      />
-                      {/* {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
-                      {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>} */}
-                    </div>
-                  </div>
-                  <br></br>
-                  <div className="form-group row">
-                    <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
-                      Số Điện Thoại:
-                    </label>
-                    <div className="col-sm-9">
-                      <input
-                        type="tel"
-                        className="form-control"
-                        name="soDienThoai"
-                        placeholder=""
-                        // value={hoaDon.soDienThoai}
-                        // onChange={(e) => {
-                        //   setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
-                        //   setNone2(true);
-                        //   setNone3(true);
-                        // }}
-                      />
-                      {/* {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
-                      {!none3 && <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>} */}
-                    </div>
-                  </div>
-                  <br></br>
-                  <div className="form-group row">
-                    <label style={{ fontWeight: 'bold' }} htmlFor="diaChi" className="col-sm-3 col-form-label">
-                      Email:
-                    </label>
-                    <div className="col-sm-9">
-                      <input
-                        type="tel"
-                        className="form-control"
-                        name="email"
-                        placeholder=""
-                        // value={hoaDon.soDienThoai}
-                        // onChange={(e) => {
-                        //   setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
-                        //   setNone2(true);
-                        //   setNone3(true);
-                        // }}
-                      />
-                      {/* {!none4 && <div style={{ color: 'red' }}>Địa chỉ không được để trống !</div>}
-                      {!none5 && <div style={{ color: 'red' }}>Địa chỉ không được vượt quá 250 ký tự !</div>} */}
-                    </div>
-                  </div>
-                  <br></br>
-                  <div className="text-center">
-                    <button
-                      type="submit"
-                      className="btn btn-labeled shadow-button"
-                      style={{
-                        background: 'deepskyblue',
-                        borderRadius: '50px',
-                        border: '1px solid black',
-                        justifyItems: 'center'
-                      }}
-                    >
-                      <span
-                        style={{
-                          marginBottom: '3px',
-                          color: 'white',
-                          fontSize: '15px',
-                          fontWeight: 'bold'
-                        }}
-                        className="btn-text"
-                      >
-                        Thêm Khách Hàng
-                      </span>
-                    </button>
-                  </div>
-                </form>
-              </Modal.Body>
+              <Modal.Body></Modal.Body>
             </Modal>
           </div>
           <br /> <br />

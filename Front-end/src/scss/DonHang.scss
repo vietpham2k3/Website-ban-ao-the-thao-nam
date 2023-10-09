@@ -867,6 +867,10 @@ video {
 .relative {
   position: relative;
 }
+.relative2 {
+  position: relative;
+  color: #00040a;
+}
 .inset-0 {
   inset: 0px;
 }
@@ -1483,7 +1487,7 @@ video {
 }
 .bg-indigo-600 {
   --tw-bg-opacity: 1;
-  background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+  background-color: black;
 }
 .bg-pink-500 {
   --tw-bg-opacity: 1;
@@ -1813,7 +1817,7 @@ video {
   line-height: 50px;
 }
 .leading-tight {
-  line-height: 1.25;
+  line-height: 0.2;
 }
 .tracking-tighter {
   letter-spacing: -0.05em;
@@ -1992,24 +1996,24 @@ video {
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
 }
-.transition {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-.transition-colors {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
+// .transition {
+//   transition-property: color, background-color, border-color,
+//     text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+//     backdrop-filter, -webkit-backdrop-filter;
+//   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+//   transition-duration: 150ms;
+// }
+// .transition-all {
+//   transition-property: all;
+//   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+//   transition-duration: 150ms;
+// }
+// .transition-colors {
+//   transition-property: color, background-color, border-color,
+//     text-decoration-color, fill, stroke;
+//   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+//   transition-duration: 150ms;
+// }
 .delay-100 {
   transition-delay: 0.1s;
 }
@@ -2053,7 +2057,7 @@ body {
   font-size: 15px;
   overflow-x: hidden;
   --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
+  color: black;
 }
 h1,
 h2,
