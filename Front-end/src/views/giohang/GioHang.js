@@ -1,12 +1,12 @@
 import Footer from 'ui-component/trangchu/Footer';
 import Header from 'ui-component/trangchu/Header';
-import Content from 'ui-component/giohang/Content';
+import Cart from 'ui-component/giohang/Cart';
 
 function GioHang() {
   return (
     <div>
       <Header />
-      <Content />
+      <Cart />
       <Footer />
     </div>
   );
