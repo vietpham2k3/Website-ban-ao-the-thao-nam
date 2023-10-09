@@ -542,27 +542,24 @@ function DonHangCT() {
                                     <td>
                                       <div style={{ marginTop: 5 }}>
                                         {item.trangThai === 0 && (
-                                          <i style={{ color: 'gray' }} className="fa-solid fa-spinner fa-spin fa-lg"></i>
+                                          <i style={{ color: 'orange' }} className="fa-solid fa-file-invoice fa-beat fa-lg"></i>
                                         )}
                                         {item.trangThai === 1 && (
-                                          <i style={{ color: 'blue' }} className="fa-solid fa-check fa-fade fa-lg"></i>
+                                          <i style={{ color: 'gray' }} className="fa-solid fa-spinner fa-spin fa-lg"></i>
                                         )}
                                         {item.trangThai === 2 && (
                                           <i style={{ color: 'red' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
                                         )}
                                         {item.trangThai === 3 && (
-                                          <i style={{ color: 'gray' }} className="fa-solid fa-spinner fa-spin fa-lg"></i>
-                                        )}
-                                        {item.trangThai === 4 && (
                                           <i style={{ color: 'orange' }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
                                         )}
-                                        {item.trangThai === 5 && (
+                                        {item.trangThai === 4 && (
                                           <i style={{ color: 'darkblue' }} className="fa-solid fa-check-double fa-fade fa-lg"></i>
                                         )}
-                                        {item.trangThai === 6 && (
+                                        {item.trangThai === 5 && (
                                           <i style={{ color: 'red' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
                                         )}
-                                        {item.trangThai === 7 && (
+                                        {item.trangThai === 6 && (
                                           <i style={{ color: 'green' }} className="fa-regular fa-circle-check fa-beat fa-lg"></i>
                                         )}
                                       </div>
@@ -597,9 +594,9 @@ function DonHangCT() {
                                             justifyContent: 'center',
                                             fontWeight: 'bold'
                                           }}
-                                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                                         >
-                                          Đã xác nhận
+                                          Chờ giao hàng
                                         </span>
                                       )}
                                       {item.trangThai === 2 && (
@@ -619,24 +616,8 @@ function DonHangCT() {
                                           Đã hủy đơn
                                         </span>
                                       )}
+
                                       {item.trangThai === 3 && (
-                                        <span
-                                          style={{
-                                            width: '200px',
-                                            pointerEvents: 'none',
-                                            height: '30px',
-                                            borderRadius: '20px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontWeight: 'bold'
-                                          }}
-                                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                                        >
-                                          Chờ giao hàng
-                                        </span>
-                                      )}
-                                      {item.trangThai === 4 && (
                                         <span
                                           style={{
                                             width: '200px',
@@ -653,7 +634,7 @@ function DonHangCT() {
                                           Đang giao hàng
                                         </span>
                                       )}
-                                      {item.trangThai === 5 && (
+                                      {item.trangThai === 4 && (
                                         <span
                                           style={{
                                             width: '200px',
@@ -670,7 +651,7 @@ function DonHangCT() {
                                           Giao hàng thành công
                                         </span>
                                       )}
-                                      {item.trangThai === 6 && (
+                                      {item.trangThai === 5 && (
                                         <span
                                           style={{
                                             width: '200px',
@@ -687,7 +668,7 @@ function DonHangCT() {
                                           Giao hàng thất bại
                                         </span>
                                       )}
-                                      {item.trangThai === 7 && (
+                                      {item.trangThai === 6 && (
                                         <span
                                           style={{
                                             width: '200px',
@@ -740,21 +721,21 @@ function DonHangCT() {
                                   style={lshd.hoaDon.trangThai === 0 ? { backgroundColor: 'yellow', color: 'black' } : {}}
                                   className={'p-timeline-block'}
                                 >
-                                  <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-file-invoice fa-beat fa-xl"></i>
                                 </div>
                               </div>
                             </li>
                           )}
                           {lshd.trangThai === 1 && (
-                            <li className={`timeline-item mini`}>
+                            <li className="timeline-item bmw">
                               <div className="p-timeline-item">
-                                <span className="p-timeline-date">{lshd.ten}</span>
+                                <time className="p-timeline-date">{lshd.ten}</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 1 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
+                                  style={lshd.hoaDon.trangThai === 1 ? { backgroundColor: 'yellow', color: 'black' } : {}}
                                   className="p-timeline-block"
                                 >
-                                  <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
                                 </div>
                               </div>
                             </li>
@@ -777,24 +758,10 @@ function DonHangCT() {
                           {lshd.trangThai === 3 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
-                                <time className="p-timeline-date">Chờ giao hàng</time>
-                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
-                                <div
-                                  style={lshd.hoaDon.trangThai === 3 ? { backgroundColor: 'yellow', color: 'black' } : {}}
-                                  className="p-timeline-block"
-                                >
-                                  <i style={{ marginTop: 27 }} className="fa-solid fa-spinner fa-spin fa-xl"></i>
-                                </div>
-                              </div>
-                            </li>
-                          )}
-                          {lshd.trangThai === 4 && (
-                            <li className="timeline-item bmw">
-                              <div className="p-timeline-item">
                                 <time className="p-timeline-date">{lshd.ten}</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 4 ? { backgroundColor: 'yellow', color: 'black' } : {}}
+                                  style={lshd.hoaDon.trangThai === 3 ? { backgroundColor: 'yellow', color: 'black' } : {}}
                                   className="p-timeline-block"
                                 >
                                   <i style={{ marginTop: 27 }} className="fa-solid fa-truck-fast fa-beat-fade fa-lg"></i>
@@ -802,13 +769,13 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
-                          {lshd.trangThai === 5 && (
+                          {lshd.trangThai === 4 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
                                 <span className="p-timeline-date">Giao hàng thành công</span>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 5 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
+                                  style={lshd.hoaDon.trangThai === 4 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
                                   className="p-timeline-block"
                                 >
                                   <i style={{ marginTop: 27 }} className="fa-solid fa-check-double fa-beat fa-xl"></i>
@@ -816,13 +783,13 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
-                          {lshd.trangThai === 6 && (
+                          {lshd.trangThai === 5 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
                                 <time className="p-timeline-date">Giao hàng thất bại</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 6 ? { backgroundColor: 'orangered', color: 'white' } : {}}
+                                  style={lshd.hoaDon.trangThai === 5 ? { backgroundColor: 'orangered', color: 'white' } : {}}
                                   className="p-timeline-block"
                                 >
                                   <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
@@ -830,13 +797,13 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
-                          {lshd.trangThai === 7 && (
+                          {lshd.trangThai === 6 && (
                             <li className="timeline-item mini">
                               <div className="p-timeline-item">
                                 <time className="p-timeline-date">{lshd.ten}</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 7 ? { backgroundColor: 'aqua', color: 'black' } : {}}
+                                  style={lshd.hoaDon.trangThai === 6 ? { backgroundColor: 'aqua', color: 'black' } : {}}
                                   className="p-timeline-block"
                                 >
                                   <i style={{ marginTop: 27 }} className="fa-regular fa-circle-check fa-beat fa-xl"></i>
@@ -925,7 +892,7 @@ function DonHangCT() {
                 )}
                 {/* //xac nhan thanh toan */}
 
-                {hoaDon.trangThai === 4 && (
+                {hoaDon.trangThai === 3 && (
                   <button
                     onClick={handleShow5}
                     style={{
@@ -1109,7 +1076,7 @@ function DonHangCT() {
               </Modal>
               {/* //huy don */}
               <div className="col-3">
-                {hoaDon.trangThai === 0 && (
+                {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
                   <button
                     onClick={handleShow3}
                     style={{
@@ -1488,23 +1455,25 @@ function DonHangCT() {
                               Đang chờ xác nhận
                             </span>
                           )}
+
                           {hoaDon.trangThai === 1 && (
                             <span
                               style={{
                                 width: '250px',
                                 pointerEvents: 'none',
                                 height: '30px',
+                                fontWeight: 'bold',
                                 borderRadius: '20px',
                                 display: 'flex',
-                                fontWeight: 'bold',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                               }}
-                              className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                              className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                             >
-                              Đã xác nhận
+                              Chờ giao hàng
                             </span>
                           )}
+
                           {hoaDon.trangThai === 2 && (
                             <span
                               style={{
@@ -1522,24 +1491,8 @@ function DonHangCT() {
                               Đã hủy đơn
                             </span>
                           )}
+
                           {hoaDon.trangThai === 3 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                            >
-                              Chờ giao hàng
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 4 && (
                             <span
                               style={{
                                 width: '250px',
@@ -1556,7 +1509,7 @@ function DonHangCT() {
                               Đang giao hàng
                             </span>
                           )}
-                          {hoaDon.trangThai === 5 && (
+                          {hoaDon.trangThai === 4 && (
                             <span
                               style={{
                                 width: '250px',
@@ -1573,7 +1526,7 @@ function DonHangCT() {
                               Giao hàng thành công
                             </span>
                           )}
-                          {hoaDon.trangThai === 6 && (
+                          {hoaDon.trangThai === 5 && (
                             <span
                               style={{
                                 width: '250px',
@@ -1590,7 +1543,7 @@ function DonHangCT() {
                               Giao hàng thất bại
                             </span>
                           )}
-                          {hoaDon.trangThai === 7 && (
+                          {hoaDon.trangThai === 6 && (
                             <span
                               style={{
                                 width: '250px',

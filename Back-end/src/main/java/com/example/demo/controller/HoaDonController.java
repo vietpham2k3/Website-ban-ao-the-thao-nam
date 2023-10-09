@@ -298,7 +298,7 @@ public class HoaDonController {
         hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setTen("Đã xác thực thông tin người dùng");
+        lichSuHoaDon.setTen("Chờ giao hàng");
 
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
@@ -327,8 +327,8 @@ public class HoaDonController {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = service.detailHD(id);
         hoaDon.setNgaySua(new Date());
-        lichSuHoaDon.setTrangThai(4);
-        hoaDon.setTrangThai(4);
+        lichSuHoaDon.setTrangThai(3);
+        hoaDon.setTrangThai(3);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
         hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
@@ -345,8 +345,8 @@ public class HoaDonController {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = service.detailHD(id);
         hoaDon.setNgaySua(new Date());
-        lichSuHoaDon.setTrangThai(7);
-        hoaDon.setTrangThai(7);
+        lichSuHoaDon.setTrangThai(6);
+        hoaDon.setTrangThai(6);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
         hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());

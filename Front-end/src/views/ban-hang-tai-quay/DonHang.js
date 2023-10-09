@@ -10,8 +10,18 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP, getAllByIdSP, detailCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById, updateSL, deleteHDCT, updateHD, addKM, getKmById,
-detailHD, thanhToan, searchCTSPofDH, addSP } from 'services/ServiceDonHang';
+import {
+  getById,
+  updateSL,
+  deleteHDCT,
+  updateHD,
+  addKM,
+  getKmById,
+  detailHD,
+  thanhToan,
+  searchCTSPofDH,
+  addSP
+} from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
 import { detailKM, getAllKM } from 'services/ServiceKhuyenMai';
@@ -324,9 +334,20 @@ function DonHang(props) {
     });
   };
 
-
-
   // fix san pham
+  const [show3, setShow3] = useState(false);
+  const handleClose3 = () => {
+    setShow3(false);
+  };
+  const handleShow3 = () => setShow3(true);
+
+  const [show4, setShow4] = useState(false);
+  const handleClose4 = () => {
+    setShow4(false);
+  };
+  const handleShow4 = () => setShow4(true);
+
+
   const [show1, setShow1] = useState(false);
   const handleClose1 = () => {
     setShow1(false);
@@ -344,8 +365,8 @@ function DonHang(props) {
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
 
-   // kcms sp
-   const handleAddSoLuong = (id, idSP) => {
+  // kcms sp
+  const handleAddSoLuong = (id, idSP) => {
     setShow2(true);
     setidSP(idSP);
     setidCTSP(id);
@@ -439,7 +460,7 @@ function DonHang(props) {
     }
   };
 
-  // searchSPinDH; 
+  // searchSPinDH;
   const [term, setTerm] = useState('');
 
   const searchSPofDH = async (term) => {
@@ -685,10 +706,117 @@ function DonHang(props) {
         </div>
         <div className="col-4 thong-tin-ban-hang">
           <div>
-            <button type="button" className="btn btn-outline-primary">
+            <button type="button" className="btn btn-outline-primary" onClick={handleShow4}>
               Chọn khách hàng
             </button>
-            <button className="fa-solid fa-plus mx-3"></button>
+            <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
+              <Modal.Header closeButton>
+                <Modal.Title style={{ marginLeft: 175 }}>Khách Hàng</Modal.Title>
+              </Modal.Header>
+              <Modal.Body style={{ width: 500 }}>
+               
+              </Modal.Body>
+            </Modal>
+            <button className="fa-solid fa-plus mx-3" onClick={handleShow3}></button>
+            <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show3} onHide={handleClose3}>
+              <Modal.Header closeButton>
+                <Modal.Title style={{ marginLeft: 145 }}>Thêm Khách Hàng</Modal.Title>
+              </Modal.Header>
+              <Modal.Body style={{ width: 500 }}>
+                <form className="needs-validation" noValidate >
+                  <div className="form-group row">
+                    <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                      Họ Và Tên:
+                    </label>
+                    <div className="col-sm-9">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="tenNguoiNhan"
+                        placeholder=""
+                        // value={hoaDon.tenNguoiNhan}
+                        // onChange={(e) => {
+                        //   setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
+                        //   setNone(true);
+                        //   setNone1(true);
+                        // }}
+                      />
+                      {/* {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
+                      {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>} */}
+                    </div>
+                  </div>
+                  <br></br>
+                  <div className="form-group row">
+                    <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
+                      Số Điện Thoại:
+                    </label>
+                    <div className="col-sm-9">
+                      <input
+                        type="tel"
+                        className="form-control"
+                        name="soDienThoai"
+                        placeholder=""
+                        // value={hoaDon.soDienThoai}
+                        // onChange={(e) => {
+                        //   setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
+                        //   setNone2(true);
+                        //   setNone3(true);
+                        // }}
+                      />
+                      {/* {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
+                      {!none3 && <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>} */}
+                    </div>
+                  </div>
+                  <br></br>
+                  <div className="form-group row">
+                    <label style={{ fontWeight: 'bold' }} htmlFor="diaChi" className="col-sm-3 col-form-label">
+                      Email:
+                    </label>
+                    <div className="col-sm-9">
+                    <input
+                        type="tel"
+                        className="form-control"
+                        name="email"
+                        placeholder=""
+                        // value={hoaDon.soDienThoai}
+                        // onChange={(e) => {
+                        //   setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
+                        //   setNone2(true);
+                        //   setNone3(true);
+                        // }}
+                      />
+                      {/* {!none4 && <div style={{ color: 'red' }}>Địa chỉ không được để trống !</div>}
+                      {!none5 && <div style={{ color: 'red' }}>Địa chỉ không được vượt quá 250 ký tự !</div>} */}
+                    </div>
+                  </div>
+                  <br></br>
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="btn btn-labeled shadow-button"
+                      style={{
+                        background: 'deepskyblue',
+                        borderRadius: '50px',
+                        border: '1px solid black',
+                        justifyItems: 'center'
+                      }}
+                    >
+                      <span
+                        style={{
+                          marginBottom: '3px',
+                          color: 'white',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                        className="btn-text"
+                      >
+                        Thêm Khách Hàng
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
           </div>
           <br /> <br />
           <div className="ma-giam-gia">

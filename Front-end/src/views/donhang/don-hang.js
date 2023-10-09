@@ -33,13 +33,12 @@ function DonHang() {
 
   const optionList = [
     { value: '0', label: 'Đang chờ xác nhận' },
-    { value: '1', label: 'Đã xác nhận' },
+    { value: '1', label: 'Chờ giao hàng' },
     { value: '2', label: 'Đã hủy đơn' },
-    { value: '3', label: 'Chờ giao hàng' },
-    { value: '4', label: 'Đang giao hàng' },
-    { value: '5', label: 'Giao hàng thành công' },
-    { value: '6', label: 'Giao hàng thất bại' },
-    { value: '7', label: 'Thanh toán thành công' }
+    { value: '3', label: 'Đang giao hàng' },
+    { value: '4', label: 'Giao hàng thành công' },
+    { value: '5', label: 'Giao hàng thất bại' },
+    { value: '6', label: 'Thanh toán thành công' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -342,9 +341,9 @@ function DonHang() {
                             justifyContent: 'center',
                             fontWeight: 'bold'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                         >
-                          Đã xác nhận
+                          Chờ giao hàng
                         </span>
                       )}
                       {d.trang_thai === 2 && (
@@ -364,24 +363,8 @@ function DonHang() {
                           Đã hủy đơn
                         </span>
                       )}
+                      
                       {d.trang_thai === 3 && (
-                        <span
-                          style={{
-                            width: '200px',
-                            pointerEvents: 'none',
-                            height: '30px',
-                            borderRadius: '20px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 'bold'
-                          }}
-                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                        >
-                          Chờ giao hàng
-                        </span>
-                      )}
-                      {d.trang_thai === 4 && (
                         <span
                           style={{
                             width: '200px',
@@ -398,7 +381,7 @@ function DonHang() {
                           Đang giao hàng
                         </span>
                       )}
-                      {d.trang_thai === 5 && (
+                      {d.trang_thai === 4 && (
                         <span
                           style={{
                             width: '200px',
@@ -415,7 +398,7 @@ function DonHang() {
                           Giao hàng thành công
                         </span>
                       )}
-                      {d.trang_thai === 6 && (
+                      {d.trang_thai === 5 && (
                         <span
                           style={{
                             width: '200px',
@@ -432,7 +415,7 @@ function DonHang() {
                           Giao hàng thất bại
                         </span>
                       )}
-                      {d.trang_thai === 7 && (
+                      {d.trang_thai === 6 && (
                         <span
                           style={{
                             width: '200px',
