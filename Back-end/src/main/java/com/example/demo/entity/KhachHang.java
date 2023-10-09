@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,6 +47,7 @@ public class KhachHang {
 
     @Column(name="anh")
     @Lob
+    @JsonIgnore
     private Blob anh;
 
     @PrePersist
