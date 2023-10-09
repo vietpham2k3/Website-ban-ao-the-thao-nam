@@ -20,7 +20,7 @@ public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, UUID> {
             "      AND (:trangThai IS NULL OR trang_thai = :trangThai)", nativeQuery = true)
     Page<KhuyenMai> search(@Param("key") String key, Integer trangThai, Pageable pageable);
 
-    @Query(value = "select k from KhuyenMai k where k.trangThai = 0 and k.tien <= :tien")
+    @Query(value = "select k from KhuyenMai k where (k.trangThai = 0 or k.trangThai = 2)and k.tien <= :tien")
     List<KhuyenMai> getAll(Double tien);
 
     @Query(value = "select k from KhuyenMai k where k.trangThai = 0")
