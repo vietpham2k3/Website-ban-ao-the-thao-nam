@@ -577,7 +577,6 @@ function DonHang(props) {
   };
   const handleShow4 = () => setShow4(true);
 
-
   const [show1, setShow1] = useState(false);
   const handleClose1 = () => {
     setShow1(false);
@@ -724,18 +723,11 @@ function DonHang(props) {
         <div className="col-8">
           <div className="col-5">
             <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
-              <Button
-                className="button-85"
-                onClick={handleShow1}
-                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
-                data-toggle="tooltip"
-                title="Thêm sản phẩm"
-                type="submit"
-              >
-                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
-                  Thêm sản phẩm
-                </span>
-              </Button>
+            <button onClick={handleShow1} style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
+              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+              <span className="relative text-black group-hover:text-white">Thêm sản phẩm</span>
+            </button>
               <Modal
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
@@ -936,17 +928,33 @@ function DonHang(props) {
         </div>
         <div className="col-4 thong-tin-ban-hang">
           <div>
-            <button type="button" className="btn btn-outline-primary" onClick={handleShow4}>
-              Chọn khách hàng
+            <button onClick={handleShow4} style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
+              <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+              <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+              <span className="relative text-black group-hover:text-white">Thêm khách hàng</span>
             </button>
             <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show4} onHide={handleClose4}>
               <Modal.Header closeButton>
                 <Modal.Title style={{ marginLeft: 175 }}>Khách Hàng</Modal.Title>
               </Modal.Header>
               <Modal.Body style={{ width: 500 }}>
-               <div>
-                
-               </div>
+                <div className="text-voucher">
+                  <h6>
+                    <strong>Phạm Quốc Việt </strong>|{' '}
+                    <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
+                      {' '}
+                      0964420243
+                    </label>
+                  </h6>
+                  <div>
+                    <p style={{ fontSize: 14, fontStyle: 'inherit' }}>Nam</p>{' '}
+                    <button style={{ float: 'left' }} href="#_" className="relative inline-block px-4 py-2 font-medium group">
+                      <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+                      <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+                      <span className="relative text-black group-hover:text-white">Chọn</span>
+                    </button>
+                  </div>
+                </div>
               </Modal.Body>
             </Modal>
             <button className="fa-solid fa-plus mx-3" onClick={handleShow3}></button>
@@ -955,7 +963,7 @@ function DonHang(props) {
                 <Modal.Title style={{ marginLeft: 145 }}>Thêm Khách Hàng</Modal.Title>
               </Modal.Header>
               <Modal.Body style={{ width: 500 }}>
-                <form className="needs-validation" noValidate >
+                <form className="needs-validation" noValidate>
                   <div className="form-group row">
                     <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
                       Họ Và Tên:
@@ -1005,7 +1013,7 @@ function DonHang(props) {
                       Email:
                     </label>
                     <div className="col-sm-9">
-                    <input
+                      <input
                         type="tel"
                         className="form-control"
                         name="email"
