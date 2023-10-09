@@ -295,7 +295,6 @@ public class HoaDonController {
         hoaDon.setTrangThai(1);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
-        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Chờ giao hàng");
@@ -313,7 +312,6 @@ public class HoaDonController {
         hoaDon.setTrangThai(2);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
-        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Đã hủy đơn hàng");
@@ -331,7 +329,6 @@ public class HoaDonController {
         hoaDon.setTrangThai(3);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
-        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Đang giao hàng");
@@ -349,7 +346,6 @@ public class HoaDonController {
         hoaDon.setTrangThai(6);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
-        hoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         hoaDon.setNgayThanhToan(new Date());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);

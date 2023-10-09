@@ -714,7 +714,9 @@ function DonHang(props) {
                 <Modal.Title style={{ marginLeft: 175 }}>Khách Hàng</Modal.Title>
               </Modal.Header>
               <Modal.Body style={{ width: 500 }}>
-               
+               <div>
+                
+               </div>
               </Modal.Body>
             </Modal>
             <button className="fa-solid fa-plus mx-3" onClick={handleShow3}></button>
