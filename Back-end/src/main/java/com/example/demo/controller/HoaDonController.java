@@ -150,8 +150,8 @@ public class HoaDonController {
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
-        hoaDon.setTenNguoiNhan(hd.getTenNguoiNhan());
-        hoaDon.setSoDienThoai(hd.getSoDienThoai());
+        hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
+        hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDon.setDiaChi("NULL");
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);

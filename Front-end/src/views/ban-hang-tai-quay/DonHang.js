@@ -804,6 +804,7 @@ function DonHang(props) {
       soDienThoai: soDienThoai,
     })
     console.log(tenKhachHang,soDienThoai);
+    handleUpdateHD();
     toast.success('Chọn thành công !');
     setShow4(false);
   };
