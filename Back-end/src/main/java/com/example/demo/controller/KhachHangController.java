@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
 import com.example.demo.dto.KhachHangDTO;
+import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -27,6 +29,9 @@ import java.util.*;
 @RequestMapping("/api/khach-hang")
 @CrossOrigin(origins = "http://localhost:3000")
 public class KhachHangController {
+
+    @Autowired
+    public HoaDonServiceImpl serviceHD;
 
     @Autowired
     private KhachHangServiceImpl khService;
@@ -310,24 +315,18 @@ public class KhachHangController {
     }
 
 
-    @PostMapping("/addKHinBH")
-    public ResponseEntity<?> addKHinBH(MultipartFile anh,
-                                       String maKhachHang,
-                                       String tenKhachHang,
-                                       String sdt,
-                                       String email,
-                                       Boolean gioiTinh) throws IOException, SQLException {
+    @PostMapping("/addKHinBH/{id}")
+    public ResponseEntity<?> addKHinBH(@PathVariable UUID id,@RequestBody KhachHang kh, MultipartFile anh) throws IOException, SQLException {
         // Create a new KhachHang object
-        KhachHang khachHang = new KhachHang();
-        if (khachHang.getMaKhachHang() == null) {
+        if (kh.getMaKhachHang() == null) {
             String ma = "KH" + new Random().nextInt(100000);
-            khachHang.setMaKhachHang(ma);
+            kh.setMaKhachHang(ma);
         }
-        khachHang.setMaKhachHang(maKhachHang);
-        khachHang.setTenKhachHang(tenKhachHang);
-        khachHang.setSdt(sdt);
-        khachHang.setEmail(email);
-        khachHang.setGioiTinh(gioiTinh);
+        kh.setTrangThai(1);
+        HoaDon hd= serviceHD.detailHD(id);
+        hd.setSoDienThoai(kh.getSdt());
+        hd.setTenNguoiNhan(kh.getTenKhachHang());
+        serviceHD.add(hd);
 
         // Check if a file is provided
         if (anh != null) {
@@ -336,13 +335,25 @@ public class KhachHangController {
             Blob imageBlob = khService.createBlob(inputStream);
 
             // Set the image blob to the KhachHang object
-            khachHang.setAnh(imageBlob);
+            kh.setAnh(imageBlob);
         }
-
         // Save the KhachHang object
-        KhachHang savedKhachHang = khService.add(khachHang);
+        KhachHang savedKhachHang = khService.add(kh);
         KhachHangDTO savedKhachHangDTO = convertToDto(savedKhachHang);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHangDTO);
+    }
+
+    @PutMapping("/handleChooseKH/{id}")
+    public ResponseEntity<?> detailKHbyHDId(@PathVariable UUID id){
+        // Create a new KhachHang object
+        KhachHang kh = khService.getOne(id);
+        HoaDon hd= serviceHD.detailHD(id);
+        hd.setSoDienThoai(kh.getSdt());
+        hd.setTenNguoiNhan(kh.getTenKhachHang());
+        serviceHD.add(hd);
+
+
+        return ResponseEntity.ok(serviceHD.detailHD(id));
     }
 
 }

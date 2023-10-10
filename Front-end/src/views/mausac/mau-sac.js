@@ -109,12 +109,12 @@ function MauSac() {
                 <input
                   style={{ borderRadius: 15, width: 300 }}
                   type="text"
-                  className="input-search"
+                  className="input-search results-list"
                   placeholder=" Nhập tên, mã màu cần tìm..."
                   onChange={handleSearchMS}
                 />
               </div>
-              <div style={{ marginRight: 50 }}>
+              <div style={{ marginRight: 50, paddingTop: 15 }}>
                 <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
                   Trạng Thái:
                 </span>

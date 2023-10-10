@@ -40,6 +40,10 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             "  FROM KhachHang WHERE trang_thai = 1 ORDER BY ma", nativeQuery = true)
     List<KhachHang> getAllKH();
 
+    @Query(value = "SELECT * FROM KhachHang WHERE trang_thai = 1 AND" +
+            " id = :id ", nativeQuery = true)
+    KhachHang getAllKHById(UUID id);
+
     @Query(value = "SELECT * FROM KhachHang WHERE trang_thai = 1 " +
             "AND ((:key is null or ma LIKE lower(CONCAT('%', :key, '%'))) " +
             "or (:key is null or ten LIKE lower(CONCAT('%', :key, '%'))) " +
@@ -47,4 +51,6 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             "or (:key is null or email LIKE lower(CONCAT('%', :key, '%')))) " +
             "ORDER BY ma", nativeQuery = true)
     List<KhachHang> searchKHinBH(@Param("key") String key);
+
+
 }
