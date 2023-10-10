@@ -104,10 +104,10 @@ function DonHang() {
     setRadioLoai('');
   };
 
-    //ngayTao
-    const currentDate = new Date();
-    const threeMonthsAgo = subMonths(currentDate, 3);
-    const threeMonthsLater = addMonths(currentDate, 0);
+  //ngayTao
+  const currentDate = new Date();
+  const threeMonthsAgo = subMonths(currentDate, 3);
+  const threeMonthsLater = addMonths(currentDate, 0);
 
   const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
 
@@ -194,8 +194,7 @@ function DonHang() {
         {/* fillter */}
         <Card>
           <div style={{ height: 'auto' }} className="w-auto rounded bg-white border shadow p-4">
-            <div style={{ marginLeft: 80}} className="row">
-
+            <div style={{ marginLeft: 80 }} className="row">
               <div className="box col-auto col-6">
                 <div className="values">
                   <strong>Mã đơn hàng hoặc tên khách hàng :</strong>
@@ -231,8 +230,7 @@ function DonHang() {
             </div>
             <br></br>
 
-            <div style={{ marginTop: 10,marginLeft: 80 }}  className="row">
-
+            <div style={{ marginTop: 10, marginLeft: 80 }} className="row">
               <div className="box col-auto col-6">
                 <div style={{ textAlign: 'start' }} className="field">
                   <div className="values">
@@ -268,7 +266,7 @@ function DonHang() {
                       onClick={handleAllClickLoai}
                       onChange={handleRadioChange1}
                     />
-                    <FormCheck.Label >Tất Cả</FormCheck.Label>
+                    <FormCheck.Label>Tất Cả</FormCheck.Label>
                   </FormCheck>
 
                   <FormCheck style={{ marginLeft: 35 }} inline>
@@ -282,9 +280,7 @@ function DonHang() {
                   </FormCheck>
                 </FormGroup>
               </div>
-
             </div>
-
           </div>
         </Card>
         <br></br>
@@ -363,7 +359,7 @@ function DonHang() {
                           Đã hủy đơn
                         </span>
                       )}
-                      
+
                       {d.trang_thai === 3 && (
                         <span
                           style={{

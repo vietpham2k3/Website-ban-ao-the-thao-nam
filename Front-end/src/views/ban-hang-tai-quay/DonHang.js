@@ -312,6 +312,8 @@ function DonHang(props) {
   useEffect(() => {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
+      tenNguoiNhan: valuesKH.tenKhachHang,
+      soDienThoai: valuesKH.sdt,
       tongTien: totalAmount
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -323,6 +325,8 @@ function DonHang(props) {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
       ...prevValuesUpdateHD.hinhThucThanhToan,
+      tenNguoiNhan: valuesKH.tenKhachHang,
+      soDienThoai: valuesKH.sdt,
       tongTienKhiGiam: totalAmount - totalGiam
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,10 +426,14 @@ function DonHang(props) {
       setValuesUpdateHD((prevValuesUpdateHD) => ({
         ...prevValuesUpdateHD,
         ...prevValuesUpdateHD.hinhThucThanhToan,
+        tenNguoiNhan: valuesKH.tenKhachHang,
+        soDienThoai: valuesKH.sdt,
         tongTienKhiGiam: totalAmount - totalGiam
       }));
       setValuesUpdateHD((prevValuesUpdateHD) => ({
         ...prevValuesUpdateHD,
+        tenNguoiNhan: valuesKH.tenKhachHang,
+        soDienThoai: valuesKH.sdt,
         tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
       }));
       toast.success('Thêm mã giảm giá thành công');
@@ -784,26 +792,18 @@ function DonHang(props) {
     }
   };
 
-  useEffect(() => {
-    setValuesUpdateHD({
-      ...valuesUpdateHD,
-      tenNguoiNhan: valuesKH.tenKhachHang,
-      soDienThoai: valuesKH.sdt,
+  const handleChooseKH = (tenKhachHang, soDienThoai) => {
+    setValuesKH({
+      ...valuesKH,
+      tenKhachHang: tenKhachHang,
+      sdt: soDienThoai
     });
-  }, [valuesUpdateHD.tenNguoiNhan,valuesUpdateHD.soDienThoai]);
-
-  const handleChooseKH = (tenKhachHang,soDienThoai) => {
     setValuesUpdateHD({
       ...valuesUpdateHD,
       tenNguoiNhan: tenKhachHang,
-      soDienThoai: soDienThoai,
-    })
-    setDataDetailHD({
-      ...dataDetailHD,
-      tenNguoiNhan: tenKhachHang,
-      soDienThoai: soDienThoai,
-    })
-    console.log(tenKhachHang,soDienThoai);
+      soDienThoai: soDienThoai
+    });
+    console.log(tenKhachHang, soDienThoai);
     handleUpdateHD();
     toast.success('Chọn thành công !');
     setShow4(false);
@@ -1077,7 +1077,7 @@ function DonHang(props) {
                       </div>
                       <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
                         <button
-                          onClick={() => handleChooseKH(k.tenKhachHang,k.sdt)}
+                          onClick={() => handleChooseKH(k.tenKhachHang, k.sdt)}
                           className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
                         >
                           <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>

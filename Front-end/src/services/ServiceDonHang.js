@@ -50,7 +50,7 @@ const detailLSHD = (id) => {
 // };
 
 const addKH2 = (id, values) => {
-  return axios.post(`/api/hoa-don/addKHinBH/`+ id, values);
+  return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
 };
 
 const updateKHDH = (id, values) => {
