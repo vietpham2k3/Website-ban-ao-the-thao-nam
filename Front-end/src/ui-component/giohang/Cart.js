@@ -1,10 +1,71 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
+import { Table } from 'react-bootstrap';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import { Link } from 'react-router-dom';
 
 function Cart() {
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    const storedProductList = JSON.parse(localStorage.getItem('product'));
+    if (storedProductList) {
+      setProductList(storedProductList);
+    }
+  }, []);
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(number);
+  }
+
+  useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    productList.forEach((d) => {
+      sum += d.soLuong * d.giaBan;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [productList]);
+
+  const handleDelete = (id) => {
+    const storedData = JSON.parse(localStorage.getItem('product'));
+    const updatedData = storedData.filter((item) => item.id !== id);
+    localStorage.setItem('product', JSON.stringify(updatedData));
+    const storedProductList = JSON.parse(localStorage.getItem('product'));
+    if (storedProductList) {
+      setProductList(storedProductList);
+    }
+  };
+
+  const handleUpdate = (e, id) => {
+    // Lấy giá trị số lượng mới
+    const newQuantity = e;
+
+    // Lấy danh sách sản phẩm từ local
+    const storedProductList = JSON.parse(localStorage.getItem('product'));
+
+    // Tìm sản phẩm tương ứng
+    const productIndex = storedProductList.findIndex((product) => product.id === id);
+
+    // Cập nhật số lượng sản phẩm
+    storedProductList[productIndex].soLuong = newQuantity;
+
+    // Lưu danh sách sản phẩm vào local
+    localStorage.setItem('product', JSON.stringify(storedProductList));
+
+    // Cập nhật danh sách sản phẩm trong state
+    setProductList(storedProductList);
+  };
 
   return (
     <div>
@@ -22,88 +83,91 @@ function Cart() {
         </div>
         <hr></hr>
       </div>
-      <div
-        className="wrapper container"
-        style={{
-          background: '#f3f5f9',
-          position: 'relative',
-          paddingLeft: 15,
-          display: 'flex',
-          fontFamily: 'Josefin Sans'
-        }}
-      >
-        <div className="sidebar col-md-8" style={{ marginRight: 20 }}>
-          <div className="mt-3">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th style={{ paddingBottom: 15, fontSize: 20, background: '#f3f5f9' }}>Đơn hàng của bạn</th>
-                </tr>
-              </thead>
-              <tbody style={{ fontSize: 18 }}>
-                <tr>
-                  <td style={{ paddingLeft: 30 }}>Sản phẩm</td>
-                  <td>Đơn giá</td>
-                  <td style={{ paddingLeft: 40 }}>Số lượng</td>
-                  <td>Thành tiền</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div className="product-count">
-                      <div className="inputSpinner" style={{ width: 135, paddingLeft: 25 }}>
-                        <InputSpinner
-                          min={1}
-                          className="input-spinner"
-                          step={1}
-                          variant={'dark'}
-                          type="real"
-                          size="md"
-                          value={quantity}
-                          onChange={(value) => setQuantity(value)}
+      <div className="wrapper container">
+        <div className="row">
+          <div className="col-md-8">
+            <div className="cart-san-pham">
+              <div className="col-12 d-flex justify-content-start title-gio-hang">
+                <h1 style={{ fontSize: '25px' }}>Giỏ hàng</h1>
+              </div>
+              <div className="col-12" style={{ paddingLeft: '25px', paddingBottom: '10px' }}>
+                <hr />
+                <Table striped hover className="my-4">
+                  <tr>
+                    <td>Sản phẩm</td>
+                    <td>&nbsp;</td>
+                    <td>Đơn giá</td>
+                    <td>Số lượng</td>
+                    <td>Thành tiền</td>
+                    <td>Action</td>
+                  </tr>
+                  {productList.map((product, index) => (
+                    <tr key={index}>
+                      <td>
+                        <img
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                          className="img-cart"
+                          style={{ width: '70px', height: '100px', borderRadius: '15px' }}
                         />
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-trash3-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
-                    </svg>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="col-md-4" style={{ marginTop: 60, marginBottom: 40, paddingLeft: 30, width: 400, background: '#fff' }}>
-          <div className="container" style={{ display: 'flex', paddingTop: 40, paddingRight: 40 }}>
-            <div className="col-sm-6">
-              <p style={{ paddingBottom: 5, fontSize: 18 }}>Giá trị đơn hàng</p>
-              <p style={{ paddingBottom: 5, fontSize: 18 }}>Khuyến mãi</p>
-              <p style={{ paddingBottom: 5, fontSize: 18 }}>Tổng tiền</p>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <span>{product.sanPham.ten}</span>
+                          <span style={{ marginLeft: '10px' }}>[{product.kichCo.ten} -</span>
+                          <div
+                            style={{
+                              backgroundColor: product.mauSac.ten,
+                              width: '30px',
+                              borderRadius: '10px',
+                              marginLeft: '10px'
+                            }}
+                          >
+                            &nbsp;
+                          </div>
+                          <span>]</span>
+                        </div>
+                      </td>
+                      <td>{convertToCurrency(product.giaBan)}</td>
+                      <td>
+                        <div className="product-count">
+                          <div className="inputSpinner" style={{ width: 140, paddingRight: 25 }}>
+                            <InputSpinner
+                              max={product.tongSoLuong}
+                              min={1}
+                              className="input-spinner"
+                              step={1}
+                              variant={'dark'}
+                              type="real"
+                              size="md"
+                              value={product.soLuong}
+                              onChange={(e) => handleUpdate(e, product.id)}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                      <td>{convertToCurrency(product.giaBan * product.soLuong)}</td>
+                      <td>
+                        <button onClick={() => handleDelete(product.id)} className="fa-solid fa-trash mx-3"></button>
+                      </td>
+                    </tr>
+                  ))}
+                </Table>
+              </div>
             </div>
-            <div className="col-sm-6">
-              <p style={{ paddingBottom: 5, fontSize: 18, textAlign: 'right' }}>339,000đ</p>
-              <p style={{ paddingBottom: 5, fontSize: 18, textAlign: 'right', color: 'red' }}>-33,000đ</p>
-              <p style={{ paddingBottom: 5, fontSize: 18, textAlign: 'right' }}>309,000đ</p>
-            </div>
           </div>
-          <div style={{ textAlign: 'center', paddingTop: 40 }}>
-            <button
-              className="btnThanhToan btn btn-default"
-              type="button"
-              style={{ background: '#EE4D2D', fontWeight: 'bold', textAlign: 'center', width: 200, height: 60, fontSize: 20 }}
-            >
-              Thanh Toán
-            </button>
+          <div className="col-md-4">
+            <div className="cart-san-pham">
+              <div className="col-12 tong-tien-cart">
+                <div className="text-total">
+                  <p>
+                    Tổng tiền: <strong>{convertToCurrency(totalAmount)}</strong>
+                  </p>
+                </div>
+                <button type="button" className="btn btn-success">
+                  Thanh toán
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

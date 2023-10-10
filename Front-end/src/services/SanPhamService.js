@@ -92,8 +92,13 @@ const getAllByIdSPTT = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/getAllByIdSPTT/${id}`);
 };
 
+const updateSL = (id, soLuong) => {
+  return axios.put(`/api/chi-tiet-san-pham/update-sl-sp/${id}?soLuong=${soLuong}`);
+};
+
 export {
   getAll,
+  updateSL,
   deleteMSKC,
   getAllByIdSPTT,
   getAllByIdSP,

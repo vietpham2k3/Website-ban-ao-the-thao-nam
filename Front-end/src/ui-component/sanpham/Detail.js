@@ -11,17 +11,17 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
-
 function Detail() {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
+  const [idCTSP, setIdCTSP] = useState(0);
   const thumbnailContainerRef = useRef(null);
+  const [listSanPham, setListSanPham] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
-  console.log(idMStest);
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -40,6 +40,7 @@ function Detail() {
       left: scrollLeft,
       behavior: 'smooth'
     });
+    console.log(idMStest);
   };
 
   const handlePrevious = () => {
@@ -59,6 +60,11 @@ function Detail() {
 
   useEffect(() => {
     getAllCTSP();
+
+    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
+    if (storedListSanPham) {
+      setListSanPham(storedListSanPham);
+    }
   }, []);
 
   // ms kc
@@ -69,8 +75,7 @@ function Detail() {
     setTimeout(() => {
       setIsActive(false);
     }, 200);
-
-    console.log(idCTSP);
+    setIdCTSP(idCTSP);
   };
 
   const [listKC, setListKC] = useState([]);
@@ -101,13 +106,9 @@ function Detail() {
   const navigate = useNavigate();
 
   const getAllMS = async (id) => {
-    try {
-      const res = await getAllMSByIdSP(id);
-      if (res && res.data) {
-        setListMS(res.data);
-      }
-    } catch (error) {
-      // Xử lý lỗi nếu cần
+    const res = await getAllMSByIdSP(id);
+    if (res && res.data) {
+      setListMS(res.data);
     }
   };
 
@@ -144,29 +145,9 @@ function Detail() {
     }
   };
 
-  // const [values, setValues] = useState({
-  //   id: '',
-  //   ten: '',
-  //   giaBan: ''
-  // });
-
-  // const handleAddToCart = () => {
-  //   setValues({
-
-  //   })
-  // };
-
-  // const post = async (value) => {
-  //   const res = await postGH(value);
-  //   if (res) {
-  //     toast.success('Thêm thành công !');
-  //     navigate('/gio-hang');
-  //   }
-  // };
-
   useEffect(() => {
-    fetchProductDetail(id);
-  }, [id]);
+    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
+  }, [idCTSP]);
 
   const fetchProductDetail = async (id) => {
     try {
@@ -189,6 +170,28 @@ function Detail() {
   if (!product) {
     return <div>Loading...</div>;
   }
+
+  const handleDetail = (idCTSP, idSP, idMS) => {
+    navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
+    localStorage.setItem('idMS', idMS);
+  };
+
+  const handleAddToCart = () => {
+    const updatedListSanPham = [
+      ...listSanPham,
+      {
+        id: product.id,
+        kichCo: product.kichCo,
+        sanPham: product.sanPham,
+        mauSac: product.mauSac,
+        giaBan: product.giaBan,
+        soLuong: quantity,
+        tongSoLuong: product.soLuong
+      }
+    ];
+    setListSanPham(updatedListSanPham);
+    localStorage.setItem('product', JSON.stringify(updatedListSanPham));
+  };
 
   return (
     <div className="container">
@@ -339,8 +342,9 @@ function Detail() {
                 >
                   Số lượng:{' '}
                 </p>
-                <div className="inputSpinner" style={{ width: 110 }}>
+                <div className="inputSpinner" style={{ width: 130 }}>
                   <InputSpinner
+                    max={product.soLuong}
                     min={1}
                     className="input-spinner"
                     step={1}
@@ -350,10 +354,11 @@ function Detail() {
                     value={quantity}
                     onChange={(value) => setQuantity(value)}
                   />
+                  {product.soLuong <= 10 ? <span>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCart}>
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={() => handleAddToCart()}>
                   Thêm vào giỏ hàng
                 </button>
                 <button className="add-to-cart1 btn btn-default" type="button">
@@ -383,13 +388,14 @@ function Detail() {
             {data.slice(0, 8).map((product, index) => {
               return (
                 <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
-                  <Card style={{ width: '260px', height: '400px' }}>
-                    <Link to={`/detail/${product.id}`}>
-                      <Card.Img
-                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
-                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                      />
-                    </Link>
+                  <Card
+                    onClick={() => handleDetail(product.id, product.sanPham.id, product.mauSac.id)}
+                    style={{ width: '260px', height: '400px' }}
+                  >
+                    <Card.Img
+                      style={{ textAlign: 'center', width: '260px', height: '300px' }}
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                    />
                     <Card.Body>
                       <Card.Title>{product.sanPham.ten}</Card.Title>
                       <Card.Text>
