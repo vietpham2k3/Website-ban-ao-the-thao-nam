@@ -41,9 +41,11 @@ const deleteMSKC = (id) => {
   return axios.put('/api/chi-tiet-san-pham/deleteMSKC/' + id);
 };
 
-const searchCTSP = (key, trangThai, min, max, page) => {
-  return axios.get(`/api/chi-tiet-san-pham/search?key=${key}&trangThai=${trangThai}&min=${min}&max=${max}&page=${page}`);
-};
+const searchCTSP = (key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page) => {
+  return axios.get(
+    `/api/chi-tiet-san-pham/search?key=${key}&trangThai=${trangThai}&min=${min}&max=${max}&mauSac=${mauSac}&chatLieu=${chatLieu}&loaiSanPham=${loaiSanPham}&nhaSanXuat=${nhaSanXuat}&coAo=${coAo}&page=${page}`
+  );
+}
 
 const detailCTSP = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/detail/${id}`);

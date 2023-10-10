@@ -268,8 +268,13 @@ public class ChiTietSanPhamController {
                                     @RequestParam(value = "trangThai", required = false) Integer trangThai,
                                     @RequestParam(value = "min", required = false) Double min,
                                     @RequestParam(value = "max", required = false) Double max,
+                                    @RequestParam(value = "mauSac", required = false) String mauSac,
+                                    @RequestParam(value = "chatLieu", required = false) String chatLieu,
+                                    @RequestParam(value = "loaiSanPham", required = false) String loaiSanPham,
+                                    @RequestParam(value = "nhaSanXuat", required = false) String nhaSanXuat,
+                                    @RequestParam(value = "coAo", required = false) String coAo,
                                     @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, page));
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page));
     }
 
 

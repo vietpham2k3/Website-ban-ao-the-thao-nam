@@ -16,6 +16,7 @@ import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Slider from 'react-slider';
+import { Form, Row, Col } from 'react-bootstrap';
 
 const MIN = 0;
 const MAX = 999999;
@@ -29,6 +30,11 @@ function SanPham() {
   const [status, setStatus] = useState('');
   const [radio, setRadio] = useState('');
   // const [isLoading, setIsLoading] = useState(true);
+  const [mauSac, setMauSac] = useState('');
+  const [chatLieu, setChatLieu] = useState('');
+  const [loaiSanPham, setLoaiSanPham] = useState('');
+  const [nhaSanXuat, setNhaSanXuat] = useState('');
+  const [coAo, setCoAo] = useState('');
 
   const navigate = useNavigate();
 
@@ -84,7 +90,7 @@ function SanPham() {
   };
 
   const handleSearchUsers = _.debounce(async () => {
-    const res = await searchCTSP(term, status, values[0], values[1], '0');
+    const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, '0');
     if (res && res.data) {
       setData(res.data.content);
     } else {
@@ -94,7 +100,8 @@ function SanPham() {
 
   useEffect(() => {
     handleSearchUsers();
-  }, [term, status, values]);
+    getAllList();
+  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
@@ -176,6 +183,61 @@ function SanPham() {
               </Link>
             </div>
           </div>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Select className="custom-select" onChange={(e) => setMauSac(e.target.value)} value={mauSac}>
+                  <option>MÀU SẮC</option>
+                  {listMS.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={(e) => setChatLieu(e.target.value)} value={chatLieu}>
+                  <option>CHẤT LIỆU</option>
+                  {listCL.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={(e) => setLoaiSanPham(e.target.value)} value={loaiSanPham}>
+                  <option>LOẠI SẢN PHẨM</option>
+                  {listLSP.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={(e) => setNhaSanXuat(e.target.value)} value={nhaSanXuat}>
+                  <option>NHÀ SẢN XUẤT</option>
+                  {listNSX.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={(e) => setCoAo(e.target.value)} value={coAo}>
+                  <option>CỔ ÁO</option>
+                  {listCA.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+            </Row>
+          </Form>
+
           <div className="col-12">
             <Table striped hover className="my-4">
               <thead>
