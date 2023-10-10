@@ -16,6 +16,7 @@ function UpdateKhachHang() {
     email: '',
     ngaySinh: '',
     matKhau: '',
+    gioiTinh: '',
     trangThai: ''
   });
 
@@ -49,6 +50,7 @@ function UpdateKhachHang() {
     formData.append('email', values.email);
     formData.append('ngaySinh', values.ngaySinh);
     formData.append('matKhau', values.matKhau);
+    formData.append('gioiTinh', values.gioiTinh);
     formData.append('trangThai', values.trangThai);
     formData.append('anh', anh);
 
@@ -155,6 +157,39 @@ function UpdateKhachHang() {
                   value={values.ngaySinh}
                   onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
                 />
+              </div>
+              <div className="col-6">
+                <label htmlFor="a" className="form-label me-3">
+                  Giới Tính:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions3"
+                    id="inlineRadio3"
+                    value={false}
+                    checked={values.gioiTinh === true}
+                    onChange={() => setValues({ ...values, gioiTinh: true })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nam
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions3"
+                    id="inlineRadio4"
+                    value={false}
+                    checked={values.gioiTinh === false}
+                    onChange={() => setValues({ ...values, gioiTinh: false })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nữ
+                  </label>
+                </div>
               </div>
               <div className="col-6">
                 <label htmlFor="a" className="form-label">

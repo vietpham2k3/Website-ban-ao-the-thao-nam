@@ -30,26 +30,24 @@ function AddKhachHang() {
     email: '',
     ngaySinh: '',
     matKhau: '',
+    gioiTinh: '',
     trangThai: 1
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!anh) {
-      toast.error('Vui lòng chọn ảnh');
-      return;
-    }
-
     const formData = new FormData();
-    // formData.append("maKhachHang", values.maKhachHang);
     formData.append('tenKhachHang', values.tenKhachHang);
     formData.append('sdt', values.sdt);
     formData.append('email', values.email);
     formData.append('ngaySinh', values.ngaySinh);
     formData.append('matKhau', values.matKhau);
+    formData.append('gioiTinh', values.gioiTinh);
     formData.append('trangThai', values.trangThai);
-    formData.append('anh', anh);
+    if (anh) {
+      formData.append('anh', anh);
+    }
 
     try {
       const res = await addKH(formData);
@@ -131,20 +129,60 @@ function AddKhachHang() {
             </div>
             <div className="col-6">
               <label htmlFor="a" className="form-label">
+                Giới tính:{' '}
+              </label>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions2"
+                  id="inlineRadio3"
+                  value={true}
+                  checked={true}
+                  onChange={() => setValues({ ...values, gioiTinh: true })}
+                />
+                <label htmlFor="a" className="form-check-label">
+                  Nam
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions2"
+                  id="inlineRadio4"
+                  value={false}
+                  onChange={() => setValues({ ...values, gioiTinh: false })}
+                />
+                <label htmlFor="a" className="form-check-label">
+                  Nữ
+                </label>
+              </div>
+            </div>
+            <div className="col-6">
+              <label htmlFor="a" className="form-label">
                 Mật khẩu
               </label>
               <input
-                type="text"
+                type="password"
                 className="form-control"
                 value={values.matKhau}
                 onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
               />
             </div>
             <div className="col-6">
+              <label className="form-label me-3" htmlFor="trang-thai6s">
+                Địa chỉ:{' '}
+                <span role="button" tabIndex={0} className="fa-solid" style={{ cursor: 'pointer' }}>
+                  <i className="fa-solid fa-plus"></i>
+                </span>
+              </label>{' '}
+            </div>
+            <div className="col-6">
               <label htmlFor="a" className="form-label">
                 Ảnh
               </label>
-              <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
+              <input type="file" id="anh" className="form-control" accept="image/*" name="anh" onChange={handlePreviewAnh} />
               {anh && <img src={anh.preview} alt="" width="70%"></img>}
             </div>
             <div className="col-12">

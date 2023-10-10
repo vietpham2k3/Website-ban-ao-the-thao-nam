@@ -182,7 +182,7 @@ function ContentSanPham() {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: 30 }}>
       <div className="row">
         <div className="col-md-3">
           <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>

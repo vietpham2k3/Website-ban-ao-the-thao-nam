@@ -224,16 +224,14 @@ function Detail() {
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-              <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
-              <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
+              <p>Mã sản phẩm: {product.ma}</p>
+              <p style={{ color: 'red', fontWeight: 'bold', fontSize: '25px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
               <br></br>
               <div>
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 3
                     }}
                   >
@@ -274,9 +272,7 @@ function Detail() {
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 8
                     }}
                   >
@@ -309,11 +305,9 @@ function Detail() {
               <div className="product-count">
                 <p
                   style={{
-                    color: 'grey',
                     paddingTop: 12,
                     paddingRight: 15,
-                    fontSize: 17,
-                    fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'
+                    fontSize: 17
                   }}
                 >
                   Số lượng:{' '}
@@ -339,7 +333,7 @@ function Detail() {
                   Mua Ngay
                 </button>
               </div>
-              <h1 style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}>Mô tả</h1>
+              <h1 style={{ paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}>Mô tả</h1>
               <hr></hr>
               <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
             </div>

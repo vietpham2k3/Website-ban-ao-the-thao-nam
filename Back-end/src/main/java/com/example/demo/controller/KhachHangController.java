@@ -131,13 +131,13 @@ public class KhachHangController {
         }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestParam("anh") MultipartFile anh,
-//                                 @RequestParam("maKhachHang") String maKhachHang,
+    public ResponseEntity<?> add(@RequestParam(value = "anh", required = false) MultipartFile anh,
                                  @RequestParam("tenKhachHang") String tenKhachHang,
                                  @RequestParam("sdt") String sdt,
                                  @RequestParam("email") String email,
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                  @RequestParam("matKhau") String matKhau,
+                                 @RequestParam("gioiTinh") Boolean gioiTinh,
                                  @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = new KhachHang();
@@ -148,6 +148,7 @@ public class KhachHangController {
         khachHang.setEmail(email);
         khachHang.setNgaySinh(ngaySinh);
         khachHang.setMatKhau(matKhau);
+        khachHang.setGioiTinh(gioiTinh);
         khachHang.setTrangThai(trangThai);
 
         // Check if a file is provided
@@ -193,16 +194,17 @@ public class KhachHangController {
                                     @RequestParam("email") String email,
                                     @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                     @RequestParam("matKhau") String matKhau,
+                                    @RequestParam("gioiTinh") Boolean gioiTinh,
                                     @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = khService.getOne(id);
 
-//        khachHang.setMaKhachHang(maKhachHang);
         khachHang.setTenKhachHang(tenKhachHang);
         khachHang.setSdt(sdt);
         khachHang.setEmail(email);
         khachHang.setNgaySinh(ngaySinh);
         khachHang.setMatKhau(matKhau);
+        khachHang.setGioiTinh(gioiTinh);
         khachHang.setTrangThai(trangThai);
 
         // Check if a file is provided

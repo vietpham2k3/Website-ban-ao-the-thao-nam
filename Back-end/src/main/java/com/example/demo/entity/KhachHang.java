@@ -16,8 +16,6 @@ import java.util.UUID;
 @Table(name="KhachHang")
 public class KhachHang {
 
-    private static int i = 1;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
@@ -41,6 +39,9 @@ public class KhachHang {
     @Column(name="mat_khau")
     private String matKhau;
 
+    @Column(name = "gioi_tinh")
+    private Boolean gioiTinh;
+
     @Column(name="trang_thai")
     private Integer trangThai;
 
@@ -48,10 +49,4 @@ public class KhachHang {
     @Lob
     private Blob anh;
 
-    @PrePersist
-    public void generateMaKhachHang() {
-        if (maKhachHang == null) {
-            maKhachHang = String.format("KH%02d", i++);
-        }
-    }
 }

@@ -31,6 +31,6 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             Pageable pageable
     );
 
-    @Query(value = "SELECT kh.id, kh.ma, kh.ten, kh.sdt, kh.email, kh.ngay_sinh, kh.trang_thai FROM KhachHang kh", nativeQuery = true)
+    @Query(value = "SELECT kh.id, kh.ma, kh.ten, kh.sdt, kh.email, kh.ngay_sinh,kh.gioi_tinh, kh.trang_thai FROM KhachHang kh", nativeQuery = true)
     Page<KhachHang> pageKH(Pageable pageable);
 }
