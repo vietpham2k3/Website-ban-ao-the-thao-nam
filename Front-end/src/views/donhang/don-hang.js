@@ -7,18 +7,13 @@ import '../../scss/DonHang.scss';
 import { getAllPageDH, findVIP } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { DateRangePicker } from 'rsuite';
-import Slider from 'react-slider';
+// import Slider from 'react-slider';
 import Select from 'react-select';
 import { FormCheck, FormGroup } from 'react-bootstrap';
 import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
 import * as XLSX from 'xlsx';
-
-const MIN = 0;
-const MAX = 99999999;
-
-const MINSL = 0;
-const MAXSL = 999;
+import { addMonths, subMonths, isWithinInterval } from 'date-fns';
 
 function DonHang() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -31,28 +26,19 @@ function DonHang() {
   const [radioLoai, setRadioLoai] = useState('');
   //select trangThai
   const [selectedOptions, setSelectedOptions] = useState([]);
-  //so luong
-  const [valuesSL, setValuesSL] = useState([MINSL, MAXSL]);
-  // tong tien
-  const [valuesTT, setValuesTT] = useState([MIN, MAX]);
   //hien thi
   const [data, setData] = useState([]);
 
   const animatedComponents = makeAnimated();
 
-  //ngayTao
-  const currentDate = new Date();
-  const nextYear = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
-
   const optionList = [
     { value: '0', label: 'Đang chờ xác nhận' },
-    { value: '1', label: 'Đã xác nhận' },
+    { value: '1', label: 'Chờ giao hàng' },
     { value: '2', label: 'Đã hủy đơn' },
-    { value: '3', label: 'Chờ giao hàng' },
-    { value: '4', label: 'Đang giao hàng' },
-    { value: '5', label: 'Giao hàng thành công' },
-    { value: '6', label: 'Giao hàng thất bại' },
-    { value: '7', label: 'Thanh toán thành công' }
+    { value: '3', label: 'Đang giao hàng' },
+    { value: '4', label: 'Giao hàng thành công' },
+    { value: '5', label: 'Giao hàng thất bại' },
+    { value: '6', label: 'Thanh toán thành công' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -73,8 +59,8 @@ function DonHang() {
   };
 
   //fillter DH
-  const search = async (key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page = 0) => {
-    const res = await findVIP(key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page);
+  const search = async (key, tuNgay, denNgay, trangThai, loaiDon, page = 0) => {
+    const res = await findVIP(key, tuNgay, denNgay, trangThai, loaiDon, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
@@ -90,9 +76,9 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      search(term, tuNgay, denNgay, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], selectedValues, loaiDon, page);
+      search(term, tuNgay, denNgay, selectedValues, loaiDon, page);
     } else {
-      search('', null, null, valuesSL[0], valuesSL[1], valuesTT[0], valuesTT[1], null, '', '', page);
+      search('', null, null, null, '', '', page);
     }
 
     if (data.length === 0) {
@@ -102,7 +88,7 @@ function DonHang() {
 
   useEffect(() => {
     handleSearchDH(currentPage);
-  }, [term, tuNgay, denNgay, valuesSL, valuesTT, selectedOptions, loaiDon, currentPage]);
+  }, [term, tuNgay, denNgay, selectedOptions, loaiDon, currentPage]);
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
@@ -118,14 +104,28 @@ function DonHang() {
     setRadioLoai('');
   };
 
+  //ngayTao
+  const currentDate = new Date();
+  const threeMonthsAgo = subMonths(currentDate, 3);
+  const threeMonthsLater = addMonths(currentDate, 0);
+
+  const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
+
   const handleDateChange = (selectedRange) => {
     if (selectedRange && selectedRange[0] && selectedRange[1]) {
-      const startDate = format(selectedRange[0], 'dd/MM/yyyy HH:mm aa');
-      const endDate = format(selectedRange[1], 'dd/MM/yyyy HH:mm aa');
+      const startDate = selectedRange[0];
+      const endDate = selectedRange[1];
 
-      setTuNgay(startDate);
-      setDenNgay(endDate);
+      const formattedStartDate = format(startDate, 'dd/MM/yyyy HH:mm aa');
+      const formattedEndDate = format(endDate, 'dd/MM/yyyy HH:mm aa');
+
+      setTuNgay(formattedStartDate);
+      setDenNgay(formattedEndDate);
     }
+  };
+
+  const disabledDate = (date) => {
+    return !isWithinInterval(date, { start: threeMonthsAgo, end: threeMonthsLater });
   };
 
   //Phan trang
@@ -135,11 +135,6 @@ function DonHang() {
 
   const handlePageClick = (event) => {
     handlePageChange(event.selected);
-  };
-
-  //refesh
-  const handleRefresh = () => {
-    window.location.reload();
   };
 
   //export
@@ -198,15 +193,15 @@ function DonHang() {
       <MainCard>
         {/* fillter */}
         <Card>
-          <div style={{ height: 280 }} className="w-auto rounded bg-white border shadow p-4">
-            <div className="row">
-              <div className="box col-auto col-4">
+          <div style={{ height: 'auto' }} className="w-auto rounded bg-white border shadow p-4">
+            <div style={{ marginLeft: 80 }} className="row">
+              <div className="box col-auto col-6">
                 <div className="values">
                   <strong>Mã đơn hàng hoặc tên khách hàng :</strong>
                 </div>
                 <div style={{ marginTop: 10 }} className="search">
                   <input
-                    style={{ borderRadius: 15, width: 300, height: 30 }}
+                    style={{ borderRadius: 15, width: 362, height: 30 }}
                     type="text"
                     className="input-search"
                     placeholder="Nhập mã đơn hoặc tên khách hàng cần tìm..."
@@ -216,36 +211,6 @@ function DonHang() {
                 </div>
               </div>
 
-              <div className="box col-auto col-5">
-                <div className="field">
-                  <div className="values">
-                    <strong>Ngày tạo đơn :</strong>
-                  </div>
-                  <div style={{ marginTop: 10 }}>
-                    <DateRangePicker
-                      format="dd:MM:yyyy hh:mm aa"
-                      showMeridian
-                      defaultCalendarValue={[currentDate, nextYear]}
-                      onChange={handleDateChange}
-                      onClean={() => {
-                        setTuNgay(null);
-                        setDenNgay(null);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="box col-auto col-3">
-                <div className="values">
-                  <strong>Tổng tiền:</strong> {convertToCurrency(valuesTT[0]) + ' - ' + convertToCurrency(valuesTT[1])}
-                </div>
-                <br />
-                <Slider className="slider" onChange={setValuesTT} value={valuesTT} min={MIN} max={MAX}></Slider>
-              </div>
-            </div>
-            <br></br>
-            <div className="row">
               <div className="box col-auto col-6">
                 <div className="values">
                   <strong>Trạng thái:</strong>
@@ -262,18 +227,32 @@ function DonHang() {
                   />
                 </div>
               </div>
-
-              <div style={{ marginLeft: 100 }} className="box col-auto col-4">
-                <div style={{ marginTop: 5 }} className="values">
-                  <strong>Số lượng:</strong> {valuesSL[0] + ' - ' + valuesSL[1]}
-                </div>
-                <br />
-                <Slider className="slider" onChange={setValuesSL} value={valuesSL} min={MINSL} max={MAXSL}></Slider>
-              </div>
             </div>
             <br></br>
-            <div className="row">
+
+            <div style={{ marginTop: 10, marginLeft: 80 }} className="row">
               <div className="box col-auto col-6">
+                <div style={{ textAlign: 'start' }} className="field">
+                  <div className="values">
+                    <strong>Ngày tạo đơn :</strong>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <DateRangePicker
+                      format="dd/MM/yyyy HH:mm aa"
+                      showMeridian
+                      defaultCalendarValue={defaultCalendarValue}
+                      onChange={handleDateChange}
+                      onClean={() => {
+                        setTuNgay(null);
+                        setDenNgay(null);
+                      }}
+                      disabledDate={disabledDate}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 8 }} className="box col-auto col-6">
                 <div className="values">
                   <strong>Loại đơn:</strong>
                 </div>
@@ -287,53 +266,19 @@ function DonHang() {
                       onClick={handleAllClickLoai}
                       onChange={handleRadioChange1}
                     />
-                    <FormCheck.Label style={{ marginLeft: 15 }}>Tất Cả</FormCheck.Label>
+                    <FormCheck.Label>Tất Cả</FormCheck.Label>
                   </FormCheck>
 
-                  <FormCheck inline>
+                  <FormCheck style={{ marginLeft: 35 }} inline>
                     <FormCheck.Input type="radio" name="radioLoai" checked={radioLoai === '0'} value="0" onChange={handleRadioChange1} />
                     <FormCheck.Label>Tại Quầy</FormCheck.Label>
                   </FormCheck>
 
-                  <FormCheck inline style={{ marginLeft: 15 }}>
+                  <FormCheck inline style={{ marginLeft: 35 }}>
                     <FormCheck.Input type="radio" name="radioLoai" checked={radioLoai === '1'} value="1" onChange={handleRadioChange1} />
                     <FormCheck.Label>Đặt hàng online</FormCheck.Label>
                   </FormCheck>
                 </FormGroup>
-              </div>
-
-              <div style={{ marginLeft: 320, marginTop: 20 }} className="box col-auto col-2">
-                <button
-                  onClick={handleRefresh}
-                  data-toggle="tooltip"
-                  title="Làm mới"
-                  style={{
-                    background: '#0ad406',
-                    borderRadius: '50px',
-                    border: '1px solid black',
-                    justifyItems: 'center'
-                  }}
-                  type="button"
-                  className="btn btn-labeled shadow-button"
-                >
-                  <span style={{ marginBottom: '3px', color: 'white' }} className="btn-icon">
-                    <i className="fa-solid fa-arrows-rotate fa-spin fa-lg"></i>
-                  </span>
-                  <span style={{ marginBottom: '3px', color: 'white', marginLeft: '5px' }} className="separator">
-                    |
-                  </span>
-                  <span
-                    style={{
-                      marginBottom: '3px',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 'bold',
-                      marginLeft: '5px'
-                    }}
-                  >
-                    Refresh
-                  </span>
-                </button>
               </div>
             </div>
           </div>
@@ -392,9 +337,9 @@ function DonHang() {
                             justifyContent: 'center',
                             fontWeight: 'bold'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-primary status-completed"
+                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
                         >
-                          Đã xác nhận
+                          Chờ giao hàng
                         </span>
                       )}
                       {d.trang_thai === 2 && (
@@ -414,24 +359,8 @@ function DonHang() {
                           Đã hủy đơn
                         </span>
                       )}
+
                       {d.trang_thai === 3 && (
-                        <span
-                          style={{
-                            width: '200px',
-                            pointerEvents: 'none',
-                            height: '30px',
-                            borderRadius: '20px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 'bold'
-                          }}
-                          className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                        >
-                          Chờ giao hàng
-                        </span>
-                      )}
-                      {d.trang_thai === 4 && (
                         <span
                           style={{
                             width: '200px',
@@ -448,7 +377,7 @@ function DonHang() {
                           Đang giao hàng
                         </span>
                       )}
-                      {d.trang_thai === 5 && (
+                      {d.trang_thai === 4 && (
                         <span
                           style={{
                             width: '200px',
@@ -465,7 +394,7 @@ function DonHang() {
                           Giao hàng thành công
                         </span>
                       )}
-                      {d.trang_thai === 6 && (
+                      {d.trang_thai === 5 && (
                         <span
                           style={{
                             width: '200px',
@@ -482,7 +411,7 @@ function DonHang() {
                           Giao hàng thất bại
                         </span>
                       )}
-                      {d.trang_thai === 7 && (
+                      {d.trang_thai === 6 && (
                         <span
                           style={{
                             width: '200px',
