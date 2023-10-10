@@ -10,7 +10,6 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { searchCTSP, getAllByIdSP, detailCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { addKH2 } from 'services/KhachHangService';
 import {
   getById,
   updateSL,
@@ -24,7 +23,8 @@ import {
   addSP,
   getAllKH,
   getAllSP,
-  searchKHofDH
+  searchKHofDH,
+  addKH2
 } from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
@@ -65,6 +65,8 @@ function DonHang(props) {
     tienGiam: 0
   });
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
+    tenNguoiNhan: '',
+    soDienThoai: '',
     tongTien: '',
     tongTienKhiGiam: '',
     hinhThucThanhToan: {
@@ -764,12 +766,12 @@ function DonHang(props) {
     sdt: '',
     email: '',
     ngaySinh: '',
-    gioiTinh: '',
+    gioiTinh: ''
   });
 
   const handleAddKH = (event) => {
     event.preventDefault();
-    postKH(id,valuesKH);
+    postKH(id, valuesKH);
   };
 
   const postKH = async (id, value) => {
@@ -777,9 +779,33 @@ function DonHang(props) {
     if (res) {
       toast.success('Thêm thành công !');
       setShow3(false);
-      detailHDById(id);
       hienThiKH();
+      detailHDById(id);
     }
+  };
+
+  useEffect(() => {
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      tenNguoiNhan: valuesKH.tenKhachHang,
+      soDienThoai: valuesKH.sdt,
+    });
+  }, [valuesUpdateHD.tenNguoiNhan,valuesUpdateHD.soDienThoai]);
+
+  const handleChooseKH = (tenKhachHang,soDienThoai) => {
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      tenNguoiNhan: tenKhachHang,
+      soDienThoai: soDienThoai,
+    })
+    setDataDetailHD({
+      ...dataDetailHD,
+      tenNguoiNhan: tenKhachHang,
+      soDienThoai: soDienThoai,
+    })
+    console.log(tenKhachHang,soDienThoai);
+    toast.success('Chọn thành công !');
+    setShow4(false);
   };
 
   return (
@@ -1003,7 +1029,7 @@ function DonHang(props) {
               <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                 <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
                 <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                <span className="relative">Thêm khách hàng</span>
+                <span className="relative">Chọn khách hàng</span>
               </span>
               <span
                 className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
@@ -1049,7 +1075,10 @@ function DonHang(props) {
                         <p style={{ fontSize: 12, fontStyle: 'italic' }}>Mã: {k.maKhachHang}</p>
                       </div>
                       <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
-                        <button className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
+                        <button
+                          onClick={() => handleChooseKH(k.tenKhachHang,k.sdt)}
+                          className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                        >
                           <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
                           <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
                             <svg
@@ -1138,7 +1167,7 @@ function DonHang(props) {
                       <br></br>
                       <div className="form-group row">
                         <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
-                          Hotline:
+                          Số ĐT:
                         </label>
                         <div className="col-sm-9">
                           <input
@@ -1270,7 +1299,12 @@ function DonHang(props) {
             </div>
             <div>
               <p>
-                <input value={dataDetailHD.tenNguoiNhan} type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} disabled/>{' '}
+                <input
+                  value={dataDetailHD.tenNguoiNhan}
+                  type="text"
+                  style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                  readOnly
+                />{' '}
               </p>
             </div>
           </div>
@@ -1280,7 +1314,12 @@ function DonHang(props) {
             </div>
             <div>
               <p>
-                <input value={dataDetailHD.soDienThoai} type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} disabled/>{' '}
+                <input
+                  value={dataDetailHD.soDienThoai}
+                  type="text"
+                  style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                  readOnly
+                />{' '}
               </p>
             </div>
           </div>

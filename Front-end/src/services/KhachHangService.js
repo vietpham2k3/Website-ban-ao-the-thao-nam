@@ -28,8 +28,4 @@ const searchKh = (key, trangThai, page) => {
   return axios.get(`/api/khach-hang/searchKH?key=${key}&trangThai=${trangThai}&page=${page}`);
 };
 
-const addKH2 = (id, values) => {
-  return axios.post(`/api/khach-hang/addKHinBH/`+ id, values);
-};
-
-export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh,addKH2 };
+export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh };

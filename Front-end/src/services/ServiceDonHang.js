@@ -18,7 +18,7 @@ const getAllSP = () => {
 };
 
 const getAllKH = () => {
-  return axios.get('/api/khach-hang/getAll');
+  return axios.get('/api/hoa-don/getAll');
 };
 
 const getKCByIdMS = (id) => {
@@ -34,7 +34,7 @@ const searchCTSPofDH = (key) => {
 };
 
 const searchKHofDH = (key) => {
-  return axios.get(`/api/khach-hang/searchKHinBH?key=${key}`);
+  return axios.get(`/api/hoa-don/searchKHinBH?key=${key}`);
 };
 
 const detailHD = (id) => {
@@ -43,6 +43,14 @@ const detailHD = (id) => {
 
 const detailLSHD = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
+};
+
+// const chooseKH = (id) => {
+//   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
+// };
+
+const addKH2 = (id, values) => {
+  return axios.post(`/api/hoa-don/addKHinBH/`+ id, values);
 };
 
 const updateKHDH = (id, values) => {
@@ -135,5 +143,6 @@ export {
   getKCByIdMS,
   getAllMSByIdSP,
   getAllKH,
-  searchKHofDH
+  searchKHofDH,
+  addKH2
 };
