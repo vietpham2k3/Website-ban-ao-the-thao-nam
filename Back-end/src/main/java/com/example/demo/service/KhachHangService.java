@@ -17,6 +17,10 @@ public interface KhachHangService {
 
     List<KhachHang> getAll();
 
+    List<KhachHang> getAllKH();
+
+    List<KhachHang> searchKHinBH(String key);
+
     Page<KhachHang> getAll(Integer page);
 
     KhachHang add(KhachHang khachHang);

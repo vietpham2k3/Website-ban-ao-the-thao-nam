@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.UUID;
@@ -14,7 +16,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name="KhachHang")
-public class KhachHang {
+public class KhachHang implements Serializable {
 
     private static int i = 1;
 
@@ -44,8 +46,12 @@ public class KhachHang {
     @Column(name="trang_thai")
     private Integer trangThai;
 
+    @Column(name="gioi_tinh")
+    private Boolean gioiTinh;
+
     @Column(name="anh")
     @Lob
+    @JsonIgnore
     private Blob anh;
 
     @PrePersist

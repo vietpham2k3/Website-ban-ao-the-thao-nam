@@ -20,5 +20,6 @@ public class KhachHangDTO {
     private Date ngaySinh;
     private String matKhau;
     private Integer trangThai;
+    private Boolean gioiTinh;
     private String anh;
 }

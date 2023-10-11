@@ -4,22 +4,42 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import '../../scss/DonHang.scss';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { useState } from 'react';
 import _ from 'lodash';
 import { useEffect } from 'react';
-import { searchCTSP } from 'services/SanPhamService';
+import { searchCTSP, getAllByIdSP, detailCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
-import { getById, updateSL, deleteHDCT, updateHD, addKM, getKmById, detailHD, thanhToan } from 'services/ServiceDonHang';
+import {
+  getById,
+  updateSL,
+  deleteHDCT,
+  updateHD,
+  addKM,
+  getKmById,
+  detailHD,
+  thanhToan,
+  searchCTSPofDH,
+  addSP,
+  getAllKH,
+  getAllSP,
+  searchKHofDH,
+  addKH2
+} from 'services/ServiceDonHang';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
 import { detailKM, getAllKM } from 'services/ServiceKhuyenMai';
 import { toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal';
+import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
+import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
+
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id, getAll } = props;
+  const { id } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
+  const [check, setCheck] = useState(true);
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
   const [values, setValues] = useState([]);
@@ -28,11 +48,13 @@ function DonHang(props) {
   const [dataHDKM, setDataHDKM] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [tienThua, setTienThua] = useState(0);
+  const [tienGiam, setTienGiam] = useState(0);
   const [tienKhachDua, setTienKhachDua] = useState(0);
   const [tongSoLuong, setTongSoLuong] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
+  Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
       id: ''
@@ -43,6 +65,8 @@ function DonHang(props) {
     tienGiam: 0
   });
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
+    tenNguoiNhan: '',
+    soDienThoai: '',
     tongTien: '',
     tongTienKhiGiam: '',
     hinhThucThanhToan: {
@@ -61,6 +85,216 @@ function DonHang(props) {
     },
     soLuong: ''
   });
+  const styles = StyleSheet.create({
+    container: {
+      marginLeft: '40px'
+    },
+    title: {
+      paddingTop: '50px',
+      paddingBottom: '20px',
+      fontSize: '20px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold'
+    },
+    titleHD: {
+      paddingTop: '20px',
+      fontSize: '20px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      fontWeight: 'bold'
+    },
+    titleTB: {
+      fontSize: '15px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold',
+      paddingBottom: '10px'
+    },
+    text: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center'
+    },
+    textMaHD: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      paddingBottom: '20px'
+    },
+    textThuocTinh: {
+      fontSize: '10px',
+      fontFamily: 'Roboto',
+      marginBottom: '3px',
+      marginTop: '3px'
+    },
+    table: {
+      width: '100%',
+      marginLeft: '40px',
+      marginRight: '40px'
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      borderTop: '1px solid #EEE',
+      marginRight: '40px'
+    },
+    header: {
+      borderTop: 'none'
+    },
+    bold: {
+      fontWeight: 'bold'
+    },
+    // So Declarative and unDRY 👌
+    row1: {
+      width: '10%',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      fontSize: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row2: {
+      width: '25%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row3: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row4: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row5: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      border: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    colorBlock: {
+      width: 30,
+      height: 30,
+      borderRadius: 10
+    },
+    flexContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+    textLeft: {
+      fontFamily: 'Roboto',
+      fontSize: '13px',
+      marginLeft: '40px'
+    },
+    textRight: {
+      fontFamily: 'Roboto',
+      fontSize: '15px',
+      marginRight: '30px'
+    },
+    button: {
+      color: 'white',
+      textDecoration: 'none'
+    }
+  });
+
+  const InvoiceDocument = () => {
+    return (
+      <Document>
+        <Page>
+          <Text style={styles.title}>Sports Shop</Text>
+          <Text style={styles.text}>SDT: 0559044158</Text>
+          <Text style={styles.text}>Email: dungsieucapdeptraivippromax@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Ngõ 69 - xã to chim - huyện chim to - thành phố toàn chim</Text>
+          <Text style={styles.text}>Ngân hàng: CHIMTOBANK - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: CHIMSIEUTO</Text>
+          <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
+          <Text style={styles.textMaHD}>{dataDetailHD.ma}</Text>
+
+          <div style={styles.container}>
+            <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
+            <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
+            <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
+            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            <Text style={styles.textThuocTinh}>
+              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+            </Text>
+          </div>
+          <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
+          <View style={styles.table}>
+            <View style={[styles.row, styles.header]}>
+              <Text style={styles.row1}>STT</Text>
+              <Text style={styles.row2}>Sản phẩm</Text>
+              <Text style={styles.row3}>Số lượng</Text>
+              <Text style={styles.row4}>Đơn giá</Text>
+              <Text style={styles.row5}>Thành tiền</Text>
+            </View>
+            {valuesSanPham.map((d, i) => (
+              <View key={i} style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>{i + 1}</Text>
+                <Text style={styles.row2}>
+                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ten}]
+                </Text>
+                <Text style={styles.row3}>{d.soLuong}</Text>
+                <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+              </View>
+            ))}
+          </View>
+          <View>
+            <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+              <Text style={styles.textLeft}>Tổng tiền</Text>
+              <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+            </View>
+            {dataHDKM.map((d) => (
+              <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                <Text style={styles.textLeft}>Tiền giảm</Text>
+                <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+              </View>
+            ))}
+            <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textRight}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</Text>
+            </View>
+            <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền thừa</Text>
+              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
 
   useEffect(() => {
     // Tính tổng tiền khi valuesSanPham thay đổi
@@ -78,6 +312,8 @@ function DonHang(props) {
   useEffect(() => {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
+      tenNguoiNhan: valuesKH.tenKhachHang,
+      soDienThoai: valuesKH.sdt,
       tongTien: totalAmount
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,10 +325,13 @@ function DonHang(props) {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
       ...prevValuesUpdateHD.hinhThucThanhToan,
+      tenNguoiNhan: valuesKH.tenKhachHang,
+      soDienThoai: valuesKH.sdt,
       tongTienKhiGiam: totalAmount - totalGiam
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalAmount, dataKM]);
+
   useEffect(() => {
     handleSearchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,6 +394,7 @@ function DonHang(props) {
   };
 
   const handleAddValueKm = (id, tienGiam) => {
+    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
     setIdKM(id);
     setValuesAddKM({
       ...valuesAddKM,
@@ -164,23 +404,39 @@ function DonHang(props) {
       tienGiam: tienGiam
     });
     setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
-
-    setValuesUpdateHD((prevValuesUpdateHD) => ({
-      ...prevValuesUpdateHD,
-      tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
-    }));
+    setTienGiam(tienGiam);
+    // if (valuesUpdateHD.tongTien <= valuesUpdateHD.tongTienKhiGiam + totalGiam) {
+    //   setValuesUpdateHD((prevValuesUpdateHD) => ({
+    //     ...prevValuesUpdateHD,
+    //     tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
+    //   }));
+    // }
   };
 
   const postKM = async (value) => {
     const res = await addKM(value);
     if (res.data === 'Mày thích spam không ?') {
-      toast.warning('Mày như nào ?');
+      toast.warning('Bạn đang sử dụng mã giảm giá này');
       return;
     } else {
       detailHDById(id);
-      toast.success('Thêm mã giảm giá thành công');
       findAllKM(id);
       setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
+      const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        ...prevValuesUpdateHD.hinhThucThanhToan,
+        tenNguoiNhan: valuesKH.tenKhachHang,
+        soDienThoai: valuesKH.sdt,
+        tongTienKhiGiam: totalAmount - totalGiam
+      }));
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        tenNguoiNhan: valuesKH.tenKhachHang,
+        soDienThoai: valuesKH.sdt,
+        tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
+      }));
+      toast.success('Thêm mã giảm giá thành công');
     }
   };
 
@@ -302,7 +558,7 @@ function DonHang(props) {
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
-      trangThai: 7,
+      trangThai: 6,
       hinhThucThanhToan: {
         tien: tienKhachDua,
         trangThai: 1
@@ -322,20 +578,377 @@ function DonHang(props) {
     });
   };
 
+  // fix san pham
+  const [show3, setShow3] = useState(false);
+  const handleClose3 = () => {
+    setShow3(false);
+  };
+  const handleShow3 = () => setShow3(true);
+
+  const [show4, setShow4] = useState(false);
+  const handleClose4 = () => {
+    setShow4(false);
+  };
+  const handleShow4 = () => setShow4(true);
+
+  const [show1, setShow1] = useState(false);
+  const handleClose1 = () => {
+    setShow1(false);
+  };
+  const handleShow1 = () => setShow1(true);
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => {
+    setShow2(false);
+  };
+  //sp
+  const [inputDetail, setInputDetail] = useState(null);
+  const [dataSP, setDataSP] = useState([]);
+  const [mauSacKC, setMauSacKC] = useState([]);
+  const [dataDetail, setDataDetail] = useState({});
+  const [idSP, setidSP] = useState('');
+  const [idCTSP, setidCTSP] = useState('');
+
+  // kcms sp
+  const handleAddSoLuong = (id, idSP) => {
+    setShow2(true);
+    setidSP(idSP);
+    setidCTSP(id);
+    setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
+  };
+
+  const handleAdd = () => {
+    // getAllById(id);
+    if (parseInt(valuesAdd.soLuong) > parseInt(dataDetail.soLuong)) {
+      toast.error('Đã vượt quá số lượng hiện có !');
+      return;
+    }
+    add(valuesAdd);
+    getAllById(id);
+  };
+
+  const add = async (value) => {
+    const res = await addSP(value);
+    if (res) {
+      toast.success('Thêm sản phẩm thành công');
+      getAllById(id);
+      handleCloseSPofDH();
+    }
+  };
+
+  const handleCloseSPofDH = () => {
+    setShow1(false);
+    // chuachac dong
+    setShow2(false);
+    //
+    setInputDetail(null);
+    inputDetail(null);
+    getAllById(id);
+    setValuesAdd({
+      chiTietSanPham: {
+        id: ''
+      },
+      hoaDon: {
+        id: id
+      },
+      soLuong: ''
+    });
+  };
+
+  const handleDetail = (id) => {
+    setInputDetail(id);
+    setidCTSP(id);
+    setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
+  };
+
+  useEffect(() => {
+    getAllMSKC(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    detail2(idCTSP);
+  }, [idCTSP]);
+
+  const detail2 = async (idCTSP) => {
+    const res = await detailCTSP(idCTSP);
+    if (res) {
+      setDataDetail(res.data);
+    }
+  };
+
+  const getAllMSKC = async (id) => {
+    let res = await getAllByIdSP(id);
+    if (res) {
+      setMauSacKC(res.data);
+    }
+  };
+
+  const [valuesAdd, setValuesAdd] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    hoaDon: {
+      id: id
+    },
+    soLuong: ''
+  });
+
+  useEffect(() => {
+    getAll(0);
+  }, []);
+
+  const getAll = async () => {
+    const res = await getAllSP();
+    if (res && res.data) {
+      setDataSP(res.data);
+    }
+  };
+
+  // searchSPinDH;
+  const [term, setTerm] = useState('');
+
+  const searchSPofDH = async (term) => {
+    const res = await searchCTSPofDH(term);
+    if (res) {
+      setDataSP(res.data);
+    }
+  };
+
+  const handleSearchSPofDH = _.debounce(async () => {
+    if (term) {
+      searchSPofDH(term);
+    } else {
+      searchSPofDH('');
+    }
+  }, []);
+
+  useEffect(() => {
+    handleSearchSPofDH();
+  }, [term]);
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
+  };
+
+  // khach hang
+  const [kh, setKH] = useState([]);
+
+  useEffect(() => {
+    hienThiKH();
+  }, []);
+
+  const hienThiKH = async () => {
+    const res = await getAllKH();
+    if (res && res.data) {
+      setKH(res.data);
+    }
+  };
+
+  // searchKHofDH;
+  const [termKH, setTermKH] = useState('');
+
+  const searchKH = async (termKH) => {
+    const res = await searchKHofDH(termKH);
+    if (res) {
+      setKH(res.data);
+    }
+  };
+
+  const handleSearchKHofDH = _.debounce(async () => {
+    if (termKH) {
+      searchKH(termKH);
+    } else {
+      searchKH('');
+    }
+  }, []);
+
+  useEffect(() => {
+    handleSearchKHofDH();
+  }, [termKH]);
+
+  const handleInputChangeKH = (e) => {
+    setTermKH(e.target.value);
+  };
+
+  const [valuesKH, setValuesKH] = useState({
+    tenKhachHang: '',
+    sdt: '',
+    email: '',
+    ngaySinh: '',
+    gioiTinh: ''
+  });
+
+  const handleAddKH = (event) => {
+    event.preventDefault();
+    postKH(id, valuesKH);
+  };
+
+  const postKH = async (id, value) => {
+    const res = await addKH2(id, value);
+    if (res) {
+      toast.success('Thêm thành công !');
+      setShow3(false);
+      hienThiKH();
+      detailHDById(id);
+    }
+  };
+
+  const handleChooseKH = (tenKhachHang, soDienThoai) => {
+    setValuesKH({
+      ...valuesKH,
+      tenKhachHang: tenKhachHang,
+      sdt: soDienThoai
+    });
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      tenNguoiNhan: tenKhachHang,
+      soDienThoai: soDienThoai
+    });
+    console.log(tenKhachHang, soDienThoai);
+    handleUpdateHD();
+    toast.success('Chọn thành công !');
+    setShow4(false);
+  };
+
   return (
     <div>
       <div className="row">
         <div className="col-8">
-          <div className="box-search">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="search"
-              placeholder="Tìm kiếm sản phẩm..."
-              className="input-seach"
-              defaultValue={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
+          <div className="col-5">
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
+              <button onClick={handleShow1} className="relative inline-block text-base group">
+                <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                  <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                  <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                  <span className="relative">Thêm sản phẩm</span>
+                </span>
+                <span
+                  className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                  data-rounded="rounded-lg"
+                ></span>
+              </button>
+              <Modal
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                style={{ marginLeft: 150 }}
+                show={show1}
+                onHide={handleClose1}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 300 }}>
+                    Thêm Sản Phẩm
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="box col-auto col-6">
+                    <div className="search">
+                      <input
+                        style={{ borderRadius: 15, width: 900, height: 35 }}
+                        type="text"
+                        className="input-search results-list"
+                        placeholder="Nhập mã hoặc tên sản phẩm cần tìm..."
+                        value={term}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                  <section className="navbar-expand-lg navbar-light bg-light">
+                    <div>
+                      <div className="results-list">
+                        <Table hover>
+                          <tbody>
+                            {dataSP.length > 0 ? (
+                              dataSP.map((d, i) => (
+                                <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
+                                  <td>
+                                    <img
+                                      src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                                      className="product-image"
+                                      style={{ width: '70px', height: '100px' }}
+                                      alt='"none"'
+                                    />
+                                  </td>
+                                  <td>{d.sanPham.ma}</td>
+                                  <td>{d.sanPham.ten}</td>
+                                  <td>{d.soLuong || 0}</td>
+                                  <td>{convertToCurrency(d.giaBan)}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan={5}>Không có dữ liệu</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+
+                        <Modal
+                          show={show2}
+                          onHide={handleClose2}
+                          style={{ marginLeft: 150 }}
+                          backdrop="static"
+                          keyboard={false}
+                          size="md"
+                          aria-labelledby="contained-modal-title-vcenter"
+                          centered
+                        >
+                          <Modal.Header closeButton>
+                            <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <div className="body-add-new">
+                              <div className="mb-3">
+                                <label htmlFor="exampleFormControlInput1" className="form-label">
+                                  Thuộc tính
+                                </label>
+                                {mauSacKC.map((d, i) => (
+                                  <div className="form-check" key={i}>
+                                    <input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="flexRadioDefault"
+                                      id={d.id}
+                                      value={d.id}
+                                      checked={d.id === dataDetail.id}
+                                      onChange={() => handleDetail(d.id)}
+                                    />
+                                    <label className="form-check-label custom-label" htmlFor={d.id}>
+                                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                      &nbsp;- {d.kichCo.ten}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mb-3">
+                                <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                                  Số lượng:{' '}
+                                  <small>
+                                    Còn lại <strong>{dataDetail.soLuong}</strong>
+                                  </small>
+                                </label>
+                                <input
+                                  className="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  type="number"
+                                  onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+                                ></input>
+                              </div>
+                            </div>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="primary" onClick={() => handleAdd()}>
+                              Thêm
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                      </div>
+                    </div>
+                  </section>
+                </Modal.Body>
+              </Modal>
+            </div>
           </div>
+
           {values.length > 0 && (
             <div className="search-result">
               <SearchResult
@@ -413,10 +1026,272 @@ function DonHang(props) {
         </div>
         <div className="col-4 thong-tin-ban-hang">
           <div>
-            <button type="button" className="btn btn-outline-primary">
-              Chọn khách hàng
+            <button onClick={handleShow4} className="relative inline-block text-base group">
+              <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                <span className="relative">Chọn khách hàng</span>
+              </span>
+              <span
+                className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                data-rounded="rounded-lg"
+              ></span>
             </button>
-            <button className="fa-solid fa-plus mx-3"></button>
+            <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show4} onHide={handleClose4}>
+              <Modal.Header closeButton>
+                <Modal.Title style={{ marginLeft: 175 }}>Khách Hàng</Modal.Title>
+              </Modal.Header>
+              <div style={{ paddingLeft: 25 }} className="search">
+                <input
+                  style={{ borderRadius: 15, width: 438, height: 35 }}
+                  type="text"
+                  className="input-search results-list"
+                  placeholder="Nhập mã, số điện thoại hoặc tên khách hàng cần tìm..."
+                  value={termKH}
+                  onChange={handleInputChangeKH}
+                />
+              </div>
+              <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'auto' }}>
+                {kh.map((k, index) => (
+                  <div
+                    key={k.id}
+                    style={{
+                      border: '2px solid skyblue',
+                      borderRadius: 10,
+                      height: 85,
+                      paddingTop: 8,
+                      marginTop: index > 0 ? 20 : 0 // Thêm khoảng cách 20px cho phần tử từ thứ 2 trở đi
+                    }}
+                  >
+                    <h7 style={{ paddingLeft: 15 }}>
+                      <strong style={{ fontSize: 16 }}>{k.tenKhachHang}</strong> |{' '}
+                      <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
+                        {' '}
+                        {k.sdt}
+                      </label>
+                    </h7>
+                    <br></br>
+                    <div className="row">
+                      <div className="col-6" style={{ paddingLeft: 27, marginTop: 15 }}>
+                        <p style={{ fontSize: 12, fontStyle: 'italic' }}>Mã: {k.maKhachHang}</p>
+                      </div>
+                      <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
+                        <button
+                          onClick={() => handleChooseKH(k.tenKhachHang, k.sdt)}
+                          className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                        >
+                          <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                          <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                            <svg
+                              className="w-5 h-5 text-green-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                          </span>
+                          <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                            <svg
+                              className="w-5 h-5 text-green-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                          </span>
+                          <span className="relative2 text-left group-hover:text-white">Chọn</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </Modal.Body>
+            </Modal>
+            <button className="fa-solid fa-plus mx-3" onClick={handleShow3}></button>
+            <Modal
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              style={{ marginLeft: 150, paddingBottom: 110 }}
+              show={show3}
+              onHide={handleClose3}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 290 }}>
+                  Thêm mới khách hàng
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form className="needs-validation" noValidate onSubmit={handleAddKH}>
+                  <div className="row">
+                    <div className="col-6">
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                          Mã KH:
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Mã mặc định"
+                            // value={valuesKH.maKhachHang}
+                            onChange={(e) => {
+                              setValuesKH({ ...valuesKH, maKhachHang: e.target.value });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                          Họ Và Tên:
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            // name="tenKhachHang"
+                            placeholder=""
+                            // value={valuesKH.tenKhachHang}
+                            onChange={(e) => {
+                              setValuesKH({ ...valuesKH, tenKhachHang: e.target.value });
+                            }}
+                          />
+                          {/* {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
+                              {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>} */}
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
+                          Số ĐT:
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="tel"
+                            className="form-control"
+                            // name="soDienThoai"
+                            placeholder=""
+                            // value={valuesKH.sdt}
+                            onChange={(e) => {
+                              setValuesKH({ ...valuesKH, sdt: e.target.value });
+                            }}
+                          />
+                          {/* {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
+                              {!none3 && (
+                                <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>
+                              )} */}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                          Email:
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            // name="email"
+                            placeholder=""
+                            // value={valuesKH.email}
+                            onChange={(e) => {
+                              setValuesKH({ ...valuesKH, email: e.target.value });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                          Giới Tính:
+                        </label>
+                        <div className="col-sm-9">
+                          <div style={{ marginTop: 5 }} className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="gt"
+                              value="true"
+                              onChange={(e) => {
+                                setValuesKH({ ...valuesKH, gioiTinh: e.target.value });
+                              }}
+                            />
+                            <span style={{ marginLeft: 5 }} className="form-check-label">
+                              Nam
+                            </span>
+                          </div>
+                          <div style={{ marginLeft: 15 }} className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="gt"
+                              value="false"
+                              onChange={(e) => {
+                                setValuesKH({ ...valuesKH, gioiTinh: e.target.value });
+                              }}
+                            />
+                            <span style={{ marginLeft: 5 }} className="form-check-label">
+                              Nữ
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="form-group row">
+                        <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
+                          Ngày sinh:
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="date"
+                            className="form-control"
+                            // name="ngaySinh"
+                            placeholder=""
+                            // value={valuesKH.ngaySinh}
+                            onChange={(e) => {
+                              setValuesKH({ ...valuesKH, ngaySinh: e.target.value });
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <br></br>
+                  <div className="text-center">
+                    <button
+                      // onClick={handleAddKH}
+                      // type="submit"
+                      className="btn btn-labeled shadow-button"
+                      style={{
+                        background: 'deepskyblue',
+                        borderRadius: '50px',
+                        border: '1px solid black',
+                        justifyItems: 'center'
+                      }}
+                    >
+                      <span
+                        style={{
+                          marginBottom: '3px',
+                          color: 'white',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                        className="btn-text"
+                      >
+                        Thêm
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
           </div>
           <br /> <br />
           <div className="ma-giam-gia">
@@ -425,7 +1300,12 @@ function DonHang(props) {
             </div>
             <div>
               <p>
-                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+                <input
+                  value={dataDetailHD.tenNguoiNhan}
+                  type="text"
+                  style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                  readOnly
+                />{' '}
               </p>
             </div>
           </div>
@@ -435,7 +1315,12 @@ function DonHang(props) {
             </div>
             <div>
               <p>
-                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+                <input
+                  value={dataDetailHD.soDienThoai}
+                  type="text"
+                  style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                  readOnly
+                />{' '}
               </p>
             </div>
           </div>
@@ -536,15 +1421,30 @@ function DonHang(props) {
               </div>
             ))}
           </div>
+          <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} className="me-2" />
+          In hoá đơn
           <div className="button-thanh-toan">
-            <button
-              type="button"
-              className="btn btn-success"
-              disabled={tienThua < 0 || tienKhachDua === 0}
-              onClick={() => handleThanhToan()}
-            >
-              Thanh toán
-            </button>
+            {check ? (
+              <button
+                type="button"
+                className="btn btn-success"
+                disabled={tienThua < 0 || tienKhachDua === 0}
+                onClick={() => handleThanhToan()}
+              >
+                <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                  <Text style={styles.button}>Thanh toán</Text>
+                </PDFDownloadLink>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-success"
+                disabled={tienThua < 0 || tienKhachDua === 0}
+                onClick={() => handleThanhToan()}
+              >
+                Thanh toán
+              </button>
+            )}
           </div>
         </div>
       </div>
