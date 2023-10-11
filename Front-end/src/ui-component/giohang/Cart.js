@@ -6,10 +6,12 @@ import { useState } from 'react';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import { Link } from 'react-router-dom';
 
-function Cart() {
+function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
   const [productList, setProductList] = useState([]);
+  // eslint-disable-next-line react/prop-types
+  const { setProductCount, productCount } = props;
 
   useEffect(() => {
     const storedProductList = JSON.parse(localStorage.getItem('product'));
@@ -37,9 +39,10 @@ function Cart() {
     setTotalAmount(sum);
   }, [productList]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, soLuong) => {
     const storedData = JSON.parse(localStorage.getItem('product'));
     const updatedData = storedData.filter((item) => item.id !== id);
+    setProductCount(productCount - soLuong);
     localStorage.setItem('product', JSON.stringify(updatedData));
     const storedProductList = JSON.parse(localStorage.getItem('product'));
     if (storedProductList) {
@@ -65,6 +68,10 @@ function Cart() {
 
     // Cập nhật danh sách sản phẩm trong state
     setProductList(storedProductList);
+    const totalCount = storedProductList.reduce((count, product) => count + product.soLuong, 0);
+
+    // Cập nhật biến productCount
+    setProductCount(totalCount);
   };
 
   return (
@@ -140,14 +147,14 @@ function Cart() {
                               type="real"
                               size="md"
                               value={product.soLuong}
-                              onChange={(e) => handleUpdate(e, product.id)}
+                              onChange={(e) => handleUpdate(e, product.id, product.soLuong)}
                             />
                           </div>
                         </div>
                       </td>
                       <td>{convertToCurrency(product.giaBan * product.soLuong)}</td>
                       <td>
-                        <button onClick={() => handleDelete(product.id)} className="fa-solid fa-trash mx-3"></button>
+                        <button onClick={() => handleDelete(product.id, product.soLuong)} className="fa-solid fa-trash mx-3"></button>
                       </td>
                     </tr>
                   ))}

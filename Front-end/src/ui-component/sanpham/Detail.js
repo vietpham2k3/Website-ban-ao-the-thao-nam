@@ -11,7 +11,7 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
-function Detail() {
+function Detail(props) {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
@@ -22,6 +22,8 @@ function Detail() {
   const [listSanPham, setListSanPham] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
+  // eslint-disable-next-line react/prop-types
+  const { setProductCount, productCount } = props;
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -191,6 +193,7 @@ function Detail() {
     ];
     setListSanPham(updatedListSanPham);
     localStorage.setItem('product', JSON.stringify(updatedListSanPham));
+    setProductCount(productCount + quantity);
   };
 
   return (
@@ -248,7 +251,6 @@ function Detail() {
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-              <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
               <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
               <br></br>
               <div>

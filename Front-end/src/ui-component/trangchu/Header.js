@@ -1,7 +1,9 @@
-import '../../scss/Header.scss';
 // import { Image } from 'react-bootstrap';
+import '../../scss/Header.scss';
 
-function Header() {
+function Header(props) {
+  // eslint-disable-next-line react/prop-types
+  const { productCount } = props;
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg bg-body-tertiary nav-1">
@@ -23,12 +25,17 @@ function Header() {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                  <i className="fa-solid fa-user"></i>
+                  <button type="button" className="btn btn-primary position-relative icon-login btn-login">
+                    <i className="fa-solid fa-user"></i>
+                  </button>
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/gio-hang">
-                  <i className="fa-solid fa-cart-shopping"></i>
+                  <button type="button" className="btn btn-primary position-relative icon-login btn-login">
+                    <i className="fa-solid fa-cart-shopping"></i>
+                    <span className="position-absolute top-0 start-90 translate-middle badge rounded-pill bg-danger">{productCount}</span>
+                  </button>
                 </a>
               </li>
             </ul>
