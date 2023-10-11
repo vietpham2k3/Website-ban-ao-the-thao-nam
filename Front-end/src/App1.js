@@ -11,6 +11,9 @@ const App1 = () => {
       <Routes>
         <Route path="/trang-chu" element={<TrangChu />}></Route>
         <Route path="/san-pham/web" element={<SanPham />}></Route>
+
+        <Route path="/detail/:id" element={<DetailSanPham />}></Route>
+
         <Route path="/detail/:id/:idSP/:idMS" element={<DetailSanPham />}></Route>
         <Route path="/gio-hang" element={<GioHang />}></Route>
       </Routes>

@@ -26,6 +26,7 @@ function UpdateKhachHang() {
 
   useEffect(() => {
     detail(id);
+    console.log(values.gioiTinh);
   }, [id]);
 
   const updateKHFormData = async (id, formData) => {
@@ -72,6 +73,11 @@ function UpdateKhachHang() {
     setAnh(file);
   };
 
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    return formattedDate.toISOString().slice(0, 10);
+  };
+
   const detail = async (id) => {
     const res = await detailKH(id);
     if (res) {
@@ -81,19 +87,6 @@ function UpdateKhachHang() {
         ngaySinh: formatDate(ngaySinh)
       });
     }
-  };
-
-  // const update = async (id, value) => {
-  //   const res = await updateKH(id, value);
-  //   if (res) {
-  //     toast.success("Update succses!");
-  //     navigate("/khach-hang");
-  //   }
-  // };
-
-  const formatDate = (date) => {
-    const formattedDate = new Date(parseInt(date, 10)).toISOString().slice(0, 10);
-    return formattedDate;
   };
 
   return (
@@ -167,10 +160,10 @@ function UpdateKhachHang() {
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions3"
-                    id="inlineRadio3"
+                    id="inlineRadio4"
                     value={false}
-                    checked={values.gioiTinh === true}
-                    onChange={() => setValues({ ...values, gioiTinh: true })}
+                    checked={values.gioiTinh === false}
+                    onChange={() => setValues({ ...values, gioiTinh: false })}
                   />
                   <label htmlFor="a" className="form-check-label">
                     Nam
@@ -181,10 +174,10 @@ function UpdateKhachHang() {
                     className="form-check-input"
                     type="radio"
                     name="inlineRadioOptions3"
-                    id="inlineRadio4"
-                    value={false}
-                    checked={values.gioiTinh === false}
-                    onChange={() => setValues({ ...values, gioiTinh: false })}
+                    id="inlineRadio3"
+                    value={true}
+                    checked={values.gioiTinh === true}
+                    onChange={() => setValues({ ...values, gioiTinh: true })}
                   />
                   <label htmlFor="a" className="form-check-label">
                     Nữ

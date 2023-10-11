@@ -3,6 +3,7 @@ import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
+// import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
@@ -142,6 +143,26 @@ function Detail() {
       setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
     }
   };
+
+  // const [values, setValues] = useState({
+  //   id: '',
+  //   ten: '',
+  //   giaBan: ''
+  // });
+
+  // const handleAddToCart = () => {
+  //   setValues({
+
+  //   })
+  // };
+
+  // const post = async (value) => {
+  //   const res = await postGH(value);
+  //   if (res) {
+  //     toast.success('Thêm thành công !');
+  //     navigate('/gio-hang');
+  //   }
+  // };
 
   useEffect(() => {
     fetchProductDetail(id);
@@ -326,14 +347,19 @@ function Detail() {
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button">
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCart}>
                   Thêm vào giỏ hàng
                 </button>
                 <button className="add-to-cart1 btn btn-default" type="button">
                   Mua Ngay
                 </button>
               </div>
-              <h1 style={{ paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}>Mô tả</h1>
+              <h1
+                style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}
+                onChange={(event) => setValues({ ...values, moTa: event.target.value })}
+              >
+                Mô tả
+              </h1>
               <hr></hr>
               <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
             </div>

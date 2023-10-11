@@ -15,12 +15,15 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import TableKM from './TableKM';
 import { detailKM, getAllKM } from 'services/ServiceKhuyenMai';
 import { toast } from 'react-toastify';
+import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
+import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
+
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAll } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
-  const [inputKH, setInputKH] = useState('');
+  const [check, setCheck] = useState(true);
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
   const [values, setValues] = useState([]);
@@ -29,10 +32,13 @@ function DonHang(props) {
   const [dataHDKM, setDataHDKM] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [tienThua, setTienThua] = useState(0);
+  const [tienGiam, setTienGiam] = useState(0);
+  const [tienKhachDua, setTienKhachDua] = useState(0);
   const [tongSoLuong, setTongSoLuong] = useState(0);
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
+  Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
       id: ''
@@ -61,6 +67,216 @@ function DonHang(props) {
     },
     soLuong: ''
   });
+  const styles = StyleSheet.create({
+    container: {
+      marginLeft: '40px'
+    },
+    title: {
+      paddingTop: '50px',
+      paddingBottom: '20px',
+      fontSize: '20px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold'
+    },
+    titleHD: {
+      paddingTop: '20px',
+      fontSize: '20px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      fontWeight: 'bold'
+    },
+    titleTB: {
+      fontSize: '15px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold',
+      paddingBottom: '10px'
+    },
+    text: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center'
+    },
+    textMaHD: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      paddingBottom: '20px'
+    },
+    textThuocTinh: {
+      fontSize: '10px',
+      fontFamily: 'Roboto',
+      marginBottom: '3px',
+      marginTop: '3px'
+    },
+    table: {
+      width: '100%',
+      marginLeft: '40px',
+      marginRight: '40px'
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      borderTop: '1px solid #EEE',
+      marginRight: '40px'
+    },
+    header: {
+      borderTop: 'none'
+    },
+    bold: {
+      fontWeight: 'bold'
+    },
+    // So Declarative and unDRY 👌
+    row1: {
+      width: '10%',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      fontSize: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row2: {
+      width: '25%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row3: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row4: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row5: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      border: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    colorBlock: {
+      width: 30,
+      height: 30,
+      borderRadius: 10
+    },
+    flexContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+    textLeft: {
+      fontFamily: 'Roboto',
+      fontSize: '13px',
+      marginLeft: '40px'
+    },
+    textRight: {
+      fontFamily: 'Roboto',
+      fontSize: '15px',
+      marginRight: '30px'
+    },
+    button: {
+      color: 'white',
+      textDecoration: 'none'
+    }
+  });
+
+  const InvoiceDocument = () => {
+    return (
+      <Document>
+        <Page>
+          <Text style={styles.title}>Sports Shop</Text>
+          <Text style={styles.text}>SDT: 0559044158</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
+          <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
+          <Text style={styles.textMaHD}>{dataDetailHD.ma}</Text>
+
+          <div style={styles.container}>
+            <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
+            <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
+            <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
+            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            <Text style={styles.textThuocTinh}>
+              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+            </Text>
+          </div>
+          <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
+          <View style={styles.table}>
+            <View style={[styles.row, styles.header]}>
+              <Text style={styles.row1}>STT</Text>
+              <Text style={styles.row2}>Sản phẩm</Text>
+              <Text style={styles.row3}>Số lượng</Text>
+              <Text style={styles.row4}>Đơn giá</Text>
+              <Text style={styles.row5}>Thành tiền</Text>
+            </View>
+            {valuesSanPham.map((d, i) => (
+              <View key={i} style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>{i + 1}</Text>
+                <Text style={styles.row2}>
+                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ten}]
+                </Text>
+                <Text style={styles.row3}>{d.soLuong}</Text>
+                <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+              </View>
+            ))}
+          </View>
+          <View>
+            <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+              <Text style={styles.textLeft}>Tổng tiền</Text>
+              <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+            </View>
+            {dataHDKM.map((d) => (
+              <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                <Text style={styles.textLeft}>Tiền giảm</Text>
+                <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+              </View>
+            ))}
+            <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textRight}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</Text>
+            </View>
+            <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền thừa</Text>
+              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
 
   useEffect(() => {
     // Tính tổng tiền khi valuesSanPham thay đổi
@@ -78,20 +294,21 @@ function DonHang(props) {
   useEffect(() => {
     setValuesUpdateHD((prevValuesUpdateHD) => ({
       ...prevValuesUpdateHD,
-      tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount
+      tongTien: totalAmount
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalAmount]);
 
   useEffect(() => {
-    setValuesUpdateHD({
-      ...valuesUpdateHD,
-      ...valuesUpdateHD.hinhThucThanhToan,
-      tongTienKhiGiam: totalAmount
-    });
+    setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    setValuesUpdateHD((prevValuesUpdateHD) => ({
+      ...prevValuesUpdateHD,
+      ...prevValuesUpdateHD.hinhThucThanhToan,
+      tongTienKhiGiam: totalAmount - totalGiam
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valuesUpdateHD.tongTien]);
+  }, [totalAmount, dataKM]);
 
   useEffect(() => {
     handleSearchUsers();
@@ -155,6 +372,7 @@ function DonHang(props) {
   };
 
   const handleAddValueKm = (id, tienGiam) => {
+    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
     setIdKM(id);
     setValuesAddKM({
       ...valuesAddKM,
@@ -164,22 +382,35 @@ function DonHang(props) {
       tienGiam: tienGiam
     });
     setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
-
-    setValuesUpdateHD((prevValuesUpdateHD) => ({
-      ...prevValuesUpdateHD,
-      tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
-    }));
+    setTienGiam(tienGiam);
+    // if (valuesUpdateHD.tongTien <= valuesUpdateHD.tongTienKhiGiam + totalGiam) {
+    //   setValuesUpdateHD((prevValuesUpdateHD) => ({
+    //     ...prevValuesUpdateHD,
+    //     tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
+    //   }));
+    // }
   };
 
   const postKM = async (value) => {
     const res = await addKM(value);
     if (res.data === 'Mày thích spam không ?') {
-      toast.warning('Mày như nào ?');
+      toast.warning('Bạn đang sử dụng mã giảm giá này');
       return;
-    } else if (res.data !== 'Mày thích spam không ?') {
+    } else {
       detailHDById(id);
-      toast.success('Thêm mã giảm giá thành công');
       findAllKM(id);
+      setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
+      const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        ...prevValuesUpdateHD.hinhThucThanhToan,
+        tongTienKhiGiam: totalAmount - totalGiam
+      }));
+      setValuesUpdateHD((prevValuesUpdateHD) => ({
+        ...prevValuesUpdateHD,
+        tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
+      }));
+      toast.success('Thêm mã giảm giá thành công');
     }
   };
 
@@ -301,14 +532,16 @@ function DonHang(props) {
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
-      trangThai: 7,
+      trangThai: 6,
       hinhThucThanhToan: {
+        tien: tienKhachDua,
         trangThai: 1
       }
     });
   };
 
   const handleChangeValueTien = (e) => {
+    setTienKhachDua(e);
     setValuesUpdateHD({
       ...valuesUpdateHD.hinhThucThanhToan,
       ...valuesUpdateHD,
@@ -409,18 +642,33 @@ function DonHang(props) {
           </div>
         </div>
         <div className="col-4 thong-tin-ban-hang">
-          <div className="box-search" style={{ width: '100%' }}>
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              placeholder="Tìm kiếm khách hàng..."
-              className="input-seach"
-              defaultValue={inputKH}
-              onChange={(e) => setInputKH(e.target.value)}
-            />
+          <div>
+            <button type="button" className="btn btn-outline-primary">
+              Chọn khách hàng
+            </button>
             <button className="fa-solid fa-plus mx-3"></button>
           </div>
           <br /> <br />
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Tên khách hàng</h6>
+            </div>
+            <div>
+              <p>
+                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+              </p>
+            </div>
+          </div>
+          <div className="ma-giam-gia">
+            <div>
+              <h6>Số điện thoại</h6>
+            </div>
+            <div>
+              <p>
+                <input type="text" style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }} />{' '}
+              </p>
+            </div>
+          </div>
           <div className="ma-giam-gia">
             <div>
               <h6>Mã giảm giá</h6>
@@ -476,7 +724,7 @@ function DonHang(props) {
             </div>
             <div>
               <input
-                type="text"
+                type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
               />
@@ -506,22 +754,42 @@ function DonHang(props) {
                 </h6>
                 <div className="text-voucher">
                   <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
-                  <button type="button" className="btn btn-outline-primary" onClick={() => handleAddValueKm(d.id, d.mucGiam)}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => handleAddValueKm(d.id, d.mucGiam)}
+                    // disabled={true} // Thêm disabled vào đây
+                  >
                     Áp dụng
                   </button>
                 </div>
               </div>
             ))}
           </div>
+          <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} className="me-2" />
+          In hoá đơn
           <div className="button-thanh-toan">
-            <button
-              type="button"
-              className="btn btn-success"
-              disabled={tienThua < 0 || tienThua === null}
-              onClick={() => handleThanhToan()}
-            >
-              Thanh toán
-            </button>
+            {check ? (
+              <button
+                type="button"
+                className="btn btn-success"
+                disabled={tienThua < 0 || tienKhachDua === 0}
+                onClick={() => handleThanhToan()}
+              >
+                <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                  <Text style={styles.button}>Thanh toán</Text>
+                </PDFDownloadLink>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-success"
+                disabled={tienThua < 0 || tienKhachDua === 0}
+                onClick={() => handleThanhToan()}
+              >
+                Thanh toán
+              </button>
+            )}
           </div>
         </div>
       </div>
