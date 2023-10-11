@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name="KhachHang")
-public class KhachHang {
+public class KhachHang implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,6 +46,9 @@ public class KhachHang {
 
     @Column(name="trang_thai")
     private Integer trangThai;
+
+    @Column(name="gioi_tinh")
+    private Boolean gioiTinh;
 
     @Column(name="anh")
     @Lob

@@ -4,9 +4,9 @@ const getAllPageDH = (page) => {
   return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`);
 };
 
-const findVIP = (key, tuNgay, denNgay, minSL, maxSL, minTT, maxTT, trangThai, loaiDon, page) => {
+const findVIP = (key, tuNgay, denNgay, trangThai, loaiDon, page) => {
   return axios.get(`/api/hoa-don/hien-thi-page-find?key=${key}&tuNgay=${tuNgay}&denNgay=${denNgay}
-  &trangThai=${trangThai}&loaiDon=${loaiDon}&minSL=${minSL}&maxSL=${maxSL}&minTT=${minTT}&maxTT=${maxTT}&page=${page}`);
+  &trangThai=${trangThai}&loaiDon=${loaiDon}&page=${page}`);
 };
 
 const getAllHD = () => {
@@ -15,6 +15,10 @@ const getAllHD = () => {
 
 const getAllSP = () => {
   return axios.get('/api/hoa-don/hien-thi-san-pham');
+};
+
+const getAllKH = () => {
+  return axios.get('/api/hoa-don/getAll');
 };
 
 const getKCByIdMS = (id) => {
@@ -29,12 +33,24 @@ const searchCTSPofDH = (key) => {
   return axios.get(`/api/hoa-don/searchSP?key=${key}`);
 };
 
+const searchKHofDH = (key) => {
+  return axios.get(`/api/hoa-don/searchKHinBH?key=${key}`);
+};
+
 const detailHD = (id) => {
   return axios.get(`/api/hoa-don/detail/` + id);
 };
 
 const detailLSHD = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
+};
+
+// const chooseKH = (id) => {
+//   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
+// };
+
+const addKH2 = (id, values) => {
+  return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
 };
 
 const updateKHDH = (id, values) => {
@@ -125,5 +141,8 @@ export {
   getAllSP,
   searchCTSPofDH,
   getKCByIdMS,
-  getAllMSByIdSP
+  getAllMSByIdSP,
+  getAllKH,
+  searchKHofDH,
+  addKH2
 };
