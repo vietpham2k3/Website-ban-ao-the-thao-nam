@@ -3,6 +3,7 @@ import DetailSanPham from 'views/sanpham/DetailSanPham';
 import TrangChu from 'views/home/TrangChu';
 import SanPham from 'views/sanpham/SanPham';
 import GioHang from 'views/giohang/GioHang';
+import './scss/Router.scss';
 
 const App1 = () => {
   return (
