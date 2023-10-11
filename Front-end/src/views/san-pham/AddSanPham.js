@@ -35,7 +35,6 @@ const handleConfirmClick = () => {
   toast.success('Xác nhận thành công');
   setIsHidden(false);
   setConfirmClicked(true);
-  handleSubmit(true);
 };
  
   const [values, setValues] = useState({

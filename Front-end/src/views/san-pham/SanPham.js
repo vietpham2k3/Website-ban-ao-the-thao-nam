@@ -8,15 +8,15 @@ import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getAllCTSP, deleteCTSP, searchCTSP } from 'services/SanPhamService';
-import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 // import defaul from '../../assets/images/default-placeholder.png';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Slider from 'react-slider';
 import { Form, Row, Col } from 'react-bootstrap';
+import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
 
 const MIN = 0;
 const MAX = 999999;
@@ -36,10 +36,53 @@ function SanPham() {
   const [nhaSanXuat, setNhaSanXuat] = useState('');
   const [coAo, setCoAo] = useState('');
 
+  const [listCL, setListCL] = useState([]);
+  const [listNSX, setListNSX] = useState([]);
+  const [listLSP, setListLSP] = useState([]);
+  const [listCA, setListCA] = useState([]);
+  const [listMS, setListMS] = useState([]);
+
   const navigate = useNavigate();
+
+  const getAllList = async () => {
+    const resCL = await getAllListCL();
+    const resLSP = await getAllListLSP();
+    const resCA = await getAllListCO();
+    const resNSX = await getAllListNSX();
+    const resMS = await getAllListMS();
+
+    if (resCL || resLSP || resCA || resNSX || resMS) {
+      setListCL(resCL.data);
+      setListCA(resCA.data);
+      setListLSP(resLSP.data);
+      setListNSX(resNSX.data);
+      setListMS(resMS.data);
+
+      if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
+        setValues({
+          ...values,
+          chatLieu: {
+            id: resCL.data[0].id
+          },
+          coAo: {
+            id: resCA.data[0].id
+          },
+          loaiSanPham: {
+            id: resLSP.data[0].id
+          },
+          nhaSanXuat: {
+            id: resNSX.data[0].id
+          }
+        });
+      }
+    }
+  };
+  console.log(values);
 
   useEffect(() => {
     getAll(0);
+    getAllList();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -100,7 +143,6 @@ function SanPham() {
 
   useEffect(() => {
     handleSearchUsers();
-    getAllList();
   }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
 
   const handleInputChange = (e) => {
@@ -248,6 +290,11 @@ function SanPham() {
                   <th>Tên sản phẩm</th>
                   <th>Số lượng</th>
                   <th>Giá bán</th>
+                  <th>Màu SẮC</th>
+                  <th>CHẤT LIỆU</th>
+                  <th>LOẠI SẢN PHẨM</th>
+                  <th>NHÀ SẢN XUẤT</th>
+                  <th>CỔ ÁO</th>
                   <th>Trạng thái</th>
                   <th>Action</th>
                 </tr>
@@ -267,6 +314,11 @@ function SanPham() {
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
+                    <td>{d.mauSac.ten}</td>
+                    <td>{d.chatLieu.ten}</td>
+                    <td>{d.loaiSanPham.ten}</td>
+                    <td>{d.nhaSanXuat.ten}</td>
+                    <td>{d.coAo.ten}</td>
                     <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>
