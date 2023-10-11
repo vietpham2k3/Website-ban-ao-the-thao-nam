@@ -12,7 +12,6 @@ import Select from 'react-select';
 import { FormCheck, FormGroup } from 'react-bootstrap';
 import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
-import * as XLSX from 'xlsx';
 import { addMonths, subMonths, isWithinInterval } from 'date-fns';
 
 function DonHang() {
@@ -76,11 +75,12 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      search(term, tuNgay, denNgay, selectedValues, loaiDon, page);
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7];
+      search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      search('', null, null, null, '', '', page);
+      const values = [0, 1, 2, 3, 4, 5, 6, 7];
+      search('', null, null, values, '', page);
     }
-
     if (data.length === 0) {
       setCurrentPage(0);
     }
@@ -137,18 +137,6 @@ function DonHang() {
     handlePageChange(event.selected);
   };
 
-  //export
-  const handleOnExport = () => {
-    const table = document.getElementById('table-to-xls');
-    const workbook = XLSX.utils.table_to_book(table);
-
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
-
-    const fileName = `Hóa đơn in ngày ${formattedDate.replace(/_/g, '-')}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
-  };
-
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
     const formatter = new Intl.NumberFormat('vi-VN', {
@@ -201,7 +189,7 @@ function DonHang() {
                 </div>
                 <div style={{ marginTop: 10 }} className="search">
                   <input
-                    style={{ borderRadius: 15, width: 362, height: 30 }}
+                    style={{ borderRadius: 15, width: 362, height: 30, border: "1px solid gray" }}
                     type="text"
                     className="input-search"
                     placeholder="Nhập mã đơn hoặc tên khách hàng cần tìm..."
@@ -289,6 +277,12 @@ function DonHang() {
           <div className="w-auto rounded bg-white border shadow p-4">
             <table id="table-to-xls" style={{ textAlign: 'center', alignItems: 'center', cursor: 'pointer' }} className="table table-hover">
               <tr>
+                <th>
+                  <input className="form-check-input"
+                   style={{border: "1px solid black"}}
+                    type="checkbox" value="" 
+                    id="flexCheckChecked" />
+                </th>
                 <th>#</th>
                 <th>Mã Đơn</th>
                 <th>Khách Hàng</th>
@@ -298,9 +292,23 @@ function DonHang() {
                 <th>Trạng Thái</th>
                 <th>Loại Đơn</th>
               </tr>
+              <br></br>
+              
               <tbody>
                 {data.map((d, i) => (
                   <tr key={i} onClick={() => navigate(`/don-hang/chi-tiet/${d.id}`)}>
+                    <td>
+                      {(d.trang_thai === 0 || d.trang_thai === 1 )&&(
+                          <input
+                            onClick={(e) => e.stopPropagation()}
+                            style={{border: "1px solid black"}}
+                            className="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id="flexCheckChecked"
+                          />
+                        )}
+                    </td>
                     <td>{i + 1}</td>
                     <td>{d.ma}</td>
                     <td>{d.ten_nguoi_nhan}</td>
@@ -523,21 +531,37 @@ function DonHang() {
               activeClassName="active"
             />
 
-            <form style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
-              <button
-                className="button-85"
-                onClick={handleOnExport}
-                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
-                data-toggle="tooltip"
-                title="In hóa đơn Excel"
-                // className="shadow-button"
-                type="submit"
-              >
-                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
-                  In Excel
-                </span>
-              </button>
-            </form>
+            <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
+              <div style={{ paddingRight: 30 }}>
+                <button className="relative inline-block text-base group">
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative">Xác nhận</span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+
+              <div>
+                <button className="relative inline-block text-base group">
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative" style={{ color: 'red' }}>
+                      Hủy đơn
+                    </span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+            </div>
           </div>
         </Card>
       </MainCard>

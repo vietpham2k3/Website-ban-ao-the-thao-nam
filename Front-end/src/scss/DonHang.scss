@@ -138,34 +138,9 @@
   color: var(--color-accent);
 }
 
-.button-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.export-form {
-  margin: 0;
-  padding: 0;
-}
-
-.export-button {
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.export-button a {
-  text-decoration: none;
-}
-
-.export-button img {
-  vertical-align: middle;
-}
-
+// 
 .search-date-input {
-  border: 1px solid #ccc;
+  border: 1px solid #fdfbfb;
   border-radius: 4px;
   padding: 6px;
   font-size: 14px;
@@ -663,14 +638,7 @@ button,
 select {
   text-transform: none;
 }
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-  background-color: transparent;
-  background-image: none;
-}
+
 :-moz-focusring {
   outline: auto;
 }
@@ -679,21 +647,6 @@ button {
 }
 progress {
   vertical-align: baseline;
-}
-::-webkit-inner-spin-button,
-::-webkit-outer-spin-button {
-  height: auto;
-}
-[type="search"] {
-  -webkit-appearance: textfield;
-  outline-offset: -2px;
-}
-::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-::-webkit-file-upload-button {
-  -webkit-appearance: button;
-  font: inherit;
 }
 summary {
   display: list-item;

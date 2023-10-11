@@ -264,7 +264,7 @@ public class HoaDonController {
     }
 
     @GetMapping("hien-thi-page-find")
-    public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Integer trangThai,
+    public ResponseEntity<?> findVIP(String key, String tuNgay, String denNgay, Integer[] trangThai,
                                      Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                      Double maxTT,
                                      @RequestParam(defaultValue = "0") int page) {
