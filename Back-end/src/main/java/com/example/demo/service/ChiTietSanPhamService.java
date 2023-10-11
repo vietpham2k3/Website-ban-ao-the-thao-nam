@@ -25,7 +25,19 @@ public interface ChiTietSanPhamService {
     Page<ChiTietSanPham> page(Integer page);
 
 
-    Page<ChiTietSanPham> search(String key, Integer trangThai, Double min, Double max,String mauSac,String chatLieu,String loaiSanPham,String nhaSanXuat,String coAo, Integer page);
+    Page<ChiTietSanPham> search(
+            String key,
+            Integer trangThai,
+            Double min,
+            Double max,
+            List<String> mauSac,
+            List<String> chatLieu,
+            List<String> loaiSanPham,
+            List<String> nhaSanXuat,
+            List<String> coAo,
+            Integer page
+    );
+
 
     ChiTietSanPham add(ChiTietSanPham chiTietSanPham);
 

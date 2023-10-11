@@ -264,16 +264,17 @@ public class ChiTietSanPhamController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key,
-                                    @RequestParam(value = "trangThai", required = false) Integer trangThai,
-                                    @RequestParam(value = "min", required = false) Double min,
-                                    @RequestParam(value = "max", required = false) Double max,
-                                    @RequestParam(value = "mauSac", required = false) String mauSac,
-                                    @RequestParam(value = "chatLieu", required = false) String chatLieu,
-                                    @RequestParam(value = "loaiSanPham", required = false) String loaiSanPham,
-                                    @RequestParam(value = "nhaSanXuat", required = false) String nhaSanXuat,
-                                    @RequestParam(value = "coAo", required = false) String coAo,
-                                    @RequestParam(value = "page", defaultValue = "0") Integer page) {
+    public ResponseEntity<?> search(
+            @RequestParam(value = "key", required = false) String key,
+            @RequestParam(value = "trangThai", required = false) Integer trangThai,
+            @RequestParam(value = "min", required = false) Double min,
+            @RequestParam(value = "max", required = false) Double max,
+            @RequestParam(value = "mauSac", required = false) List<String> mauSac,
+            @RequestParam(value = "chatLieu", required = false) List<String> chatLieu,
+            @RequestParam(value = "loaiSanPham", required = false) List<String> loaiSanPham,
+            @RequestParam(value = "nhaSanXuat", required = false) List<String> nhaSanXuat,
+            @RequestParam(value = "coAo", required = false) List<String> coAo,
+            @RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page));
     }
 

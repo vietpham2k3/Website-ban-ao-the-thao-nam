@@ -133,17 +133,20 @@ function SanPham() {
   };
 
   const handleSearchUsers = _.debounce(async () => {
-    const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, '0');
+  
+    const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, 0);
     if (res && res.data) {
       setData(res.data.content);
+      setTotalPages(res.data.totalPages);
     } else {
       getAll(0);
     }
+    console.log(data);
   }, 100);
 
   useEffect(() => {
     handleSearchUsers();
-  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
+  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, 0]);
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
