@@ -2528,3 +2528,17 @@ h6 {
   }
 }
 /*# sourceMappingURL=style.min.css.map */
+.disabled-checkbox {
+  position: relative;
+  cursor: not-allowed;
+}
+
+.disabled-checkbox::before {
+  content: '⛔';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: red; /* Màu của biểu tượng chặn */
+}

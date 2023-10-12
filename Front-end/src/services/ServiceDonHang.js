@@ -62,15 +62,23 @@ const xacNhanDH = (id, values) => {
 };
 
 const huyDonHang = (id, values) => {
-  return axios.put(`/api/hoa-don/huy-don/` + id, values);
+  return axios.post(`/api/hoa-don/huy-don/` + id, values);
+};
+
+const xacNhanListIds = (values) => {
+  return axios.post(`/api/hoa-don/xac-nhan` ,values);
+};
+
+const huyDonListIds = (values) => {
+  return axios.post(`/api/hoa-don/huy-don` , values);
 };
 
 const xacNhanGiao = (id, values) => {
-  return axios.put(`/api/hoa-don/xac-nhan-giao-hang/` + id, values);
+  return axios.post(`/api/hoa-don/xac-nhan-giao-hang/` + id, values);
 };
 
 const xacNhanThanhToan = (id, values) => {
-  return axios.put(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
+  return axios.post(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
 
 const addHD = () => {
@@ -144,5 +152,7 @@ export {
   getAllMSByIdSP,
   getAllKH,
   searchKHofDH,
-  addKH2
+  addKH2,
+  xacNhanListIds,
+  huyDonListIds
 };
