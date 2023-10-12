@@ -20,7 +20,6 @@ import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX 
 
 const MIN = 0;
 const MAX = 999999;
-
 function SanPham() {
   const [data, setData] = useState([]);
   // const [imageErrors, setImageErrors] = useState([]);
@@ -39,64 +38,88 @@ function SanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
   const [listLSP, setListLSP] = useState([]);
-  const [listCA, setListCA] = useState([]);
+  const [listCA, setListCO] = useState([]);
   const [listMS, setListMS] = useState([]);
 
+  const [chatLieuDefaultSelected, setChatLieuDefaultSelected] = useState(false); // Biến để theo dõi giá trị mặc định chất liệu
+  const [loaiSanPhamDefaultSelected, setLoaiSanPhamDefaultSelected] = useState(false);
+  const [nhaSanXuatDefaultSelected, setNhaSanXuatDefaultSelected] = useState(false);
+  const [coAoDefaultSelected, setCoAoDefaultSelected] = useState(false);
+  const [mauSacDefaultSelected, setMauSacDefaultSelected] = useState(false);
   const navigate = useNavigate();
-
-  const getAllList = async () => {
-    const resCL = await getAllListCL();
-    const resLSP = await getAllListLSP();
-    const resCA = await getAllListCO();
-    const resNSX = await getAllListNSX();
-    const resMS = await getAllListMS();
-
-    if (resCL || resLSP || resCA || resNSX || resMS) {
-      setListCL(resCL.data);
-      setListCA(resCA.data);
-      setListLSP(resLSP.data);
-      setListNSX(resNSX.data);
-      setListMS(resMS.data);
-
-      if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
-        setValues({
-          ...values,
-          chatLieu: {
-            id: resCL.data[0].id
-          },
-          coAo: {
-            id: resCA.data[0].id
-          },
-          loaiSanPham: {
-            id: resLSP.data[0].id
-          },
-          nhaSanXuat: {
-            id: resNSX.data[0].id
-          }
-        });
-      }
-    }
-  };
-  console.log(values);
 
   useEffect(() => {
     getAll(0);
-    getAllList();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getListCO();
+    getListLSP();
+    getListMS();
+    getListNSX();
+    getListCL();
   }, []);
 
-  const getAll = async (page) => {
-    const res = await getAllCTSP(page);
+  const getListCL = async () => {
     try {
+      const response = await getAllListCL();
+      if (response && response.data) {
+        setListCL(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListLSP = async () => {
+    try {
+      const response = await getAllListLSP(); // Gọi API hoặc thực hiện tác vụ lấy danh sách loại sản phẩm
+      if (response && response.data) {
+        setListLSP(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListCO = async () => {
+    try {
+      const response = await getAllListCO();
+      if (response && response.data) {
+        setListCO(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListMS = async () => {
+    try {
+      const response = await getAllListMS(); // Gọi API hoặc thực hiện tác vụ lấy danh sách màu sắc
+      if (response && response.data) {
+        setListMS(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+  const getListNSX = async () => {
+    try {
+      const response = await getAllListNSX(); // Gọi API hoặc thực hiện tác vụ lấy danh sách NSX
+      if (response && response.data) {
+        setListNSX(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+  const getAll = async (page) => {
+    try {
+      const res = await getAllCTSP(term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page);
+
       if (res) {
         setData(res.data.content);
         setTotalPages(res.data.totalPages);
       }
     } catch (error) {
-      // Errors
-    } finally {
-      // setIsLoading(false);
+      // Xử lý lỗi nếu có
     }
   };
 
@@ -133,20 +156,23 @@ function SanPham() {
   };
 
   const handleSearchUsers = _.debounce(async () => {
-  
-    const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, 0);
-    if (res && res.data) {
-      setData(res.data.content);
-      setTotalPages(res.data.totalPages);
-    } else {
-      getAll(0);
+    try {
+      const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, '0');
+
+      if (res && res.data) {
+        setData(res.data.content);
+        setTotalPages(res.data.totalPages);
+      } else {
+        getAll(0);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có
     }
-    console.log(data);
   }, 100);
 
   useEffect(() => {
     handleSearchUsers();
-  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, 0]);
+  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
@@ -165,6 +191,65 @@ function SanPham() {
   const handleUpdate = (idSp, id) => {
     navigate(`/san-pham/chi-tiet-san-pham/detail/${id}/${idSp}`);
     localStorage.setItem('idSP', idSp);
+  };
+
+  const handleMauSacChange = (e) => {
+    const selectedValue = e.target.value;
+    setMauSac(selectedValue);
+    if (selectedValue === '') {
+      setMauSacDefaultSelected(true);
+      getAll(0);
+    } else {
+      setMauSacDefaultSelected(false);
+    }
+
+    // if (selectedValue.startsWith('#')) {
+    //   setMauSac(selectedValue.substring(1));
+    // } else {
+    //  
+  };
+
+  const handleChatLieuChange = (e) => {
+    const selectedValue = e.target.value;
+    setChatLieu(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setChatLieuDefaultSelected(true);
+    } else {
+      setChatLieuDefaultSelected(false);
+    }
+  };
+  const handleLoaiSanPhamChange = (e) => {
+    const selectedValue = e.target.value;
+    setLoaiSanPham(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setLoaiSanPhamDefaultSelected(true);
+    } else {
+      setLoaiSanPhamDefaultSelected(false);
+    }
+  };
+
+  const handleNhaSanXuatChange = (e) => {
+    const selectedValue = e.target.value;
+    setNhaSanXuat(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setNhaSanXuatDefaultSelected(true);
+    } else {
+      setNhaSanXuatDefaultSelected(false);
+    }
+  };
+
+  const handleCoAoChange = (e) => {
+    const selectedValue = e.target.value;
+    setCoAo(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setCoAoDefaultSelected(true);
+    } else {
+      setCoAoDefaultSelected(false);
+    }
   };
 
   return (
@@ -231,50 +316,60 @@ function SanPham() {
           <Form>
             <Row>
               <Col>
-                <Form.Select className="custom-select" onChange={(e) => setMauSac(e.target.value)} value={mauSac}>
-                  <option>MÀU SẮC</option>
-                  {listMS.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.ten}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Col>
-              <Col>
-                <Form.Select className="custom-select" onChange={(e) => setChatLieu(e.target.value)} value={chatLieu}>
-                  <option>CHẤT LIỆU</option>
+                <Form.Select className="custom-select" onChange={handleChatLieuChange} value={chatLieu}>
+                  <option value="" disabled={chatLieuDefaultSelected}>
+                    CHẤT LIỆU
+                  </option>
                   {listCL.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.ten} value={c.ten}>
                       {c.ten}
                     </option>
                   ))}
                 </Form.Select>
               </Col>
               <Col>
-                <Form.Select className="custom-select" onChange={(e) => setLoaiSanPham(e.target.value)} value={loaiSanPham}>
-                  <option>LOẠI SẢN PHẨM</option>
+                <Form.Select className="custom-select" onChange={handleLoaiSanPhamChange} value={loaiSanPham}>
+                  <option value="" disabled={loaiSanPhamDefaultSelected}>
+                    LOẠI SẢN PHẨM
+                  </option>
                   {listLSP.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.ten} value={c.ten}>
                       {c.ten}
                     </option>
                   ))}
                 </Form.Select>
               </Col>
               <Col>
-                <Form.Select className="custom-select" onChange={(e) => setNhaSanXuat(e.target.value)} value={nhaSanXuat}>
-                  <option>NHÀ SẢN XUẤT</option>
+                <Form.Select className="custom-select" onChange={handleNhaSanXuatChange} value={nhaSanXuat}>
+                  <option value="" disabled={nhaSanXuatDefaultSelected}>
+                    NHÀ SẢN XUẤT
+                  </option>
                   {listNSX.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.ten} value={c.ten}>
                       {c.ten}
                     </option>
                   ))}
                 </Form.Select>
               </Col>
               <Col>
-                <Form.Select className="custom-select" onChange={(e) => setCoAo(e.target.value)} value={coAo}>
-                  <option>CỔ ÁO</option>
+                <Form.Select className="custom-select" onChange={handleCoAoChange} value={coAo}>
+                  <option value="" disabled={coAoDefaultSelected}>
+                    CỔ ÁO
+                  </option>
                   {listCA.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.ten} value={c.ten}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
+                  <option value="" disabled={mauSacDefaultSelected}>
+                    MÀU SẮC
+                  </option>
+                  {listMS.map((c) => (
+                    <option key={c.ten} value={c.ten}>
                       {c.ten}
                     </option>
                   ))}

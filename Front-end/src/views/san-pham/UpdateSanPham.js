@@ -161,7 +161,7 @@ function UpdateSanPham() {
       getAllAnh(idCTSP !== null ? idCTSP : id);
     }
   };
-
+  const maxImages = 5;
   const handleAddAnh = (event) => {
     event.preventDefault();
 
@@ -169,7 +169,10 @@ function UpdateSanPham() {
       alert('Vui lòng chọn ít nhất một tệp ảnh.');
       return;
     }
-
+    if (imageList.length >= maxImages) {
+      alert('Bạn chỉ được tải lên tối đa ' + maxImages + ' ảnh.');
+      return;
+    }
     const formData = new FormData();
     file.forEach((file) => {
       formData.append('files', file);

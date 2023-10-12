@@ -14,6 +14,13 @@ import { postCreate as postCa } from 'services/ServiceCoAo';
 import { add } from 'services/LoaiSanPhamService';
 import { postNSX } from 'services/NhaSanXuatService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
+// import * as Yup from 'yup';
+
+// const schema = Yup.object().shape({
+//   ten: Yup.string().required('Tên không được trống'),
+//   moTa: Yup.string().required('Mô tả không được trống'),
+  
+// });
 
 function AddSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -31,11 +38,14 @@ function AddSanPham() {
 
   const navigate = useNavigate();
 
-const handleConfirmClick = () => {
-  toast.success('Xác nhận thành công');
-  setIsHidden(false);
-  setConfirmClicked(true);
-};
+  const handleConfirmClick = () => {
+    toast.success('Xác nhận thành công');
+    setIsHidden(false);
+    setConfirmClicked(true);
+  };
+  
+ 
+  
  
   const [values, setValues] = useState({
     chatLieu: {

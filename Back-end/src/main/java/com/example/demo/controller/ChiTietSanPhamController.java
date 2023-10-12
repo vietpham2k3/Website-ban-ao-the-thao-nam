@@ -149,7 +149,11 @@ public class ChiTietSanPhamController {
         if (files.length == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vui lòng chọn ít nhất một tệp ảnh.");
         }
+        int maxImages = 5; // Đặt số lượng tối đa là 5 hoặc bất kỳ con số nào bạn muốn
 
+        if (files.length > maxImages) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bạn chỉ được tải lên tối đa " + maxImages + " ảnh.");
+        }
         ChiTietSanPham ctsp = chiTietSanPhamService.detail(id);
 
         try {
