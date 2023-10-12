@@ -58,6 +58,12 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
     }
 
+    @PutMapping("update-sl-sp/{id}")
+    public ResponseEntity<?> updateSl(@PathVariable UUID id, @RequestParam("soLuong") Integer soLuong) {
+        chiTietSanPhamService.update(soLuong, id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("getAllCTSP")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(chiTietSanPhamService.getAll());

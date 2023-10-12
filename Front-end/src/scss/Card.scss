@@ -40,3 +40,28 @@
   font-size: small;
   margin-bottom: 10px;
 }
+.cart-san-pham {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 3px 3px 10px 2px;
+}
+.title-gio-hang {
+  padding-top: 15px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+.tong-tien-cart {
+  height: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  .btn-success {
+    margin-top: -19px;
+    margin-right: 30px;
+  }
+  .text-total {
+    font-size: medium;
+    margin-left: 30px;
+  }
+}

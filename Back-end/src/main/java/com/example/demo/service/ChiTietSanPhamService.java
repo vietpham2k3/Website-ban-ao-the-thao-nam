@@ -19,7 +19,6 @@ public interface ChiTietSanPhamService {
 
     List<String> getKCByIdMS(UUID id);
 
-
     List<ChiTietSanPham> getAllSPNEW();
 
     Page<ChiTietSanPham> page(Integer page);
