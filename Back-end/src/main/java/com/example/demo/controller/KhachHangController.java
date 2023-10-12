@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
 import com.example.demo.dto.KhachHangDTO;
+import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.service.impl.DiaChiServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,9 @@ public class KhachHangController {
 
     @Autowired
     private KhachHangServiceImpl khService;
+
+    @Autowired
+    private DiaChiServiceImpl dcService;
 
     @GetMapping("/getAll/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
@@ -137,7 +142,12 @@ public class KhachHangController {
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                  @RequestParam("matKhau") String matKhau,
                                  @RequestParam("gioiTinh") Boolean gioiTinh,
-                                 @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
+//                                 @RequestBody DiaChi diaChi,
+                                 @RequestParam("tinhThanh") String tinhThanh,
+                                 @RequestParam("quanHuyen") String quanHuyen,
+                                 @RequestParam("phuongXa") String phuongXa,
+                                 @RequestParam("trangThai") Integer trangThai
+    ) throws IOException, SQLException {
         // Create a new KhachHang object
         KhachHang khachHang = new KhachHang();
         String ma = "KH" + new Random().nextInt(100000);
@@ -161,8 +171,19 @@ public class KhachHangController {
         }
 
         // Save the KhachHang object
-        KhachHang savedKhachHang = khService.add(khachHang);
-        KhachHangDTO savedKhachHangDTO = convertToDto(savedKhachHang);
+        khachHang = khService.add(khachHang);
+        KhachHangDTO savedKhachHangDTO = convertToDto(khachHang);
+
+        DiaChi diaChi = new DiaChi();
+//        diaChi.setTinhThanh(diaChi.getTinhThanh());
+//        diaChi.setQuanHuyen(diaChi.getQuanHuyen());
+//        diaChi.setPhuongXa(diaChi.getPhuongXa());
+        diaChi.setTinhThanh(tinhThanh);
+        diaChi.setQuanHuyen(quanHuyen);
+        diaChi.setPhuongXa(phuongXa);
+        diaChi.setTrangThai(1);
+        diaChi.setKhachHang(khachHang);
+        dcService.add(diaChi);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHangDTO);
     }
 
@@ -252,9 +273,11 @@ public class KhachHangController {
                 .ngaySinh(khachHang.getNgaySinh())
                 .matKhau(khachHang.getMatKhau())
                 .trangThai(khachHang.getTrangThai())
+                .gioiTinh(khachHang.getGioiTinh())
+//                .diaChi(DiaChi.builder().id(khachHang.getId()).build())
                 .build();
 
-        // Convert Blob to byte array
+        // Set anh field from Blob
         Blob anhBlob = khachHang.getAnh();
         if (anhBlob != null) {
             try (InputStream inputStream = anhBlob.getBinaryStream()) {

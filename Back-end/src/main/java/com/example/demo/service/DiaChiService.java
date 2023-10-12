@@ -8,11 +8,15 @@ import java.util.UUID;
 
 @Service
 public interface DiaChiService {
-    List<DiaChi> getAll();
+    List<DiaChi> getAllIdKh(UUID idKH);
 
     DiaChi add(DiaChi diaChi);
 
-    DiaChi update(DiaChi diaChi);
+    DiaChi update(DiaChi diaChi, UUID id);
+
+    DiaChi addDCKH(DiaChi diaChi, UUID id);
 
     DiaChi delete(UUID id);
+
+    DiaChi detail (UUID id);
 }

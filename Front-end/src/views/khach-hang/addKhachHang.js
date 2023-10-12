@@ -16,9 +16,12 @@ function AddKhachHang() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [selectedWard, setSelectedWard] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedWard, setSelectedWard] = useState(null);
+  const [selectedProvinceName, setSelectedProvinceName] = useState('');
+  const [selectedDistrictName, setSelectedDistrictName] = useState('');
+  const [selectedWardName, setSelectedWardName] = useState('');
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -33,13 +36,24 @@ function AddKhachHang() {
 
     fetchProvinces();
   }, []);
+
   const handleProvinceChange = async (event) => {
     const provinceId = event.target.value;
     setSelectedProvince(provinceId);
+    setSelectedProvinceName(event.target.options[event.target.selectedIndex].text);
+    setSelectedDistrict(null);
+    setSelectedWard(null);
+    setSelectedDistrictName('');
+    setSelectedWardName('');
     try {
-      const response = await axios.get(`https://vapi.vnappmob.com/api/province/district/${provinceId}`);
-      setDistricts(response.data.results);
-      setWards([]);
+      if (provinceId) {
+        const response = await axios.get(`https://vapi.vnappmob.com/api/province/district/${provinceId}`);
+        setDistricts(response.data.results);
+        setWards([]);
+      } else {
+        setDistricts([]);
+        setWards([]);
+      }
     } catch (error) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi lấy danh sách quận huyện');
@@ -49,18 +63,30 @@ function AddKhachHang() {
   const handleDistrictChange = async (event) => {
     const districtId = event.target.value;
     setSelectedDistrict(districtId);
+    setSelectedDistrictName(event.target.options[event.target.selectedIndex].text);
+    setSelectedWard(null);
+    setSelectedWardName('');
     try {
-      const response = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${districtId}`);
-      setWards(response.data.results);
+      if (districtId) {
+        const response = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${districtId}`);
+        setWards(response.data.results);
+      } else {
+        setWards([]);
+      }
     } catch (error) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi lấy danh sách phường xã');
     }
   };
+
   const handleWardChange = (event) => {
     const wardId = event.target.value;
     setSelectedWard(wardId);
+    setSelectedWardName(event.target.options[event.target.selectedIndex].text);
   };
+
+  const filteredDistricts = districts.filter((district) => district.province_id === selectedProvince);
+  const filteredWards = wards.filter((ward) => ward.district_id === selectedDistrict);
 
   useEffect(() => {
     return () => {
@@ -75,31 +101,44 @@ function AddKhachHang() {
   };
 
   const [values, setValues] = useState({
-    maKhachHang: '',
-    tenKhachHang: '',
-    sdt: '',
-    email: '',
-    ngaySinh: '',
-    matKhau: '',
-    gioiTinh: '',
+    tinhThanh: '',
+    quanHuyen: '',
+    phuongXa: '',
+    khachHang: {
+      maKhachHang: '',
+      tenKhachHang: '',
+      sdt: '',
+      email: '',
+      ngaySinh: '',
+      matKhau: '',
+      gioiTinh: '',
+      trangThai: 1
+    },
     trangThai: 1
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setValues((prevValues) => ({
+      ...prevValues,
+      tinhThanh: selectedProvinceName,
+      quanHuyen: selectedDistrictName,
+      phuongXa: selectedWardName
+    }));
     const formData = new FormData();
-    formData.append('tenKhachHang', values.tenKhachHang);
-    formData.append('sdt', values.sdt);
-    formData.append('email', values.email);
-    formData.append('ngaySinh', values.ngaySinh);
-    formData.append('matKhau', values.matKhau);
-    formData.append('gioiTinh', values.gioiTinh);
-    formData.append('trangThai', values.trangThai);
+    formData.append('tenKhachHang', values.khachHang.tenKhachHang);
+    formData.append('sdt', values.khachHang.sdt);
+    formData.append('email', values.khachHang.email);
+    formData.append('ngaySinh', values.khachHang.ngaySinh);
+    formData.append('matKhau', values.khachHang.matKhau);
+    formData.append('gioiTinh', values.khachHang.gioiTinh);
+    formData.append('trangThai', values.khachHang.trangThai);
     if (anh) {
       formData.append('anh', anh);
     }
-
+    formData.append('tinhThanh', selectedProvinceName);
+    formData.append('quanHuyen', selectedDistrictName);
+    formData.append('phuongXa', selectedWardName);
     try {
       const res = await addKH(formData);
       if (res) {
@@ -112,28 +151,12 @@ function AddKhachHang() {
     }
   };
 
-  // const handleFileChange = (event) => {
-  //   setValues({
-  //     ...values,
-  //   })
-  //   event.target.files[0];
-  // };
-
   return (
     <MainCard>
       <Card>
         <div className="div">
           <h1>Thêm Khách Hàng</h1>
           <form className="row g-3">
-            {/* <div className="col-md-6">
-            <label className="form-label">Mã Khách Hàng</label>
-            <input
-              type="text"
-              className="form-control"
-              value={values.maKhachHang}
-              onChange={(e) => setValues({ ...values, maKhachHang: e.target.value })}
-            />
-          </div> */}
             <div className="col-md-6">
               <label htmlFor="a" className="form-label">
                 Tên Khách Hàng
@@ -141,8 +164,16 @@ function AddKhachHang() {
               <input
                 type="text"
                 className="form-control"
-                value={values.tenKhachHang}
-                onChange={(e) => setValues({ ...values, tenKhachHang: e.target.value })}
+                value={values.khachHang.tenKhachHang}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    khachHang: {
+                      ...values.khachHang,
+                      tenKhachHang: e.target.value
+                    }
+                  })
+                }
               />
             </div>
             <div className="col-md-6">
@@ -152,8 +183,16 @@ function AddKhachHang() {
               <input
                 type="text"
                 className="form-control"
-                value={values.sdt}
-                onChange={(e) => setValues({ ...values, sdt: e.target.value })}
+                value={values.khachHang.sdt}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    khachHang: {
+                      ...values.khachHang,
+                      sdt: e.target.value
+                    }
+                  })
+                }
               />
             </div>
             <div className="col-6">
@@ -163,8 +202,16 @@ function AddKhachHang() {
               <input
                 type="email"
                 className="form-control"
-                value={values.email}
-                onChange={(e) => setValues({ ...values, email: e.target.value })}
+                value={values.khachHang.email}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    khachHang: {
+                      ...values.khachHang,
+                      email: e.target.value
+                    }
+                  })
+                }
               />
             </div>
             <div className="col-6">
@@ -174,12 +221,20 @@ function AddKhachHang() {
               <input
                 type="date"
                 className="form-control"
-                value={values.ngaySinh}
-                onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
+                value={values.khachHang.ngaySinh}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    khachHang: {
+                      ...values.khachHang,
+                      ngaySinh: e.target.value
+                    }
+                  })
+                }
               />
             </div>
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
+            <div className="col-md-6">
+              <label htmlFor="a" className="form-label" style={{ paddingRight: 5 }}>
                 Giới tính:{' '}
               </label>
               <div className="form-check form-check-inline">
@@ -189,8 +244,16 @@ function AddKhachHang() {
                   name="inlineRadioOptions2"
                   id="inlineRadio3"
                   value={true}
-                  checked={values.gioiTinh === true}
-                  onChange={() => setValues({ ...values, gioiTinh: true })}
+                  checked={values.khachHang.gioiTinh === true}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        gioiTinh: true
+                      }
+                    })
+                  }
                 />
                 <label htmlFor="a" className="form-check-label">
                   Nam
@@ -203,8 +266,16 @@ function AddKhachHang() {
                   name="inlineRadioOptions2"
                   id="inlineRadio4"
                   value={false}
-                  checked={values.gioiTinh === false}
-                  onChange={() => setValues({ ...values, gioiTinh: false })}
+                  checked={values.khachHang.gioiTinh === false}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        gioiTinh: false
+                      }
+                    })
+                  }
                 />
                 <label htmlFor="a" className="form-check-label">
                   Nữ
@@ -218,8 +289,16 @@ function AddKhachHang() {
               <input
                 type="password"
                 className="form-control"
-                value={values.matKhau}
-                onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
+                value={values.khachHang.matKhau}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    khachHang: {
+                      ...values.khachHang,
+                      matKhau: e.target.value
+                    }
+                  })
+                }
               />
             </div>
 
@@ -241,29 +320,35 @@ function AddKhachHang() {
               <label htmlFor="district" className="form-label">
                 Quận huyện
               </label>
-              <select id="district" className="form-select" value={selectedDistrict} onChange={handleDistrictChange}>
+              <select
+                id="district"
+                className="form-select"
+                value={selectedDistrict}
+                onChange={handleDistrictChange}
+                disabled={!selectedProvince}
+              >
                 <option value="">Chọn quận huyện</option>
-                {districts.map((district) => (
+                {filteredDistricts.map((district) => (
                   <option key={district.district_id} value={district.district_id}>
                     {district.district_name}
                   </option>
                 ))}
               </select>
             </div>
-            <input
-              label="Địa chỉ chính xác"
-              value={`${selectedDistrict ? `${districts?.find((item) => item.district_id === selectedDistrict)?.district_name},` : ''} ${
-                selectedProvince ? provinces?.find((item) => item.province_id === selectedProvince)?.province_name : ''
-              }`}
-            />
 
             <div className="col-md-4">
               <label htmlFor="ward" className="form-label">
                 Phường xã
               </label>
-              <select id="ward" className="form-select" value={selectedWard} onChange={handleWardChange}>
+              <select
+                id="ward"
+                className="form-select"
+                value={selectedWard}
+                onChange={handleWardChange}
+                disabled={!selectedDistrict || !selectedProvince}
+              >
                 <option value="">Chọn phường xã</option>
-                {wards.map((ward) => (
+                {filteredWards.map((ward) => (
                   <option key={ward.ward_id} value={ward.ward_id}>
                     {ward.ward_name}
                   </option>
@@ -290,7 +375,15 @@ function AddKhachHang() {
                   id="inlineRadio1"
                   value="1"
                   checked={true}
-                  onChange={() => setValues({ ...values, trangThai: 1 })}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        trangThai: 1
+                      }
+                    })
+                  }
                 />
                 <label htmlFor="a" className="form-check-label">
                   Hoạt động
@@ -303,7 +396,15 @@ function AddKhachHang() {
                   name="inlineRadioOptions"
                   id="inlineRadio2"
                   value="0"
-                  onChange={() => setValues({ ...values, trangThai: 0 })}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        trangThai: 0
+                      }
+                    })
+                  }
                 />
                 <label htmlFor="a" className="form-check-label">
                   Không hoạt động

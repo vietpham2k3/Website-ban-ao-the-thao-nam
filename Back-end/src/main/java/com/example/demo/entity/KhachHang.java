@@ -41,9 +41,6 @@ public class KhachHang implements Serializable {
     @Column(name="mat_khau")
     private String matKhau;
 
-    @Column(name = "gioi_tinh")
-    private Boolean gioiTinh;
-
     @Column(name="trang_thai")
     private Integer trangThai;
 
