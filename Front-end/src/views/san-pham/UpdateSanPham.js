@@ -191,7 +191,8 @@ function UpdateSanPham() {
     const res = await deleteAnh(idAnh);
     if (res) {
       toast.success('Xoá thành công');
-      getAllAnh(idCTSP);
+      getAllAnh(idCTSP !== null ? idCTSP : id);
+
     }
   };
 

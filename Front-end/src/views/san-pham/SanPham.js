@@ -57,6 +57,7 @@ function SanPham() {
     getListCL();
   }, []);
 
+  
   const getListCL = async () => {
     try {
       const response = await getAllListCL();
@@ -193,21 +194,35 @@ function SanPham() {
     localStorage.setItem('idSP', idSp);
   };
 
-  const handleMauSacChange = (e) => {
-    const selectedValue = e.target.value;
-    setMauSac(selectedValue);
-    if (selectedValue === '') {
-      setMauSacDefaultSelected(true);
-      getAll(0);
-    } else {
-      setMauSacDefaultSelected(false);
-    }
+ // Define a function to handle the substring manipulation
+const handleSubstring = (selectedValue) => {
+  if (selectedValue.startsWith('#')) {
+    // If selectedValue starts with '#', remove the '#' character
+    return selectedValue.substring(1);
+  }
+  // If it doesn't start with '#', return it as is
+  return selectedValue;
+};
 
-    // if (selectedValue.startsWith('#')) {
-    //   setMauSac(selectedValue.substring(1));
-    // } else {
-    //  
-  };
+const handleMauSacChange = (e) => {
+  const selectedValue = e.target.value;
+
+  // Update MauSac state
+  setMauSac(selectedValue);
+
+  // Check for empty string and perform actions
+  if (selectedValue === '') {
+    setMauSacDefaultSelected(true);
+    getAll(0);
+  } else {
+    setMauSacDefaultSelected(false);
+  }
+
+  // Call the substring manipulation function and update MauSac accordingly
+  const mauSacWithoutHash = handleSubstring(selectedValue);
+  setMauSac(mauSacWithoutHash);
+};
+
 
   const handleChatLieuChange = (e) => {
     const selectedValue = e.target.value;
