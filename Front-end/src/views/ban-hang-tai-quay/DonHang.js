@@ -1015,8 +1015,18 @@ function DonHang(props) {
                       />
                     </td>
                     <td>
-                      {d.chiTietSanPham.sanPham.ten} <br /> {d.chiTietSanPham.kichCo.ten} <br />
-                      <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px' }}>&nbsp;</div>
+                      {d.chiTietSanPham.sanPham.ten} <br />
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span
+                        className="color-circle"
+                        style={{
+                          backgroundColor: d.chiTietSanPham.mauSac.ten,
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          height: '15px',
+                          width: '15px'
+                        }}
+                      ></span>
                     </td>
                     <td>
                       <div

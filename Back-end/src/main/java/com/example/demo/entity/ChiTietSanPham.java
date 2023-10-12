@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "ChiTietSanPham")
@@ -37,6 +40,10 @@ public class ChiTietSanPham {
 
     @Column(name = "ma")
     private String ma;
+
+    @OneToMany(mappedBy = "chiTietSanPham", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<HoaDonChiTiet> hoaDonChiTiet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cl", referencedColumnName = "id")

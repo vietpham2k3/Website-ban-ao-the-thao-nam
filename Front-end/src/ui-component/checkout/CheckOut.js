@@ -1,21 +1,36 @@
-import Accordion from 'react-bootstrap/Accordion';
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+// import Accordion from 'react-bootstrap/Accordion';
 import React, { useState, useEffect } from 'react';
 import '../../scss/CheckOut.scss';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import { useNavigate, useParams } from 'react-router';
+import { getById } from 'services/ServiceDonHang';
+import { deleteByIdHD, addKhuyenMai } from 'services/GioHangService';
 
 function CheckoutForm() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [dataHDCT, setDataHDCT] = useState([]);
   const [wards, setWards] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedWard, setSelectedWard] = useState('');
+  const [totalAmount, setTotalAmount] = useState(0);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [valuesKhuyenMai, setValuesKhuyenMai] = useState({
+    khuyenMai: {
+      ma: '',
+      tien: 0
+    },
+    hoaDon: {
+      id: id
+    },
+    tienGiam: 0
+  });
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -30,6 +45,26 @@ function CheckoutForm() {
 
     fetchProvinces();
   }, []);
+
+  useEffect(() => {
+    getAllHDById(id);
+  }, [id]);
+
+  useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    dataHDCT.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [dataHDCT]);
+
+  console.log(valuesKhuyenMai);
+
+  const handleChangeValuesKM = () => {
+    addVToHD(valuesKhuyenMai);
+  };
 
   const handleProvinceChange = async (event) => {
     const provinceId = event.target.value;
@@ -58,6 +93,42 @@ function CheckoutForm() {
 
   const handleWardChange = (event) => {
     setSelectedWard(event.target.value);
+  };
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(number);
+  }
+
+  const handleBackToCart = () => {
+    backToCart(id);
+  };
+
+  const addVToHD = async (value) => {
+    const res = await addKhuyenMai(value);
+    if (res.data === 'error') {
+      toast.error('Mã khuyễn mãi không hợp lệ');
+    } else {
+      toast.success('Thêm mã thành công');
+    }
+  };
+
+  const backToCart = async (idHD) => {
+    const res = await deleteByIdHD(idHD);
+    if (res) {
+      setDataHDCT(res.data);
+    }
+  };
+
+  const getAllHDById = async (idHD) => {
+    const res = await getById(idHD);
+    if (res) {
+      setDataHDCT(res.data);
+    }
   };
 
   return (
@@ -151,9 +222,19 @@ function CheckoutForm() {
                   ></textarea>
                 </div>
               </div>
+              <div className="col-md-12 mt-3">
+                <p
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    navigate('/gio-hang');
+                    handleBackToCart();
+                  }}
+                >
+                  <i className="fa-solid fa-chevron-left"></i> Quay về giỏ hàng
+                </p>
+              </div>
             </div>
           </div>
-
           <div className="col-md-6 mb-5 mb-md-0">
             <div className="row mb-5">
               <div className="col-md-12">
@@ -165,77 +246,48 @@ function CheckoutForm() {
                         <th></th>
                         <th>Sản Phẩm</th>
                         <th>Giá</th>
-                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td className="product-image-col">
-                          <img
-                            src="https://tse4.mm.bing.net/th?id=OIP.XS6BIy1MSccDl9mGjM_WxQHaE6&pid=Api&P=0&h=180"
-                            alt="Product 1"
-                            className="product-image"
-                          />
-                        </td>
-                        <td>
-                          <div className="product-details">
-                            <span className="product-name">
-                              Top Up T-Shirt <strong className="mx-2">x</strong> 1
+                      {dataHDCT.map((d, i) => (
+                        <tr key={i}>
+                          <td className="product-image-col">
+                            <img
+                              src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                              alt="Product 1"
+                              className="product-image"
+                            />
+                          </td>
+                          <td>
+                            <div className="product-details">
+                              <span className="product-name">
+                                {d.chiTietSanPham.sanPham.ten} <strong className="mx-2">x</strong> {d.soLuong}
+                              </span>
+                            </div>
+                            <span>
+                              {d.chiTietSanPham.kichCo.ten} -{' '}
+                              <span
+                                className="color-circle"
+                                style={{
+                                  backgroundColor: d.chiTietSanPham.mauSac.ten,
+                                  display: 'inline-block',
+                                  verticalAlign: 'middle',
+                                  height: '15px',
+                                  width: '15px'
+                                }}
+                              ></span>
                             </span>
-                          </div>
-                          <span>
-                            M - <span className="color-circle" style={{ backgroundColor: 'black' }}></span>
-                          </span>
-                        </td>
+                          </td>
 
-                        <td>$250.00</td>
-                        <td>
-                          <Tooltip title="Delete">
-                            <IconButton>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="product-image-col">
-                          <img
-                            src="https://tse3.mm.bing.net/th?id=OIP.w6nn7zgZSO4boZob_zx3uwHaEK&pid=Api&P=0&h=180"
-                            alt="Product 2"
-                            className="product-image"
-                          />
-                        </td>
-                        <td>
-                          <div className="product-details">
-                            <span className="product-name">
-                              Polo Shirt <strong className="mx-2">x</strong> 1
-                            </span>
-                          </div>
-                          <span>
-                            M - <span className="color-circle" style={{ backgroundColor: 'green' }}></span>
-                          </span>
-                        </td>
-                        <td>$100.00</td>
-                        <td>
-                          <Tooltip title="Delete">
-                            <IconButton>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
+                          <td>{convertToCurrency(d.donGia)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                   <table className="table site-block-order-table mb-5 tbl">
                     <tr>
                       <td className="text-black font-weight-bold" colSpan="3">
-                        <strong>Tạm Tính</strong>
-                      </td>
-                      <td className="text-black">$350.00</td>
-                    </tr>
-                    <tr>
-                      <td className="text-black font-weight-bold" colSpan="3">
-                        <strong>Mã Giảm Giá</strong>
+                        Mã Giảm Giá
                       </td>
                       <td className="text-black">
                         <div className="input-group w-75">
@@ -246,39 +298,46 @@ function CheckoutForm() {
                             placeholder="Nhập mã giảm giá"
                             aria-label="Coupon Code"
                             aria-describedby="button-addon2"
+                            value={valuesKhuyenMai.khuyenMai.ma}
+                            onChange={(e) =>
+                              setValuesKhuyenMai({
+                                ...valuesKhuyenMai,
+                                khuyenMai: {
+                                  ma: e.target.value,
+                                  tien: totalAmount
+                                },
+                                tienGiam: totalAmount
+                              })
+                            }
                           />
                           <div className="input-group-append">
-                            <button className="btn btn-primary btn-sm px-4 btn-apply" type="button" id="button-addon2">
+                            <button
+                              className="btn btn-primary btn-sm px-4 btn-apply"
+                              type="button"
+                              id="button-addon2"
+                              onClick={() => handleChangeValuesKM()}
+                            >
                               Apply
                             </button>
                           </div>
                         </div>
-                        <Accordion defaultActiveKey="0">
-                          <Accordion.Item eventKey="0">
-                            <Accordion.Header>Danh sách voucher</Accordion.Header>
-                            <Accordion.Body>
-                              <ul>
-                                <li>Voucher 1: Giảm 10%</li>
-                                <li>Voucher 2: Giảm 20%</li>
-                                <li>Voucher 3: Giảm 30%</li>
-                                {/* Thêm các voucher khác vào đây */}
-                              </ul>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion>
                       </td>
                     </tr>
                     <tr>
                       <td className="text-black font-weight-bold" colSpan="3">
-                        <strong>Tổng Cộng</strong>
+                        Tạm Tính
                       </td>
-                      <td className="text-black font-weight-bold">
-                        <strong>$350.00</strong>
-                      </td>
+                      <td className="text-black">{convertToCurrency(totalAmount)}</td>
                     </tr>
                     <tr>
                       <td className="text-black font-weight-bold" colSpan="3">
-                        <strong>Thanh Toán</strong>
+                        Tổng Cộng
+                      </td>
+                      <td className="text-black font-weight-bold">{convertToCurrency(totalAmount)}</td>
+                    </tr>
+                    <tr>
+                      <td className="text-black font-weight-bold" colSpan="3">
+                        Thanh Toán
                       </td>
                       <td className="text-black">
                         <div className="custom-control custom-checkbox custom-control-inline" style={{ display: 'flex' }}>
@@ -329,7 +388,6 @@ function CheckoutForm() {
                       </td>
                     </tr>
                   </table>
-
                   <div className="text-center">
                     <button className="btn btn-primary btn-lg btn-apply" type="button">
                       Thanh toán

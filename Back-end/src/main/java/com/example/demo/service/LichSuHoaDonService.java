@@ -12,6 +12,8 @@ public interface LichSuHoaDonService {
 
     LichSuHoaDon detail(UUID id);
 
+    void delete(UUID id);
+
     List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id);
 
     LichSuHoaDon findLSHDByIDsHD(UUID id);

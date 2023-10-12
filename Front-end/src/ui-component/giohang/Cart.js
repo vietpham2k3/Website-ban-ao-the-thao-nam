@@ -4,14 +4,26 @@ import { Table } from 'react-bootstrap';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import InputSpinner from 'react-bootstrap-input-spinner';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { postGH } from 'services/GioHangService';
 
 function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
   const [productList, setProductList] = useState([]);
+  const navigate = useNavigate();
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount } = props;
+  const hoaDonChiTietList = productList.map((product) => {
+    return {
+      chiTietSanPham: {
+        id: product.id
+        // Các trường khác của chi tiết sản phẩm nếu cần
+      },
+      soLuong: product.soLuong, // Thêm số lượng
+      donGia: product.soLuong * product.giaBan // Thêm giá bán
+    };
+  });
 
   useEffect(() => {
     const storedProductList = JSON.parse(localStorage.getItem('product'));
@@ -19,15 +31,6 @@ function Cart(props) {
       setProductList(storedProductList);
     }
   }, []);
-
-  function convertToCurrency(number) {
-    // Chuyển đổi số thành định dạng tiền Việt Nam
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
-    return formatter.format(number);
-  }
 
   useEffect(() => {
     // Tính tổng tiền khi valuesSanPham thay đổi
@@ -38,6 +41,17 @@ function Cart(props) {
     // Cập nhật giá trị tổng tiền
     setTotalAmount(sum);
   }, [productList]);
+
+  const handleTaoHoaDon = () => {
+    taoHoaDon(hoaDonChiTietList);
+  };
+
+  const taoHoaDon = async (value) => {
+    const res = await postGH(value);
+    if (res) {
+      navigate(`/checkout/${res.data}`);
+    }
+  };
 
   const handleDelete = (id, soLuong) => {
     const storedData = JSON.parse(localStorage.getItem('product'));
@@ -73,6 +87,15 @@ function Cart(props) {
     // Cập nhật biến productCount
     setProductCount(totalCount);
   };
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(number);
+  }
 
   return (
     <div>
@@ -117,38 +140,36 @@ function Cart(props) {
                         />
                       </td>
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <span>{product.sanPham.ten}</span>
-                          <span style={{ marginLeft: '10px' }}>[{product.kichCo.ten} -</span>
-                          <div
-                            style={{
-                              backgroundColor: product.mauSac.ten,
-                              width: '30px',
-                              borderRadius: '10px',
-                              marginLeft: '10px'
-                            }}
-                          >
-                            &nbsp;
-                          </div>
-                          <span>]</span>
-                        </div>
+                        {product.sanPham.ten} <br />
+                        {product.kichCo.ten} -{' '}
+                        <span
+                          className="color-circle"
+                          style={{
+                            backgroundColor: product.mauSac.ten,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            height: '2px',
+                            width: '10px'
+                          }}
+                        ></span>
                       </td>
                       <td>{convertToCurrency(product.giaBan)}</td>
                       <td>
-                        <div className="product-count">
-                          <div className="inputSpinner" style={{ width: 140, paddingRight: 25 }}>
-                            <InputSpinner
-                              max={product.tongSoLuong}
-                              min={1}
-                              className="input-spinner"
-                              step={1}
-                              variant={'dark'}
-                              type="real"
-                              size="md"
-                              value={product.soLuong}
-                              onChange={(e) => handleUpdate(e, product.id, product.soLuong)}
-                            />
-                          </div>
+                        <div
+                          className="input-spinner"
+                          style={{ display: 'flex', alignItems: 'center', width: 140, justifyContent: 'center' }}
+                        >
+                          <InputSpinner
+                            max={product.tongSoLuong}
+                            min={1}
+                            className="input-spinner"
+                            step={1}
+                            variant={'dark'}
+                            type="real"
+                            size="md"
+                            value={product.soLuong}
+                            onChange={(e) => handleUpdate(e, product.id, product.soLuong)}
+                          />
                         </div>
                       </td>
                       <td>{convertToCurrency(product.giaBan * product.soLuong)}</td>
@@ -169,7 +190,14 @@ function Cart(props) {
                     Tổng tiền: <strong>{convertToCurrency(totalAmount)}</strong>
                   </p>
                 </div>
-                <button type="button" className="btn btn-success">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    // navigate('/checkout');
+                    handleTaoHoaDon();
+                  }}
+                >
                   Thanh toán
                 </button>
               </div>

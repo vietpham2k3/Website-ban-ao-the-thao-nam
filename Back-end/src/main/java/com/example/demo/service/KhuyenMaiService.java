@@ -9,16 +9,18 @@ import java.util.List;
 import java.util.UUID;
 
 public interface KhuyenMaiService {
-    public List<KhuyenMai> getAllKM(Double tien);
+    List<KhuyenMai> getAll();
 
-    public Page<KhuyenMai> pageKM(Pageable pageable);
+    List<KhuyenMai> getAllKM(Double tien);
 
-    public Page<KhuyenMai> pageSearchKM(String key, Integer trangThai, Pageable pageable);
+    Page<KhuyenMai> pageKM(Pageable pageable);
 
-    public KhuyenMai add(KhuyenMai khuyenMai);
+    Page<KhuyenMai> pageSearchKM(String key, Integer trangThai, Pageable pageable);
 
-    public KhuyenMai detail(UUID id);
+    KhuyenMai add(KhuyenMai khuyenMai);
 
-    public KhuyenMai xoa(UUID id);
+    KhuyenMai detail(UUID id);
+
+    KhuyenMai xoa(UUID id);
 
 }

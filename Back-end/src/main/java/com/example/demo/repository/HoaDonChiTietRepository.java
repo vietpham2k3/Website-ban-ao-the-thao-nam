@@ -30,4 +30,15 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Modifying
     @Query(value = "update HoaDonChiTiet c set c.soLuong = :soLuong  where c.id = :id")
     void updateSL(Integer soLuong, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from LichSuHoaDon \n" +
+            "where LichSuHoaDon.id_hd = :id\n" +
+            "delete from HoaDonChiTiet\n" +
+            "where HoaDonChiTiet.id_hd = :id\n" +
+            "delete from HoaDon\n" +
+            "where id = :id", nativeQuery = true)
+    void delete(UUID id);
+
 }

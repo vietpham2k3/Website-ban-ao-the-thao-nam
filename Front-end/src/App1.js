@@ -17,7 +17,7 @@ const App1 = () => {
 
         <Route path="/detail/:id/:idSP/:idMS" element={<DetailSanPham />}></Route>
         <Route path="/gio-hang" element={<GioHang />}></Route>
-        <Route path="/checkout" element={<Checkout />}></Route>
+        <Route path="/checkout/:id" element={<Checkout />}></Route>
       </Routes>
     </div>
   );
