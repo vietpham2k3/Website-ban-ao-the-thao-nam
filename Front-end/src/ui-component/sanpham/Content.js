@@ -349,7 +349,7 @@ function ContentSanPham() {
             <h3 style={{ textAlign: 'center' }}>Sản Phẩm</h3>
             {filteredData.map((d, i) => (
               <div key={i} className="col-md-3">
-                <Card onClick={() => handleDetail(d.id, d.kichCo.id, d.mauSac.id)} style={{ width: '260px', height: '400px' }}>
+                <Card onClick={() => handleDetail(d.id, d.sanPham.id, d.mauSac.id)} style={{ width: '260px', height: '400px' }}>
                   <Card.Img
                     style={{ textAlign: 'center', width: '260px', height: '300px' }}
                     src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}

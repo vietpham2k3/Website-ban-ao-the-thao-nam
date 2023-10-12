@@ -1,178 +1,141 @@
 /* CheckoutForm container */
 .site-section {
-    padding: 50px 0;
-  }
-  
-  /* CheckoutForm container background */
-  .container {
-    // background: #f7f7f7;
-    border-radius: 5px;
-    padding: 20px;
-  }
-  
-  /* Form elements */
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Labels */
-  .form-group label {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Select dropdowns */
-  .form-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Table styles */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .table th, .table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .table th {
-    font-weight: bold;
-    background-color: #f2f2f2;
-  }
-  
-  /* Button styles */
-  .btn {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Checkboxes */
-  .custom-control {
-    margin: 5px 0;
-  }
-  
-  /* Accordion styles */
-  .accordion-item {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .accordion-header {
-   
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .accordion-body {
-    padding: 10px;
-  }
-  
-  /* Add more specific CSS selectors and styles as needed */
-  
-  /* Responsive styles (adjust as needed) */
-  @media (max-width: 768px) {
-    .col-md-6 {
-      width: 100%;
-    }
-  }
+  padding: 50px 0;
+}
 
-  
-  .color-circle {
-    width: 15px; /* Đặt kích thước theo mong muốn */
-    height: 15px; /* Đặt kích thước theo mong muốn */
-    border-radius: 50%; /* Biến thành hình tròn */
-    display: inline-block; /* Để nó hiển thị trên cùng một dòng với văn bản khác */
+/* CheckoutForm container background */
+.ctn {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+/* Form elements */
+.fgr {
+  margin-bottom: 20px;
+}
+
+.fct {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Labels */
+.fgr label {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Select dropdowns */
+.fsl {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Table styles */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tbl th,
+.tbl td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.tbl th {
+  font-weight: bold;
+  background-color: #f2f2f2;
+}
+
+/* Button styles */
+.btn-apply {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Checkboxes */
+.custom-control {
+  margin: 5px 0;
+}
+
+/* Accordion styles */
+.accordion-item {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.accordion-header {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.accordion-body {
+  padding: 10px;
+}
+
+/* Add more specific CSS selectors and styles as needed */
+
+/* Responsive styles (adjust as needed) */
+@media (max-width: 768px) {
+  .col-md-6 {
+    width: 100%;
+  }
+}
+
+.color-circle {
+  width: 15px; /* Đặt kích thước theo mong muốn */
+  height: 15px; /* Đặt kích thước theo mong muốn */
+  border-radius: 50%; /* Biến thành hình tròn */
+  display: inline-block; /* Để nó hiển thị trên cùng một dòng với văn bản khác */
 }
 
 .product-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 10%; /* Làm cho hình ảnh có góc tròn */
+  width: 60px;
+  height: 60px;
+  border-radius: 10%; /* Làm cho hình ảnh có góc tròn */
 }
 
 /* Tùy chỉnh kích thước hình ảnh logo */
 .payment-logo {
-    // width: 40px; /* Điều chỉnh kích thước theo mong muốn */
-    // height: 40px;
-    margin-left: 10px; /* Khoảng cách giữa checkbox và logo */
+  /* width: 40px; Điều chỉnh kích thước theo mong muốn */
+  /* // height: 40px; */
+  margin-left: 10px; /* Khoảng cách giữa checkbox và logo */
 }
 
 /* Điều chỉnh kích thước của nút radio */
-.custom-control-input[type="radio"] {
-    width: 20px;
-    height: 20px;
+.custom-control-input[type='radio'] {
+  width: 20px;
+  height: 20px;
 }
 
 td {
-    text-align: center; /* Căn giữa theo chiều ngang */
-    vertical-align: middle; /* Căn giữa theo chiều dọc */
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
 }
 
 /* Điều chỉnh màu nền của nút khi chưa được chọn */
-.btn-primary {
-    background-color: burlywood; /* Thay đổi màu nền chưa được chọn theo ý muốn của bạn */
-    color: #fff; /* Thay đổi màu chữ (màu chữ trắng) */
-    transition: background-color 0.3s; /* Hiệu ứng màu nền chuyển đổi trong 0.3 giây */
+.btn-apply {
+  background-color: burlywood; /* Thay đổi màu nền chưa được chọn theo ý muốn của bạn */
+  color: #fff; /* Thay đổi màu chữ (màu chữ trắng) */
+  transition: background-color 0.3s; /* Hiệu ứng màu nền chuyển đổi trong 0.3 giây */
 }
 
 /* Điều chỉnh màu nền của nút khi được chọn */
-.btn-primary.active, .btn-primary:active, .btn-primary:focus {
-    background-color: grey; /* Thay đổi màu nền khi được chọn theo ý muốn của bạn */
-    transition: background-color 0.3s; /* Hiệu ứng màu nền chuyển đổi trong 0.3 giây */
+.btn-apply.active,
+.btn-apply:active,
+.btn-apply:focus {
+  background-color: grey; /* Thay đổi màu nền khi được chọn theo ý muốn của bạn */
+  transition: background-color 0.3s; /* Hiệu ứng màu nền chuyển đổi trong 0.3 giây */
 }
-
-
-
-// /* Điều chỉnh kích thước của Accordion */
-// /* Chỉnh chiều rộng của Accordion */
-// .accordion {
-//     max-width: 350px;
-    
-// }
-
-// /* Điều chỉnh kiểu dáng của Header */
-// /* Chỉnh kiểu dáng của tiêu đề (Header) */
-// .accordion-header {
-//     background-color: antiquewhite; /* Thay đổi màu nền theo ý muốn */
-//     color: #333; /* Thay đổi màu chữ (màu chữ trắng) */
-//     border: 1px solid gray; /* Thay đổi màu viền theo ý muốn */
-//     border-radius: 5px; /* Thay đổi góc bo tròn theo ý muốn */
-// }
-
-// /* Điều chỉnh kiểu dáng của Body */
-// /* Chỉnh kiểu dáng của nội dung (Body) */
-// .accordion-body {
-//     background-color: antiquewhite; /* Thay đổi màu nền nội dung theo ý muốn */
-//     color: #333; /* Thay đổi màu chữ trong nội dung (màu chữ trắng) */
-//     border: 1px solid gray; /* Thay đổi màu viền nội dung theo ý muốn */
-//     border-radius: 5px; /* Thay đổi góc bo tròn nội dung theo ý muốn */
-// }
-
-// /* Điều chỉnh kiểu dáng của danh sách (ul) */
-// /* Chỉnh kiểu dáng của danh sách (ul) */
-// .accordion-body ul {
-//     list-style-type: square; /* Thay đổi kiểu ký tự danh sách (square, circle, disc, decimal, ...) */
-//     padding-left: 15px; /* Thay đổi lề trái để tạo khoảng cách */
-// }
-
-
-

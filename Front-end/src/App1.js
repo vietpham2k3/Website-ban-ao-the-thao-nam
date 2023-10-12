@@ -6,7 +6,6 @@ import GioHang from 'views/giohang/GioHang';
 import '../src/scss/Router.scss';
 import Checkout from 'views/checkout/CheckOut';
 
-
 const App1 = () => {
   return (
     <div className="full-screen-div">
