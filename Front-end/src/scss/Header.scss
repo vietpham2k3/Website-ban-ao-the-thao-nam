@@ -68,10 +68,10 @@ a:focus {
   font-weight: bold;
 }
 .icon-login {
-  background-color: inherit;
-  border: none;
-  color: black;
-  font-size: 20px;
+  background-color: inherit !important;
+  border: none !important;
+  color: black !important;
+  font-size: 20px !important;
   :hover {
     background-color: inherit;
     color: black;

@@ -97,9 +97,8 @@ function Cart(props) {
               <div className="col-12 d-flex justify-content-start title-gio-hang">
                 <h1 style={{ fontSize: '25px' }}>Giỏ hàng</h1>
               </div>
-              <div className="col-12" style={{ paddingLeft: '25px', paddingBottom: '10px' }}>
-                <hr />
-                <Table striped hover className="my-4">
+              <div className="col-12" style={{ paddingLeft: '25px', paddingBottom: '10px', paddingRight: '25px' }}>
+                <Table striped hover className="my-2">
                   <tr>
                     <td>Sản phẩm</td>
                     <td>&nbsp;</td>

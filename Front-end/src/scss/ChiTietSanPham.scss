@@ -24,7 +24,6 @@
   font-size: 16px;
 }
 
-
 /* Thiết lập kiểu cho phần nội dung collapsible */
 .collapse {
   margin-top: 10px; /* Khoảng cách giữa phần nội dung collapsible và các thông tin sản phẩm */
@@ -58,36 +57,36 @@
 // ColorFilters.scss
 
 .color-filter-container {
-display: flex;
-flex-direction: column;
-align-items: flex-start; // Căn theo trục Y sang trái
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // Căn theo trục Y sang trái
 }
 
 .color-filter {
-display: flex;
-align-items: center; // Căn theo trục Y vào giữa
-margin-bottom: 10px; // Khoảng cách giữa các màu
+  display: flex;
+  align-items: center; // Căn theo trục Y vào giữa
+  margin-bottom: 10px; // Khoảng cách giữa các màu
 }
 
 .color-code {
-width: 20px; // Độ rộng của hộp màu
-height: 20px; // Chiều cao của hộp màu
-margin-right: 10px; // Khoảng cách giữa hộp màu và checkbox
-border: 1px solid #000; // Viền xung quanh hộp màu
+  width: 20px; // Độ rộng của hộp màu
+  height: 20px; // Chiều cao của hộp màu
+  margin-right: 10px; // Khoảng cách giữa hộp màu và checkbox
+  border: 1px solid #000; // Viền xung quanh hộp màu
 }
 
 /* Trong tệp CSS của bạn (hoặc SCSS) */
 
 .round-checkbox {
-appearance: none;
--webkit-appearance: none;
--moz-appearance: none;
-width: 20px; /* Độ rộng của checkbox */
-height: 20px; /* Chiều cao của checkbox */
-border: 2px solid #000; /* Viền của checkbox */
-border-radius: 50%; /* Để biến checkbox thành hình tròn */
-outline: none;
-cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px; /* Độ rộng của checkbox */
+  height: 20px; /* Chiều cao của checkbox */
+  border: 2px solid #000; /* Viền của checkbox */
+  border-radius: 50%; /* Để biến checkbox thành hình tròn */
+  outline: none;
+  cursor: pointer;
 }
 
 .round-checkbox:checked {
