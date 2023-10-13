@@ -22,7 +22,6 @@
   font-size: 30px;
 }
 .nav-item {
-  padding-left: 50px;
   font-size: 20px;
 }
 .fa-user {
@@ -65,4 +64,22 @@ a:hover {
 a:focus {
   text-decoration: none;
   font-weight: bold;
+}
+.icon-login {
+  background-color: inherit !important;
+  border: none !important;
+  color: black !important;
+  font-size: 20px !important;
+  :hover {
+    background-color: inherit;
+    color: black;
+  }
+}
+.btn-login:hover {
+  background-color: inherit;
+  color: black;
+}
+.btn-login:active {
+  background-color: transparent !important;
+  color: inherit !important;
 }

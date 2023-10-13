@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import '../../scss/SanPham.scss';
-import { getAllCTSPWeb, getAllListCL, getAllListKC, getAllListMS } from 'services/SanPhamService';
-import '../../scss/SanPham.scss';
+import { getAllCTSPWeb, getAllListCL, getAllListKC, getAllListMS, getAllListCO, getAllListNSX } from 'services/SanPhamService';
+// import '../../scss/SanPham.scss';
 import '../../scss/ChiTietSanPham.scss';
 import '../../scss/MauSac.scss';
 
@@ -33,6 +33,11 @@ function ContentSanPham() {
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [priceRange, setPriceRange] = useState([MIN, MAX]);
   const [displayedPriceRange, setDisplayedPriceRange] = useState([MIN, MAX]);
+
+  const [selectedCollars, setSelectedCollars] = useState([]);
+  const [selectedManufacturers, setSelectedManufacturers] = useState([]);
+  const [collars, setCollars] = useState([]); // Thêm dòng này
+  const [manufacturers, setManufacturers] = useState([]);
 
   //Max khoảng tiền:
   const findMaxPrice = (products) => {
@@ -78,7 +83,19 @@ function ContentSanPham() {
         setMaterials(res.data);
       }
     });
+    // Lấy dữ liệu cổ áo từ API
+    getAllListCO().then((res) => {
+      if (res) {
+        setCollars(res.data);
+      }
+    });
 
+    // Lấy dữ liệu nhà sản xuất từ API
+    getAllListNSX().then((res) => {
+      if (res) {
+        setManufacturers(res.data);
+      }
+    });
     // Gọi hàm lấy dữ liệu sản phẩm ở đây (getAll)
   }, []);
 
@@ -96,7 +113,7 @@ function ContentSanPham() {
 
   useEffect(() => {
     filterProducts();
-  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials]);
+  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials, selectedCollars, selectedManufacturers]);
 
   // Hàm xử lý việc lọc sản phẩm
   const filterProducts = () => {
@@ -121,6 +138,17 @@ function ContentSanPham() {
       if (selectedMaterials.length > 0 && !selectedMaterials.includes(product.chatLieu.ten)) {
         return false;
       }
+
+      // Lọc theo cổ áo
+      if (selectedCollars.length > 0 && !selectedCollars.includes(product.coAo.ten)) {
+        return false;
+      }
+
+      // Lọc theo nhà sản xuất
+      if (selectedManufacturers.length > 0 && !selectedManufacturers.includes(product.nhaSanXuat.ten)) {
+        return false;
+      }
+
 
       return true;
     });
@@ -161,6 +189,25 @@ function ContentSanPham() {
     }
   };
 
+  // Hàm xử lý khi chọn cổ áo
+  const handleCollarChange = (collar) => {
+    if (selectedCollars.includes(collar)) {
+      setSelectedCollars(selectedCollars.filter((c) => c !== collar));
+    } else {
+      setSelectedCollars([...selectedCollars, collar]);
+    }
+  };
+
+  // Hàm xử lý khi chọn nhà sản xuất
+  const handleManufacturerChange = (manufacturer) => {
+    if (selectedManufacturers.includes(manufacturer)) {
+      setSelectedManufacturers(selectedManufacturers.filter((m) => m !== manufacturer));
+    } else {
+      setSelectedManufacturers([...selectedManufacturers, manufacturer]);
+    }
+  };
+
+
   const handlePageClick = (event) => {
     getAll(event.selected);
   };
@@ -190,7 +237,7 @@ function ContentSanPham() {
           <div style={{}}>
             {/* Đặt nội dung bộ lọc ở đây */}
 
-            <Accordion defaultActiveKey={['0', '1', '3', '4']}>
+            <Accordion defaultActiveKey={['0', '1', '3', '4', '5', '6']}>
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Giá Tiền</Accordion.Header>
                 <Accordion.Body>
@@ -258,6 +305,41 @@ function ContentSanPham() {
                   ))}
                 </Accordion.Body>
               </Accordion.Item>
+
+              <Accordion.Item eventKey="5">
+                <Accordion.Header>Cổ Áo</Accordion.Header>
+                <Accordion.Body>
+                  {collars.map((collar, index) => (
+                    <Form.Group key={index} className="mb-3" controlId={`collarCheckbox${index}`}>
+                      <Form.Check
+                        type="checkbox"
+                        label={collar.ten} 
+                        onChange={() => handleCollarChange(collar.ten)}
+                        checked={selectedCollars.includes(collar.ten)}
+                      />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+
+
+              <Accordion.Item eventKey="6">
+                <Accordion.Header>Nhà Sản Xuất</Accordion.Header>
+                <Accordion.Body>
+                  {manufacturers.map((manufacturer, index) => (
+                    <Form.Group key={index} className="mb-3" controlId={`manufacturerCheckbox${index}`}>
+                      <Form.Check
+                        type="checkbox"
+                        label={manufacturer.ten}
+                        onChange={() => handleManufacturerChange(manufacturer.ten)}
+                        checked={selectedManufacturers.includes(manufacturer.ten)}
+                      />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+
+
             </Accordion>
           </div>
         </div>
@@ -267,7 +349,7 @@ function ContentSanPham() {
             <h3 style={{ textAlign: 'center' }}>Sản Phẩm</h3>
             {filteredData.map((d, i) => (
               <div key={i} className="col-md-3">
-                <Card onClick={() => handleDetail(d.id, d.kichCo.id, d.mauSac.id)} style={{ width: '260px', height: '400px' }}>
+                <Card onClick={() => handleDetail(d.id, d.sanPham.id, d.mauSac.id)} style={{ width: '260px', height: '400px' }}>
                   <Card.Img
                     style={{ textAlign: 'center', width: '260px', height: '300px' }}
                     src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}

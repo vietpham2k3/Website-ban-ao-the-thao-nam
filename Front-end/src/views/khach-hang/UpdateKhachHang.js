@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { Card } from '@mui/material';
-import { detailKH, getAllDcKh, deleteDC, updateDC, addDC } from 'services/KhachHangService';
+import { detailKH, getAllDcKh, deleteDC, updateDC, addDC, detailDC } from 'services/KhachHangService';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -91,8 +91,30 @@ function UpdateKhachHang() {
   const filteredDistricts = districts.filter((district) => district.province_id === selectedProvince);
   const filteredWards = wards.filter((ward) => ward.district_id === selectedDistrict);
 
-  const updateDCKH = async (id, value) => {
-    const res = await updateDC(id, value);
+  const [valueDC, setValueDC] = useState();
+  const [idDC, setIdDc] = useState();
+
+  const detailDCKH = async (idDC) => {
+    const res = await detailDC(idDC);
+    if (res) {
+      setValueDC(res.data);
+    }
+  };
+
+  useEffect(() => {
+    if (valueDC) {
+      setSelectedProvince(valueDC.tinhThanh);
+      setSelectedDistrict(valueDC.quanHuyen);
+      setSelectedWard(valueDC.phuongXa);
+    }
+  }, [valueDC]);
+
+  useEffect(() => {
+    detailDCKH(idDC);
+  }, [idDC]);
+
+  const updateDCKH = async (idDC, value) => {
+    const res = await updateDC(idDC, value);
     if (res) {
       toast.success('Cập nhật thành công !');
     }
@@ -100,24 +122,12 @@ function UpdateKhachHang() {
 
   const handleSubmitDC = async (event) => {
     event.preventDefault();
-    setValues(() => ({
+    setValueDC(() => ({
       tinhThanh: selectedProvinceName,
-      quanHuyen: selectedDistrictName,
-      phuongXa: selectedWardName
+      quanHuyen: selectedProvinceName,
+      phuongXa: selectedProvinceName
     }));
-    const formData = new FormData();
-    formData.append('tinhThanh', selectedProvinceName);
-    formData.append('quanHuyen', selectedDistrictName);
-    formData.append('phuongXa', selectedWardName);
-    try {
-      const res = await updateDCKH(id, formData);
-      if (res) {
-        toast.success('cập nhật thành công');
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Đã xảy ra lỗi khi cập nhật');
-    }
+    updateDCKH(idDC, values);
   };
 
   //Địa chỉ
@@ -128,13 +138,20 @@ function UpdateKhachHang() {
   const handleShow = () => setShow(true);
 
   const [show1, setShow1] = useState(false);
+
   const handleClose1 = () => {
     setShow1(false);
   };
-  const handleShow1 = () => {
-    setSelectedProvince(selectedProvinceName);
-    setSelectedDistrict(selectedDistrictName);
-    setSelectedWard(selectedWardName);
+
+  const handleShow1 = (dc) => {
+    setSelectedProvince(dc.tinhThanh);
+    setSelectedProvinceName(dc.tinhThanh);
+    setSelectedDistrict(dc.quanHuyen);
+    setSelectedDistrictName(dc.quanHuyen);
+    setSelectedWard(dc.phuongXa);
+    setSelectedWardName(dc.phuongXa);
+    setIdDc(dc.id);
+    console.log(dc.tinhThanh);
     setShow1(true);
   };
 
@@ -418,7 +435,7 @@ function UpdateKhachHang() {
                   <span className="fa-solid fa-plus mx-3" onClick={handleShow}></span>
                   <div>
                     <ul>
-                      <li style={{ width: 400, textAlign: 'center' }}>
+                      <li style={{ width: 500 }}>
                         {dc.map((dc, index) => (
                           <div
                             key={dc.id}
@@ -452,6 +469,81 @@ function UpdateKhachHang() {
                       </li>
                     </ul>
                   </div>
+                  <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show1} onHide={handleClose1}>
+                    <Modal.Header>
+                      <Modal.Title style={{ marginLeft: 175 }}>Sửa Địa Chỉ</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'auto' }}>
+                      <div className="div">
+                        <div className="body flex-grow-1 px-3">
+                          <form className="row g-3">
+                            <div className="col-md-4">
+                              <label htmlFor="province" className="form-label">
+                                Tỉnh thành
+                              </label>
+                              <select id="province" className="form-select" value={selectedProvince} onChange={handleProvinceChange}>
+                                <option value="">Chọn tỉnh thành</option>
+                                {provinces.map((province) => (
+                                  <option key={province.province_id} value={province.province_id}>
+                                    {province.province_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="col-md-4">
+                              <label htmlFor="district" className="form-label">
+                                Quận huyện
+                              </label>
+                              <select
+                                id="district"
+                                className="form-select"
+                                value={selectedDistrict}
+                                onChange={handleDistrictChange}
+                                disabled={!selectedProvince}
+                              >
+                                <option value="">Chọn quận huyện</option>
+                                {districts.map((district) => (
+                                  <option key={district.district_id} value={district.district_id}>
+                                    {district.district_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="col-md-4">
+                              <label htmlFor="ward" className="form-label">
+                                Phường xã
+                              </label>
+                              <select
+                                id="ward"
+                                className="form-select"
+                                value={selectedWard}
+                                onChange={handleWardChange}
+                                disabled={!selectedDistrict || !selectedProvince}
+                              >
+                                <option value="">Chọn phường xã</option>
+                                {wards.map((ward) => (
+                                  <option key={ward.ward_id} value={ward.ward_id}>
+                                    {ward.ward_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="col-6" style={{ display: 'flex' }}>
+                              <div className="text-start">
+                                <button type="submit" onClick={handleSubmitDC} className="btn btn-primary">
+                                  Update
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
+
                   <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show} onHide={handleClose}>
                     <Modal.Header>
                       <Modal.Title style={{ marginLeft: 150 }}>Thêm Mới Địa Chỉ</Modal.Title>
@@ -518,81 +610,6 @@ function UpdateKhachHang() {
                               <button type="button" className="btn btn-primary" onClick={handleSubmitADD}>
                                 Thêm
                               </button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </Modal.Body>
-                  </Modal>
-
-                  <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show1} onHide={handleClose1}>
-                    <Modal.Header>
-                      <Modal.Title style={{ marginLeft: 175 }}>Sửa Địa Chỉ</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'auto' }}>
-                      <div className="div">
-                        <div className="body flex-grow-1 px-3">
-                          <form className="row g-3" onSubmit={handleSubmitDC}>
-                            <div className="col-md-4">
-                              <label htmlFor="province" className="form-label">
-                                Tỉnh thành
-                              </label>
-                              <select id="province" className="form-select" value={selectedProvince} onChange={handleProvinceChange}>
-                                <option value="">Chọn tỉnh thành</option>
-                                {provinces.map((province) => (
-                                  <option key={province.province_id} value={province.province_id}>
-                                    {province.province_name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div className="col-md-4">
-                              <label htmlFor="district" className="form-label">
-                                Quận huyện
-                              </label>
-                              <select
-                                id="district"
-                                className="form-select"
-                                value={selectedDistrict}
-                                onChange={handleDistrictChange}
-                                disabled={!selectedProvince}
-                              >
-                                <option value="">Chọn quận huyện</option>
-                                {filteredDistricts.map((district) => (
-                                  <option key={district.district_id} value={district.district_id}>
-                                    {district.district_name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div className="col-md-4">
-                              <label htmlFor="ward" className="form-label">
-                                Phường xã
-                              </label>
-                              <select
-                                id="ward"
-                                className="form-select"
-                                value={selectedWard}
-                                onChange={handleWardChange}
-                                disabled={!selectedDistrict || !selectedProvince}
-                              >
-                                <option value="">Chọn phường xã</option>
-                                {filteredWards.map((ward) => (
-                                  <option key={ward.ward_id} value={ward.ward_id}>
-                                    {ward.ward_name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div className="col-6" style={{ display: 'flex' }}>
-                              <div className="text-start">
-                                <button type="submit" className="btn btn-primary">
-                                  Update
-                                </button>
-                              </div>
                             </div>
                           </form>
                         </div>
