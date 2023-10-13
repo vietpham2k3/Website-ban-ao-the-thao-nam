@@ -21,11 +21,11 @@ const getAllKH = () => {
   return axios.get('/api/hoa-don/getAll');
 };
 
-const getAllKCByIdMSAndIdSP = (idMS,idSP) => {
+const getAllKCByIdMSAndIdSP = (idMS, idSP) => {
   return axios.get(`/api/hoa-don/getAllKCByIdMSAndIdSP/${idMS}/${idSP}`);
 };
 
-const findAllAnhByIdMSAndIdSP = (idMS,idSP) => {
+const findAllAnhByIdMSAndIdSP = (idMS, idSP) => {
   return axios.get(`/api/hoa-don/findAllAnhByIdMSAndIdSP/${idMS}/${idSP}`);
 };
 

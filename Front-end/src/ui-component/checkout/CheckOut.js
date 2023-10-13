@@ -130,9 +130,14 @@ function CheckoutForm() {
       setIsUpdatingDiaChi(false);
 
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
-      thanhToanHD(id, valuesUpdateHD);
-      navigate('/checkout/thankyou');
-      localStorage.removeItem('product');
+      if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
+        thanhToanHD(id, valuesUpdateHD);
+        navigate('/checkout/thankyou');
+        localStorage.removeItem('product');
+      } else {
+        thanhToanHD(id, valuesUpdateHD);
+        localStorage.removeItem('product');
+      }
     }
     VNP(tongTienKhiGiam);
   }, [valuesUpdateHD]);
@@ -392,7 +397,6 @@ function CheckoutForm() {
   };
 
   const handleThanhToanWithNVP = () => {
-    window.location.href = urlPay;
     if (valuesUpdateHD.tenNguoiNhan === '') {
       setErrors({
         ...errors,
@@ -442,6 +446,7 @@ function CheckoutForm() {
       ...prev,
       diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh
     }));
+    window.location.href = urlPay;
   };
 
   console.log(valuesUpdateHD.hinhThucThanhToan.ten);
