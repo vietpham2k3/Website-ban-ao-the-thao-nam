@@ -384,8 +384,8 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
                   {listMS.map((c) => (
-                    <option key={c.ten} value={c.ten}>
-                      {c.ten}
+                    <option key={c.ten} value={c.ten}  className="color-code" style={{ backgroundColor: c.ten }}>
+                
                     </option>
                   ))}
                   <option value="" disabled={mauSacDefaultSelected}>
@@ -430,7 +430,7 @@ function SanPham() {
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
-                    <td>{d.mauSac.ten}</td>
+                    <td className="color-code" style={{ backgroundColor: d.mauSac.ten }}></td>
                     <td>{d.chatLieu.ten}</td>
                     <td>{d.loaiSanPham.ten}</td>
                     <td>{d.nhaSanXuat.ten}</td>
