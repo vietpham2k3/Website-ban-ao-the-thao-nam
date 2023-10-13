@@ -2,13 +2,13 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
 // import { getAllByIdSP } from '../../services/SanPhamService';
-import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
+import { getAllKCByIdMSAndIdSP, getAllMSByIdSP,findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
 function Detail(props) {
@@ -90,13 +90,14 @@ function Detail(props) {
   }, [idSP]);
 
   useEffect(() => {
-    getAllKC(idMS);
+    getAllKC(idMS,idSP);
+    getAllAnh(idMS,idSP);
     // console.log(idSP);
-  }, [idMS]);
+  }, [idMS,idSP]);
 
-  const getAllKC = async (id) => {
+  const getAllKC = async (idMS,idSP) => {
     try {
-      const res = await getKCByIdMS(id);
+      const res = await getAllKCByIdMSAndIdSP(idMS,idSP);
       if (res && res.data) {
         setListKC(res.data);
       }
@@ -114,22 +115,18 @@ function Detail(props) {
     }
   };
 
-  const handleChangeId = (idCTSP, idSP, idMS) => {
-    if (idCTSP === id) {
+  const handleChangeId = (idCTSP,idSP, idMS) => {
+    if (idSP === id) {
       toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
       // localStorage.setItem("idMS",idMS);
-      getAllAnh(idCTSP);
+      getAllAnh(idMS,idSP);
       setVal(0);
       // console.log(id);
     }
   };
   ////////
-
-  useEffect(() => {
-    getAllAnh(id);
-  }, [id]);
 
   const getAllCTSP = async () => {
     const res = await getAllProduct();
@@ -138,12 +135,11 @@ function Detail(props) {
     }
   };
 
-  const getAllAnh = async (id) => {
-    const res = await listAnh(id);
+  const getAllAnh = async (idMS,idSP) => {
+    const res = await findAllAnhByIdMSAndIdSP(idMS,idSP);
     if (res && res.data) {
       setImageList(res.data);
-      console.log(imageList);
-      setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
+      setVal(0);
     }
   };
 

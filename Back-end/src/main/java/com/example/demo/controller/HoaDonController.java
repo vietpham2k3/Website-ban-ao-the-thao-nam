@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
+import com.example.demo.dto.AnhDTO;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.entity.*;
 import com.example.demo.service.impl.*;
@@ -33,6 +34,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -90,9 +92,49 @@ public class HoaDonController {
         return ResponseEntity.ok(hoaDon_khuyenMaiService.add(hoaDon));
     }
 
-    @GetMapping("getKCByIdMS/{id}")
-    public ResponseEntity<?> getAllByIdCTSP(@PathVariable UUID id) {
-        return ResponseEntity.ok(chiTietSanPhamService.getKCByIdMS(id));
+    @GetMapping("/getAllKCByIdMSAndIdSP/{idMS}/{idSP}")
+    public ResponseEntity<List<String>> getKCByIdMSAndIdSP(@PathVariable UUID idMS, @PathVariable UUID idSP) {
+        List<String> listKC = chiTietSanPhamService.getKCByIdMSAndIdSP(idMS, idSP);
+        return ResponseEntity.ok(listKC);
+    }
+
+    @GetMapping("/findAllAnhByIdMSAndIdSP/{idMS}/{idSP}")
+    public ResponseEntity<List<AnhDTO>> findAnhByIdMSAndIdSP(@PathVariable UUID idMS, @PathVariable UUID idSP) {
+        List<Anh> listAnh = chiTietSanPhamService.findAnhByIdMSAndIdSP(idMS, idSP);
+        if (listAnh.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<AnhDTO> imageDTOList = listAnh.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(imageDTOList);
+    }
+
+    private AnhDTO convertToDTO(Anh anh) {
+        AnhDTO anhDTO = new AnhDTO();
+        anhDTO.setId(anh.getId());
+        anhDTO.setMa(anh.getMa());
+        anhDTO.setTrangThai(anh.getTrangThai());
+        anhDTO.setNgayTao(anh.getNgayTao());
+        anhDTO.setNgaySua(anh.getNgaySua());
+        anhDTO.setChiTietSanPhamTen(anh.getChiTietSanPham().getSanPham().getTen());
+
+        if (anh.getTen() != null) {
+            try {
+                Blob blob = anh.getTen();
+                byte[] tenBytes = blob.getBytes(1, (int) blob.length());
+                String tenBase64 = Base64.getEncoder().encodeToString(tenBytes);
+                anhDTO.setTenBase64(tenBase64);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            anhDTO.setTenBase64(null);
+        }
+
+        return anhDTO;
     }
 
     @GetMapping("getAllMSByIdSP/{id}")

@@ -21,8 +21,12 @@ const getAllKH = () => {
   return axios.get('/api/hoa-don/getAll');
 };
 
-const getKCByIdMS = (id) => {
-  return axios.get(`/api/hoa-don/getKCByIdMS/${id}`);
+const getAllKCByIdMSAndIdSP = (idMS,idSP) => {
+  return axios.get(`/api/hoa-don/getAllKCByIdMSAndIdSP/${idMS}/${idSP}`);
+};
+
+const findAllAnhByIdMSAndIdSP = (idMS,idSP) => {
+  return axios.get(`/api/hoa-don/findAllAnhByIdMSAndIdSP/${idMS}/${idSP}`);
 };
 
 const getAllMSByIdSP = (id) => {
@@ -44,10 +48,6 @@ const detailHD = (id) => {
 const detailLSHD = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
 };
-
-// const chooseKH = (id) => {
-//   return axios.get(`/api/hoa-don/hien-thi-list-lshd/` + id);
-// };
 
 const addKH2 = (id, values) => {
   return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
@@ -148,11 +148,12 @@ export {
   xacNhanDH,
   getAllSP,
   searchCTSPofDH,
-  getKCByIdMS,
+  getAllKCByIdMSAndIdSP,
   getAllMSByIdSP,
   getAllKH,
   searchKHofDH,
   addKH2,
   xacNhanListIds,
-  huyDonListIds
+  huyDonListIds,
+  findAllAnhByIdMSAndIdSP
 };

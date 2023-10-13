@@ -637,7 +637,7 @@ function DonHang() {
               </tbody>
             </table>
 
-            {data.map.length === 0 && (
+            {data.length === 0 && (
               <div className="col-sm-12">
                 <div
                   style={{ background: 'whitesmoke' }}

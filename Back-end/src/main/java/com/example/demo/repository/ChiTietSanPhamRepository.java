@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,12 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void deleteMSKC(UUID id);
 
+    @Query("SELECT a FROM Anh a JOIN a.chiTietSanPham ctsp " +
+            "WHERE ctsp.mauSac.id = :idMS AND ctsp.sanPham.id = :idSP AND a.trangThai = 1 " +
+            "ORDER BY a.ngayTao")
+    List<Anh> findAnhByIdMSAndIdSP(UUID idMS,UUID idSP);
+
+
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
@@ -41,13 +48,15 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             , nativeQuery = true)
     List<String> getAllMSByIdSP(UUID id);
 
-    @Query(value = "SELECT KC.ten , CTSP.id\n" +
-            "FROM ChiTietSanPham CTSP\n" +
-            "JOIN KichCo KC ON CTSP.id_kc = KC.id\n" +
-            "WHERE CTSP.id_ms = :id AND CTSP.trang_thai = 1\n" +
-            "GROUP BY KC.id, KC.ten , CTSP.id"
+    @Query(value = "SELECT KC.ten , CTSP.id, CTSP.id_ms, CTSP.id_sp\n" +
+            "            FROM ChiTietSanPham CTSP\n" +
+            "            JOIN KichCo KC ON CTSP.id_kc = KC.id\n" +
+            "            WHERE CTSP.id_ms = :idMS\n" +
+            "\t\t\tAND CTSP.id_sp = :idSP \n" +
+            "\t\t\tAND CTSP.trang_thai = 1\n" +
+            "            GROUP BY KC.id, KC.ten , CTSP.id, CTSP.id_sp, CTSP.id_ms"
             , nativeQuery = true)
-    List<String> getKCByIdMS(UUID id);
+    List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP);
 
     @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
             "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
