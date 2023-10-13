@@ -2,13 +2,13 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
 // import { getAllByIdSP } from '../../services/SanPhamService';
-import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
+import { getAllKCByIdMSAndIdSP, getAllMSByIdSP, findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
 function Detail(props) {
@@ -70,13 +70,10 @@ function Detail(props) {
   }, []);
 
   // ms kc
-  const [isActive, setIsActive] = useState(false);
+  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
 
-  const handleClick2 = (idCTSP) => {
-    setIsActive(true);
-    setTimeout(() => {
-      setIsActive(false);
-    }, 200);
+  const handleClick2 = (idCTSP, idKCMS) => {
+    setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
   };
 
@@ -90,13 +87,14 @@ function Detail(props) {
   }, [idSP]);
 
   useEffect(() => {
-    getAllKC(idMS);
+    getAllKC(idMS, idSP);
+    getAllAnh(idMS, idSP);
     // console.log(idSP);
-  }, [idMS]);
+  }, [idMS, idSP]);
 
-  const getAllKC = async (id) => {
+  const getAllKC = async (idMS, idSP) => {
     try {
-      const res = await getKCByIdMS(id);
+      const res = await getAllKCByIdMSAndIdSP(idMS, idSP);
       if (res && res.data) {
         setListKC(res.data);
       }
@@ -114,22 +112,21 @@ function Detail(props) {
     }
   };
 
-  const handleChangeId = (idCTSP, idSP, idMS) => {
-    if (idCTSP === id) {
+  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
+
+  const handleChangeId = (idCTSP, idSP, idMS, idMSSP) => {
+    setSelectedIdMSSP(idMSSP);
+    if (idSP === id) {
       toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
       // localStorage.setItem("idMS",idMS);
-      getAllAnh(idCTSP);
+      getAllAnh(idMS, idSP);
       setVal(0);
       // console.log(id);
     }
   };
   ////////
-
-  useEffect(() => {
-    getAllAnh(id);
-  }, [id]);
 
   const getAllCTSP = async () => {
     const res = await getAllProduct();
@@ -138,12 +135,11 @@ function Detail(props) {
     }
   };
 
-  const getAllAnh = async (id) => {
-    const res = await listAnh(id);
+  const getAllAnh = async (idMS, idSP) => {
+    const res = await findAllAnhByIdMSAndIdSP(idMS, idSP);
     if (res && res.data) {
       setImageList(res.data);
-      console.log(imageList);
-      setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
+      setVal(0);
     }
   };
 
@@ -228,8 +224,7 @@ function Detail(props) {
                       ? `data:image/jpeg;base64,${imageList[0] && imageList[0].tenBase64}`
                       : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
                   }
-                  height="350"
-                  width="300"
+                  className="anh1"
                 />
                 <button className="btns" onClick={handleNext}>
                   <i className="fa-solid fa-angle-right"></i>
@@ -239,11 +234,9 @@ function Detail(props) {
                 {imageList.map((image, index) => (
                   <div className="thumbnailAnh" key={image.id}>
                     <Image
-                      className={index === 0 ? 'clicked' : ''}
+                      className={index === 0 ? 'anh2 clicked' : 'anh2'}
                       src={`data:image/jpeg;base64,${image.tenBase64}`}
                       onClick={() => handleClick(index)}
-                      height="100"
-                      width="100"
                     />
                   </div>
                 ))}
@@ -273,18 +266,29 @@ function Detail(props) {
                       const idCTSP = colorData[2];
                       const idSP = colorData[3];
 
+                      const idMSSP = `${id}-${idSP}`;
+
                       return (
                         <div style={{ marginLeft: 15, height: 30 }} key={id}>
                           {color ? (
                             <Button
                               className="custom-button"
                               onClick={() => {
-                                handleChangeId(idCTSP, idSP, id);
+                                handleChangeId(idCTSP, idSP, id, idMSSP);
                               }}
-                              style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
+                              style={{
+                                backgroundColor: color,
+                                border: idMSSP === selectedIdMSSP ? '2px solid black' : '',
+                                width: 35,
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                height: 25
+                              }}
                               tabIndex={0}
                             >
-                              &nbsp;
+                              <span style={{ color: idMSSP === selectedIdMSSP ? 'greenyellow' : 'black', fontSize: '15px' }}>
+                                {idMSSP === selectedIdMSSP ? '✔' : ''}
+                              </span>
                             </Button>
                           ) : (
                             <p>Chưa có màu sắc nào</p>
@@ -311,16 +315,26 @@ function Detail(props) {
                   <ButtonToolbar>
                     {listKC.map((d) => {
                       const sizeData = d.split(',');
-                      const idCTSP = sizeData[1];
                       const size = sizeData[0];
+                      const idCTSP = sizeData[1];
+                      const idMS = sizeData[2];
+                      const soLuong = sizeData[4];
+                      const idKC = sizeData[5];
+
+                      const idKCMS = `${idKC}-${idMS}`;
 
                       return (
                         <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
                           <Button
                             className="custom-button"
                             appearance="ghost"
-                            onClick={() => handleClick2(idCTSP)}
-                            style={{ '--background-color': isActive ? 'black' : 'transparent' }}
+                            onClick={() => handleClick2(idCTSP, idKCMS)}
+                            style={{
+                              backgroundColor: idKCMS === activeIdKCMaMau ? 'black' : 'transparent',
+                              color: idKCMS === activeIdKCMaMau ? 'white' : 'black',
+                              border: idKCMS === activeIdKCMaMau ? '1px solid red' : ''
+                            }}
+                            disabled={soLuong === '0'}
                           >
                             {size}
                           </Button>
@@ -356,7 +370,7 @@ function Detail(props) {
                     value={quantity}
                     onChange={(value) => setQuantity(value)}
                   />
-                  {product.soLuong <= 10 ? <span>Còn lại: {product.soLuong}</span> : ''}
+                  {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
               <div className="action">
