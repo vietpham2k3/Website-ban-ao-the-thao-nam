@@ -38,7 +38,7 @@ import { pay } from 'services/PayService';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id } = props;
+  const { id, getAllHD } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState(true);
@@ -468,7 +468,7 @@ function DonHang(props) {
     const res = await thanhToan(idHD);
     if (res) {
       toast.success('Thanh toán thành công');
-      getAll();
+      getAllHD();
     }
   };
 
@@ -943,9 +943,8 @@ function DonHang(props) {
                                       onChange={() => handleDetail(d.id)}
                                     />
                                     <label className="form-check-label custom-label" htmlFor={d.id}>
-                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                                              &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} -{' '}
-                                              {d.nhaSanXuat.ten}
+                                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                      &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                                     </label>
                                   </div>
                                 ))}
