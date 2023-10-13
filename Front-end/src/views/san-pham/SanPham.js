@@ -47,6 +47,7 @@ function SanPham() {
   const [coAoDefaultSelected, setCoAoDefaultSelected] = useState(false);
   const [mauSacDefaultSelected, setMauSacDefaultSelected] = useState(false);
   const navigate = useNavigate();
+  const maxPrice = findMaxPrice(data);
 
   useEffect(() => {
     getAll(0);
@@ -57,7 +58,18 @@ function SanPham() {
     getListCL();
   }, []);
 
-  
+  function findMaxPrice(data) {
+    if (data.length === 0) {
+      return null;
+    }
+
+    const maxPrice = data.reduce((max, product) => {
+      return product.giaBan > max ? product.giaBan : max;
+    }, data[0].giaBan);
+
+    return maxPrice;
+  }
+
   const getListCL = async () => {
     try {
       const response = await getAllListCL();
@@ -194,35 +206,26 @@ function SanPham() {
     localStorage.setItem('idSP', idSp);
   };
 
- // Define a function to handle the substring manipulation
-const handleSubstring = (selectedValue) => {
-  if (selectedValue.startsWith('#')) {
-    // If selectedValue starts with '#', remove the '#' character
-    return selectedValue.substring(1);
-  }
-  // If it doesn't start with '#', return it as is
-  return selectedValue;
-};
+  const handleSubstring = (selectedValue) => {
+    if (selectedValue.startsWith('#')) {
+      return selectedValue.substring(1);
+    }
+    return selectedValue;
+  };
 
-const handleMauSacChange = (e) => {
-  const selectedValue = e.target.value;
+  const handleMauSacChange = (e) => {
+    const selectedValue = e.target.value;
 
-  // Update MauSac state
-  setMauSac(selectedValue);
+    const mauSacWithoutHash = handleSubstring(selectedValue);
+    setMauSac(mauSacWithoutHash);
 
-  // Check for empty string and perform actions
-  if (selectedValue === '') {
-    setMauSacDefaultSelected(true);
-    getAll(0);
-  } else {
-    setMauSacDefaultSelected(false);
-  }
-
-  // Call the substring manipulation function and update MauSac accordingly
-  const mauSacWithoutHash = handleSubstring(selectedValue);
-  setMauSac(mauSacWithoutHash);
-};
-
+    if (selectedValue === '' || selectedValue === 'default') {
+      setMauSacDefaultSelected(true);
+      getAll(0);
+    } else {
+      setMauSacDefaultSelected(false);
+    }
+  };
 
   const handleChatLieuChange = (e) => {
     const selectedValue = e.target.value;
@@ -318,7 +321,7 @@ const handleMauSacChange = (e) => {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-              <Slider className="slider" onChange={setValues} value={values} min={MIN} max={MAX}></Slider>
+              <Slider className="slider" onChange={setValues} value={values} min={MIN} max={maxPrice}></Slider>
             </div>
           </div>
           <div className="col-6 d-none d-md-block">
@@ -380,14 +383,14 @@ const handleMauSacChange = (e) => {
               </Col>
               <Col>
                 <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
-                  <option value="" disabled={mauSacDefaultSelected}>
-                    MÀU SẮC
-                  </option>
                   {listMS.map((c) => (
                     <option key={c.ten} value={c.ten}>
                       {c.ten}
                     </option>
                   ))}
+                  <option value="" disabled={mauSacDefaultSelected}>
+                    MÀU SẮC
+                  </option>
                 </Form.Select>
               </Col>
             </Row>
