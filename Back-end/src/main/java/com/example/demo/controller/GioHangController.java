@@ -17,6 +17,7 @@ import com.example.demo.service.impl.HoaDon_KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
 import com.example.demo.service.impl.KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
+import jakarta.validation.Valid;
 import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,13 +67,46 @@ public class GioHangController {
         return ResponseEntity.ok(gioHangService.getAll());
     }
 
+    @PutMapping("update-hd-checkout/{id}")
+    public ResponseEntity<?> updateHD(@Valid @RequestBody HoaDon hoaDon, @PathVariable UUID id) {
+        String ma = "HTTT" + new Random().nextInt(100000);
+
+        HoaDon hd = serviceHD.detailHD(id);
+        HinhThucThanhToan httt = new HinhThucThanhToan().builder()
+                .ma(ma)
+                .ten(hoaDon.getHinhThucThanhToan().getTen())
+                .ngayTao(new Date())
+                .trangThai(1)
+                .tien(hoaDon.getHinhThucThanhToan().getTien())
+                .build();
+        hoaDon.setId(id);
+        hoaDon.setNgayTao(hd.getNgayTao());
+        hoaDon.setNgayThanhToan(new Date());
+        hoaDon.setNgaySua(new Date());
+        hoaDon.setMa(hd.getMa());
+        hoaDon.setLoaiDon(1);
+        hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
+        hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
+        hoaDon.setDiaChi(hoaDon.getDiaChi());
+        httt = serviceHttt.add(httt);
+        hoaDon.setHinhThucThanhToan(httt);
+        return ResponseEntity.ok(serviceHD.add(hoaDon));
+    }
+
     @PostMapping("/add-km")
     public ResponseEntity<?> addkm(@RequestBody HoaDon_KhuyenMai khuyenMai) {
         List<KhuyenMai> list = khuyenMaiService.getAllKM(khuyenMai.getKhuyenMai().getTien());
         boolean isValid = false;
+        List<HoaDon_KhuyenMai> listHD = hoaDon_khuyenMaiService.getAll(khuyenMai.getHoaDon().getId());
+        for (HoaDon_KhuyenMai h : listHD) {
+            if (khuyenMai.getKhuyenMai().getMa().equals(h.getKhuyenMai().getMa())) {
+                return ResponseEntity.ok("ff");
+            }
+        }
 
         for (KhuyenMai k : list) {
             if (khuyenMai.getKhuyenMai().getMa().equalsIgnoreCase(k.getMa())) {
+                khuyenMai.setTienGiam(k.getMucGiam());
                 khuyenMai.setKhuyenMai(k);
                 isValid = true;
                 break;

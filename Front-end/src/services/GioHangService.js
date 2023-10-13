@@ -12,4 +12,8 @@ const addKhuyenMai = (values) => {
   return axios.post('/api/gio-hang/add-km', values);
 };
 
-export { postGH, deleteByIdHD, addKhuyenMai };
+const thanhToan = (id, values) => {
+  return axios.put(`/api/gio-hang/update-hd-checkout/${id}`, values);
+};
+
+export { postGH, deleteByIdHD, addKhuyenMai, thanhToan };

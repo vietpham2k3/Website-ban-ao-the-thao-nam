@@ -34,7 +34,9 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Transactional
     @Modifying
     @Query(value = "delete from LichSuHoaDon \n" +
-            "where LichSuHoaDon.id_hd = :id\n" +
+            "where LichSuHoaDon.id_hd = :id " +
+            "delete from HoaDon_KhuyenMai \n" +
+            "where HoaDon_KhuyenMai.id_hd = :id\n" +
             "delete from HoaDonChiTiet\n" +
             "where HoaDonChiTiet.id_hd = :id\n" +
             "delete from HoaDon\n" +
