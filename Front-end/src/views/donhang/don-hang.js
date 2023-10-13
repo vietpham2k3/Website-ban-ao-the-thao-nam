@@ -4,15 +4,14 @@ import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../../scss/DonHang.scss';
-import { getAllPageDH, findVIP } from 'services/ServiceDonHang';
+import { toast } from 'react-toastify';
+import { getAllPageDH, findVIP, xacNhanListIds, huyDonListIds } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { DateRangePicker } from 'rsuite';
-// import Slider from 'react-slider';
 import Select from 'react-select';
 import { FormCheck, FormGroup } from 'react-bootstrap';
 import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
-import * as XLSX from 'xlsx';
 import { addMonths, subMonths, isWithinInterval } from 'date-fns';
 
 function DonHang() {
@@ -76,11 +75,12 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      search(term, tuNgay, denNgay, selectedValues, loaiDon, page);
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6];
+      search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      search('', null, null, null, '', '', page);
+      const values = [0, 1, 2, 3, 4, 5, 6];
+      search('', null, null, values, '', page);
     }
-
     if (data.length === 0) {
       setCurrentPage(0);
     }
@@ -137,17 +137,93 @@ function DonHang() {
     handlePageChange(event.selected);
   };
 
-  //export
-  const handleOnExport = () => {
-    const table = document.getElementById('table-to-xls');
-    const workbook = XLSX.utils.table_to_book(table);
+  //Checkbox
 
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
+  const [isChecked, setIsChecked] = useState([]);
+  const [isCheckAllDisabled, setIsCheckAllDisabled] = useState(false);
 
-    const fileName = `Hóa đơn in ngày ${formattedDate.replace(/_/g, '-')}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
+  useEffect(() => {
+    // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
+    const shouldDisableCheckAll = data.some((d) => d.trang_thai !== 0 && d.trang_thai !== 1);
+    setIsCheckAllDisabled(shouldDisableCheckAll);
+  }, [data]);
+
+  const handleCheckAll = (event) => {
+    const { checked } = event.target;
+    const newCheckedArray = data.map((d) => (d.trang_thai === 0 || d.trang_thai === 1 ? checked : false));
+    setIsChecked(newCheckedArray);
   };
+
+  const handleCheck = (index) => {
+    const newCheckedArray = [...isChecked];
+    newCheckedArray[index] = !newCheckedArray[index];
+
+    // Cập nhật trạng thái disabled của các checkbox dựa trên newCheckedArray
+    const updatedData = data.map((d) => {
+      if (d.trang_thai === 0) {
+        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 1) };
+      } else if (d.trang_thai === 1) {
+        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 0) };
+      }
+      return d;
+    });
+
+    setIsChecked(newCheckedArray);
+    setData(updatedData);
+  };
+
+  //xac nhan don
+  const xacNhan = async (ids, value) => {
+    const res = await xacNhanListIds(ids, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      getAll(0);
+    }
+  };
+
+  const handleXacNhanDH = async (event) => {
+    event.preventDefault();
+    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
+    toast.warning('Bạn phải chọn hóa đơn trước !');
+    if (selectedIds.length > 0) {
+      await xacNhan(selectedIds, '');
+    }
+  };
+
+  // huy don
+  const huyDon = async (ids, value) => {
+    const res = await huyDonListIds(ids, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      getAll(0);
+    }
+  };
+
+  const handleHuyDon = async (event) => {
+    event.preventDefault();
+    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
+    toast.warning('Bạn phải chọn hóa đơn trước !');
+    if (selectedIds.length > 0) {
+      await huyDon(selectedIds, '');
+    }
+  };
+
+  // // xac nhan giao hang
+
+  // const giaoHang = async (id, value) => {
+  //   const res = await xacNhanGiao(id, value);
+  //   if (res) {
+  //     toast.success('Cập nhật thành công !');
+  //     setShow4(false);
+  //     detail(id);
+  //     detailListLSHD(id);
+  //   }
+  // };
+
+  // const handleXacNhanGiaoHang = async (event) => {
+  //   event.preventDefault();
+  //   await giaoHang(id, lshd2);
+  // };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -201,7 +277,7 @@ function DonHang() {
                 </div>
                 <div style={{ marginTop: 10 }} className="search">
                   <input
-                    style={{ borderRadius: 15, width: 362, height: 30 }}
+                    style={{ borderRadius: 15, width: 362, height: 30, border: '1px solid gray' }}
                     type="text"
                     className="input-search"
                     placeholder="Nhập mã đơn hoặc tên khách hàng cần tìm..."
@@ -289,6 +365,18 @@ function DonHang() {
           <div className="w-auto rounded bg-white border shadow p-4">
             <table id="table-to-xls" style={{ textAlign: 'center', alignItems: 'center', cursor: 'pointer' }} className="table table-hover">
               <tr>
+                <th>
+                  <input
+                    className={`form-check-input ${isCheckAllDisabled ? 'disabled-checkbox' : ''}`}
+                    style={{ border: '1px solid black' }}
+                    type="checkbox"
+                    value=""
+                    id="checkAll"
+                    onChange={handleCheckAll}
+                    disabled={isCheckAllDisabled}
+                  />
+                </th>
+
                 <th>#</th>
                 <th>Mã Đơn</th>
                 <th>Khách Hàng</th>
@@ -298,9 +386,71 @@ function DonHang() {
                 <th>Trạng Thái</th>
                 <th>Loại Đơn</th>
               </tr>
+              <br></br>
+
               <tbody>
                 {data.map((d, i) => (
                   <tr key={i} onClick={() => navigate(`/don-hang/chi-tiet/${d.id}`)}>
+                    <td>
+                      <td>
+                        {d.trang_thai === 0 && (
+                          <input
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ border: '1px solid black' }}
+                            className={`form-check-input ${
+                              d.trang_thai === 0
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 1)
+                                  ? 'disabled-checkbox'
+                                  : ''
+                                : d.trang_thai === 1
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 0)
+                                  ? 'disabled-checkbox'
+                                  : ''
+                                : ''
+                            }`}
+                            type="checkbox"
+                            value=""
+                            checked={isChecked[i]}
+                            disabled={
+                              d.trang_thai === 0
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 1)
+                                : d.trang_thai === 1
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 0)
+                                : false
+                            }
+                            onChange={() => handleCheck(i, d.id)}
+                          />
+                        )}
+                        {d.trang_thai === 1 && (
+                          <input
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ border: '1px solid black' }}
+                            className={`form-check-input ${
+                              d.trang_thai === 0
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 1)
+                                  ? 'disabled-checkbox'
+                                  : ''
+                                : d.trang_thai === 1
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 0)
+                                  ? 'disabled-checkbox'
+                                  : ''
+                                : ''
+                            }`}
+                            type="checkbox"
+                            value=""
+                            checked={isChecked[i]}
+                            disabled={
+                              d.trang_thai === 0
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 1)
+                                : d.trang_thai === 1
+                                ? isChecked.some((value, index) => value && data[index].trang_thai === 0)
+                                : false
+                            }
+                            onChange={() => handleCheck(i, d.id)}
+                          />
+                        )}
+                      </td>
+                    </td>
                     <td>{i + 1}</td>
                     <td>{d.ma}</td>
                     <td>{d.ten_nguoi_nhan}</td>
@@ -487,7 +637,7 @@ function DonHang() {
               </tbody>
             </table>
 
-            {totalPages === 0 && currentPage === 0 && (
+            {data.length === 0 && (
               <div className="col-sm-12">
                 <div
                   style={{ background: 'whitesmoke' }}
@@ -523,21 +673,43 @@ function DonHang() {
               activeClassName="active"
             />
 
-            <form style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
-              <button
-                className="button-85"
-                onClick={handleOnExport}
-                style={{ border: '1px solid black', background: 'greenyellow', borderRadius: '10px' }}
-                data-toggle="tooltip"
-                title="In hóa đơn Excel"
-                // className="shadow-button"
-                type="submit"
-              >
-                <span style={{ fontSize: '15px', fontWeight: 'bold' }} className="btn-text">
-                  In Excel
-                </span>
-              </button>
-            </form>
+            <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
+              <div style={{ paddingRight: 30 }}>
+                <button
+                  onClick={handleXacNhanDH}
+                  className={`relative inline-block text-base group ${
+                    isChecked.some((checked, index) => checked && data[index].trang_thai === 1) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={isChecked.some((checked, index) => checked && data[index].trang_thai === 1)}
+                >
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative">Xác nhận</span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+
+              <div>
+                <button onClick={handleHuyDon} className="relative inline-block text-base group">
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative" style={{ color: 'red' }}>
+                      Hủy đơn
+                    </span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+            </div>
           </div>
         </Card>
       </MainCard>
