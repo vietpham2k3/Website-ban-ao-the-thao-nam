@@ -227,7 +227,7 @@ function ContentSanPham() {
   };
 
   return (
-    <div style={{ paddingTop: 30 }}>
+    <div style={{ paddingTop: 30 }} className="container">
       <div className="row">
         <div className="col-md-3">
           <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>
@@ -343,7 +343,7 @@ function ContentSanPham() {
           <div className="row">
             <h3 style={{ textAlign: 'center' }}>Sản Phẩm</h3>
             {filteredData.map((d, i) => (
-              <div key={i} className="col-md-3">
+              <div key={i} className="col-md-4">
                 <Card onClick={() => handleDetail(d.id, d.sanPham.id, d.mauSac.id)} style={{ width: '260px', height: '400px' }}>
                   <Card.Img
                     style={{ textAlign: 'center', width: '260px', height: '300px' }}

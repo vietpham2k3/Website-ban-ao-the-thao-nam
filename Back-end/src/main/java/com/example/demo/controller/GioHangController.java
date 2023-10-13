@@ -68,7 +68,7 @@ public class GioHangController {
     }
 
     @PutMapping("update-hd-checkout/{id}")
-    public ResponseEntity<?> updateHD(@Valid @RequestBody HoaDon hoaDon, @PathVariable UUID id) {
+    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id) {
         String ma = "HTTT" + new Random().nextInt(100000);
 
         HoaDon hd = serviceHD.detailHD(id);
