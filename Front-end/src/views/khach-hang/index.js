@@ -155,8 +155,8 @@ const KhachHang = () => {
                   <th>Email</th>
                   <th>SĐT</th>
                   <th>Ngày sinh</th>
+                  <th>Giới tính</th>
                   {/* <th>Người Tạo</th> */}
-                  <th>Mật Khẩu</th>
                   <th>Ảnh</th>
                   <th>Trạng thái</th>
                   <th>Action</th>
@@ -171,8 +171,7 @@ const KhachHang = () => {
                     <td>{d.email}</td>
                     <td>{d.sdt}</td>
                     <td>{formatDate(d.ngaySinh)}</td>
-                    {/* <td>{d.nguoiTao}</td> */}
-                    <td>{d.matKhau}</td>
+                    <td>{d.gioiTinh === true ? 'Nam' : 'Nữ'}</td>
                     <td>
                       <img src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
                     </td>

@@ -250,9 +250,7 @@ function Detail(props) {
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 3
                     }}
                   >
@@ -304,9 +302,7 @@ function Detail(props) {
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 8
                     }}
                   >
@@ -349,11 +345,9 @@ function Detail(props) {
               <div className="product-count">
                 <p
                   style={{
-                    color: 'grey',
                     paddingTop: 12,
                     paddingRight: 15,
-                    fontSize: 17,
-                    fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'
+                    fontSize: 17
                   }}
                 >
                   Số lượng:{' '}

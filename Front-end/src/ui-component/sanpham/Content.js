@@ -149,7 +149,6 @@ function ContentSanPham() {
         return false;
       }
 
-
       return true;
     });
 
@@ -207,7 +206,6 @@ function ContentSanPham() {
     }
   };
 
-
   const handlePageClick = (event) => {
     getAll(event.selected);
   };
@@ -229,7 +227,7 @@ function ContentSanPham() {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: 30 }}>
       <div className="row">
         <div className="col-md-3">
           <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>
@@ -313,7 +311,7 @@ function ContentSanPham() {
                     <Form.Group key={index} className="mb-3" controlId={`collarCheckbox${index}`}>
                       <Form.Check
                         type="checkbox"
-                        label={collar.ten} 
+                        label={collar.ten}
                         onChange={() => handleCollarChange(collar.ten)}
                         checked={selectedCollars.includes(collar.ten)}
                       />
@@ -321,7 +319,6 @@ function ContentSanPham() {
                   ))}
                 </Accordion.Body>
               </Accordion.Item>
-
 
               <Accordion.Item eventKey="6">
                 <Accordion.Header>Nhà Sản Xuất</Accordion.Header>
@@ -338,8 +335,6 @@ function ContentSanPham() {
                   ))}
                 </Accordion.Body>
               </Accordion.Item>
-
-
             </Accordion>
           </div>
         </div>

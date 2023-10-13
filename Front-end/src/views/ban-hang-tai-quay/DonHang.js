@@ -235,10 +235,10 @@ function DonHang(props) {
         <Page>
           <Text style={styles.title}>Sports Shop</Text>
           <Text style={styles.text}>SDT: 0559044158</Text>
-          <Text style={styles.text}>Email: dungsieucapdeptraivippromax@gmail.com</Text>
-          <Text style={styles.text}>Địa chỉ: Ngõ 69 - xã to chim - huyện chim to - thành phố toàn chim</Text>
-          <Text style={styles.text}>Ngân hàng: CHIMTOBANK - STK: 69696969696969</Text>
-          <Text style={styles.text}>Chủ tải khoản: CHIMSIEUTO</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
           <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
           <Text style={styles.textMaHD}>{dataDetailHD.ma}</Text>
 
