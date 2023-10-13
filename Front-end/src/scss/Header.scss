@@ -2,12 +2,15 @@
   display: flex;
   justify-content: center;
   background-color: #eef2f6;
+  text-align: center;
 }
 .header {
   position: sticky;
   top: 0;
   width: 100%;
   z-index: 9999;
+  text-align: center;
+  justify-content: center;
 }
 .nav-1 {
   display: flex;
@@ -15,7 +18,7 @@
 }
 .nameShop {
   color: darkblue;
-  font-family: 'Pacifico';
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   font-size: 30px;
 }
 .nav-item {
@@ -30,11 +33,6 @@
 .nav-item {
   display: flex;
   justify-content: flex-end;
-}
-.headerBottom {
-  display: flex;
-  justify-content: center;
-  padding-left: 150px;
 }
 .nav-item:hover {
   color: #000000;

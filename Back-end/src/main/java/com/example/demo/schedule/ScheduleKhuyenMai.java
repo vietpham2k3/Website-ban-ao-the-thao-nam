@@ -16,7 +16,8 @@ public class ScheduleKhuyenMai {
     @Autowired
     private KhuyenMaiRepository kmRepo;
 
-    @Scheduled(fixedRate = 15000) // Chạy vào mỗi giờ
+    @Scheduled(cron = "0 0 * * * *")// Chạy vào mỗi giờ
+//    @Scheduled(cron = "*/15 * * * * *")// Chạy vào mỗi 15s
     public void updateVoucherStatus() {
 //        // Lấy thời gian hiện tại
 //        Date currentTime = new Date();

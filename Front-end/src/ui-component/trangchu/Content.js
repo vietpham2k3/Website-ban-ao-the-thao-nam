@@ -5,6 +5,8 @@ import '../../scss/Content.scss';
 import { getAllBestseller, getAllSPNEW, getAllProduct } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AnhBanner from '../../assets/images/banner44.jpg';
+import AnhBanner1 from '../../assets/images/333333.jpg';
 
 function Content() {
   const [data, setData] = useState([]);
@@ -55,8 +57,22 @@ function Content() {
   return (
     <>
       <section className="product">
-        <h1 className="title">Sản Phẩm Bán Chạy</h1>
         <div className="container">
+          <div style={{ display: 'flex', paddingLeft: 17, paddingTop: 30 }}>
+            <div className="col-4" style={{ width: 430, paddingRight: 30 }}>
+              <Card.Img src="https://i.ytimg.com/vi/3K689mxA6a0/maxresdefault.jpg" />
+            </div>
+            <div className="col-4" style={{ width: 430, paddingRight: 30 }}>
+              <Card.Img src={AnhBanner1} />
+            </div>
+            <div className="col-4" style={{ width: 430, paddingRight: 30 }}>
+              <Card.Img src="https://bizweb.dktcdn.net/thumb/large/100/376/467/collections/z2137541763817-65adcff79dc0f58c8d9ac9d4110ffdcc.jpg?v=1603270072300" />
+            </div>
+          </div>
+          <div style={{ paddingLeft: 17, paddingRight: 20, color: 'red' }}>
+            <hr></hr>
+          </div>
+          <p className="title">Sản Phẩm Bán Chạy</p>
           <div className="row">
             {Array.isArray(data) &&
               data.slice(0, 8).map((product, index) => {
@@ -86,8 +102,12 @@ function Content() {
           </div>
         </div>
 
-        <h1 className="title">Sản Phẩm Mới Nhất</h1>
         <div className="container">
+          <Card.Img style={{ height: 250, paddingTop: 20 }} src={AnhBanner} />
+        </div>
+
+        <div className="container">
+          <p className="title">Sản Phẩm Mới Nhất</p>
           <div className="row">
             {productNew.slice(0, 8).map((product, i) => {
               return (
