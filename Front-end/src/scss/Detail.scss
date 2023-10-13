@@ -122,3 +122,25 @@
   text-align: center;
   padding-left: 140px;
 }
+.anh1 {
+  width: 300px;
+  height: 350px;
+}
+.anh2 {
+  width: 100px;
+  height: 100px;
+}
+.active-button {
+  background-color: red;
+  color: white;
+}
+.activeMS {
+  content: '✔'; /* Sử dụng ký tự Unicode cho dấu tích xanh */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: green; /* Màu của dấu tích xanh */
+}
+

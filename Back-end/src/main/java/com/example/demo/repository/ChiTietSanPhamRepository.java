@@ -30,7 +30,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query("SELECT a FROM Anh a JOIN a.chiTietSanPham ctsp " +
             "WHERE ctsp.mauSac.id = :idMS AND ctsp.sanPham.id = :idSP AND a.trangThai = 1 " +
             "ORDER BY a.ngayTao")
-    List<Anh> findAnhByIdMSAndIdSP(UUID idMS,UUID idSP);
+    List<Anh> findAnhByIdMSAndIdSP(UUID idMS, UUID idSP);
 
 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
@@ -48,13 +48,21 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             , nativeQuery = true)
     List<String> getAllMSByIdSP(UUID id);
 
-    @Query(value = "SELECT KC.ten , CTSP.id, CTSP.id_ms, CTSP.id_sp\n" +
+    @Query(value = "SELECT KC.ten, CTSP.id, CTSP.id_ms, CTSP.id_sp, CTSP.so_luong, KC.id\n" +
             "            FROM ChiTietSanPham CTSP\n" +
             "            JOIN KichCo KC ON CTSP.id_kc = KC.id\n" +
             "            WHERE CTSP.id_ms = :idMS\n" +
-            "\t\t\tAND CTSP.id_sp = :idSP \n" +
-            "\t\t\tAND CTSP.trang_thai = 1\n" +
-            "            GROUP BY KC.id, KC.ten , CTSP.id, CTSP.id_sp, CTSP.id_ms"
+            "                AND CTSP.id_sp = :idSP\n" +
+            "                AND CTSP.trang_thai = 1\n" +
+            "            GROUP BY KC.id, KC.ten , CTSP.id, CTSP.id_sp, CTSP.id_ms, CTSP.so_luong\n" +
+            "ORDER BY \n" +
+            "    CASE\n" +
+            "        WHEN KC.ten = 'S' THEN 1\n" +
+            "        WHEN KC.ten = 'M' THEN 2\n" +
+            "        WHEN KC.ten = 'L' THEN 3\n" +
+            "        WHEN KC.ten = 'XL' THEN 4\n" +
+            "        WHEN KC.ten = 'XXL' THEN 5\n" +
+            "    END;\n"
             , nativeQuery = true)
     List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP);
 
