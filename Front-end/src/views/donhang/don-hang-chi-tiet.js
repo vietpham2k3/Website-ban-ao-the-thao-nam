@@ -1781,8 +1781,9 @@ function DonHangCT() {
                                               onChange={() => handleDetail(d.id)}
                                             />
                                             <label className="form-check-label custom-label" htmlFor={d.id}>
-                                              <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                                              &nbsp;- {d.kichCo.ten}
+                                            <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                              &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} -{' '}
+                                              {d.nhaSanXuat.ten}
                                             </label>
                                           </div>
                                         ))}
