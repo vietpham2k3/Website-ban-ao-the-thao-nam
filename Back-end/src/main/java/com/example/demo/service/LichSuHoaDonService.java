@@ -17,4 +17,6 @@ public interface LichSuHoaDonService {
     LichSuHoaDon findLSHDByIDsHD(UUID id);
 
     LichSuHoaDon add(LichSuHoaDon lichSuHoaDon);
+
+    List<LichSuHoaDon> createLichSuDonHangAll(List<LichSuHoaDon> lichSuHoaDonList);
 }

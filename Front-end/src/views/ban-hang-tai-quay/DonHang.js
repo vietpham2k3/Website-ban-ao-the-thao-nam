@@ -1365,7 +1365,6 @@ function DonHang(props) {
                   style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                   defaultValue={dataDetailKM && dataDetailKM.ma}
                 />{' '}
-                <button className="fa-solid fa-plus" onClick={() => setShow(true)}></button>
               </p>
             </div>
           </div>
