@@ -44,8 +44,8 @@
 
 /* Thiết lập kiểu cho nút phân trang được chọn */
 .page-item.active .page-link {
-  background-color: #007bff; /* Màu nền cho nút phân trang được chọn */
-  border-color: #007bff; /* Màu viền cho nút phân trang được chọn */
+  background-color: #757779; /* Màu nền cho nút phân trang được chọn */
+  border-color: #757779; /* Màu viền cho nút phân trang được chọn */
   color: #fff; /* Màu chữ cho nút phân trang được chọn */
   font-weight: bold;
 }
@@ -74,6 +74,7 @@ width: 20px; // Độ rộng của hộp màu
 height: 20px; // Chiều cao của hộp màu
 margin-right: 10px; // Khoảng cách giữa hộp màu và checkbox
 border: 1px solid #000; // Viền xung quanh hộp màu
+border-radius: 50%;
 }
 
 /* Trong tệp CSS của bạn (hoặc SCSS) */
@@ -84,25 +85,73 @@ appearance: none;
 -moz-appearance: none;
 width: 20px; /* Độ rộng của checkbox */
 height: 20px; /* Chiều cao của checkbox */
-border: 2px solid #000; /* Viền của checkbox */
+border: 2px solid #a4a4a4; /* Viền của checkbox */
 border-radius: 50%; /* Để biến checkbox thành hình tròn */
 outline: none;
 cursor: pointer;
 }
 
 .round-checkbox:checked {
-  background-color: #000; /* Màu nền khi checkbox được chọn */
+  background-color: #434343; /* Màu nền khi checkbox được chọn */
 }
 
-.button-container {
+/* ColorFilters.scss */
+.color-filter-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 240px; /* Độ rộng tối đa của container */
+  flex-wrap: wrap; /* Chia thành nhiều dòng khi cần */
+  align-items: center; /* Căn theo trục Y vào giữa */
 }
 
-.custom-button {
-  width: calc(33.33% - 10px); /* 33.33% để chia đều thành 3 cột và trừ đi khoảng cách giữa chúng */
-  margin-bottom: 10px; /* Khoảng cách dưới mỗi nút */
+.color-filter {
+  display: flex;
+  align-items: center; /* Căn theo trục Y vào giữa */
+  margin-right: 20px; /* Khoảng cách giữa các ô màu */
 }
+
+/* SanPham.scss */
+.custom-button {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  // background-color: #85b5d4; /* Màu nền của button */
+  color: #fff; /* Màu chữ trắng */
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #95e3ff; /* Màu nền khi di chuột qua button */
+}
+
+/* SanPham.scss */
+// .row {
+//   display: flex;
+//   flex-wrap: wrap; /* Chia thành nhiều dòng khi cần */
+//   justify-content: space-between; /* Để các cột cách đều nhau */
+//   margin: 0 -20px; /* Khoảng cách giữa các cột */
+// }
+
+// .col-md-3 {
+//   flex: 0 0 calc(25% - 40px); /* 25% width cho mỗi cột và trừ đi khoảng cách */
+//   margin: 0 20px; /* Khoảng cách giữa các cột */
+// }
+
+// /* ColorFilters.scss */
+// .color-filter {
+//   display: flex;
+//   align-items: center; /* Căn theo trục Y vào giữa */
+//   margin-right: 20px; /* Khoảng cách giữa các ô màu */
+// }
+
+// /* Trong tệp CSS của bạn (hoặc SCSS) */
+// .round-checkbox {
+//   width: 20px; /* Độ rộng của checkbox */
+//   height: 20px; /* Chiều cao của checkbox */
+//   border: 2px solid #a4a4a4; /* Viền của checkbox */
+//   border-radius: 50%; /* Để biến checkbox thành hình tròn */
+//   outline: none;
+//   cursor: pointer;
+// }
+

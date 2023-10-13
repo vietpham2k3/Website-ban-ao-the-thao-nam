@@ -262,10 +262,12 @@ function ContentSanPham() {
                           className="round-checkbox"
                           onChange={() => handleColorChange(color.ten)}
                           checked={selectedColors.includes(color.ten)}
+                          
                         />
+                        <Form className="color-code" style={{ backgroundColor: color.ten }} />
                         <span className="round-checkmark"></span>
                       </label>
-                      <Form className="color-code" style={{ backgroundColor: color.ten }} />
+                      
                     </Form.Group>
                   ))}
                 </Accordion.Body>
