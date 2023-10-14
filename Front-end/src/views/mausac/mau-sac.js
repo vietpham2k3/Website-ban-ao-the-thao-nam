@@ -172,8 +172,8 @@ function MauSac() {
             <table style={{ marginTop: 50 }} className="table table-hover">
               <tr>
                 <th className="ps-2">#</th>
-                <th className="ps-2">Mã Màu</th>
                 <th className="ps-2">Tên Màu</th>
+                <th className="ps-2">Màu</th>
                 <th className="ps-2">Ngày Tạo</th>
                 <th className="ps-2">Ngày Sửa</th>
                 <th className="ps-2">Trạng Thái</th>

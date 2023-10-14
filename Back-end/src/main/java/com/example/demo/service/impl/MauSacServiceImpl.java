@@ -33,7 +33,6 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public MauSac add(MauSac mauSac){
-        mauSac.setTen(mauSac.getMa());
         return res.save(mauSac);
     }
 

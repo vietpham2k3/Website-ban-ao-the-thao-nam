@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router';
 import { getById, getKmById } from 'services/ServiceDonHang';
 import { deleteByIdHD, addKhuyenMai, thanhToan } from 'services/GioHangService';
-import { getTP, getQH, getP, getServices, getFee } from 'services/ApiGHNService';
+import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
 
 function CheckoutForm() {
@@ -22,6 +22,7 @@ function CheckoutForm() {
   const [selectedWard, setSelectedWard] = useState('');
   const [urlPay, setUrlPay] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
+  const [ngayDuKienNhan, setNgayDuKienNhan] = useState(0);
   const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
   const [dataHDKM, setDataHDKM] = useState([]);
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ function CheckoutForm() {
     tongTien: 0,
     tongTienKhiGiam: 0,
     trangThai: 0,
+    ngayDuKienNhan: 0,
     ghiChu: '',
     tienShip: 0,
     hinhThucThanhToan: {
@@ -82,6 +84,13 @@ function CheckoutForm() {
     quan: true,
     xa: true,
     pttt: true
+  });
+  const [tgDuKien, setTgDuKien] = useState({
+    from_district_id: 1710,
+    from_ward_code: '1A1112',
+    to_district_id: 0,
+    to_ward_code: '',
+    service_id: 0
   });
 
   useEffect(() => {
@@ -105,7 +114,15 @@ function CheckoutForm() {
 
   useEffect(() => {
     fee(valuesFee);
+    thoiGiaoHang(tgDuKien);
   }, [valuesFee.to_ward_code]);
+
+  useEffect(() => {
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      ngayDuKienNhan: ngayDuKienNhan
+    });
+  }, [ngayDuKienNhan]);
 
   useEffect(() => {
     getAllHDById(id);
@@ -142,8 +159,6 @@ function CheckoutForm() {
     VNP(tongTienKhiGiam);
   }, [valuesUpdateHD]);
 
-  console.log(urlPay);
-
   const handleChangeValuesKM = () => {
     addVToHD(valuesKhuyenMai);
   };
@@ -160,7 +175,7 @@ function CheckoutForm() {
     });
   };
 
-  const handleProvinceChange = async (event) => {
+  const handleProvinceChange = (event) => {
     const provinceId = {
       province_id: event.target.value
     };
@@ -183,7 +198,7 @@ function CheckoutForm() {
     });
   };
 
-  const handleDistrictChange = async (event) => {
+  const handleDistrictChange = (event) => {
     const districtId = {
       district_id: event.target.value
     };
@@ -191,6 +206,10 @@ function CheckoutForm() {
     setValuesServices({
       ...valuesServices,
       to_district: parseInt(event.target.value, 10)
+    });
+    setTgDuKien({
+      ...tgDuKien,
+      to_district_id: parseInt(event.target.value, 10)
     });
     getPhuong(districtId);
     setValuesFee({
@@ -220,6 +239,10 @@ function CheckoutForm() {
     setValuesFee({
       ...valuesFee,
       insurance_value: totalAmount,
+      to_ward_code: event.target.value
+    });
+    setTgDuKien({
+      ...tgDuKien,
       to_ward_code: event.target.value
     });
     setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
@@ -254,93 +277,151 @@ function CheckoutForm() {
   };
 
   const addVToHD = async (value) => {
-    const res = await addKhuyenMai(value);
-    if (res.data === 'error') {
-      toast.error('Mã khuyễn mãi không hợp lệ');
-    } else if (res.data === 'ff') {
-      toast.error('Bạn đang sử dụng mã này');
-    } else {
-      findAllKM(id);
-      const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-      setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
-      toast.success('Thêm mã thành công');
+    try {
+      const res = await addKhuyenMai(value);
+      if (res.data === 'error') {
+        toast.error('Mã khuyễn mãi không hợp lệ');
+      } else if (res.data === 'ff') {
+        toast.error('Bạn đang sử dụng mã này');
+      } else {
+        findAllKM(id);
+        const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+        setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+        toast.success('Thêm mã thành công');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const backToCart = async (idHD) => {
-    const res = await deleteByIdHD(idHD);
-    if (res) {
-      setDataHDCT(res.data);
+    try {
+      const res = await deleteByIdHD(idHD);
+      if (res) {
+        setDataHDCT(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getAllHDById = async (idHD) => {
-    const res = await getById(idHD);
-    if (res) {
-      setDataHDCT(res.data);
+    try {
+      const res = await getById(idHD);
+      if (res) {
+        setDataHDCT(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getService = async (value) => {
-    const res = await getServices(value);
-    if (res) {
-      setValuesFee({
-        ...valuesFee,
-        service_id: res.data.data[0].service_id
-      });
+    try {
+      const res = await getServices(value);
+      if (res) {
+        setValuesFee({
+          ...valuesFee,
+          service_id: res.data.data[0].service_id
+        });
+        setTgDuKien({
+          ...tgDuKien,
+          service_id: res.data.data[0].service_id
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const fee = async (value) => {
-    const res = await getFee(value);
-    if (res) {
-      setValuesUpdateHD({
-        ...valuesUpdateHD,
-        tienShip: res.data.data.total
-      });
+    try {
+      const res = await getFee(value);
+      if (res) {
+        setValuesUpdateHD({
+          ...valuesUpdateHD,
+          tienShip: res.data.data.total
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getThanhPho = async () => {
-    const res = await getTP();
-    if (res) {
-      setThanhPho(res.data.data);
+    try {
+      const res = await getTP();
+      if (res) {
+        setThanhPho(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getQuanHuyen = async (value) => {
-    const res = await getQH(value);
-    if (res) {
-      setQuan(res.data.data);
+    try {
+      const res = await getQH(value);
+      if (res) {
+        setQuan(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getPhuong = async (value) => {
-    const res = await getP(value);
-    if (res) {
-      setPhuong(res.data.data);
+    try {
+      const res = await getP(value);
+      if (res) {
+        setPhuong(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const thoiGiaoHang = async (value) => {
+    try {
+      const res = await TGGH(value);
+      if (res) {
+        setNgayDuKienNhan(res.data.data.leadtime);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const findAllKM = async (id) => {
-    const res = await getKmById(id);
-    if (res) {
-      setDataHDKM(res.data);
+    try {
+      const res = await getKmById(id);
+      if (res) {
+        setDataHDKM(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const thanhToanHD = async (id, value) => {
-    const res = await thanhToan(id, value);
-    if (res) {
-      toast.success('Thành công');
+    try {
+      const res = await thanhToan(id, value);
+      if (res) {
+        toast.success('Thành công');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const VNP = async (tien) => {
-    const res = await payOnline(tien);
-    if (res) {
-      setUrlPay(res.data);
-      console.log(res.data);
+    try {
+      const res = await payOnline(tien);
+      if (res) {
+        setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -392,7 +473,8 @@ function CheckoutForm() {
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((prev) => ({
       ...prev,
-      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh
+      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh,
+      ngayDuKienNhan: ngayDuKienNhan
     }));
   };
 
@@ -449,7 +531,21 @@ function CheckoutForm() {
     window.location.href = urlPay;
   };
 
-  console.log(valuesUpdateHD.hinhThucThanhToan.ten);
+  function formatDate(dateString) {
+    if (dateString === null) {
+      return '';
+    }
+
+    const dateObject = new Date(dateString * 1000); // * 1000 để chuyển từ giây thành mili giây
+
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0
+    const year = dateObject.getFullYear(); // Lấy năm
+
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return formattedDate;
+  }
 
   return (
     <div className="site-section">
@@ -710,6 +806,16 @@ function CheckoutForm() {
                         {convertToCurrency(tongTienKhiGiam)}
                       </td>
                     </tr>
+                    {ngayDuKienNhan ? (
+                      <tr>
+                        <td className="text-black font-weight-bold" colSpan="3">
+                          Nhận hàng vào
+                        </td>
+                        <td className="text-black font-weight-bold">{formatDate(ngayDuKienNhan)}</td>
+                      </tr>
+                    ) : (
+                      ''
+                    )}
                     <tr>
                       <td className="text-black font-weight-bold" colSpan="3">
                         Thanh Toán
