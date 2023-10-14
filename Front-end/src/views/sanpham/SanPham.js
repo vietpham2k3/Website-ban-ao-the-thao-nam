@@ -1,4 +1,5 @@
 import Content from 'ui-component/sanpham/Content';
+import Banner from 'ui-component/trangchu/Banner';
 import Footer from 'ui-component/trangchu/Footer';
 import Header from 'ui-component/trangchu/Header';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ function SanPham() {
   return (
     <div>
       <Header productCount={productCount} />
+      <Banner />
       <Content />
       <Footer />
     </div>
