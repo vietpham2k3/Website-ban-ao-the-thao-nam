@@ -207,10 +207,7 @@ function SanPham() {
   };
 
   const handleSubstring = (selectedValue) => {
-    if (selectedValue.startsWith('#')) {
-      return selectedValue.substring(1);
-    }
-    return selectedValue;
+    return selectedValue.replace('#', '');
   };
 
   const handleMauSacChange = (e) => {
@@ -220,12 +217,18 @@ function SanPham() {
     setMauSac(mauSacWithoutHash);
 
     if (selectedValue === '' || selectedValue === 'default') {
+      // Nếu bạn muốn điền lại giá trị, sử dụng selectedValue đã lưu trữ
       setMauSacDefaultSelected(true);
       getAll(0);
+      // Để hiển thị giá trị đúng trong combobox, bạn có thể sử dụng
     } else {
       setMauSacDefaultSelected(false);
     }
   };
+
+  // ...
+
+  // Trong JSX của combobox, bạn có thể hiển thị selectedValue thay vì mauSac.
 
   const handleChatLieuChange = (e) => {
     const selectedValue = e.target.value;
@@ -384,8 +387,8 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
                   {listMS.map((c) => (
-                    <option key={c.ten} value={c.ten}  className="color-code" style={{ backgroundColor: c.ten }}>
-                
+                    <option key={c.ten} value={c.ten} className="color-code" style={{ background: c.ten }}>
+                      &nbsp;{c.ten}
                     </option>
                   ))}
                   <option value="" disabled={mauSacDefaultSelected}>
@@ -406,11 +409,6 @@ function SanPham() {
                   <th>Tên sản phẩm</th>
                   <th>Số lượng</th>
                   <th>Giá bán</th>
-                  <th>Màu SẮC</th>
-                  <th>CHẤT LIỆU</th>
-                  <th>LOẠI SẢN PHẨM</th>
-                  <th>NHÀ SẢN XUẤT</th>
-                  <th>CỔ ÁO</th>
                   <th>Trạng thái</th>
                   <th>Action</th>
                 </tr>
@@ -430,11 +428,11 @@ function SanPham() {
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
-                    <td className="color-code" style={{ backgroundColor: d.mauSac.ten }}></td>
+                    {/* <td><div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>{d.mauSac.ten}</td>
                     <td>{d.chatLieu.ten}</td>
                     <td>{d.loaiSanPham.ten}</td>
                     <td>{d.nhaSanXuat.ten}</td>
-                    <td>{d.coAo.ten}</td>
+                    <td>{d.coAo.ten}</td> */}
                     <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>
