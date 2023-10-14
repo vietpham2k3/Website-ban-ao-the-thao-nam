@@ -61,6 +61,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public void delete(UUID id) {
+        res.deleteById(id);
+    }
+
+    @Override
     public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi) {
         res.updateKH(id, tenNguoiNhan, soDienThoai, diaChi);
     }

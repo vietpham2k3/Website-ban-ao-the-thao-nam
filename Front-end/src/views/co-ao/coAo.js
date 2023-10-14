@@ -187,7 +187,7 @@ const CoAo = () => {
               </div>
             </div>
 
-            <table style={{ textAlign: 'center' }} className="table table-hover">
+            <table style={{ textAlign: 'center', marginTop: 30 }} className="table table-hover">
               <tr>
                 <th>#</th>
                 <th>Mã</th>

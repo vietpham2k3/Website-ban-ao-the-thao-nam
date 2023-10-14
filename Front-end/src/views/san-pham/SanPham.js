@@ -280,7 +280,7 @@ function SanPham() {
           <div className="col-6 search d-flex align-items-center row">
             <input
               type="text"
-              className="input-search box col-auto"
+              className="input-search-sp box col-auto"
               placeholder="Search..."
               value={term}
               onChange={handleInputChange}

@@ -182,11 +182,8 @@ function NhaSanXuat() {
                 {data.map((d, i) => (
                   <tr key={i}>
                     <td>{i + 1}</td>
-                    <td>
-                      {' '}
-                      <span className="color-code">{d.ma}</span>
-                    </td>
-                    <td className="color-code">{d.ten}</td>
+                    <td>{d.ma}</td>
+                    <td>{d.ten}</td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>

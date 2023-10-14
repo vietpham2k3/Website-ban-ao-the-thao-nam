@@ -44,7 +44,7 @@ public class KhuyenMai {
     @Column(name = "muc_giam")
     @NotNull(message = "Không được để trống")
     @Min(value = 0, message = "Không được nhỏ hơn 0")
-    private Integer mucGiam;
+    private Double mucGiam;
 
     @Column(name = "so_tien_toi_thieu_giam")
     @NotNull(message = "Không được để trống")

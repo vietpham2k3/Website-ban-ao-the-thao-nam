@@ -15,7 +15,11 @@ public interface HoaDonChiTietService {
 
     HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet);
 
+    void taoHoaDon(List<HoaDonChiTiet> hoaDonChiTiet);
+
     void delete(UUID id);
+
+    void deleteByIdHD(UUID id);
 
     void update(Integer soLuong, UUID id);
 

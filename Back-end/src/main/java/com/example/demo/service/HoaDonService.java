@@ -28,6 +28,8 @@ public interface HoaDonService {
 
     HoaDon detailHD(UUID id);
 
+    void delete(UUID id);
+
     public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
     HoaDon add(HoaDon hoaDon);

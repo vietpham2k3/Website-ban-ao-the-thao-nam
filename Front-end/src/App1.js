@@ -5,6 +5,7 @@ import SanPham from 'views/sanpham/SanPham';
 import GioHang from 'views/giohang/GioHang';
 import '../src/scss/Router.scss';
 import Checkout from 'views/checkout/CheckOut';
+import ThankYou from 'ui-component/checkout/ThankYou';
 
 const App1 = () => {
   return (
@@ -17,7 +18,8 @@ const App1 = () => {
 
         <Route path="/detail/:id/:idSP/:idMS" element={<DetailSanPham />}></Route>
         <Route path="/gio-hang" element={<GioHang />}></Route>
-        <Route path="/checkout" element={<Checkout />}></Route>
+        <Route path="/checkout/:id" element={<Checkout />}></Route>
+        <Route path="/checkout/thankyou" element={<ThankYou />}></Route>
       </Routes>
     </div>
   );

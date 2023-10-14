@@ -34,6 +34,11 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
     }
 
     @Override
+    public void delete(UUID id) {
+        res.delete(id);
+    }
+
+    @Override
     public List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id) {
         return res.findALLLichSuHoaDonByHoaDonId(id);
     }

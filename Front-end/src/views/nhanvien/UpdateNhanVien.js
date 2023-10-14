@@ -120,7 +120,7 @@ function UpdateNhanVien() {
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
                 <label htmlFor="ma" className="form-label">
-                  Mã Khách Hàng
+                  Mã Nhân Viên
                 </label>
                 <input
                   id="ma"

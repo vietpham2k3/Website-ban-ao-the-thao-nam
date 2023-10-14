@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +43,7 @@ public class Anh {
     private String ma;
 
     @Lob
+    @JsonIgnore
     @Column(name = "ten")
     private Blob ten;
 
@@ -55,5 +57,4 @@ public class Anh {
     @Column(name = "ngay_sua")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date ngaySua;
-
 }

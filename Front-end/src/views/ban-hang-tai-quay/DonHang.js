@@ -38,7 +38,7 @@ import { pay } from 'services/PayService';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id } = props;
+  const { id, getAllHD } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState(true);
@@ -235,10 +235,10 @@ function DonHang(props) {
         <Page>
           <Text style={styles.title}>Sports Shop</Text>
           <Text style={styles.text}>SDT: 0559044158</Text>
-          <Text style={styles.text}>Email: dungsieucapdeptraivippromax@gmail.com</Text>
-          <Text style={styles.text}>Địa chỉ: Ngõ 69 - xã to chim - huyện chim to - thành phố toàn chim</Text>
-          <Text style={styles.text}>Ngân hàng: CHIMTOBANK - STK: 69696969696969</Text>
-          <Text style={styles.text}>Chủ tải khoản: CHIMSIEUTO</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
           <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
           <Text style={styles.textMaHD}>{dataDetailHD.ma}</Text>
 
@@ -468,7 +468,7 @@ function DonHang(props) {
     const res = await thanhToan(idHD);
     if (res) {
       toast.success('Thanh toán thành công');
-      getAll();
+      getAllHD();
     }
   };
 
@@ -944,7 +944,7 @@ function DonHang(props) {
                                     />
                                     <label className="form-check-label custom-label" htmlFor={d.id}>
                                       <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                                      &nbsp;- {d.kichCo.ten}
+                                      &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                                     </label>
                                   </div>
                                 ))}
@@ -1015,8 +1015,18 @@ function DonHang(props) {
                       />
                     </td>
                     <td>
-                      {d.chiTietSanPham.sanPham.ten} <br /> {d.chiTietSanPham.kichCo.ten} <br />
-                      <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px' }}>&nbsp;</div>
+                      {d.chiTietSanPham.sanPham.ten} <br />
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span
+                        className="color-circle"
+                        style={{
+                          backgroundColor: d.chiTietSanPham.mauSac.ten,
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          height: '15px',
+                          width: '15px'
+                        }}
+                      ></span>
                     </td>
                     <td>
                       <div
