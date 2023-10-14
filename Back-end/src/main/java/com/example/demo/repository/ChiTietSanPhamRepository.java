@@ -143,7 +143,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "AND\n" +
             "    (:max IS NULL OR C.gia_ban <= :max)\n" +
             "AND\n" +
-            "    (:mauSac IS NULL OR LOWER(ms.ten) LIKE CONCAT('%', LOWER(:mauSac), '%'))\n" +
+            "    (:mauSac IS NULL OR LOWER(ms.ma) LIKE CONCAT('%', LOWER(:mauSac), '%'))\n" +
             "AND\n" +
             "    (:chatLieu IS NULL OR LOWER(cl.ten) LIKE CONCAT('%', LOWER(:chatLieu), '%'))\n" +
             "AND\n" +

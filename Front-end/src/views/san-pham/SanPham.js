@@ -205,6 +205,7 @@ function SanPham() {
     navigate(`/san-pham/chi-tiet-san-pham/detail/${id}/${idSp}`);
     localStorage.setItem('idSP', idSp);
   };
+  const uniqueColors = listMS.filter((color, index, self) => index === self.findIndex((c) => c.ten === color.ten));
 
   const handleSubstring = (selectedValue) => {
     return selectedValue.replace('#', '');
@@ -217,10 +218,8 @@ function SanPham() {
     setMauSac(mauSacWithoutHash);
 
     if (selectedValue === '' || selectedValue === 'default') {
-      // Nếu bạn muốn điền lại giá trị, sử dụng selectedValue đã lưu trữ
       setMauSacDefaultSelected(true);
       getAll(0);
-      // Để hiển thị giá trị đúng trong combobox, bạn có thể sử dụng
     } else {
       setMauSacDefaultSelected(false);
     }
@@ -386,9 +385,9 @@ function SanPham() {
               </Col>
               <Col>
                 <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
-                  {listMS.map((c) => (
-                    <option key={c.ten} value={c.ten} className="color-code" style={{ background: c.ten }}>
-                      &nbsp;{c.ten}
+                  {uniqueColors.map((c) => (
+                    <option key={c.ma} value={c.ma}>
+                      &nbsp;{c.ma}
                     </option>
                   ))}
                   <option value="" disabled={mauSacDefaultSelected}>
