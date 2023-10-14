@@ -18,6 +18,7 @@ function UpdateMS() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     ma: '',
+    ten: '',
     trangThai: 0
   });
 
@@ -25,7 +26,7 @@ function UpdateMS() {
 
   const handleColorChange = (newColor) => {
     setColor(newColor); // Cập nhật giá trị màu từ bảng màu
-    setValues({ ...values, ma: newColor.hex });
+    setValues({ ...values, ten: newColor.hex });
   };
 
   const { id } = useParams();
@@ -61,11 +62,20 @@ function UpdateMS() {
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
+                <span className="form-label">Tên màu</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={values.ma}
+                  onChange={(e) => setValues({ ...values, ma: e.target.value })}
+                />
+              </div>
+              <div className="col-md-6">
                 <span className="form-label" style={{ fontWeight: 'bold' }}>
                   Mã Màu:{' '}
                 </span>
                 <br></br>
-                <InputColor initialValue={values.ma} onChange={handleColorChange} placement="right" />
+                <InputColor initialValue={values.ten} onChange={handleColorChange} placement="right" />
                 <div
                   style={{
                     width: 300,

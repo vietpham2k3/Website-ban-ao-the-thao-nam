@@ -264,7 +264,7 @@ function DonHang(props) {
               <View key={i} style={[styles.row, styles.header]}>
                 <Text style={styles.row1}>{i + 1}</Text>
                 <Text style={styles.row2}>
-                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ten}]
+                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
                 </Text>
                 <Text style={styles.row3}>{d.soLuong}</Text>
                 <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>

@@ -46,4 +46,14 @@ const getFee = (value) => {
   });
 };
 
-export { getTP, getQH, getP, getServices, getFee };
+const TGGH = (value) => {
+  return axios.get('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime', {
+    params: value, // Sử dụng params để truyền dữ liệu vào request
+    headers: {
+      Token: 'c99ea38f-6996-11ee-af43-6ead57e9219a',
+      shop_id: 4625720
+    }
+  });
+};
+
+export { getTP, getQH, getP, getServices, getFee, TGGH };
