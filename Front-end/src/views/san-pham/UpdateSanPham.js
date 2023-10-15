@@ -192,7 +192,6 @@ function UpdateSanPham() {
     if (res) {
       toast.success('Xoá thành công');
       getAllAnh(idCTSP !== null ? idCTSP : id);
-
     }
   };
 

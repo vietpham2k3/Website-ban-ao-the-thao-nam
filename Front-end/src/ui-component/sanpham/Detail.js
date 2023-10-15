@@ -18,12 +18,45 @@ function Detail(props) {
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
   const [idCTSP, setIdCTSP] = useState(0);
+  const [listKC, setListKC] = useState([]);
+  const [listMS, setListMS] = useState([]);
   const thumbnailContainerRef = useRef(null);
   const [listSanPham, setListSanPham] = useState([]);
+  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
+  const navigate = useNavigate();
+  // ms kc
+  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount } = props;
+
+  useEffect(() => {
+    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
+  }, [idCTSP]);
+
+  useEffect(() => {
+    getAllCTSP();
+
+    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
+    if (storedListSanPham) {
+      setListSanPham(storedListSanPham);
+    }
+  }, []);
+
+  console.log(listSanPham);
+
+  useEffect(() => {
+    // getAllMSKC(idSP);
+    getAllMS(idSP);
+    // console.log(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    getAllKC(idMS, idSP);
+    getAllAnh(idMS, idSP);
+    // console.log(idSP);
+  }, [idMS, idSP]);
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -60,37 +93,10 @@ function Detail(props) {
     });
   };
 
-  useEffect(() => {
-    getAllCTSP();
-
-    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
-    if (storedListSanPham) {
-      setListSanPham(storedListSanPham);
-    }
-  }, []);
-
-  // ms kc
-  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
-
   const handleClick2 = (idCTSP, idKCMS) => {
     setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
   };
-
-  const [listKC, setListKC] = useState([]);
-  const [listMS, setListMS] = useState([]);
-
-  useEffect(() => {
-    // getAllMSKC(idSP);
-    getAllMS(idSP);
-    // console.log(idSP);
-  }, [idSP]);
-
-  useEffect(() => {
-    getAllKC(idMS, idSP);
-    getAllAnh(idMS, idSP);
-    // console.log(idSP);
-  }, [idMS, idSP]);
 
   const getAllKC = async (idMS, idSP) => {
     try {
@@ -103,16 +109,12 @@ function Detail(props) {
     }
   };
 
-  const navigate = useNavigate();
-
   const getAllMS = async (id) => {
     const res = await getAllMSByIdSP(id);
     if (res && res.data) {
       setListMS(res.data);
     }
   };
-
-  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
 
   const handleChangeId = (idCTSP, idSP, idMS, idMSSP) => {
     setSelectedIdMSSP(idMSSP);
@@ -126,7 +128,6 @@ function Detail(props) {
       // console.log(id);
     }
   };
-  ////////
 
   const getAllCTSP = async () => {
     const res = await getAllProduct();
@@ -142,10 +143,6 @@ function Detail(props) {
       setVal(0);
     }
   };
-
-  useEffect(() => {
-    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
-  }, [idCTSP]);
 
   const fetchProductDetail = async (id) => {
     try {
@@ -175,9 +172,19 @@ function Detail(props) {
   };
 
   const handleAddToCart = () => {
-    const updatedListSanPham = [
-      ...listSanPham,
-      {
+    // Lấy danh sách sản phẩm từ localStorage
+    const storedProducts = JSON.parse(localStorage.getItem('product')) || [];
+
+    // Tìm sản phẩm có cùng id
+    const existingProduct = storedProducts.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      // Nếu sản phẩm đã tồn tại, cộng dồn số lượng
+      existingProduct.soLuong += quantity;
+      existingProduct.tongSoLuong = product.soLuong;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+      storedProducts.push({
         id: product.id,
         kichCo: product.kichCo,
         sanPham: product.sanPham,
@@ -185,10 +192,13 @@ function Detail(props) {
         giaBan: product.giaBan,
         soLuong: quantity,
         tongSoLuong: product.soLuong
-      }
-    ];
-    setListSanPham(updatedListSanPham);
-    localStorage.setItem('product', JSON.stringify(updatedListSanPham));
+      });
+    }
+
+    // Lưu danh sách sản phẩm mới vào localStorage
+    localStorage.setItem('product', JSON.stringify(storedProducts));
+
+    // Cập nhật số lượng sản phẩm trong giỏ hàng
     setProductCount(productCount + quantity);
   };
 
