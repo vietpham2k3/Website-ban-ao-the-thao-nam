@@ -212,7 +212,7 @@ function Detail(props) {
         mauSac: product.mauSac,
         giaBan: product.giaBan,
         soLuong: quantity,
-        tongSoLuong: product.soLuong
+        tongSoLuong: product.soLuong - quantity
       });
     }
     putSl(product.id, product.soLuong - quantity);

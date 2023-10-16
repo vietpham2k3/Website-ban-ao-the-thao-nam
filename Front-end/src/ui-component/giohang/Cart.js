@@ -7,7 +7,7 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { Link, useNavigate } from 'react-router-dom';
 import { postGH } from 'services/GioHangService';
 import { updateSL } from 'services/SanPhamService';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
@@ -64,8 +64,8 @@ function Cart(props) {
   };
 
   const handleDelete = (id, soLuong, tongSoLuong) => {
-    console.log(tongSoLuong - soLuong + soLuong);
-    putSl(id, tongSoLuong - soLuong + soLuong);
+    console.log(tongSoLuong + soLuong);
+    putSl(id, tongSoLuong + soLuong);
     const storedData = JSON.parse(localStorage.getItem('product'));
     const updatedData = storedData.filter((item) => item.id !== id);
     setProductCount(productCount - soLuong);
@@ -91,7 +91,6 @@ function Cart(props) {
 
     // Cập nhật số lượng sản phẩm
     storedProductList[productIndex].soLuong = newQuantity;
-
     // Lưu danh sách sản phẩm vào local
     localStorage.setItem('product', JSON.stringify(storedProductList));
 
@@ -101,10 +100,18 @@ function Cart(props) {
 
     // Cập nhật biến productCount
     setProductCount(totalCount);
+
     if (newQuantity > currentQuantity) {
-      toast.success('thành công');
-      putSl(id, tongSoLuong - 1);
+      storedProductList[productIndex].tongSoLuong = tongSoLuong - (newQuantity - currentQuantity);
+    } else {
+      storedProductList[productIndex].tongSoLuong = tongSoLuong + (currentQuantity - newQuantity);
     }
+
+    // Lưu lại danh sách sản phẩm đã được cập nhật
+    localStorage.setItem('product', JSON.stringify(storedProductList));
+
+    // Gọi hàm để cập nhật tổng số lượng trong local storage
+    putSl(id, storedProductList[productIndex].tongSoLuong);
   };
 
   function convertToCurrency(number) {
