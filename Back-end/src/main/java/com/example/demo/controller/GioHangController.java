@@ -88,6 +88,7 @@ public class GioHangController {
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDon.setDiaChi(hoaDon.getDiaChi());
+        hoaDon.setTrangThai(0);
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);
         return ResponseEntity.ok(serviceHD.add(hoaDon));

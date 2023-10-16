@@ -477,22 +477,17 @@ function DonHangCT() {
   }, [valuesUpdateHDTien]);
 
   useEffect(() => {
-    const calculatedTienShip = hoaDon && hoaDon.tienShip ? hoaDon.tienShip : 0;
-    const calculatedTienGiam = hd_km && hd_km.tienGiam ? hd_km.tienGiam : 0;
-    const tongTienKhiGiam = totalAmount + calculatedTienShip - calculatedTienGiam;
-  
+    console.log(valuesUpdateHDTien);
     setHoaDon(() => ({
       ...hoaDon,
       tongTien: totalAmount,
-      tongTienKhiGiam: tongTienKhiGiam < 0 ? 0 : tongTienKhiGiam
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
     }));
-  
     setValuesUpdateHDTien(() => ({
       tongTien: totalAmount,
-      tongTienKhiGiam: tongTienKhiGiam < 0 ? 0 : tongTienKhiGiam
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
     }));
   }, [totalAmount]);
-  
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -2017,7 +2012,7 @@ function DonHangCT() {
 
               <br></br>
 
-              {hoaDon && hoaDon.tienShip !== 0 && (
+              {hoaDon && hoaDon.tienGiam !== 0 && (
               <Container style={{ display: 'flex', justifyContent: 'end' }}>
                 <Row style={{ marginBottom: 10 }}>
                   <Col sm={12} className="row">

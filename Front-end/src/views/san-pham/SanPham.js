@@ -58,8 +58,6 @@ function SanPham() {
     getListCL();
   }, []);
 
-
-
   useEffect(() => {
     // Tính giá cao nhất khi trang được tải
     const max = findMaxPrice(data);
@@ -75,9 +73,7 @@ function SanPham() {
     });
     return maxPrice;
   };
-  
 
-  
   const getListCL = async () => {
     try {
       const response = await getAllListCL();
@@ -331,7 +327,7 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-              <Slider className="slider" value={values} min={MIN} max={maxPrice}  onChange={(newValues) => setValues(newValues)} ></Slider>
+              <Slider className="slider" value={values} min={MIN} max={maxPrice} onChange={(newValues) => setValues(newValues)}></Slider>
             </div>
           </div>
           <div className="col-6 d-none d-md-block">

@@ -27,6 +27,9 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void deleteMSKC(UUID id);
 
+    @Query(value = "select sp from ChiTietSanPham sp where sp.sanPham.id = :id")
+    List<ChiTietSanPham> detailByIdSP(UUID id);
+
     @Query("SELECT a FROM Anh a JOIN a.chiTietSanPham ctsp " +
             "WHERE ctsp.mauSac.id = :idMS AND ctsp.sanPham.id = :idSP AND a.trangThai = 1 " +
             "ORDER BY a.ngayTao")

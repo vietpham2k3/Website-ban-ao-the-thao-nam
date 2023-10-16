@@ -192,7 +192,6 @@ function UpdateSanPham() {
     if (res) {
       toast.success('Xoá thành công');
       getAllAnh(idCTSP !== null ? idCTSP : id);
-
     }
   };
 
@@ -340,7 +339,10 @@ function UpdateSanPham() {
 
   const postctsp = async (id, value) => {
     const res = await postCTSP(value);
-    if (res) {
+    if (res.data === 'da ton tai') {
+      toast.success('Thêm số lượng thành công');
+      getAllMSKC(id);
+    } else {
       toast.success('Thêm thành công');
       getAllMSKC(id);
     }

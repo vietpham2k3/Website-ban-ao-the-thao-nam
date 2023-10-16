@@ -55,5 +55,7 @@ public interface ChiTietSanPhamService {
 
     List<ChiTietSanPham> getAllBestseller();
 
+    List<ChiTietSanPham> detailByIdSP(UUID id);
+
     Page<ChiTietSanPham> pageWeb(Integer page);
 }
