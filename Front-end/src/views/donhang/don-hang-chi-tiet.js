@@ -477,17 +477,22 @@ function DonHangCT() {
   }, [valuesUpdateHDTien]);
 
   useEffect(() => {
-    console.log(valuesUpdateHDTien);
+    const calculatedTienShip = hoaDon && hoaDon.tienShip ? hoaDon.tienShip : 0;
+    const calculatedTienGiam = hd_km && hd_km.tienGiam ? hd_km.tienGiam : 0;
+    const tongTienKhiGiam = totalAmount + calculatedTienShip - calculatedTienGiam;
+  
     setHoaDon(() => ({
       ...hoaDon,
       tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+      tongTienKhiGiam: tongTienKhiGiam < 0 ? 0 : tongTienKhiGiam
     }));
+  
     setValuesUpdateHDTien(() => ({
       tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+      tongTienKhiGiam: tongTienKhiGiam < 0 ? 0 : tongTienKhiGiam
     }));
   }, [totalAmount]);
+  
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -1645,7 +1650,7 @@ function DonHangCT() {
                             className="payment-logo"
                           />
                         )}
-                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Ví VNPAY' && (
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' && (
                           <img
                             style={{ display: 'inline-block' }}
                             width={'35px'}
@@ -1907,13 +1912,13 @@ function DonHangCT() {
             <div className="table-container">
               <Table hover className="my-4">
                 <tr>
-                  <th style={{paddingLeft: 5}}>#</th>
-                  <th style={{paddingLeft: 5}}>Mã</th>
-                  <th style={{paddingLeft: 10}}>Ảnh</th>
-                  <th style={{paddingLeft: 6}}>Sản phẩm</th>
-                  <th style={{paddingLeft: 10}}>Số lượng</th>
-                  <th style={{paddingLeft: 5}}>Đơn giá</th>
-                  <th style={{paddingLeft: 5}}>Tổng tiền</th>
+                  <th style={{ paddingLeft: 5 }}>#</th>
+                  <th style={{ paddingLeft: 5 }}>Mã</th>
+                  <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                  <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                  <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                  <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                  <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
                 </tr>
                 <tbody>
                   {valuesSanPham.map((d, i) => (
@@ -1929,24 +1934,22 @@ function DonHangCT() {
                         />
                       </td>
                       <td>
-                      <span style={{fontWeight: 'bold'}}>{d.chiTietSanPham.sanPham.ten} </span><br />
-                      <span style={{fontStyle: 'italic'}}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
-                      <span
-                        className="color-circle"
-                        style={{
-                          backgroundColor: d.chiTietSanPham.mauSac.ten,
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                          height: '15px',
-                          width: '15px'
-                        }}
-                      ></span>
-                    </td>
+                        <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                        <br />
+                        <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                        <span
+                          className="color-circle"
+                          style={{
+                            backgroundColor: d.chiTietSanPham.mauSac.ten,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            height: '15px',
+                            width: '15px'
+                          }}
+                        ></span>
+                      </td>
                       <td>
-                        <div
-                          className="input-spinner"
-                          style={{width: 120 }}
-                        >
+                        <div className="input-spinner" style={{ width: 120 }}>
                           {hoaDon.trangThai === 0 || hoaDon.trangThai === 1 ? (
                             <InputSpinner
                               type={'real'}
@@ -1960,11 +1963,7 @@ function DonHangCT() {
                               size="sm"
                             />
                           ) : (
-                            <span
-                              style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}
-                            >
-                              {d.soLuong}
-                            </span>
+                            <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>{d.soLuong}</span>
                           )}
                         </div>
                         {d.chiTietSanPham.soLuong < 10 && hoaDon.trangThai === 0 ? (
@@ -1986,70 +1985,74 @@ function DonHangCT() {
                   ))}
                 </tbody>
               </Table>
-                <Container style={{display: 'flex', justifyContent: "end"}}>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={12} className="row">
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Tiền hàng:
-                        </span>
-                      </Col>
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {convertToCurrency(hoaDon.tongTien)}
-                        </span>
-                      </Col>
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Tiền hàng:
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
-     
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {convertToCurrency(hoaDon.tongTien)}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
               <br></br>
 
-                <Container style={{display: 'flex', justifyContent: "end"}}>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={12} className="row">
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Phí ship:
-                        </span>
-                      </Col>
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {convertToCurrency(hoaDon.tienShip)}
-                        </span>
-                      </Col>
+              {hoaDon && hoaDon.tienShip !== 0 && (
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Phí ship:
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {convertToCurrency(hoaDon.tienShip)}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+              )}
               <br></br>
+              
 
-                <Container style={{display: 'flex', justifyContent: "end"}}>
+              {hd_km && hd_km.tienGiam !== 0 && (
+                <Container style={{ display: 'flex', justifyContent: 'end' }}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col sm={12} className="row">
                       <Col sm={6}>
@@ -2076,44 +2079,45 @@ function DonHangCT() {
                             fontStyle: 'italic'
                           }}
                         >
-                          {'- ' + convertToCurrency(hd_km ? hd_km.tienGiam : 0)}
+                          {'- ' + convertToCurrency(hd_km.tienGiam)}
                         </span>
                       </Col>
                     </Col>
                   </Row>
                 </Container>
+              )}
 
               <br></br>
-                <Container style={{display: 'flex', justifyContent: "end"}}>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={12} className="row">
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '150px',
-                            fontSize: '22px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Tổng tiền:
-                        </span>
-                      </Col>
-                      <Col sm={6}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '22px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
-                        </span>
-                      </Col>
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '150px',
+                          fontSize: '22px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Tổng tiền:
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '22px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
             </div>
           </div>
         </Card>

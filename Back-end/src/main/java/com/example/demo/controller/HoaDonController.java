@@ -150,6 +150,7 @@ public class HoaDonController {
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
         hoaDon.setTenNguoiNhan("Khách lẻ");
+        hoaDon.setTienShip(0.0);
         hoaDon.setTrangThai(0);
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .ma(ma)
@@ -189,7 +190,11 @@ public class HoaDonController {
                 .build();
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
+        if (hoaDon.getTongTienKhiGiam().doubleValue() < 0) {
+            hoaDon.setTongTienKhiGiam(0.0);
+        }
         hoaDon.setNgayThanhToan(new Date());
+        hoaDon.setTienShip(0.0);
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
