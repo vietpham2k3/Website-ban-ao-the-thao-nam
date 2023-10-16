@@ -23,7 +23,9 @@ import {
   updateSL,
   getAllSP,
   searchCTSPofDH,
-  addSP
+  addSP,
+  getKmById,
+  updateTienHD
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -136,6 +138,10 @@ function DonHangCT() {
       },
       soLuong: soLuong
     });
+    // setValuesUpdateHDTien(() => ({
+    //   tongTien: totalAmount,
+    //   tongTienKhiGiam: (totalAmount - (hoaDon.tienShip + hd_km.tienGiam))
+    // }));
   };
 
   useEffect(() => {
@@ -307,8 +313,8 @@ function DonHangCT() {
       return;
     }
 
-    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\s]+$/.test(values.tenNguoiNhan)) {
-      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái và khoảng trắng
+    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(values.tenNguoiNhan)) {
+      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
       setNone1(false);
       return;
     }
@@ -344,6 +350,7 @@ function DonHangCT() {
   useEffect(() => {
     detail(id);
     detailListLSHD(id);
+    getKMByIdHD(id);
   }, [id]);
 
   useEffect(() => {
@@ -354,6 +361,15 @@ function DonHangCT() {
     const res = await detailHD(id);
     if (res && res.data) {
       setHoaDon(res.data);
+    }
+  };
+
+  const [hd_km, setHD_KM] = useState(null);
+
+  const getKMByIdHD = async (id) => {
+    const res = await getKmById(id);
+    if (res && res.data && res.data.length > 0) {
+      setHD_KM(res.data[0]);
     }
   };
 
@@ -432,6 +448,46 @@ function DonHangCT() {
     event.preventDefault();
     await thanhToan(id, lshd3);
   };
+
+  const [totalAmount, setTotalAmount] = useState(0);
+  // const [tienGiam, setTienGiam] = useState(0);
+
+  // Tính tổng tiền khi valuesSanPham thay đổi
+  useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    valuesSanPham.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [valuesSanPham]);
+
+  const [valuesUpdateHDTien, setValuesUpdateHDTien] = useState({
+    tongTien: '',
+    tongTienKhiGiam: ''
+  });
+
+  const handleUpdateHD = () => {
+    updateTienHD(id, valuesUpdateHDTien);
+  };
+
+  useEffect(() => {
+    handleUpdateHD();
+  }, [valuesUpdateHDTien]);
+
+  useEffect(() => {
+    console.log(valuesUpdateHDTien);
+    setHoaDon(() => ({
+      ...hoaDon,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+    setValuesUpdateHDTien(() => ({
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+  }, [totalAmount]);
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -1150,7 +1206,7 @@ function DonHangCT() {
                                 }}
                               />
                               {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
-                              {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>}
+                              {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 30 ký tự và phải là chữ !</div>}
                             </div>
                           </div>
                           <br></br>
@@ -1233,436 +1289,462 @@ function DonHangCT() {
             </div>
             <hr />
             {/* //detail */}
-            {hoaDon && (
-              <div style={{ paddingLeft: '100px' }}>
-                <Container>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Mã Đơn:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.ma}
-                        </span>
-                      </Col>
+
+            <div style={{ paddingLeft: '100px' }}>
+              <Container>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Mã Đơn:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Người Tạo:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
-                          Phạm Quốc Việt
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.ma}
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
 
-                <br />
-
-                <Container>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Tổng Tiền:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {convertToCurrency(hoaDon.tongTien)}
-                        </span>
-                      </Col>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Người Tạo:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Ngày Tạo:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {formatDate(hoaDon.ngayTao)}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
+                        Phạm Quốc Việt
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
+                </Row>
+              </Container>
 
-                <br />
+              <br />
 
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Trạng Thái:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {hoaDon.trangThai === 0 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                fontWeight: 'bold',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                            >
-                              Đang chờ xác nhận
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 1 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                            >
-                              Chờ giao hàng
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 2 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                fontWeight: 'bold',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                            >
-                              Đã hủy đơn
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 3 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                            >
-                              Đang giao hàng
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 4 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                fontWeight: 'bold',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-info status-completed"
-                            >
-                              Giao hàng thành công
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 5 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                            >
-                              Giao hàng thất bại
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 6 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-info status-completed"
-                            >
-                              Thanh toán thành công
-                            </span>
-                          )}
-                        </div>
-                      </Col>
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Trạng Thái:
+                      </span>
                     </Col>
+                    <Col sm={3}>
+                      <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
+                        {hoaDon.trangThai === 0 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              fontWeight: 'bold',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                          >
+                            Đang chờ xác nhận
+                          </span>
+                        )}
 
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Người Nhận:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.tenNguoiNhan}
-                        </span>
-                      </Col>
+                        {hoaDon.trangThai === 1 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-secondary status-pending"
+                          >
+                            Chờ giao hàng
+                          </span>
+                        )}
+
+                        {hoaDon.trangThai === 2 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          >
+                            Đã hủy đơn
+                          </span>
+                        )}
+
+                        {hoaDon.trangThai === 3 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                          >
+                            Đang giao hàng
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 4 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              fontWeight: 'bold',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          >
+                            Giao hàng thành công
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 5 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          >
+                            Giao hàng thất bại
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 6 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          >
+                            Thanh toán thành công
+                          </span>
+                        )}
+                      </div>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
 
-                <br />
-
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Loại:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {hoaDon.loaiDon === 0 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                fontWeight: 'bold',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-dark status-pending"
-                            >
-                              Tại Quầy
-                            </span>
-                          )}
-                          {hoaDon.loaiDon === 1 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                fontWeight: 'bold',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: '#126e3bff',
-                                color: 'white'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-primary status-pending"
-                            >
-                              Đặt Hàng Online
-                            </span>
-                          )}
-                        </div>
-                      </Col>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Ngày Tạo:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '120px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Số Điện Thoại:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.soDienThoai}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {formatDate(hoaDon.ngayTao)}
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
+                </Row>
+              </Container>
 
-                <br />
+              <br />
 
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Ghi Chú:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.ghiChu}
-                        </span>
-                      </Col>
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Loại:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Địa Chỉ:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.diaChi}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
+                        {hoaDon.loaiDon === 0 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              fontWeight: 'bold',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-dark status-pending"
+                          >
+                            Tại Quầy
+                          </span>
+                        )}
+                        {hoaDon.loaiDon === 1 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#126e3bff',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-primary status-pending"
+                          >
+                            Đặt Hàng Online
+                          </span>
+                        )}
+                      </div>
                     </Col>
-                  </Row>
-                </Container>
-              </div>
-            )}
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Người Nhận:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.tenNguoiNhan}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
+              <br />
+
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold',
+                          paddingTop: '7px'
+                        }}
+                      >
+                        Hình Thức:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : ''}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt' && (
+                          <img
+                            style={{ display: 'inline-block' }}
+                            width={'35px'}
+                            height={'15px'}
+                            src="https://symbols.vn/wp-content/uploads/2021/11/Bieu-tuong-tien-mat-doc-dao.png"
+                            alt="COD Logo"
+                            className="payment-logo"
+                          />
+                        )}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Ví VNPAY' && (
+                          <img
+                            style={{ display: 'inline-block' }}
+                            width={'35px'}
+                            height={'20px'}
+                            src="https://on.net.vn/web/image/3876184-2b57e083/202166185_2021396718013233_8499389898242103910_n.png"
+                            alt="VNPay Logo"
+                            className="payment-logo"
+                          />
+                        )}
+                      </span>
+                    </Col>
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '120px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Số Điện Thoại:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.soDienThoai}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
+              <br />
+
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Ghi Chú:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.ghiChu}
+                      </span>
+                    </Col>
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Địa Chỉ:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.diaChi}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
           </div>
         </Card>
 
@@ -1823,15 +1905,15 @@ function DonHangCT() {
             <hr />
             {/* noi dung */}
             <div className="table-container">
-              <Table style={{ textAlign: 'center' }} hover className="my-4">
-                <tr className="ps-3">
-                  <th>#</th>
-                  <th>Mã</th>
-                  <th>Ảnh</th>
-                  <th>Sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th>Tổng tiền</th>
+              <Table hover className="my-4">
+                <tr>
+                  <th style={{paddingLeft: 5}}>#</th>
+                  <th style={{paddingLeft: 5}}>Mã</th>
+                  <th style={{paddingLeft: 10}}>Ảnh</th>
+                  <th style={{paddingLeft: 6}}>Sản phẩm</th>
+                  <th style={{paddingLeft: 10}}>Số lượng</th>
+                  <th style={{paddingLeft: 5}}>Đơn giá</th>
+                  <th style={{paddingLeft: 5}}>Tổng tiền</th>
                 </tr>
                 <tbody>
                   {valuesSanPham.map((d, i) => (
@@ -1847,16 +1929,23 @@ function DonHangCT() {
                         />
                       </td>
                       <td>
-                        <div style={{ fontWeight: 'bold', fontSize: 16 }}> {d.chiTietSanPham.sanPham.ten} </div> <br />
-                        <div style={{ fontStyle: 'italic' }}> {d.chiTietSanPham.kichCo.ten} </div> <br />
-                        <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px', marginLeft: 80 }}>
-                          &nbsp;
-                        </div>
-                      </td>
+                      <span style={{fontWeight: 'bold'}}>{d.chiTietSanPham.sanPham.ten} </span><br />
+                      <span style={{fontStyle: 'italic'}}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                      <span
+                        className="color-circle"
+                        style={{
+                          backgroundColor: d.chiTietSanPham.mauSac.ten,
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          height: '15px',
+                          width: '15px'
+                        }}
+                      ></span>
+                    </td>
                       <td>
                         <div
                           className="input-spinner"
-                          style={{ alignItems: 'center', width: 120, justifyContent: 'center', marginLeft: 90, marginTop: 20 }}
+                          style={{width: 120 }}
                         >
                           {hoaDon.trangThai === 0 || hoaDon.trangThai === 1 ? (
                             <InputSpinner
@@ -1872,7 +1961,7 @@ function DonHangCT() {
                             />
                           ) : (
                             <span
-                              style={{ fontWeight: 'bold', fontSize: 16, justifyContent: 'center', marginLeft: 20, fontStyle: 'italic' }}
+                              style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}
                             >
                               {d.soLuong}
                             </span>
@@ -1897,6 +1986,134 @@ function DonHangCT() {
                   ))}
                 </tbody>
               </Table>
+                <Container style={{display: 'flex', justifyContent: "end"}}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          Tiền hàng:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px'
+                          }}
+                        >
+                          {convertToCurrency(hoaDon.tongTien)}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
+     
+              <br></br>
+
+                <Container style={{display: 'flex', justifyContent: "end"}}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          Phí ship:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px'
+                          }}
+                        >
+                          {convertToCurrency(hoaDon.tienShip)}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
+              <br></br>
+
+                <Container style={{display: 'flex', justifyContent: "end"}}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            fontWeight: 'bold',
+                            color: 'red',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          Khuyến mãi:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            color: 'red',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          {'- ' + convertToCurrency(hd_km ? hd_km.tienGiam : 0)}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
+
+              <br></br>
+                <Container style={{display: 'flex', justifyContent: "end"}}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '150px',
+                            fontSize: '22px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          Tổng tiền:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '22px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
             </div>
           </div>
         </Card>

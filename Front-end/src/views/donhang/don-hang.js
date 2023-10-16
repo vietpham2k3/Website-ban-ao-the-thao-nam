@@ -461,7 +461,7 @@ function DonHang() {
                       {d.trang_thai === 0 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -478,7 +478,7 @@ function DonHang() {
                       {d.trang_thai === 1 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -495,7 +495,7 @@ function DonHang() {
                       {d.trang_thai === 2 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -513,7 +513,7 @@ function DonHang() {
                       {d.trang_thai === 3 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -530,7 +530,7 @@ function DonHang() {
                       {d.trang_thai === 4 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -547,7 +547,7 @@ function DonHang() {
                       {d.trang_thai === 5 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',
@@ -564,7 +564,7 @@ function DonHang() {
                       {d.trang_thai === 6 && (
                         <span
                           style={{
-                            width: '200px',
+                            width: '240px',
                             pointerEvents: 'none',
                             height: '30px',
                             borderRadius: '20px',

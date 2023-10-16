@@ -19,12 +19,13 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
 
 const MIN = 0;
-const MAX = 999999;
+const MAX = 10000000;
 function SanPham() {
+  const [values, setValues] = useState([MIN, MAX]);
+  const [maxPrice, setMaxPrice] = useState(0);
   const [data, setData] = useState([]);
   // const [imageErrors, setImageErrors] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const [values, setValues] = useState([MIN, MAX]);
   const [term, setTerm] = useState('');
   const [status, setStatus] = useState('');
   const [radio, setRadio] = useState('');
@@ -47,7 +48,6 @@ function SanPham() {
   const [coAoDefaultSelected, setCoAoDefaultSelected] = useState(false);
   const [mauSacDefaultSelected, setMauSacDefaultSelected] = useState(false);
   const navigate = useNavigate();
-  const maxPrice = findMaxPrice(data);
 
   useEffect(() => {
     getAll(0);
@@ -58,18 +58,26 @@ function SanPham() {
     getListCL();
   }, []);
 
-  function findMaxPrice(data) {
-    if (data.length === 0) {
-      return null;
-    }
 
-    const maxPrice = data.reduce((max, product) => {
-      return product.giaBan > max ? product.giaBan : max;
-    }, data[0].giaBan);
 
+  useEffect(() => {
+    // Tính giá cao nhất khi trang được tải
+    const max = findMaxPrice(data);
+    setMaxPrice(max);
+  }, [data]);
+
+  const findMaxPrice = (products) => {
+    let maxPrice = 0;
+    products.forEach((product) => {
+      if (product.giaBan > maxPrice) {
+        maxPrice = product.giaBan;
+      }
+    });
     return maxPrice;
-  }
+  };
+  
 
+  
   const getListCL = async () => {
     try {
       const response = await getAllListCL();
@@ -323,7 +331,7 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-              <Slider className="slider" onChange={setValues} value={values} min={MIN} max={maxPrice}></Slider>
+              <Slider className="slider" value={values} min={MIN} max={maxPrice}  onChange={(newValues) => setValues(newValues)} ></Slider>
             </div>
           </div>
           <div className="col-6 d-none d-md-block">
