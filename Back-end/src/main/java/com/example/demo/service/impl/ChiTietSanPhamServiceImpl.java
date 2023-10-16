@@ -68,6 +68,12 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> detailByIdSP(UUID id) {
+        return repository.detailByIdSP(id);
+    }
+
+
+    @Override
     public List<ChiTietSanPham> getAllProduct() {
         return repository.getAllProduct();
     }

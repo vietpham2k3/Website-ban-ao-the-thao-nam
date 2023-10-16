@@ -2,7 +2,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct, updateSL } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
@@ -21,7 +21,9 @@ function Detail(props) {
   const [listKC, setListKC] = useState([]);
   const [listMS, setListMS] = useState([]);
   const thumbnailContainerRef = useRef(null);
-  const [listSanPham, setListSanPham] = useState([]);
+  const [detailProduct, setDetailProduct] = useState(null);
+  const [check, setCheck] = useState(false);
+  // const [listSanPham, setListSanPham] = useState([]);
   const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
@@ -36,15 +38,16 @@ function Detail(props) {
   }, [idCTSP]);
 
   useEffect(() => {
+    if (check) {
+      fetchProductDetail(idCTSP);
+    }
+  }, [check]);
+
+  useEffect(() => {
     getAllCTSP();
 
-    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
-    if (storedListSanPham) {
-      setListSanPham(storedListSanPham);
-    }
+    JSON.parse(localStorage.getItem('product'));
   }, []);
-
-  console.log(listSanPham);
 
   useEffect(() => {
     // getAllMSKC(idSP);
@@ -96,6 +99,7 @@ function Detail(props) {
   const handleClick2 = (idCTSP, idKCMS) => {
     setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
+    setDetailProduct(product);
   };
 
   const getAllKC = async (idMS, idSP) => {
@@ -104,6 +108,14 @@ function Detail(props) {
       if (res && res.data) {
         setListKC(res.data);
       }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const putSl = async (idCTSP, soLuong) => {
+    try {
+      await updateSL(idCTSP, soLuong);
     } catch (error) {
       // Xử lý lỗi nếu cần
     }
@@ -125,6 +137,8 @@ function Detail(props) {
       // localStorage.setItem("idMS",idMS);
       getAllAnh(idMS, idSP);
       setVal(0);
+      setDetailProduct(null);
+      setActiveIdKCMaMau('');
       // console.log(id);
     }
   };
@@ -177,7 +191,14 @@ function Detail(props) {
 
     // Tìm sản phẩm có cùng id
     const existingProduct = storedProducts.find((item) => item.id === product.id);
-
+    if (detailProduct === null) {
+      toast.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+    if (product.soLuong <= 0) {
+      toast.error('Không thể mua sản phẩm này');
+      return;
+    }
     if (existingProduct) {
       // Nếu sản phẩm đã tồn tại, cộng dồn số lượng
       existingProduct.soLuong += quantity;
@@ -194,6 +215,9 @@ function Detail(props) {
         tongSoLuong: product.soLuong
       });
     }
+    putSl(product.id, product.soLuong - quantity);
+    setCheck(true);
+    fetchProductDetail(idCTSP);
 
     // Lưu danh sách sản phẩm mới vào localStorage
     localStorage.setItem('product', JSON.stringify(storedProducts));

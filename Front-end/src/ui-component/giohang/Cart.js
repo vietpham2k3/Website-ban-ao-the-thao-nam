@@ -6,6 +6,8 @@ import { useState } from 'react';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import { Link, useNavigate } from 'react-router-dom';
 import { postGH } from 'services/GioHangService';
+import { updateSL } from 'services/SanPhamService';
+import { toast } from 'react-toastify';
 
 function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
@@ -53,7 +55,17 @@ function Cart(props) {
     }
   };
 
-  const handleDelete = (id, soLuong) => {
+  const putSl = async (idCTSP, soLuong) => {
+    try {
+      await updateSL(idCTSP, soLuong);
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const handleDelete = (id, soLuong, tongSoLuong) => {
+    console.log(tongSoLuong - soLuong + soLuong);
+    putSl(id, tongSoLuong - soLuong + soLuong);
     const storedData = JSON.parse(localStorage.getItem('product'));
     const updatedData = storedData.filter((item) => item.id !== id);
     setProductCount(productCount - soLuong);
@@ -64,7 +76,7 @@ function Cart(props) {
     }
   };
 
-  const handleUpdate = (e, id) => {
+  const handleUpdate = (e, id, soLuong, tongSoLuong) => {
     // Lấy giá trị số lượng mới
     const newQuantity = e;
 
@@ -73,6 +85,9 @@ function Cart(props) {
 
     // Tìm sản phẩm tương ứng
     const productIndex = storedProductList.findIndex((product) => product.id === id);
+
+    // Lấy số lượng hiện tại
+    const currentQuantity = storedProductList[productIndex].soLuong;
 
     // Cập nhật số lượng sản phẩm
     storedProductList[productIndex].soLuong = newQuantity;
@@ -86,6 +101,10 @@ function Cart(props) {
 
     // Cập nhật biến productCount
     setProductCount(totalCount);
+    if (newQuantity > currentQuantity) {
+      toast.success('thành công');
+      putSl(id, tongSoLuong - 1);
+    }
   };
 
   function convertToCurrency(number) {
@@ -168,13 +187,16 @@ function Cart(props) {
                             type="real"
                             size="md"
                             value={product.soLuong}
-                            onChange={(e) => handleUpdate(e, product.id, product.soLuong)}
+                            onChange={(e) => handleUpdate(e, product.id, product.soLuong, product.tongSoLuong)}
                           />
                         </div>
                       </td>
                       <td>{convertToCurrency(product.giaBan * product.soLuong)}</td>
                       <td>
-                        <button onClick={() => handleDelete(product.id, product.soLuong)} className="fa-solid fa-trash mx-3"></button>
+                        <button
+                          onClick={() => handleDelete(product.id, product.soLuong, product.tongSoLuong)}
+                          className="fa-solid fa-trash mx-3"
+                        ></button>
                       </td>
                     </tr>
                   ))}
