@@ -69,7 +69,7 @@ function DonHang(props) {
     tienGiam: 0
   });
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
-    tenNguoiNhan: '',
+    tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
     tongTien: '',
     tongTienKhiGiam: '',

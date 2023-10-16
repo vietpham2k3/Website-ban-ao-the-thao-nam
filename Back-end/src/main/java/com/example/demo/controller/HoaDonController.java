@@ -149,6 +149,7 @@ public class HoaDonController {
         hoaDon.setMa(ma);
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
+        hoaDon.setTenNguoiNhan("Khách lẻ");
         hoaDon.setTrangThai(0);
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .ma(ma)
@@ -192,6 +193,9 @@ public class HoaDonController {
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
+        if (hoaDon.getTenNguoiNhan().isEmpty()) {
+            hoaDon.setTenNguoiNhan("Khách lẻ");
+        }
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDon.setDiaChi("NULL");
@@ -329,6 +333,12 @@ public class HoaDonController {
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         serviceHD.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi());
+        return ResponseEntity.ok("ok");
+    }
+
+    @PutMapping("updateHDTien/{id}")
+    public ResponseEntity<?> updateTien(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
+        serviceHD.updateHDTien(id, hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam());
         return ResponseEntity.ok("ok");
     }
 
