@@ -1,6 +1,10 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.HoaDon_KhuyenMai;
+import com.example.demo.entity.KhuyenMai;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,5 +17,8 @@ public interface HoaDon_KhuyenMaiRepository extends JpaRepository<HoaDon_KhuyenM
 
     @Query(value = "select h from HoaDon_KhuyenMai h where h.hoaDon.id = :id")
     List<HoaDon_KhuyenMai> getAll(UUID id);
+
+    @Query(value = "select h from HoaDon_KhuyenMai h where h.khuyenMai.ma = :khuyenMai and h.hoaDon = :hoaDon ")
+    List<HoaDon_KhuyenMai> existsById(String khuyenMai, HoaDon hoaDon);
 
 }

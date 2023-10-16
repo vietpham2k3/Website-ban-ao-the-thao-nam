@@ -8,6 +8,7 @@ import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,6 +59,12 @@ public class ChiTietSanPhamController {
     @GetMapping("getAll")
     public ResponseEntity<?> hienThiPage(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         return ResponseEntity.ok(chiTietSanPhamService.page(page));
+    }
+
+    @PutMapping("update-sl-sp/{id}")
+    public ResponseEntity<?> updateSl(@PathVariable UUID id, @RequestParam("soLuong") Integer soLuong) {
+        chiTietSanPhamService.update(soLuong, id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("getAllCTSP")
@@ -283,6 +292,26 @@ public class ChiTietSanPhamController {
     public ResponseEntity<?> deleteMSKC(@PathVariable UUID id) {
         chiTietSanPhamService.deleteMSKC(id);
         return ResponseEntity.ok("ok");
+    }
+
+//    @GetMapping("/searchByColor")
+//    public ResponseEntity<?> searchByColor(
+//            @RequestParam String key,
+//            @RequestParam(value = "page",defaultValue = "0") Integer page) {
+//
+//        Page<ChiTietSanPham> products = chiTietSanPhamService.searchMauSac(key, page);
+//
+//        return ResponseEntity.ok(products);
+//    }
+
+    @GetMapping("/searchByColor/{key}")
+    public ResponseEntity<?> searchByColor(
+            @PathVariable String key,
+            @RequestParam(value = "page", defaultValue = "0") Integer page) {
+
+        // Giải mã tên màu sắc nếu cần
+
+        return ResponseEntity.ok(chiTietSanPhamService.searchMauSac(key, page));
     }
 
 }

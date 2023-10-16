@@ -1,14 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 import { deleteCL } from 'services/ServiceChatLieu';
 import { toast } from 'react-toastify';
 
 const ConfirmDelete = ({ handleClose, show, dataDelete, getAll }) => {
-  const { id } = useParams();
-
-  const handleConfirm = async (id) => {
+  const handleConfirm = async () => {
     let res = await deleteCL(dataDelete.id); // Truyền dataDelete.id vào hàm deleteMS
     if (res) {
       toast.success('Delete success!');

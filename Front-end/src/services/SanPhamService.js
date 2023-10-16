@@ -92,8 +92,17 @@ const getAllByIdSPTT = (id) => {
   return axios.get(`/api/chi-tiet-san-pham/getAllByIdSPTT/${id}`);
 };
 
+const updateSL = (id, soLuong) => {
+  return axios.put(`/api/chi-tiet-san-pham/update-sl-sp/${id}?soLuong=${soLuong}`);
+};
+
+const locMauSac = (key, page) => {
+  return axios.get(`/api/chi-tiet-san-pham/searchByColor?key=${key}&page=${page}`);
+};
+
 export {
   getAll,
+  updateSL,
   deleteMSKC,
   getAllByIdSPTT,
   getAllByIdSP,
@@ -115,5 +124,6 @@ export {
   getAllSPNEW,
   getAllBestseller,
   getAllProduct,
-  getAllCTSPWeb
+  getAllCTSPWeb,
+  locMauSac
 };

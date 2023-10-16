@@ -28,4 +28,24 @@ const searchKh = (key, trangThai, page) => {
   return axios.get(`/api/khach-hang/searchKH?key=${key}&trangThai=${trangThai}&page=${page}`);
 };
 
-export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh };
+const getAllDcKh = (id) => {
+  return axios.get('/api/dia-chi/getAllIdKh/' + id);
+};
+
+const deleteDC = (id) => {
+  return axios.delete('/api/dia-chi/delete/' + id);
+};
+
+const detailDC = (id) => {
+  return axios.get('/api/dia-chi/detail/' + id);
+};
+
+const updateDC = (id, values) => {
+  return axios.put('/api/dia-chi/update/' + id, values);
+};
+
+const addDC = (id, values) => {
+  return axios.post('/api/dia-chi/addDCKH/' + id, values);
+};
+
+export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh, getAllDcKh, deleteDC, detailDC, updateDC, addDC };

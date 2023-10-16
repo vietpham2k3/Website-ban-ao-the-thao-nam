@@ -18,8 +18,6 @@ import java.util.UUID;
 @Table(name="KhachHang")
 public class KhachHang implements Serializable {
 
-    private static int i = 1;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
@@ -54,10 +52,4 @@ public class KhachHang implements Serializable {
     @JsonIgnore
     private Blob anh;
 
-    @PrePersist
-    public void generateMaKhachHang() {
-        if (maKhachHang == null) {
-            maKhachHang = String.format("KH%02d", i++);
-        }
-    }
 }

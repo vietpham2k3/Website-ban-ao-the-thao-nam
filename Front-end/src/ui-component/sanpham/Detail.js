@@ -2,26 +2,28 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct, listAnh } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
 // import { getAllByIdSP } from '../../services/SanPhamService';
-import { getKCByIdMS, getAllMSByIdSP } from 'services/ServiceDonHang';
+import { getAllKCByIdMSAndIdSP, getAllMSByIdSP, findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
-
-function Detail() {
+function Detail(props) {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
   const [data, setData] = useState([]);
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
+  const [idCTSP, setIdCTSP] = useState(0);
   const thumbnailContainerRef = useRef(null);
+  const [listSanPham, setListSanPham] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
-  console.log(idMStest);
+  // eslint-disable-next-line react/prop-types
+  const { setProductCount, productCount } = props;
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -40,6 +42,7 @@ function Detail() {
       left: scrollLeft,
       behavior: 'smooth'
     });
+    console.log(idMStest);
   };
 
   const handlePrevious = () => {
@@ -59,18 +62,19 @@ function Detail() {
 
   useEffect(() => {
     getAllCTSP();
+
+    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
+    if (storedListSanPham) {
+      setListSanPham(storedListSanPham);
+    }
   }, []);
 
   // ms kc
-  const [isActive, setIsActive] = useState(false);
+  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
 
-  const handleClick2 = (idCTSP) => {
-    setIsActive(true);
-    setTimeout(() => {
-      setIsActive(false);
-    }, 200);
-
-    console.log(idCTSP);
+  const handleClick2 = (idCTSP, idKCMS) => {
+    setActiveIdKCMaMau(idKCMS);
+    setIdCTSP(idCTSP);
   };
 
   const [listKC, setListKC] = useState([]);
@@ -83,13 +87,14 @@ function Detail() {
   }, [idSP]);
 
   useEffect(() => {
-    getAllKC(idMS);
+    getAllKC(idMS, idSP);
+    getAllAnh(idMS, idSP);
     // console.log(idSP);
-  }, [idMS]);
+  }, [idMS, idSP]);
 
-  const getAllKC = async (id) => {
+  const getAllKC = async (idMS, idSP) => {
     try {
-      const res = await getKCByIdMS(id);
+      const res = await getAllKCByIdMSAndIdSP(idMS, idSP);
       if (res && res.data) {
         setListKC(res.data);
       }
@@ -101,32 +106,27 @@ function Detail() {
   const navigate = useNavigate();
 
   const getAllMS = async (id) => {
-    try {
-      const res = await getAllMSByIdSP(id);
-      if (res && res.data) {
-        setListMS(res.data);
-      }
-    } catch (error) {
-      // Xử lý lỗi nếu cần
+    const res = await getAllMSByIdSP(id);
+    if (res && res.data) {
+      setListMS(res.data);
     }
   };
 
-  const handleChangeId = (idCTSP, idSP, idMS) => {
-    if (idCTSP === id) {
+  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
+
+  const handleChangeId = (idCTSP, idSP, idMS, idMSSP) => {
+    setSelectedIdMSSP(idMSSP);
+    if (idSP === id) {
       toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
       // localStorage.setItem("idMS",idMS);
-      getAllAnh(idCTSP);
+      getAllAnh(idMS, idSP);
       setVal(0);
       // console.log(id);
     }
   };
   ////////
-
-  useEffect(() => {
-    getAllAnh(id);
-  }, [id]);
 
   const getAllCTSP = async () => {
     const res = await getAllProduct();
@@ -135,38 +135,17 @@ function Detail() {
     }
   };
 
-  const getAllAnh = async (id) => {
-    const res = await listAnh(id);
+  const getAllAnh = async (idMS, idSP) => {
+    const res = await findAllAnhByIdMSAndIdSP(idMS, idSP);
     if (res && res.data) {
       setImageList(res.data);
-      console.log(imageList);
-      setVal(0); // Đặt giá trị ban đầu của val là 0 khi có dữ liệu mới
+      setVal(0);
     }
   };
 
-  // const [values, setValues] = useState({
-  //   id: '',
-  //   ten: '',
-  //   giaBan: ''
-  // });
-
-  // const handleAddToCart = () => {
-  //   setValues({
-
-  //   })
-  // };
-
-  // const post = async (value) => {
-  //   const res = await postGH(value);
-  //   if (res) {
-  //     toast.success('Thêm thành công !');
-  //     navigate('/gio-hang');
-  //   }
-  // };
-
   useEffect(() => {
-    fetchProductDetail(id);
-  }, [id]);
+    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
+  }, [idCTSP]);
 
   const fetchProductDetail = async (id) => {
     try {
@@ -189,6 +168,29 @@ function Detail() {
   if (!product) {
     return <div>Loading...</div>;
   }
+
+  const handleDetail = (idCTSP, idSP, idMS) => {
+    navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
+    localStorage.setItem('idMS', idMS);
+  };
+
+  const handleAddToCart = () => {
+    const updatedListSanPham = [
+      ...listSanPham,
+      {
+        id: product.id,
+        kichCo: product.kichCo,
+        sanPham: product.sanPham,
+        mauSac: product.mauSac,
+        giaBan: product.giaBan,
+        soLuong: quantity,
+        tongSoLuong: product.soLuong
+      }
+    ];
+    setListSanPham(updatedListSanPham);
+    localStorage.setItem('product', JSON.stringify(updatedListSanPham));
+    setProductCount(productCount + quantity);
+  };
 
   return (
     <div className="container">
@@ -222,8 +224,7 @@ function Detail() {
                       ? `data:image/jpeg;base64,${imageList[0] && imageList[0].tenBase64}`
                       : `data:image/jpeg;base64,${imageList[val - 1].tenBase64}`
                   }
-                  height="350"
-                  width="300"
+                  className="anh1"
                 />
                 <button className="btns" onClick={handleNext}>
                   <i className="fa-solid fa-angle-right"></i>
@@ -233,11 +234,9 @@ function Detail() {
                 {imageList.map((image, index) => (
                   <div className="thumbnailAnh" key={image.id}>
                     <Image
-                      className={index === 0 ? 'clicked' : ''}
+                      className={index === 0 ? 'anh2 clicked' : 'anh2'}
                       src={`data:image/jpeg;base64,${image.tenBase64}`}
                       onClick={() => handleClick(index)}
-                      height="100"
-                      width="100"
                     />
                   </div>
                 ))}
@@ -245,16 +244,13 @@ function Detail() {
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-              <p style={{ fontStyle: 'italic' }}>Mã sản phẩm: {product.ma}</p>
               <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
               <br></br>
               <div>
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 3
                     }}
                   >
@@ -268,18 +264,29 @@ function Detail() {
                       const idCTSP = colorData[2];
                       const idSP = colorData[3];
 
+                      const idMSSP = `${id}-${idSP}`;
+
                       return (
                         <div style={{ marginLeft: 15, height: 30 }} key={id}>
                           {color ? (
                             <Button
                               className="custom-button"
                               onClick={() => {
-                                handleChangeId(idCTSP, idSP, id);
+                                handleChangeId(idCTSP, idSP, id, idMSSP);
                               }}
-                              style={{ backgroundColor: color, width: 35, borderRadius: '10px', cursor: 'pointer', height: 25 }}
+                              style={{
+                                backgroundColor: color,
+                                border: idMSSP === selectedIdMSSP ? '2px solid black' : '',
+                                width: 35,
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                height: 25
+                              }}
                               tabIndex={0}
                             >
-                              &nbsp;
+                              <span style={{ color: idMSSP === selectedIdMSSP ? 'greenyellow' : 'black', fontSize: '15px' }}>
+                                {idMSSP === selectedIdMSSP ? '✔' : ''}
+                              </span>
                             </Button>
                           ) : (
                             <p>Chưa có màu sắc nào</p>
@@ -295,9 +302,7 @@ function Detail() {
                 <div style={{ display: 'flex' }}>
                   <p
                     style={{
-                      color: 'grey',
                       fontSize: 17,
-                      fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif',
                       marginTop: 8
                     }}
                   >
@@ -306,16 +311,26 @@ function Detail() {
                   <ButtonToolbar>
                     {listKC.map((d) => {
                       const sizeData = d.split(',');
-                      const idCTSP = sizeData[1];
                       const size = sizeData[0];
+                      const idCTSP = sizeData[1];
+                      const idMS = sizeData[2];
+                      const soLuong = sizeData[4];
+                      const idKC = sizeData[5];
+
+                      const idKCMS = `${idKC}-${idMS}`;
 
                       return (
                         <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
                           <Button
                             className="custom-button"
                             appearance="ghost"
-                            onClick={() => handleClick2(idCTSP)}
-                            style={{ '--background-color': isActive ? 'black' : 'transparent' }}
+                            onClick={() => handleClick2(idCTSP, idKCMS)}
+                            style={{
+                              backgroundColor: idKCMS === activeIdKCMaMau ? 'black' : 'transparent',
+                              color: idKCMS === activeIdKCMaMau ? 'white' : 'black',
+                              border: idKCMS === activeIdKCMaMau ? '1px solid red' : ''
+                            }}
+                            disabled={soLuong === '0'}
                           >
                             {size}
                           </Button>
@@ -330,17 +345,16 @@ function Detail() {
               <div className="product-count">
                 <p
                   style={{
-                    color: 'grey',
                     paddingTop: 12,
                     paddingRight: 15,
-                    fontSize: 17,
-                    fontFamily: '"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif'
+                    fontSize: 17
                   }}
                 >
                   Số lượng:{' '}
                 </p>
-                <div className="inputSpinner" style={{ width: 110 }}>
+                <div className="inputSpinner" style={{ width: 130 }}>
                   <InputSpinner
+                    max={product.soLuong}
                     min={1}
                     className="input-spinner"
                     step={1}
@@ -350,10 +364,11 @@ function Detail() {
                     value={quantity}
                     onChange={(value) => setQuantity(value)}
                   />
+                  {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCart}>
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={() => handleAddToCart()}>
                   Thêm vào giỏ hàng
                 </button>
                 <button className="add-to-cart1 btn btn-default" type="button">
@@ -383,13 +398,14 @@ function Detail() {
             {data.slice(0, 8).map((product, index) => {
               return (
                 <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12 product-item" key={index}>
-                  <Card style={{ width: '260px', height: '400px' }}>
-                    <Link to={`/detail/${product.id}`}>
-                      <Card.Img
-                        style={{ textAlign: 'center', width: '250px', height: '300px' }}
-                        src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                      />
-                    </Link>
+                  <Card
+                    onClick={() => handleDetail(product.id, product.sanPham.id, product.mauSac.id)}
+                    style={{ width: '260px', height: '400px' }}
+                  >
+                    <Card.Img
+                      style={{ textAlign: 'center', width: '260px', height: '300px' }}
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
+                    />
                     <Card.Body>
                       <Card.Title>{product.sanPham.ten}</Card.Title>
                       <Card.Text>

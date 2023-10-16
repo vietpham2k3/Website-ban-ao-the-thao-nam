@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.SanPham;
@@ -41,8 +42,13 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
-    public List<String> getKCByIdMS(UUID id) {
-        return repository.getKCByIdMS(id);
+    public List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP) {
+        return repository.getKCByIdMSAndIdSP(idMS,idSP);
+    }
+
+    @Override
+    public List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS) {
+        return repository.findAnhByIdMSAndIdSP(idSP,idMS);
     }
 
     @Override
@@ -101,5 +107,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     public Page<ChiTietSanPham> pageWeb(Integer page) {
         Pageable pageable = PageRequest.of(page, 20);
         return repository.getAll(pageable);
+    }
+
+    @Override
+    public Page<ChiTietSanPham> searchMauSac(String key, Integer page) {
+        Pageable pageable = PageRequest.of(page, 21);
+        return repository.searchByColorName(key, pageable);
     }
 }

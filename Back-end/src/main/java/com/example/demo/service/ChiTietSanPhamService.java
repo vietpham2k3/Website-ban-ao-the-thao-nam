@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.SanPham;
@@ -17,8 +18,9 @@ public interface ChiTietSanPhamService {
 
     List<String> getAllMSByIdSP(UUID id);
 
-    List<String> getKCByIdMS(UUID id);
+    List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP);
 
+    List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS);
 
     List<ChiTietSanPham> getAllSPNEW();
 
@@ -41,4 +43,6 @@ public interface ChiTietSanPhamService {
     List<ChiTietSanPham> getAllBestseller();
 
     Page<ChiTietSanPham> pageWeb(Integer page);
+
+    Page<ChiTietSanPham> searchMauSac(String key, Integer page);
 }

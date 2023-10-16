@@ -110,8 +110,11 @@ function SearchResult(props) {
     let res = await getAllByIdSPTT(id);
     if (res) {
       setValues(res.data);
+      console.log(res.data);
     }
   };
+
+  console.log(values);
   return (
     <div className="results-list">
       <Table hover>

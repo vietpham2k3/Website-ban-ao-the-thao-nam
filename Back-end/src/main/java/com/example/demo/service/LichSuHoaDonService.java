@@ -12,9 +12,13 @@ public interface LichSuHoaDonService {
 
     LichSuHoaDon detail(UUID id);
 
+    void delete(UUID id);
+
     List<LichSuHoaDon> findAllLSHDByIDsHD(UUID id);
 
     LichSuHoaDon findLSHDByIDsHD(UUID id);
 
     LichSuHoaDon add(LichSuHoaDon lichSuHoaDon);
+
+    List<LichSuHoaDon> createLichSuDonHangAll(List<LichSuHoaDon> lichSuHoaDonList);
 }

@@ -19,6 +19,11 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
     }
 
     @Override
+    public List<LichSuHoaDon> createLichSuDonHangAll(List<LichSuHoaDon> lichSuHoaDonList) {
+        return res.saveAll(lichSuHoaDonList);
+    }
+
+    @Override
     public List<LichSuHoaDon> getAll() {
         return res.findAll();
     }
@@ -26,6 +31,11 @@ public class LichSuHoaDonServiceImpl implements LichSuHoaDonService {
     @Override
     public LichSuHoaDon detail(UUID id) {
         return res.findLichSuHoaDonById(id);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        res.delete(id);
     }
 
     @Override

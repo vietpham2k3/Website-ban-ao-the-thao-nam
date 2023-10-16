@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image } from 'react-bootstrap';
 import Carousel from 'react-bootstrap/Carousel';
-import AnhBanner from '../../assets/images/banner11.jpg';
-import AnhBanner1 from '../../assets/images/banner22.jpg';
-import AnhBanner2 from '../../assets/images/banner33.jpg';
+import AnhBanner from '../../assets/images/banner555.jpg';
+import AnhBanner1 from '../../assets/images/banner666.jpg';
+import AnhBanner2 from '../../assets/images/banner777.jpg';
 
 function Banner() {
   return (

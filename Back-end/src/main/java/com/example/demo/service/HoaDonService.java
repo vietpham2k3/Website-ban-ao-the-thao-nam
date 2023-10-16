@@ -18,7 +18,7 @@ public interface HoaDonService {
 
     Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
-    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer trangThai,
+    public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer[] trangThai,
                                         Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                         Double maxTT, Pageable pageable);
 
@@ -27,6 +27,8 @@ public interface HoaDonService {
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);
+
+    void delete(UUID id);
 
     public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 

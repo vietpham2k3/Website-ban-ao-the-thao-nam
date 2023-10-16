@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDon_KhuyenMai;
+import com.example.demo.entity.KhuyenMai;
 import com.example.demo.repository.HoaDon_KhuyenMaiRepository;
 import com.example.demo.service.HoaDon_KhuyenMaiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,11 @@ public class HoaDon_KhuyenMaiServiceImpl implements HoaDon_KhuyenMaiService {
     @Override
     public List<HoaDon_KhuyenMai> getAll(UUID id) {
         return repository.getAll(id);
+    }
+
+    @Override
+    public List<HoaDon_KhuyenMai> existsById(String khuyenMai, HoaDon hoaDon) {
+        return repository.existsById(khuyenMai, hoaDon);
     }
 
     @Override

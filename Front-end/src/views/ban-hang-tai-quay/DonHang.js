@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -33,6 +34,7 @@ import { toast } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal';
 import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
+import { pay } from 'services/PayService';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
@@ -42,6 +44,8 @@ function DonHang(props) {
   const [check, setCheck] = useState(true);
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
+  const [httt, setHttt] = useState('1');
+  const [urlPay, setUrlPay] = useState('');
   const [values, setValues] = useState([]);
   const [dataKM, setDataKM] = useState([]);
   const [valuesSanPham, setValuesSanPham] = useState([]);
@@ -231,10 +235,10 @@ function DonHang(props) {
         <Page>
           <Text style={styles.title}>Sports Shop</Text>
           <Text style={styles.text}>SDT: 0559044158</Text>
-          <Text style={styles.text}>Email: dungsieucapdeptraivippromax@gmail.com</Text>
-          <Text style={styles.text}>Địa chỉ: Ngõ 69 - xã to chim - huyện chim to - thành phố toàn chim</Text>
-          <Text style={styles.text}>Ngân hàng: CHIMTOBANK - STK: 69696969696969</Text>
-          <Text style={styles.text}>Chủ tải khoản: CHIMSIEUTO</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
           <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
           <Text style={styles.textMaHD}>{dataDetailHD.ma}</Text>
 
@@ -341,6 +345,7 @@ function DonHang(props) {
     findAllKM(id);
     getAllById(id);
     detailHDById(id);
+    VNP(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -379,6 +384,13 @@ function DonHang(props) {
     }
   };
 
+  const VNP = async (id) => {
+    const res = await pay(id);
+    if (res) {
+      setUrlPay(res.data);
+    }
+  };
+
   const findAllKM = async (id) => {
     const res = await getKmById(id);
     if (res) {
@@ -393,13 +405,14 @@ function DonHang(props) {
     }
   };
 
-  const handleAddValueKm = (id, tienGiam) => {
+  const handleAddValueKm = (idKM, tienGiam) => {
     // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setIdKM(id);
+    setIdKM(idKM);
+    VNP(id);
     setValuesAddKM({
       ...valuesAddKM,
       khuyenMai: {
-        id: id
+        id: idKM
       },
       tienGiam: tienGiam
     });
@@ -566,7 +579,22 @@ function DonHang(props) {
     });
   };
 
+  const handleThanhToanWithVNP = () => {
+    window.location.href = urlPay;
+    ThanhToanHD(id);
+    setValuesUpdateHD({
+      ...valuesUpdateHD,
+      ...valuesUpdateHD.hinhThucThanhToan,
+      trangThai: 6,
+      hinhThucThanhToan: {
+        tien: tienKhachDua,
+        trangThai: 1
+      }
+    });
+  };
+
   const handleChangeValueTien = (e) => {
+    VNP(id);
     setTienKhachDua(e);
     setValuesUpdateHD({
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -809,6 +837,8 @@ function DonHang(props) {
     setShow4(false);
   };
 
+  console.log(urlPay);
+
   return (
     <div>
       <div className="row">
@@ -913,8 +943,9 @@ function DonHang(props) {
                                       onChange={() => handleDetail(d.id)}
                                     />
                                     <label className="form-check-label custom-label" htmlFor={d.id}>
-                                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                                      &nbsp;- {d.kichCo.ten}
+                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                              &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} -{' '}
+                                              {d.nhaSanXuat.ten}
                                     </label>
                                   </div>
                                 ))}
@@ -985,8 +1016,18 @@ function DonHang(props) {
                       />
                     </td>
                     <td>
-                      {d.chiTietSanPham.sanPham.ten} <br /> {d.chiTietSanPham.kichCo.ten} <br />
-                      <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px' }}>&nbsp;</div>
+                      {d.chiTietSanPham.sanPham.ten} <br />
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span
+                        className="color-circle"
+                        style={{
+                          backgroundColor: d.chiTietSanPham.mauSac.ten,
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
+                          height: '15px',
+                          width: '15px'
+                        }}
+                      ></span>
                     </td>
                     <td>
                       <div
@@ -1335,7 +1376,6 @@ function DonHang(props) {
                   style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                   defaultValue={dataDetailKM && dataDetailKM.ma}
                 />{' '}
-                <button className="fa-solid fa-plus" onClick={() => setShow(true)}></button>
               </p>
             </div>
           </div>
@@ -1387,9 +1427,17 @@ function DonHang(props) {
           </div>
           <div className="ma-giam-gia">
             <div>
-              <select className="form-select" aria-label="Default select example">
-                <option selected>Tiền mặt</option>
-                <option defaultValue="1">QR</option>
+              <select
+                className="form-select"
+                aria-label="Default select example"
+                value={httt}
+                onChange={(e) => {
+                  setHttt(e.target.value);
+                  VNP(id);
+                }}
+              >
+                <option value="1">Tiền mặt</option>
+                <option value="0">VNPAY</option>
               </select>
             </div>
           </div>
@@ -1425,22 +1473,44 @@ function DonHang(props) {
           In hoá đơn
           <div className="button-thanh-toan">
             {check ? (
+              httt === '0' ? (
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  onClick={() => handleThanhToanWithVNP()}
+                >
+                  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                    <Text style={styles.button}>Thanh toán</Text>
+                  </PDFDownloadLink>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  onClick={() => handleThanhToan()}
+                >
+                  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                    <Text style={styles.button}>Thanh toán</Text>
+                  </PDFDownloadLink>
+                </button>
+              )
+            ) : httt === '1' ? (
               <button
                 type="button"
                 className="btn btn-success"
                 disabled={tienThua < 0 || tienKhachDua === 0}
                 onClick={() => handleThanhToan()}
               >
-                <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
-                  <Text style={styles.button}>Thanh toán</Text>
-                </PDFDownloadLink>
+                Thanh toán
               </button>
             ) : (
               <button
                 type="button"
                 className="btn btn-success"
                 disabled={tienThua < 0 || tienKhachDua === 0}
-                onClick={() => handleThanhToan()}
+                onClick={() => handleThanhToanWithVNP()}
               >
                 Thanh toán
               </button>

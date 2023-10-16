@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.DiaChi;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.UUID;
@@ -22,4 +24,6 @@ public class KhachHangDTO {
     private Integer trangThai;
     private Boolean gioiTinh;
     private String anh;
+//    private DiaChi diaChi;
+
 }

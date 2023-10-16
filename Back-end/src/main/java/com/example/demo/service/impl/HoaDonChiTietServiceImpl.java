@@ -33,8 +33,18 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
+    public void taoHoaDon(List<HoaDonChiTiet> hoaDonChiTiet) {
+        repository.saveAll(hoaDonChiTiet);
+    }
+
+    @Override
     public void delete(UUID id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByIdHD(UUID id) {
+        repository.delete(id);
     }
 
     @Override

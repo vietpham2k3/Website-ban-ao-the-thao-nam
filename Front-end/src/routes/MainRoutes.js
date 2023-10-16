@@ -248,6 +248,10 @@ const MainRoutes = {
       path: '/khach-hang/detail/:id',
       element: <UpdateKhachHang />
     },
+    // {
+    //   path: '/dia-chi/detail/:id',
+    //   element: <UpdateKhachHang />
+    // },
     {
       path: '/khach-hang/update/:id',
       element: <UpdateKhachHang />
