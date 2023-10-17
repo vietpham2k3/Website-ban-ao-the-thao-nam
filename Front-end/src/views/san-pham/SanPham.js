@@ -22,7 +22,7 @@ const MIN = 0;
 const MAX = 1000000;
 function SanPham() {
   const [values, setValues] = useState([MIN, 0]);
- 
+
   const [maxPrice, setMaxPrice] = useState(MAX);
   const [data, setData] = useState([]);
   // const [imageErrors, setImageErrors] = useState([]);
@@ -71,8 +71,7 @@ function SanPham() {
       localStorage.setItem('maxPrice', max.toString());
     }
 
-      setValues([MIN, maxPrice]);
-   
+    setValues([MIN, maxPrice]);
   }, [maxPrice]);
 
   const findMaxPrice = (products) => {
@@ -84,7 +83,7 @@ function SanPham() {
     });
     return maxPrice;
   };
- 
+
   const getListCL = async () => {
     try {
       const response = await getAllListCL();
@@ -98,7 +97,7 @@ function SanPham() {
 
   const getListLSP = async () => {
     try {
-      const response = await getAllListLSP(); 
+      const response = await getAllListLSP();
       if (response && response.data) {
         setListLSP(response.data);
       }
@@ -338,7 +337,6 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-    
 
               <Slider
                 className="slider"
