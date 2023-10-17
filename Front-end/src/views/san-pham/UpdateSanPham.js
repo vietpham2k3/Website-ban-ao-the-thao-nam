@@ -360,6 +360,22 @@ function UpdateSanPham() {
       setIdCTSP(id);
     }
   };
+  function confirmDeleteImage(imageId) {
+    // Sử dụng hộp thoại xác nhận
+    const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa hình ảnh này?');
+    if (shouldDelete) {
+      // Gọi hàm xóa hình ảnh khi người dùng xác nhận
+      handleDeleteImage(imageId);
+    }
+  }
+  function confirmDeleteItem(itemId) {
+    // Sử dụng hộp thoại xác nhận
+    const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa mục này?');
+    if (shouldDelete) {
+      // Gọi hàm xóa mục khi người dùng xác nhận
+      handleDelete(itemId);
+    }
+  }
 
   return (
     <div>
@@ -704,7 +720,7 @@ function UpdateSanPham() {
                       <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                       <td>
                         <button onClick={() => handleUpdate(d.id)} className="fa-solid fa-pen"></button>
-                        <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                        <button onClick={() => confirmDeleteItem(d.id)} className="fa-solid fa-trash mx-3"></button>
                       </td>
                     </tr>
                   ))
@@ -774,10 +790,10 @@ function UpdateSanPham() {
                         className="fa-solid fa-trash"
                         role="button"
                         tabIndex={0}
-                        onClick={() => handleDeleteImage(image.id)}
+                        onClick={() => confirmDeleteImage(image.id)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
-                            handleDeleteImage(image.id);
+                            confirmDeleteImage(image.id);
                           }
                         }}
                       ></i>
