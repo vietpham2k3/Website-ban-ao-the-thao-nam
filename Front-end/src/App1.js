@@ -7,6 +7,7 @@ import '../src/scss/Router.scss';
 import Checkout from 'views/checkout/CheckOut';
 import ThankYou from 'ui-component/checkout/ThankYou';
 import CheckOutQuick from 'views/checkout/CheckOutQuick';
+import Login from 'views/login';
 
 const App1 = () => {
   return (
@@ -22,6 +23,7 @@ const App1 = () => {
         <Route path="/checkout/:id" element={<Checkout />}></Route>
         <Route path="/checkoutquick/:id" element={<CheckOutQuick />}></Route>
         <Route path="/checkout/thankyou" element={<ThankYou />}></Route>
+        <Route path="/login" element={<Login />}></Route>
       </Routes>
     </div>
   );

@@ -265,11 +265,11 @@ function Detail(props) {
         <p style={{ paddingLeft: 30, fontSize: 20, paddingTop: 30, display: 'flex' }}>
           <Link to="/trang-chu" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="trangChu">Trang chủ</p>
-          </Link>{' '}
-          |{' '}
+          </Link>
+          |
           <Link to="/san-pham/web" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="sanPham">Sản phẩm</p>
-          </Link>{' '}
+          </Link>
           | {product.sanPham.ten}
         </p>
       </div>

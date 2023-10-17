@@ -27,17 +27,8 @@ function Header(props) {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                  <button type="button" className="btn btn-primary position-relative icon-login btn-login">
-                    <i className="fa-solid fa-user"></i>
-                  </button>
-                </a>
-              </li>{' '}
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  <DropdownButton className="custom-dropdown" id="dropdown-basic-button" title={<i className="bi bi-person"></i>}>
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                  <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
+                    <Dropdown.Item href="/login">Đăng nhập</Dropdown.Item>
                   </DropdownButton>
                 </a>
               </li>
