@@ -1,5 +1,7 @@
 // import { Image } from 'react-bootstrap';
 import '../../scss/Header.scss';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 function Header(props) {
   // eslint-disable-next-line react/prop-types
@@ -28,6 +30,15 @@ function Header(props) {
                   <button type="button" className="btn btn-primary position-relative icon-login btn-login">
                     <i className="fa-solid fa-user"></i>
                   </button>
+                </a>
+              </li>{' '}
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="#">
+                  <DropdownButton className="custom-dropdown" id="dropdown-basic-button" title={<i className="bi bi-person"></i>}>
+                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                  </DropdownButton>
                 </a>
               </li>
               <li className="nav-item">
