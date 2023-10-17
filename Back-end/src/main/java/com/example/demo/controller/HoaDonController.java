@@ -343,7 +343,8 @@ public class HoaDonController {
 
     @PutMapping("updateHDTien/{id}")
     public ResponseEntity<?> updateTien(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
-        serviceHD.updateHDTien(id, hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam());
+        serviceHD.updateHDTien(id, hoaDon.getTongTien(),
+                hoaDon.getTongTienKhiGiam(),hoaDon.getTienShip());
         return ResponseEntity.ok("ok");
     }
 

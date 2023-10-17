@@ -30,7 +30,7 @@ public interface HoaDonService {
 
     public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
 
-    public void updateHDTien(UUID id, Double tongTien,Double tongTienKhiGiam);
+    public void updateHDTien(UUID id, Double tongTien,Double tongTienKhiGiam,Double tienShip);
 
     HoaDon add(HoaDon hoaDon);
 }

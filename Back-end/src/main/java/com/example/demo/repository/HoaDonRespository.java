@@ -65,9 +65,10 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE HoaDon SET tong_tien = :tongTien, \n" +
-            "            tong_tien_sau_khi_giam = :tongTienKhiGiam" +
+            "            tong_tien_sau_khi_giam = :tongTienKhiGiam," +
+            "            tien_ship = :tienShip" +
             " WHERE id = :id", nativeQuery = true)
-    public void updateTienHD(UUID id, Double tongTien, Double tongTienKhiGiam);
+    public void updateTienHD(UUID id, Double tongTien, Double tongTienKhiGiam,Double tienShip);
 
     @Query(value = "SELECT KM.ma, KM.ten, KM.muc_giam, KM_HD.tien_giam" +
             " FROM HoaDon_KhuyenMai KM_HD JOIN\n" +
