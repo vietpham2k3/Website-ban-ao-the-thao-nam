@@ -8,11 +8,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router';
 import { getById, getKmById } from 'services/ServiceDonHang';
-import { deleteByIdHD, addKhuyenMai, thanhToan } from 'services/GioHangService';
+import { addKhuyenMai, thanhToan } from 'services/GioHangService';
 import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
 
-function CheckoutForm() {
+function CheckoutForm(props) {
+  // eslint-disable-next-line react/prop-types
+  const { handleBackToCart, label } = props;
   const [dataHDCT, setDataHDCT] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
   const [quan, setQuan] = useState([]);
@@ -272,10 +274,6 @@ function CheckoutForm() {
     return formatter.format(number);
   }
 
-  const handleBackToCart = () => {
-    backToCart(id);
-  };
-
   const addVToHD = async (value) => {
     try {
       const res = await addKhuyenMai(value);
@@ -288,17 +286,6 @@ function CheckoutForm() {
         const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
         setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
         toast.success('Thêm mã thành công');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const backToCart = async (idHD) => {
-    try {
-      const res = await deleteByIdHD(idHD);
-      if (res) {
-        setDataHDCT(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -690,11 +677,10 @@ function CheckoutForm() {
                 <p
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                    navigate('/gio-hang');
                     handleBackToCart();
                   }}
                 >
-                  <i className="fa-solid fa-chevron-left"></i> Quay về giỏ hàng
+                  <i className="fa-solid fa-chevron-left"></i> {label}
                 </p>
               </div>
             </div>
@@ -835,7 +821,9 @@ function CheckoutForm() {
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
                                 hinhThucThanhToan: {
-                                  ten: 'VNPay'
+                                  ten: 'VNPay',
+                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  trangThai: 1
                                 }
                               })
                             }
@@ -867,7 +855,9 @@ function CheckoutForm() {
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
                                 hinhThucThanhToan: {
-                                  ten: 'Tiền mặt'
+                                  ten: 'Tiền mặt',
+                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  trangThai: 0
                                 }
                               })
                             }

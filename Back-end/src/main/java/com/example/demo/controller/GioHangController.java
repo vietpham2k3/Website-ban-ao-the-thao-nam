@@ -76,7 +76,7 @@ public class GioHangController {
                 .ma(ma)
                 .ten(hoaDon.getHinhThucThanhToan().getTen())
                 .ngayTao(new Date())
-                .trangThai(1)
+                .trangThai(hoaDon.getHinhThucThanhToan().getTrangThai())
                 .tien(hoaDon.getHinhThucThanhToan().getTien())
                 .build();
         hoaDon.setId(id);

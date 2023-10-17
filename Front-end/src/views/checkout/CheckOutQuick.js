@@ -1,9 +1,9 @@
 import CheckoutForm from 'ui-component/checkout/CheckOut';
 import { deleteByIdHD } from 'services/GioHangService';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
-function Checkout() {
-  const navigate = useNavigate();
+function CheckOutQuick() {
+  // const navigate = useNavigate();
   const { id } = useParams();
   const handleBackToCart = () => {
     backToCart(id);
@@ -13,7 +13,8 @@ function Checkout() {
     try {
       const res = await deleteByIdHD(idHD);
       if (res) {
-        navigate('/gio-hang');
+        // Sử dụng window.history để quay lại trang trước đó
+        window.history.back();
         setDataHDCT(res.data);
       }
     } catch (error) {
@@ -22,8 +23,8 @@ function Checkout() {
   };
   return (
     <div>
-      <CheckoutForm handleBackToCart={handleBackToCart} label={'Quay về giỏ hàng'} />
+      <CheckoutForm handleBackToCart={handleBackToCart} label={'Quay về trang sản phẩm'} />
     </div>
   );
 }
-export default Checkout;
+export default CheckOutQuick;

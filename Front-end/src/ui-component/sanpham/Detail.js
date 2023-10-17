@@ -11,6 +11,7 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { getAllKCByIdMSAndIdSP, getAllMSByIdSP, findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
+import { postGH } from 'services/GioHangService';
 function Detail(props) {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
@@ -32,10 +33,23 @@ function Detail(props) {
   const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount } = props;
+  const [valuesHDCT, setValuesHDCT] = useState([]);
 
   useEffect(() => {
     fetchProductDetail(idCTSP === 0 ? id : idCTSP);
+    setValuesHDCT([
+      {
+        chiTietSanPham: {
+          id: idCTSP === 0 ? id : idCTSP
+          // Các trường khác của chi tiết sản phẩm nếu cần
+        },
+        soLuong: quantity, // Thêm số lượng
+        donGia: quantity * (product && product.giaBan) // Thêm giá bán
+      }
+    ]);
   }, [idCTSP]);
+
+  console.log(valuesHDCT);
 
   useEffect(() => {
     if (check) {
@@ -226,6 +240,25 @@ function Detail(props) {
     setProductCount(productCount + quantity);
   };
 
+  const handleTaoHoaDon = () => {
+    if (detailProduct === null) {
+      toast.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+    if (product.soLuong <= 0) {
+      toast.error('Không thể mua sản phẩm này');
+      return;
+    }
+    taoHoaDon(valuesHDCT);
+  };
+
+  const taoHoaDon = async (value) => {
+    const res = await postGH(value);
+    if (res) {
+      navigate(`/checkoutquick/${res.data}`);
+    }
+  };
+
   return (
     <div className="container">
       <div>
@@ -396,8 +429,16 @@ function Detail(props) {
                     type="real"
                     size="md"
                     value={quantity}
-                    onChange={(value) => setQuantity(value)}
+                    onChange={(value) => {
+                      setQuantity(value);
+                      // Tạo một bản sao của mảng valuesHDCT
+                      const updatedValuesHDCT = [...valuesHDCT];
+                      // Cập nhật giá trị soLuong trong phần tử đầu tiên của mảng
+                      updatedValuesHDCT[0].soLuong = value;
+                      setValuesHDCT(updatedValuesHDCT);
+                    }}
                   />
+
                   {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
@@ -405,7 +446,7 @@ function Detail(props) {
                 <button className="add-to-cart2 btn btn-default" type="button" onClick={() => handleAddToCart()}>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="add-to-cart1 btn btn-default" type="button">
+                <button className="add-to-cart1 btn btn-default" type="button" onClick={() => handleTaoHoaDon()}>
                   Mua Ngay
                 </button>
               </div>
