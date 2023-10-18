@@ -151,14 +151,18 @@ function DonHangCT() {
       soLuong: soLuong
     });
   };
+
   const update = async (idHDCT, values) => {
     const res = await updateSL(idHDCT, values);
     if (res) {
       getAllById(id);
     }
   };
+
   useEffect(() => {
-    update(idHDCT, valuesUpdate);
+    if (idHDCT) {
+      update(idHDCT, valuesUpdate);
+    }
   }, [valuesUpdate]);
 
   // kcms sp
@@ -214,11 +218,15 @@ function DonHangCT() {
   };
 
   useEffect(() => {
-    getAllMSKC(idSP);
+    if (idSP) {
+      getAllMSKC(idSP);
+    }
   }, [idSP]);
 
   useEffect(() => {
-    detail2(idCTSP);
+    if (idCTSP) {
+      detail2(idCTSP);
+    }
   }, [idCTSP]);
 
   const detail2 = async (idCTSP) => {
@@ -316,9 +324,11 @@ function DonHangCT() {
   const [hoaDon, setHoaDon] = useState({});
 
   useEffect(() => {
-    detail(id);
-    detailListLSHD(id);
-    getKMByIdHD(id);
+    if (id) {
+      detail(id);
+      detailListLSHD(id);
+      getKMByIdHD(id);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -478,6 +488,7 @@ function DonHangCT() {
     const provinceId = {
       province_id: event.target.value
     };
+
     setSelectedProvince(event.target.value);
     getQuanHuyen(provinceId);
     const selectedProvinceId = event.target.value;
@@ -495,6 +506,7 @@ function DonHangCT() {
         tinh: selectedProvinceName
       });
     }
+    console.log(selectedProvinceId);
   };
 
   const handleDistrictChange = (event) => {
@@ -531,6 +543,7 @@ function DonHangCT() {
         huyen: selectedProvinceName
       });
     }
+    console.log('huyen' + selectedProvinceId);
   };
 
   const handleWardChange = (event) => {
@@ -562,6 +575,24 @@ function DonHangCT() {
       });
     }
   };
+
+  useEffect(() => {
+    const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
+    setSelectedProvince(tinh && tinh.ProvinceID);
+    getQuanHuyen(tinh && tinh.ProvinceId);
+  
+    const huyen = quan.find((province) => province.DistrictName === values.huyen);
+    setSelectedDistrict(huyen && huyen.DistrictID);
+  
+    // Kiểm tra xem dữ liệu đã được tải thành công từ hàm getPhuong chưa
+    if (huyen && huyen.DistrictID) {
+      getPhuong(huyen.DistrictID);
+    }
+  
+    console.log(huyen && huyen.DistrictID);
+  }, [values]);
+  
+
 
   const getService = async (value) => {
     try {
@@ -1501,7 +1532,9 @@ function DonHangCT() {
                                   >
                                     <option value="">-----Chọn tỉnh thành-----</option>
                                     {thanhPho.map((province) => (
-                                      <option key={province.ProvinceID} value={province.ProvinceID}>
+                                      <option key={province.ProvinceID} 
+                                      selected={province.NameExtension[1] === values.tinh}
+                                      value={province.ProvinceID}>
                                         {province.NameExtension[1]}
                                       </option>
                                     ))}
@@ -1521,13 +1554,15 @@ function DonHangCT() {
                                   <select
                                     id="district"
                                     className="form-select fsl"
-                                    value={selectedDistrict || ''}
+                                    value={selectedDistrict}
                                     onChange={(e) => handleDistrictChange(e)}
-                                    disabled={!selectedProvince}
+                                    
                                   >
                                     <option value="">----Chọn quận huyện-----</option>
                                     {quan.map((district) => (
-                                      <option key={district.DistrictID} value={district.DistrictID}>
+                                      <option key={district.DistrictID} 
+                                      selected={district.DistrictName === values.huyen}
+                                       value={district.DistrictID}>
                                         {district.DistrictName}
                                       </option>
                                     ))}
@@ -1547,13 +1582,14 @@ function DonHangCT() {
                                   <select
                                     id="ward"
                                     className="form-select fsl"
-                                    value={selectedWard || ''}
+                                    value={selectedWard}
                                     onChange={handleWardChange}
-                                    disabled={!selectedDistrict || !selectedProvince}
                                   >
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
-                                      <option key={ward.WardCode} value={ward.WardCode}>
+                                      <option key={ward.WardCode} 
+                                      selected={ward.WardName === values.xa}
+                                       value={ward.WardCode}>
                                         {ward.WardName}
                                       </option>
                                     ))}
