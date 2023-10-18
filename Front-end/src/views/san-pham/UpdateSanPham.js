@@ -355,7 +355,7 @@ function UpdateSanPham() {
 
   const handleChangeId = (id) => {
     if (idCTSP === id) {
-      toast.warning('Bạn đang xem ảnh của sản phẩm này');
+      // toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       setIdCTSP(id);
     }
@@ -369,12 +369,7 @@ function UpdateSanPham() {
     }
   }
   function confirmDeleteItem(itemId) {
-    // Sử dụng hộp thoại xác nhận
-    const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa mục này?');
-    if (shouldDelete) {
-      // Gọi hàm xóa mục khi người dùng xác nhận
-      handleDelete(itemId);
-    }
+    handleDelete(itemId);
   }
 
   return (

@@ -1,26 +1,60 @@
 import { lazy } from 'react';
-
 // project imports
 import Loadable from 'ui-component/Loadable';
-import MinimalLayout from 'layout/MinimalLayout';
 
 // login option 3 routing
-const AuthLogin3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
-const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
+const TrangChu = Loadable(lazy(() => import('views/home/TrangChu')));
+const SanPham = Loadable(lazy(() => import('views/sanpham/SanPham')));
+const Detail = Loadable(lazy(() => import('views/sanpham/DetailSanPham')));
+const GioHang = Loadable(lazy(() => import('views/giohang/GioHang')));
+const CheckOut = Loadable(lazy(() => import('views/checkout/CheckOut')));
+const ThankYou = Loadable(lazy(() => import('ui-component/checkout/ThankYou')));
+const CheckOutQuick = Loadable(lazy(() => import('views/checkout/CheckOutQuick')));
+const Login = Loadable(lazy(() => import('views/login')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
+// import { Navigate } from 'react-router';
+// const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+
 const AuthenticationRoutes = {
   path: '/',
-  element: <MinimalLayout />,
   children: [
     {
-      path: '/pages/login/login3',
-      element: <AuthLogin3 />
+      path: '/trang-chu',
+      element: <TrangChu />
     },
     {
-      path: '/pages/register/register3',
-      element: <AuthRegister3 />
+      path: '/san-pham/web',
+      element: <SanPham />
+    },
+    {
+      path: '/detail/:id/:idSP/:idMS',
+      element: <Detail />
+    },
+    {
+      path: '/gio-hang',
+      element: <GioHang />
+    },
+    {
+      path: '/checkout/:id',
+      element: <CheckOut />
+    },
+    {
+      path: '/checkoutquick/:id',
+      element: <CheckOutQuick />
+    },
+    {
+      path: '/checkout/thankyou',
+      element: <ThankYou />
+    },
+    {
+      path: '/login',
+      element: <Login />
+    },
+    {
+      path: '/error',
+      element: <Login />
     }
   ]
 };

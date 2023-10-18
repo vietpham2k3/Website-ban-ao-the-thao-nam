@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class LoginController {
     @Autowired
     private KhachHangServiceImpl khService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("matKhau") String matKhau ) {
         KhachHang kh = khService.findKhachHangByEmailAndMatKhau(email, matKhau);
         NhanVien nv = nhanVienService.findKhachHangByEmailAndMatKhau(email, matKhau);

@@ -6,6 +6,13 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 function Header(props) {
   // eslint-disable-next-line react/prop-types
   const { productCount } = props;
+
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+
+  const handleLogout = () => {
+    window.location.reload();
+    localStorage.removeItem('dataLogin');
+  };
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg bg-body-tertiary nav-1">
@@ -26,10 +33,22 @@ function Header(props) {
           <div>
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
-                    <Dropdown.Item href="/login">Đăng nhập</Dropdown.Item>
-                  </DropdownButton>
+                <a className="nav-link active container" aria-current="page" href="#">
+                  {dataLogin && dataLogin.role === 'KH' ? (
+                    <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
+                      <Dropdown.Item style={{ color: 'yellowgreen' }}>{dataLogin.tenKhachHang}</Dropdown.Item>
+                      <hr />
+                      <Dropdown.Item href="/login">Tài khoản của tôi</Dropdown.Item>
+                      <Dropdown.Item href="/login">Đổi mật khẩu</Dropdown.Item>
+                      <Dropdown.Item href="/login">Địa chỉ</Dropdown.Item>
+                      <hr />
+                      <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
+                    </DropdownButton>
+                  ) : (
+                    <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
+                      <Dropdown.Item href="/login">Đăng nhập</Dropdown.Item>
+                    </DropdownButton>
+                  )}
                 </a>
               </li>
               <li className="nav-item">

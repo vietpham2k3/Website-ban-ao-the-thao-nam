@@ -62,6 +62,9 @@ const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
 const KichCo = Loadable(lazy(() => import('views/kich-co/KichCo')));
 const UpdateKC = Loadable(lazy(() => import('views/kich-co/UpdateKichCo')));
 
+// import { Navigate } from 'react-router';
+// const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,

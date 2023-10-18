@@ -513,9 +513,13 @@ function CheckoutForm(props) {
     setIsUpdatingDiaChi(true);
 
     // Cập nhật giá trị diaChi
-    setValuesUpdateHD((prev) => ({
-      ...prev,
-      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh
+    setValuesUpdateHD((valuesUpdateHD) => ({
+      ...valuesUpdateHD,
+      diaChi: valuesUpdateHD.diaChi,
+      tinh: valuesUpdateHD.tinh,
+      huyen: valuesUpdateHD.huyen,
+      xa: valuesUpdateHD.xa,
+      ngayDuKienNhan: ngayDuKienNhan
     }));
     window.location.href = urlPay;
   };
