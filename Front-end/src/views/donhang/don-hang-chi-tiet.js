@@ -697,17 +697,15 @@ function DonHangCT() {
       return;
     }
 
-    setValues((values) =>({
+    setValues((values) => ({
       ...values,
       tinh: values.tinh,
       huyen: values.huyen,
       xa: values.xa
-    }))
+    }));
 
     await updateKH(id, values);
   };
-    
-  
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam

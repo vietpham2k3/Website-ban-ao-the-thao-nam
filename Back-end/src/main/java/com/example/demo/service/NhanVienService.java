@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.NhanVien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,4 +29,7 @@ public interface NhanVienService {
     Blob createBlob(InputStream inputStream) throws SQLException, IOException;
 
     void delete(UUID id);
+
+    NhanVien findKhachHangByEmailAndMatKhau(String email, String matKhau);
+
 }

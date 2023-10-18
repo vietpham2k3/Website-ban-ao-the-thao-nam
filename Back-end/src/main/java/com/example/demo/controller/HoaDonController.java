@@ -176,13 +176,12 @@ public class HoaDonController {
     @PutMapping("update-hd/{id}")
     public ResponseEntity<?> updateHD(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
         String ma = "HTTT" + new Random().nextInt(100000);
-
         HoaDon hd = serviceHD.detailHD(id);
         HinhThucThanhToan h = serviceHttt.detail(hd.hinhThucThanhToan.getId());
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .id(hd.hinhThucThanhToan.getId())
                 .ma(ma)
-                .ten("Tiền mặt")
+                .ten(hoaDon.getHinhThucThanhToan().getTen())
                 .ngayTao(h.getNgayTao())
                 .ngaySua(new Date())
                 .trangThai(hoaDon.getHinhThucThanhToan().getTrangThai())

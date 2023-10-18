@@ -331,6 +331,7 @@ function SanPham() {
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
               <div>{/* <strong>giá cao nhất:</strong> {convertToCurrency(maxPrice)} */}</div>
+
               <Slider
                 className="slider"
                 value={values}

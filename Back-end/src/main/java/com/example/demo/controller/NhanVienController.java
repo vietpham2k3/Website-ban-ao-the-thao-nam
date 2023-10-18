@@ -159,7 +159,7 @@ public class NhanVienController {
             @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         NhanVien nv = new NhanVien();
-        String ma = "CL" + new Random().nextInt(100000);
+        String ma = "NV" + new Random().nextInt(100000);
         nv.setMa(ma);
         nv.setTen(ten);
         nv.setSdt(sdt);
