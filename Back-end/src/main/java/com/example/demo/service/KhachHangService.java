@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 public interface KhachHangService {
 
     List<KhachHang> getAll();
@@ -28,6 +27,8 @@ public interface KhachHangService {
     KhachHang delete(UUID id);
 
     KhachHang getOne(UUID id);
+
+    KhachHang findKhachHangByEmailAndMatKhau(String email, String matKhau);
 
     KhachHang update(KhachHang khachHang, UUID id);
 

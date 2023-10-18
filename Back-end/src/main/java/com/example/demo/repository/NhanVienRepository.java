@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.NhanVien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,9 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, UUID> {
     @Modifying
     @Query(value = "UPDATE NhanVien SET trang_thai = 1 WHERE id = :id", nativeQuery = true)
     void update(@Param("id") UUID id);
+
+    @Query(value = "SELECT kh FROM NhanVien kh WHERE kh.email = :email AND" +
+            " kh.matKhau = :matKhau ")
+    NhanVien findNhanVienByEmailAndMatKhau(String email, String matKhau);
 
 }

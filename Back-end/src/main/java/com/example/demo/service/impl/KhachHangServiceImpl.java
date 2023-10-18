@@ -68,7 +68,13 @@ public class KhachHangServiceImpl implements KhachHangService {
     public KhachHang getOne(UUID id) {
         return khRepo.findById(id).orElse(null);
     }
-//
+
+    @Override
+    public KhachHang findKhachHangByEmailAndMatKhau(String email, String matKhau) {
+        return khRepo.findKhachHangByEmailAndMatKhau(email, matKhau);
+    }
+
+    //
     @Override
     public KhachHang update(KhachHang khachHang, UUID id) {
         Optional<KhachHang> op = khRepo.findById(id);

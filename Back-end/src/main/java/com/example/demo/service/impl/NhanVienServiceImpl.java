@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.repository.NhanVienRepository;
 import com.example.demo.repository.VaiTroRepository;
@@ -109,5 +110,10 @@ public class NhanVienServiceImpl implements NhanVienService {
     @Transactional
     public void delete(UUID id) {
         nvRepository.update(id);
+    }
+
+    @Override
+    public NhanVien findKhachHangByEmailAndMatKhau(String email, String matKhau) {
+        return nvRepository.findNhanVienByEmailAndMatKhau(email, matKhau);
     }
 }
