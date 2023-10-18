@@ -19,10 +19,11 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
 
 const MIN = 0;
-const MAX = 10000000;
+const MAX = 1000000;
 function SanPham() {
-  const [values, setValues] = useState([MIN, MAX]);
-  const [maxPrice, setMaxPrice] = useState(0);
+  const [values, setValues] = useState([MIN, 0]);
+
+  const [maxPrice, setMaxPrice] = useState(MAX);
   const [data, setData] = useState([]);
   // const [imageErrors, setImageErrors] = useState([]);
   const [totalPages, setTotalPages] = useState();
@@ -59,10 +60,12 @@ function SanPham() {
   }, []);
 
   useEffect(() => {
-    // Tính giá cao nhất khi trang được tải
-    const max = findMaxPrice(data);
-    setMaxPrice(max);
-  }, [data]);
+    if (maxPrice === MAX && data.length > 0) {
+      const max = findMaxPrice(data);
+      setMaxPrice(max);
+      setValues([MIN, max]);
+    }
+  }, [data, maxPrice]);
 
   const findMaxPrice = (products) => {
     let maxPrice = 0;
@@ -87,7 +90,7 @@ function SanPham() {
 
   const getListLSP = async () => {
     try {
-      const response = await getAllListLSP(); // Gọi API hoặc thực hiện tác vụ lấy danh sách loại sản phẩm
+      const response = await getAllListLSP();
       if (response && response.data) {
         setListLSP(response.data);
       }
@@ -327,7 +330,16 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-              <Slider className="slider" value={values} min={MIN} max={maxPrice} onChange={(newValues) => setValues(newValues)}></Slider>
+              <div>{/* <strong>giá cao nhất:</strong> {convertToCurrency(maxPrice)} */}</div>
+              <Slider
+                className="slider"
+                value={values}
+                min={MIN}
+                max={maxPrice}
+                onChange={(newValues) => {
+                  setValues(newValues);
+                }}
+              ></Slider>
             </div>
           </div>
           <div className="col-6 d-none d-md-block">
