@@ -78,7 +78,6 @@ function DonHangCT() {
     },
     soLuong: ''
   });
-
   useEffect(() => {
     getAll(0);
   }, []);
@@ -322,6 +321,25 @@ function DonHangCT() {
 
   // detailHD
   const [hoaDon, setHoaDon] = useState({});
+
+  useEffect(() => {
+    const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
+    const huyen = quan.find((province) => province.DistrictName === values.huyen);
+    const xa = phuong.find((province) => province.WardName === values.xa);
+    const districtId = {
+      district_id: huyen && huyen.DistrictID
+    };
+    getQuanHuyen(tinh && tinh.ProvinceId);
+    if (districtId.district_id === undefined) {
+      districtId.district_id = huyen && huyen.DistrictID;
+    } else {
+      getPhuong(districtId);
+    }
+    setSelectedProvince(tinh && tinh.ProvinceID);
+    setSelectedDistrict(huyen && huyen.DistrictID);
+    setSelectedWard(xa && xa.WardCode);
+    console.log(selectedDistrict);
+  }, [values, hoaDon, id, valuesAdd, valuesUpdate, valuesUpdateHDTien]);
 
   useEffect(() => {
     if (id) {
@@ -575,25 +593,7 @@ function DonHangCT() {
     }
   };
 
-  useEffect(() => {
-    const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
-    const huyen = quan.find((province) => province.DistrictName === values.huyen);
-    const xa = phuong.find((province) => province.WardName === values.xa);
-    const districtId = {
-      district_id: huyen && huyen.DistrictID
-    };
-    console.log(districtId && districtId.district_id);
-    getQuanHuyen(tinh && tinh.ProvinceId);
-    if (districtId.district_id === undefined) {
-      districtId.district_id = huyen && huyen.DistrictID;
-    } else {
-      getPhuong(districtId);
-    }
-    setSelectedProvince(tinh && tinh.ProvinceID);
-    setSelectedDistrict(huyen && huyen.DistrictID);
-    setSelectedWard(xa && xa.WardCode);
-  }, [values, hoaDon, id]);
-
+  // eslint-disable-next-line no-unused-vars
   const getService = async (value) => {
     try {
       const res = await getServices(value);
@@ -631,16 +631,16 @@ function DonHangCT() {
     }
   };
 
-  useEffect(() => {
-    getService({
-      ...valuesServices
-    });
-  }, [valuesServices]);
+  // useEffect(() => {
+  //   getService();
+  // }, [valuesServices]);
 
   /////
 
   useEffect(() => {
-    fee(valuesFee);
+    if (valuesFee.to_district_id !== 0) {
+      fee(valuesFee);
+    }
     // thoiGiaoHang(tgDuKien);
   }, [valuesFee.to_ward_code]);
 
