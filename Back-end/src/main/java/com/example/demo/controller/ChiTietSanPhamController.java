@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
@@ -294,24 +295,18 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("ok");
     }
 
-//    @GetMapping("/searchByColor")
-//    public ResponseEntity<?> searchByColor(
-//            @RequestParam String key,
-//            @RequestParam(value = "page",defaultValue = "0") Integer page) {
-//
-//        Page<ChiTietSanPham> products = chiTietSanPhamService.searchMauSac(key, page);
-//
-//        return ResponseEntity.ok(products);
-//    }
-
-    @GetMapping("/searchByColor/{key}")
-    public ResponseEntity<?> searchByColor(
-            @PathVariable String key,
-            @RequestParam(value = "page", defaultValue = "0") Integer page) {
-
-        // Giải mã tên màu sắc nếu cần
-
-        return ResponseEntity.ok(chiTietSanPhamService.searchMauSac(key, page));
+    @GetMapping("/locCTSP")
+    public ResponseEntity<?> locChiTietSanPham(@RequestParam(value = "mauSac", required = false) String mauSac,
+                                               @RequestParam(value = "kichCo", required = false) String kichCo,
+                                               @RequestParam(value = "chatLieu", required = false) String chatLieu,
+                                               @RequestParam(value = "coAo", required = false) String coAo,
+                                               @RequestParam(value = "nhaSanXuat", required = false) String nhaSanXuat,
+                                               @RequestParam(value = "minGiaBan", required = false) BigDecimal minGiaBan,
+                                               @RequestParam(value = "maxGiaBan", required = false) BigDecimal maxGiaBan,
+                                               @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.locChiTietSanPham(mauSac, kichCo, chatLieu, coAo, nhaSanXuat, minGiaBan, maxGiaBan, page));
     }
+
+
 
 }

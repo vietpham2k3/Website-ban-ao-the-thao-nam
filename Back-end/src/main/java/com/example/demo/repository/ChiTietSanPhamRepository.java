@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,20 +67,20 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             , nativeQuery = true)
     List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP);
 
-    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
-            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
-            "FROM ChiTietSanPham C\n" +
-            "JOIN (\n" +
-            "SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id,\n" +
-            "SUM(ChiTietSanPham.so_luong) AS so_luong\n" +
-            "FROM ChiTietSanPham\n" +
-            "JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
-            "where ChiTietSanPham.trang_thai = 1\n" +
-            "GROUP BY ChiTietSanPham.id_sp\n" +
-            ") AS T\n" +
-            "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
-            "JOIN SanPham S ON S.id = C.id_sp\n" +
-            "order by c.ngay_tao desc", nativeQuery = true)
+        @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, t.so_luong,\n" +
+                "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai\n" +
+                "FROM ChiTietSanPham C\n" +
+                "JOIN (\n" +
+                "SELECT ChiTietSanPham.id_sp, MIN(ChiTietSanPham.id) AS min_id,\n" +
+                "SUM(ChiTietSanPham.so_luong) AS so_luong\n" +
+                "FROM ChiTietSanPham\n" +
+                "JOIN SanPham ON SanPham.id = ChiTietSanPham.id_sp\n" +
+                "where ChiTietSanPham.trang_thai = 1\n" +
+                "GROUP BY ChiTietSanPham.id_sp\n" +
+                ") AS T\n" +
+                "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
+                "JOIN SanPham S ON S.id = C.id_sp\n" +
+                "order by c.ngay_tao desc", nativeQuery = true)
     Page<ChiTietSanPham> getAll(Pageable pageable);
 
 
@@ -259,10 +260,176 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "WHERE ctsp.trang_thai = 1", nativeQuery = true)
     List<ChiTietSanPham> getAllProduct();
 
-    @Query(value = "SELECT CSP.* " +
-            "FROM ChiTietSanPham CSP " +
-            "INNER JOIN MauSac MS ON CSP.id_ms = MS.id " +
-            "WHERE MS.ten = :key", nativeQuery = true)
-    Page<ChiTietSanPham> searchByColorName(@Param("key") String key, Pageable pageable);
+//    @Query(value = "SELECT CSP.* " +
+//            "FROM ChiTietSanPham CSP " +
+//            "INNER JOIN MauSac MS ON CSP.id_ms = MS.id " +
+//            "WHERE MS.ten = :key", nativeQuery = true)
+//    Page<ChiTietSanPham> searchByColorName(@Param("key") String key, Pageable pageable);
 
+//    @Query(value = "SELECT CSP.* FROM ChiTietSanPham CSP INNER JOIN" +
+//            " MauSac MS ON CSP.id_ms = MS.id INNER JOIN " +
+//            " KichCo KC ON CSP.id_kc = KC.id INNER JOIN " +
+//            "ChatLieu CL ON CSP.id_cl = CL.id INNER JOIN" +
+//            " CoAo CA ON CSP.id_ca = CA.id INNER JOIN " +
+//            "NhaSanXuat NSX ON CSP.id_nsx = NSX.id " +
+//            "WHERE (MS.ten = :mauSac OR :mauSac IS NULL) " +
+//            "AND (KC.ten = :kichCo OR :kichCo IS NULL) " +
+//            "AND (CL.ten = :chatLieu OR :chatLieu IS NULL) " +
+//            "AND (CA.ten = :coAo OR :coAo IS NULL) " +
+//            "AND (NSX.ten = :nhaSanXuat OR :nhaSanXuat IS NULL)", nativeQuery = true)
+//    Page<ChiTietSanPham> locChiTietSanPham(@Param("mauSac") String mauSac,
+//                                           @Param("kichCo") String kichCo,
+//                                           @Param("chatLieu") String chatLieu,
+//                                           @Param("coAo") String coAo,
+//                                           @Param("nhaSanXuat") String nhaSanXuat,
+//                                           Pageable pageable);
+
+
+//@Query(value = "SELECT CSP.* FROM ChiTietSanPham CSP " +
+//        "INNER JOIN MauSac MS ON CSP.id_ms = MS.id " +
+//        "INNER JOIN KichCo KC ON CSP.id_kc = KC.id " +
+//        "INNER JOIN ChatLieu CL ON CSP.id_cl = CL.id " +
+//        "INNER JOIN CoAo CA ON CSP.id_ca = CA.id " +
+//        "INNER JOIN NhaSanXuat NSX ON CSP.id_nsx = NSX.id " +
+//        "WHERE " +
+//        "((MS.ten = :mauSac OR :mauSac IS NULL) " +
+//        "OR (KC.ten = :kichCo OR :kichCo IS NULL) " +
+//        "OR (CL.ten = :chatLieu OR :chatLieu IS NULL) " +
+//        "OR (CA.ten = :coAo OR :coAo IS NULL) " +
+//        "OR (NSX.ten = :nhaSanXuat OR :nhaSanXuat IS NULL) " +
+//        "OR (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL) " +
+//        "OR (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL)) " +
+//        "GROUP BY CSP.id", nativeQuery = true)
+
+//    @Query(value = "SELECT CSP.id ,CSP.id_cl ,CSP.id_sp, CSP.id_lsp, \n" +
+//            "\t\tCSP.id_nsx, CSP.id_kc, CSP.id_ms, CSP.id_ca, \n" +
+//            "\t\tCSP.ma, CSP.so_luong, CSP.gia_ban, CSP.ngay_tao,\n" +
+//            "\t\tCSP.ngay_sua, CSP.nguoi_tao, CSP.nguoi_sua ,CSP.trang_thai\n" +
+//            "\t\tFROM ChiTietSanPham CSP\n" +
+//            "        INNER JOIN MauSac MS ON CSP.id_ms = MS.id\n" +
+//            "        INNER JOIN KichCo KC ON CSP.id_kc = KC.id\n" +
+//            "        INNER JOIN ChatLieu CL ON CSP.id_cl = CL.id\n" +
+//            "        INNER JOIN CoAo CA ON CSP.id_ca = CA.id\n" +
+//            "        INNER JOIN NhaSanXuat NSX ON CSP.id_nsx = NSX.id\n" +
+//            "        WHERE\n" +
+//            "        ((MS.ten = :mauSac OR :mauSac IS NULL)\n" +
+//            "        OR (KC.ten = :kichCo OR :kichCo IS NULL)\n" +
+//            "        OR (CL.ten = :chatLieu OR :chatLieu IS NULL)\n" +
+//            "        OR (CA.ten = :coAo OR :coAo IS NULL)\n" +
+//            "        OR (NSX.ten = :nhaSanXuat OR :nhaSanXuat IS NULL)\n" +
+//            "        OR (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL)\n" +
+//            "        OR (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL))\n" +
+//            "\t\tAND (CSP.trang_thai = 1)\n" +
+//            "        GROUP BY CSP.id, CSP.id_cl ,CSP.id_sp, CSP.id_lsp, \n" +
+//            "\t\tCSP.id_nsx, CSP.id_kc, CSP.id_ms, CSP.id_ca, \n" +
+//            "\t\tCSP.ma, CSP.so_luong, CSP.gia_ban, CSP.ngay_tao,\n" +
+//            "\t\tCSP.ngay_sua, CSP.nguoi_tao, CSP.nguoi_sua ,CSP.trang_thai", nativeQuery = true)
+
+//           @Query(value = "SELECT CSP.* FROM ChiTietSanPham CSP INNER JOIN" +
+//            " MauSac MS ON CSP.id_ms = MS.id INNER JOIN " +
+//            " KichCo KC ON CSP.id_kc = KC.id INNER JOIN " +
+//            "ChatLieu CL ON CSP.id_cl = CL.id INNER JOIN" +
+//            " CoAo CA ON CSP.id_ca = CA.id INNER JOIN " +
+//            "NhaSanXuat NSX ON CSP.id_nsx = NSX.id " +
+//            "WHERE (MS.ten = :mauSac OR :mauSac IS NULL) " +
+//            "AND (KC.ten = :kichCo OR :kichCo IS NULL) " +
+//            "AND (CL.ten = :chatLieu OR :chatLieu IS NULL) " +
+//            "AND (CA.ten = :coAo OR :coAo IS NULL) " +
+//            "AND (NSX.ten = :nhaSanXuat OR :nhaSanXuat IS NULL) " +
+//            "AND (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL) " +
+//            "AND (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL)" +
+//            "AND (CSP.trang_thai = 1)", nativeQuery = true)
+
+//@Query(value = "SELECT CSP.* FROM ChiTietSanPham CSP INNER JOIN" +
+//        " MauSac MS ON CSP.id_ms = MS.id INNER JOIN " +
+//        " KichCo KC ON CSP.id_kc = KC.id INNER JOIN " +
+//        "ChatLieu CL ON CSP.id_cl = CL.id INNER JOIN" +
+//        " CoAo CA ON CSP.id_ca = CA.id INNER JOIN " +
+//        "NhaSanXuat NSX ON CSP.id_nsx = NSX.id " +
+//        "WHERE (MS.ten = :mauSac OR :mauSac IS NULL) " +
+//        "AND (KC.ten = :kichCo OR :kichCo IS NULL) " +
+//        "AND (CL.ten = :chatLieu OR :chatLieu IS NULL) " +
+//        "AND (CA.ten = :coAo OR :coAo IS NULL) " +
+//        "AND (NSX.ten = :nhaSanXuat OR :nhaSanXuat IS NULL) " +
+//        "AND (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL) " +
+//        "AND (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL)" +
+//        "AND (CSP.trang_thai = 1)", nativeQuery = true)
+
+//    @Query(value = "SELECT CSP.*\n" +
+//                "FROM ChiTietSanPham CSP\n" +
+//                " JOIN MauSac MS ON CSP.id_ms = MS.id\n" +
+//                " JOIN KichCo KC ON CSP.id_kc = KC.id\n" +
+//                " JOIN ChatLieu CL ON CSP.id_cl = CL.id\n" +
+//                " JOIN CoAo CA ON CSP.id_ca = CA.id\n" +
+//                " JOIN NhaSanXuat NSX ON CSP.id_nsx = NSX.id\n" +
+//                "WHERE\n" +
+//                "  ((MS.ten LIKE CONCAT('%', :mauSac, '%') OR :mauSac IS NULL)\n" +
+//                "  AND (KC.ten LIKE CONCAT('%', :kichCo, '%') OR :kichCo IS NULL)\n" +
+//                "  AND (CL.ten LIKE CONCAT('%', :chatLieu, '%')  OR :chatLieu IS NULL)\n" +
+//                "  AND (CA.ten LIKE CONCAT('%', :coAo, '%') OR :coAo IS NULL)\n" +
+//                "  AND (NSX.ten LIKE CONCAT('%', :nhaSanXuat, '%') OR :nhaSanXuat IS NULL)\n" +
+//                "AND (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL) \n" +
+//                "AND (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL) \n" +
+//                "AND (CSP.trang_thai = 1))", nativeQuery = true)
+
+//@Query(value = "SELECT DISTINCT CSP.id ,CSP.id_cl ,CSP.id_sp, CSP.id_lsp, \n" +
+//        "\t\tCSP.id_nsx, CSP.id_kc, CSP.id_ms, CSP.id_ca, \n" +
+//        "\t\tCSP.ma, CSP.so_luong, CSP.gia_ban, CSP.ngay_tao,\n" +
+//        "\t\tCSP.ngay_sua, CSP.nguoi_tao, CSP.nguoi_sua ,CSP.trang_thai FROM ChiTietSanPham CSP\n" +
+//        "         JOIN MauSac MS ON CSP.id_ms = MS.id\n" +
+//        "         JOIN KichCo KC ON CSP.id_kc = KC.id\n" +
+//        "         JOIN ChatLieu CL ON CSP.id_cl = CL.id\n" +
+//        "         JOIN CoAo CA ON CSP.id_ca = CA.id\n" +
+//        "         JOIN NhaSanXuat NSX ON CSP.id_nsx = NSX.id\n" +
+//        "         WHERE (CSP.id IN (\n" +
+//        "             SELECT MIN(CSP.id) AS id\n" +
+//        "             FROM ChiTietSanPham CSP\n" +
+//        "             JOIN MauSac MS ON CSP.id_ms = MS.id\n" +
+//        "             JOIN KichCo KC ON CSP.id_kc = KC.id\n" +
+//        "             JOIN ChatLieu CL ON CSP.id_cl = CL.id\n" +
+//        "             JOIN CoAo CA ON CSP.id_ca = CA.id\n" +
+//        "             JOIN NhaSanXuat NSX ON CSP.id_nsx = NSX.id\n" +
+//        "             WHERE\n" +
+//        "             ((MS.ten LIKE CONCAT('%', :mauSac, '%') OR :mauSac IS NULL)\n" +
+//        "             AND (KC.ten LIKE CONCAT('%', :kichCo, '%') OR :kichCo IS NULL)\n" +
+//        "             AND (CL.ten LIKE CONCAT('%', :chatLieu, '%') OR :chatLieu IS NULL)\n" +
+//        "             AND (CA.ten LIKE CONCAT('%', :coAo, '%') OR :coAo IS NULL)\n" +
+//        "             AND (NSX.ten LIKE CONCAT('%', :nhaSanXuat, '%') OR :nhaSanXuat, IS NULL)\n" +
+//        "             AND (CSP.gia_ban >= :minGiaBan OR :minGiaBan IS NULL)\n" +
+//        "             AND (CSP.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL)\n" +
+//        "             AND (CSP.trang_thai = 1))\n" +
+//        "             GROUP BY CSP.id ,CSP.id_cl ,CSP.id_sp, CSP.id_lsp, \n" +
+//        "\t\t\t\tCSP.id_nsx, CSP.id_kc, CSP.id_ms, CSP.id_ca, \n" +
+//        "\t\t\t\tCSP.ma, CSP.so_luong, CSP.gia_ban, CSP.ngay_tao,\n" +
+//        "\t\t\t\tCSP.ngay_sua, CSP.nguoi_tao, CSP.nguoi_sua ,CSP.trang_thai))", nativeQuery = true)
+
+    @Query(value = "SELECT ctsp.*\n" +
+            "FROM ChiTietSanPham ctsp\n" +
+            "JOIN (\n" +
+            "  SELECT ctsp.id_sp, MAX(ctsp.id) AS max_id\n" +
+            "  FROM ChiTietSanPham ctsp\n" +
+            "  JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "  WHERE ctsp.trang_thai = 1\n" +
+            "  GROUP BY ctsp.id_sp\n" +
+            ") AS sp ON sp.max_id = ctsp.id\n" +
+            "WHERE ((ctsp.id_ms LIKE CONCAT('%', :mauSac, '%') OR :mauSac IS NULL)\n" +
+            "  AND (ctsp.id_kc LIKE CONCAT('%', :kichCo, '%') OR :kichCo IS NULL)\n" +
+            "  AND (ctsp.id_cl LIKE CONCAT('%', :chatLieu, '%') OR :chatLieu IS NULL)\n" +
+            "  AND (ctsp.id_ca LIKE CONCAT('%', :coAo, '%') OR :coAo IS NULL)\n" +
+            "  AND (ctsp.id_nsx LIKE CONCAT('%', :nhaSanXuat, '%') OR :nhaSanXuat IS NULL)\n" +
+            "  AND (ctsp.gia_ban >= :minGiaBan OR :minGiaBan IS NULL)\n" +
+            "  AND (ctsp.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL))\n" +
+            "  GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc,\n" +
+            "  ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp,\n" +
+            "  ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,\n" +
+            "  ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai", nativeQuery = true)
+Page<ChiTietSanPham> locChiTietSanPham(
+            @Param("mauSac") String mauSac,
+            @Param("kichCo") String kichCo,
+            @Param("chatLieu") String chatLieu,
+            @Param("coAo") String coAo,
+            @Param("nhaSanXuat") String nhaSanXuat,
+            @Param("minGiaBan") BigDecimal minGiaBan,
+            @Param("maxGiaBan") BigDecimal maxGiaBan,
+            Pageable pageable);
 }

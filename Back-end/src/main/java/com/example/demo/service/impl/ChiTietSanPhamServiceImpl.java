@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,13 +43,13 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
-    public List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP) {
-        return repository.getKCByIdMSAndIdSP(idMS,idSP);
+    public List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP) {
+        return repository.getKCByIdMSAndIdSP(idMS, idSP);
     }
 
     @Override
     public List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS) {
-        return repository.findAnhByIdMSAndIdSP(idSP,idMS);
+        return repository.findAnhByIdMSAndIdSP(idSP, idMS);
     }
 
     @Override
@@ -110,8 +111,16 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
-    public Page<ChiTietSanPham> searchMauSac(String key, Integer page) {
+    public Page<ChiTietSanPham> locChiTietSanPham(String mauSac, String kichCo,
+                                                  String chatLieu, String coAo,
+                                                  String nhaSanXuat, BigDecimal minGiaBan, BigDecimal maxGiaBan, Integer page) {
         Pageable pageable = PageRequest.of(page, 21);
-        return repository.searchByColorName(key, pageable);
+        return repository.locChiTietSanPham(mauSac, kichCo, chatLieu, coAo, nhaSanXuat, minGiaBan, maxGiaBan, pageable);
     }
+
+//    @Override
+//    public Page<ChiTietSanPham> searchMauSac(String key, Integer page) {
+//        Pageable pageable = PageRequest.of(page, 21);
+//        return repository.searchByColorName(key, pageable);
+//    }
 }

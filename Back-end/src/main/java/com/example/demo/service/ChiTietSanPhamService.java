@@ -6,6 +6,7 @@ import com.example.demo.entity.KichCo;
 import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,5 +45,6 @@ public interface ChiTietSanPhamService {
 
     Page<ChiTietSanPham> pageWeb(Integer page);
 
-    Page<ChiTietSanPham> searchMauSac(String key, Integer page);
+    Page<ChiTietSanPham> locChiTietSanPham(String mauSac, String kichCo, String chatLieu, String coAo, String nhaSanXuat, BigDecimal minGiaBan, BigDecimal maxGiaBan, Integer page);
+//    Page<ChiTietSanPham> searchMauSac(String key, Integer page);
 }

@@ -96,9 +96,56 @@ const updateSL = (id, soLuong) => {
   return axios.put(`/api/chi-tiet-san-pham/update-sl-sp/${id}?soLuong=${soLuong}`);
 };
 
-const locMauSac = (key, page) => {
-  return axios.get(`/api/chi-tiet-san-pham/searchByColor?key=${key}&page=${page}`);
+// const locCTSP = (mauSac, kichCo, chatLieu, coAo, nhaSanXuat, page) => {
+//   // Xác minh và mã hóa các tham số để tránh lỗi khi chúng không có giá trị
+//   const params = new URLSearchParams();
+//   if (mauSac) params.append('mauSac', mauSac);
+//   if (kichCo) params.append('kichCo', kichCo);
+//   if (chatLieu) params.append('chatLieu', chatLieu);
+//   if (coAo) params.append('coAo', coAo);
+//   if (nhaSanXuat) params.append('nhaSanXuat', nhaSanXuat);
+
+//   // Thực hiện cuộc gọi API sử dụng các tham số đã xác minh
+//   return axios.get(`/api/chi-tiet-san-pham/locCTSP?page=${page}`, { params });
+// };
+
+// const locCTSP = (mauSac, kichCo, chatLieu, coAo, nhaSanXuat, page) => {
+//   // Xác minh và mã hóa các tham số để tránh lỗi khi chúng không có giá trị
+//   const params = new URLSearchParams();
+//   if (mauSac) params.append('mauSac', mauSac);
+//   if (kichCo) params.append('kichCo', kichCo);
+//   if (chatLieu) params.append('chatLieu', chatLieu);
+//   if (coAo) params.append('coAo', coAo);
+//   if (nhaSanXuat) params.append('nhaSanXuat', nhaSanXuat);
+  
+//   // Thêm tham số page vào URL truy vấn
+//   params.append('page', page);
+
+//   // Thực hiện cuộc gọi API sử dụng các tham số đã xác minh
+//   return axios.get('/api/chi-tiet-san-pham/locCTSP', { params });
+// };
+
+const locCTSP = (filters, page) => {
+  // Tạo một đối tượng params để lưu trữ tất cả các tham số truy vấn
+  const params = {};
+
+  // Duyệt qua các bộ lọc và thêm chúng vào đối tượng params nếu chúng tồn tại
+  if (filters.mauSac) params.mauSac = filters.mauSac;
+  if (filters.kichCo) params.kichCo = filters.kichCo;
+  if (filters.chatLieu) params.chatLieu = filters.chatLieu;
+  if (filters.coAo) params.coAo = filters.coAo;
+  if (filters.nhaSanXuat) params.nhaSanXuat = filters.nhaSanXuat;
+  if (filters.minGiaBan) params.minGiaBan = filters.minGiaBan;
+  if (filters.maxGiaBan) params.maxGiaBan = filters.maxGiaBan;
+
+  // Thêm tham số page vào đối tượng params
+  params.page = page;
+
+  // Thực hiện cuộc gọi API sử dụng các tham số đã được xác định
+  return axios.get('/api/chi-tiet-san-pham/locCTSP', { params });
 };
+
+
 
 export {
   getAll,
@@ -125,5 +172,5 @@ export {
   getAllBestseller,
   getAllProduct,
   getAllCTSPWeb,
-  locMauSac
+  locCTSP
 };
