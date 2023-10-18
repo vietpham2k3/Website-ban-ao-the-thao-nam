@@ -59,6 +59,9 @@ function CheckoutForm() {
     tenNguoiNhan: '',
     soDienThoai: '',
     diaChi: '',
+    tinh: '',
+    huyen: '',
+    xa: '',
     tongTien: 0,
     tongTienKhiGiam: 0,
     trangThai: 0,
@@ -71,11 +74,7 @@ function CheckoutForm() {
       trangThai: 1
     }
   });
-  const [diaChi, setDiaChi] = useState({
-    tinh: '',
-    quan: '',
-    xa: ''
-  });
+
   const [errors, setErrors] = useState({
     tenNguoiNhan: true,
     soDienThoai: true,
@@ -187,8 +186,8 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.NameExtension[1];
-      setDiaChi({
-        ...diaChi,
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
         tinh: selectedProvinceName
       });
     }
@@ -222,9 +221,9 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.DistrictName;
-      setDiaChi({
-        ...diaChi,
-        quan: selectedProvinceName
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
+        huyen: selectedProvinceName
       });
     }
     setErrors({
@@ -252,8 +251,8 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.WardName;
-      setDiaChi({
-        ...diaChi,
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
         xa: selectedProvinceName
       });
     }
@@ -444,19 +443,19 @@ function CheckoutForm() {
         diaChi: false
       });
       return;
-    } else if (diaChi.tinh === '') {
+    } else if (valuesUpdateHD.tinh === '') {
       setErrors({
         ...errors,
         tinh: false
       });
       return;
-    } else if (diaChi.quan === '') {
+    } else if (valuesUpdateHD.huyen === '') {
       setErrors({
         ...errors,
         quan: false
       });
       return;
-    } else if (diaChi.xa === '') {
+    } else if (valuesUpdateHD.xa === '') {
       setErrors({
         ...errors,
         xa: false
@@ -471,9 +470,12 @@ function CheckoutForm() {
     setIsUpdatingDiaChi(true);
 
     // Cập nhật giá trị diaChi
-    setValuesUpdateHD((prev) => ({
-      ...prev,
-      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh,
+    setValuesUpdateHD((valuesUpdateHD) => ({
+      ...valuesUpdateHD,
+      diaChi: valuesUpdateHD.diaChi,
+      tinh: valuesUpdateHD.tinh,
+      huyen: valuesUpdateHD.huyen,
+      xa: valuesUpdateHD.xa,
       ngayDuKienNhan: ngayDuKienNhan
     }));
   };
@@ -497,19 +499,19 @@ function CheckoutForm() {
         diaChi: false
       });
       return;
-    } else if (diaChi.tinh === '') {
+    } else if (valuesUpdateHD.tinh === '') {
       setErrors({
         ...errors,
         tinh: false
       });
       return;
-    } else if (diaChi.quan === '') {
+    } else if (valuesUpdateHD.huyen === '') {
       setErrors({
         ...errors,
         quan: false
       });
       return;
-    } else if (diaChi.xa === '') {
+    } else if (valuesUpdateHD.xa === '') {
       setErrors({
         ...errors,
         xa: false

@@ -63,8 +63,10 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi) {
-        res.updateKH(id, tenNguoiNhan, soDienThoai, diaChi);
+    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai,
+                           String diaChi, String tinh,
+                           String huyen, String xa) {
+        res.updateKH(id, tenNguoiNhan, soDienThoai, diaChi,tinh,huyen,xa);
     }
 
     @Override

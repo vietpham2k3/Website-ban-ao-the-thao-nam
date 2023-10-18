@@ -59,8 +59,11 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE HoaDon SET ten_nguoi_nhan = :tenNguoiNhan, \n" +
-            "            sdt = :soDienThoai, dia_chi = :diaChi ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
-    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
+            "            sdt = :soDienThoai, dia_chi = :diaChi, tinh = :tinh," +
+            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
+    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai,
+                         String diaChi, String tinh,
+                         String huyen, String xa);
 
     @Transactional
     @Modifying

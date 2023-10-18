@@ -38,7 +38,13 @@ function DonHangCT() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
-
+  const [thanhPho, setThanhPho] = useState([]);
+  const [quan, setQuan] = useState([]);
+  const [phuong, setPhuong] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedWard, setSelectedWard] = useState('');
+  // const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [inputDetail, setInputDetail] = useState(null);
@@ -48,11 +54,6 @@ function DonHangCT() {
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
-  const [diaChi, setDiaChi] = useState({
-    tinh: '',
-    quan: '',
-    xa: ''
-  });
   const [valuesUpdateHDTien, setValuesUpdateHDTien] = useState({
     tongTien: 0,
     tongTienKhiGiam: 0,
@@ -289,8 +290,11 @@ function DonHangCT() {
   // cap nhat khach hang
   const [values, setValues] = useState({
     tenNguoiNhan: '',
+    soDienThoai: '',
     diaChi: '',
-    soDienThoai: ''
+    tinh: '',
+    huyen: '',
+    xa: ''
   });
 
   const updateKH = async (id, value) => {
@@ -307,7 +311,6 @@ function DonHangCT() {
   const [none3, setNone3] = useState(true);
   const [none4, setNone4] = useState(true);
   const [none5, setNone5] = useState(true);
-
 
   // detailHD
   const [hoaDon, setHoaDon] = useState({});
@@ -449,14 +452,6 @@ function DonHangCT() {
   }, [valuesUpdateHDTien]);
   // apiGHN
 
-  const [thanhPho, setThanhPho] = useState([]);
-  const [quan, setQuan] = useState([]);
-  const [phuong, setPhuong] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [selectedWard, setSelectedWard] = useState('');
-  // const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
-
   const [valuesServices, setValuesServices] = useState({
     shop_id: 4625720,
     from_district: 1710,
@@ -491,8 +486,12 @@ function DonHangCT() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.NameExtension[1];
-      setDiaChi({
-        ...diaChi,
+      setValues({
+        ...values,
+        tinh: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
         tinh: selectedProvinceName
       });
     }
@@ -503,6 +502,7 @@ function DonHangCT() {
       district_id: event.target.value
     };
     setSelectedDistrict(event.target.value);
+
     setValuesServices({
       ...valuesServices,
       to_district: parseInt(event.target.value, 10)
@@ -522,9 +522,13 @@ function DonHangCT() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.DistrictName;
-      setDiaChi({
-        ...diaChi,
-        quan: selectedProvinceName
+      setValues({
+        ...values,
+        huyen: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        huyen: selectedProvinceName
       });
     }
   };
@@ -536,7 +540,7 @@ function DonHangCT() {
       ...valuesFee,
       insurance_value: totalAmount,
       to_ward_code: event.target.value
-      });
+    });
     // setTgDuKien({
     //   ...tgDuKien,
     //   to_ward_code: event.target.value
@@ -548,8 +552,12 @@ function DonHangCT() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.WardName;
-      setDiaChi({
-        ...diaChi,
+      setValues({
+        ...values,
+        xa: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
         xa: selectedProvinceName
       });
     }
@@ -572,7 +580,6 @@ function DonHangCT() {
       console.log(error);
     }
   };
-  // const [selectedAddress, setSelectedAddress] = useState(null);
 
   const fee = async (value) => {
     try {
@@ -591,10 +598,12 @@ function DonHangCT() {
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   useEffect(() => {
-    getService(valuesServices);
+    getService({
+      ...valuesServices
+    });
   }, [valuesServices]);
 
   /////
@@ -637,7 +646,6 @@ function DonHangCT() {
     }
   };
 
-
   const handleUpdate = async (event) => {
     event.preventDefault();
 
@@ -674,24 +682,32 @@ function DonHangCT() {
       return;
     }
 
-    setValues((values) => ({
-      ...values,
-      diaChi: values.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh,
-      // ngayDuKienNhan: ngayDuKienNhan
-    }));
+    if (!selectedProvince) {
+      toast.error('Vui lòng chọn tỉnh/thành phố.');
+      return;
+    }
 
-    setHoaDon((hoaDon) => ({
-      ...hoaDon,
-      diaChi: hoaDon.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh,
-      // ngayDuKienNhan: ngayDuKienNhan
-    }));
-        
+    if (!selectedDistrict) {
+      toast.error('Vui lòng chọn quận/huyện.');
+      return;
+    }
+
+    if (!selectedWard) {
+      toast.error('Vui lòng chọn phường/xã.');
+      return;
+    }
+
+    setValues((values) =>({
+      ...values,
+      tinh: values.tinh,
+      huyen: values.huyen,
+      xa: values.xa
+    }))
+
     await updateKH(id, values);
   };
-
-  useEffect(() => {
-    handleUpdateHD();
-  }, [valuesUpdateHDTien.tienShip]);
+    
+  
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -1471,7 +1487,11 @@ function DonHangCT() {
                             </div>
                             <div className="col-6">
                               <div className="form-group row">
-                                <label style={{ fontStyle: 'italic',paddingLeft: 29 }} htmlFor="tenNguoiNhan" className="col-sm-5 col-form-label">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="tenNguoiNhan"
+                                  className="col-sm-5 col-form-label"
+                                >
                                   Tỉnh/Thành Phố:
                                 </label>
                                 <div className="col-sm-7">
@@ -1492,15 +1512,20 @@ function DonHangCT() {
                               </div>
                               <br></br>
                               <div className="form-group row">
-                                <label style={{ fontStyle: 'italic',paddingLeft: 29 }} htmlFor="soDienThoai" className="col-sm-5 col-form-label">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="soDienThoai"
+                                  className="col-sm-5 col-form-label"
+                                >
                                   Quận/Huyện:
                                 </label>
                                 <div className="col-sm-7">
                                   <select
                                     id="district"
                                     className="form-select fsl"
-                                    value={selectedDistrict}
+                                    value={selectedDistrict || ''}
                                     onChange={(e) => handleDistrictChange(e)}
+                                    disabled={!selectedProvince}
                                   >
                                     <option value="">----Chọn quận huyện-----</option>
                                     {quan.map((district) => (
@@ -1513,11 +1538,21 @@ function DonHangCT() {
                               </div>
                               <br></br>
                               <div className="form-group row">
-                                <label style={{ fontStyle: 'italic',paddingLeft: 29 }} htmlFor="diaChi" className="col-sm-5 col-form-label">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="diaChi"
+                                  className="col-sm-5 col-form-label"
+                                >
                                   Phường/Xã:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select id="ward" className="form-select fsl" value={selectedWard} onChange={handleWardChange}>
+                                  <select
+                                    id="ward"
+                                    className="form-select fsl"
+                                    value={selectedWard || ''}
+                                    onChange={handleWardChange}
+                                    disabled={!selectedDistrict || !selectedProvince}
+                                  >
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
                                       <option key={ward.WardCode} value={ward.WardCode}>
@@ -2014,7 +2049,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.diaChi}
+                        {values.diaChi}, {values.xa}, {values.huyen}, {values.tinh}
                       </span>
                     </Col>
                   </Col>
