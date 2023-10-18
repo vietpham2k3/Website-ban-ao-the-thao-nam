@@ -579,18 +579,20 @@ function DonHangCT() {
     const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
     const huyen = quan.find((province) => province.DistrictName === values.huyen);
     const xa = phuong.find((province) => province.WardName === values.xa);
-    const id = {
+    const districtId = {
       district_id: huyen && huyen.DistrictID
     };
-    console.log(id);
+    console.log(districtId && districtId.district_id);
     getQuanHuyen(tinh && tinh.ProvinceId);
-    if (id.district_id !== undefined) {
-      getPhuong(id);
+    if (districtId.district_id === undefined) {
+      districtId.district_id = huyen && huyen.DistrictID;
+    } else {
+      getPhuong(districtId);
     }
     setSelectedProvince(tinh && tinh.ProvinceID);
     setSelectedDistrict(huyen && huyen.DistrictID);
     setSelectedWard(xa && xa.WardCode);
-  }, [values]);
+  }, [values, hoaDon, id]);
 
   const getService = async (value) => {
     try {
@@ -673,7 +675,6 @@ function DonHangCT() {
 
   const handleUpdate = async (event) => {
     event.preventDefault();
-
     if (values.tenNguoiNhan === '') {
       setNone(false);
       return;
