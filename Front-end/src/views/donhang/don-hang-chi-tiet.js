@@ -492,7 +492,15 @@ function DonHangCT() {
     getQuanHuyen(provinceId);
     const selectedProvinceId = event.target.value;
     const selectedProvince = thanhPho.find((province) => province.ProvinceID === parseInt(selectedProvinceId, 10));
+    setValuesUpdateHDTien((prevT) =>({
+      ...prevT,
+      tienShip: valuesUpdateHDTien.tienShip
+    }))
 
+    setHoaDon((prevHoaDon) =>({
+      ...prevHoaDon,
+      tienShip: hoaDon.tienShip
+    }))
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.NameExtension[1];
@@ -505,7 +513,7 @@ function DonHangCT() {
         tinh: selectedProvinceName
       });
     }
-    console.log(selectedProvinceId);
+    console.log(valuesUpdateHDTien.tienShip);
   };
 
   const handleDistrictChange = (event) => {
@@ -514,6 +522,16 @@ function DonHangCT() {
     };
     setSelectedDistrict(event.target.value);
 
+    setValuesUpdateHDTien((prevT) =>({
+      ...prevT,
+      tienShip: valuesUpdateHDTien.tienShip
+    }))
+
+    setHoaDon((prevHoaDon) =>({
+      ...prevHoaDon,
+      tienShip: hoaDon.tienShip
+    }))
+    
     setValuesServices({
       ...valuesServices,
       to_district: parseInt(event.target.value, 10)
@@ -542,12 +560,21 @@ function DonHangCT() {
         huyen: selectedProvinceName
       });
     }
-    console.log('huyen' + selectedProvinceId);
+    console.log(valuesUpdateHDTien.tienShip);
   };
 
   const handleWardChange = (event) => {
     // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
     setSelectedWard(event.target.value);
+    setValuesUpdateHDTien((prevT) =>({
+      ...prevT,
+      tienShip: valuesUpdateHDTien.tienShip
+    }))
+
+    setHoaDon((prevHoaDon) =>({
+      ...prevHoaDon,
+      tienShip: hoaDon.tienShip
+    }))
     setValuesFee({
       ...valuesFee,
       insurance_value: totalAmount,
@@ -573,6 +600,8 @@ function DonHangCT() {
         xa: selectedProvinceName
       });
     }
+    console.log(valuesUpdateHDTien.tienShip);
+
   };
 
   useEffect(() => {
@@ -728,6 +757,16 @@ function DonHangCT() {
       huyen: values.huyen,
       xa: values.xa
     }));
+
+    setValuesUpdateHDTien((prevT) =>({
+      ...prevT,
+      tienShip: valuesUpdateHDTien.tienShip
+    }))
+
+    setHoaDon((prevHoaDon) =>({
+      ...prevHoaDon,
+      tienShip: hoaDon.tienShip
+    }))
 
     await updateKH(id, values);
   };
@@ -1579,7 +1618,9 @@ function DonHangCT() {
                                   <select id="ward" className="form-select fsl" value={selectedWard} onChange={handleWardChange}>
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
-                                      <option key={ward.WardCode} selected={ward.WardName === values.xa} value={ward.WardCode}>
+                                      <option key={ward.WardCode}
+                                       selected={ward.WardName === values.xa}
+                                        value={ward.WardCode}>
                                         {ward.WardName}
                                       </option>
                                     ))}
