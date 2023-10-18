@@ -60,19 +60,12 @@ function SanPham() {
   }, []);
 
   useEffect(() => {
-    const maxFromLocalStorage = localStorage.getItem('maxPrice');
-    if (maxFromLocalStorage) {
-      setMaxPrice(parseInt(maxFromLocalStorage, 10));
-    } else {
+    if (maxPrice === MAX && data.length > 0) {
       const max = findMaxPrice(data);
       setMaxPrice(max);
-
-      // Lưu giá trị maxPrice vào localStorage
-      localStorage.setItem('maxPrice', max.toString());
+      setValues([MIN, max]);
     }
-
-    setValues([MIN, maxPrice]);
-  }, [maxPrice]);
+  }, [data, maxPrice]);
 
   const findMaxPrice = (products) => {
     let maxPrice = 0;
@@ -337,6 +330,7 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
+              <div>{/* <strong>giá cao nhất:</strong> {convertToCurrency(maxPrice)} */}</div>
 
               <Slider
                 className="slider"
