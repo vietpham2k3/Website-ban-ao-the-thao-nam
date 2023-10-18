@@ -97,8 +97,8 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public Page<KhachHang> searchKH(String key, Integer trangThai, Pageable pageable) {
-        return khRepo.searchKH(key, trangThai, pageable);
+    public Page<KhachHang> searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable) {
+        return khRepo.searchKH(key, trangThai, gioiTinh, pageable);
     }
 
 

@@ -247,9 +247,10 @@ public class KhachHangController {
     @GetMapping("/searchKH")
     public ResponseEntity<?> getAll(@RequestParam(value = "key", required = false) String key,
                                     @RequestParam(value = "trangThai", required = false) Integer trangThai,
+                                    @RequestParam(value = "gioiTinh", required = false) Boolean gioiTinh,
                                     @RequestParam(defaultValue = "0") Integer page) throws IOException {
         Pageable pageable = PageRequest.of(page, 5);
-        Page<KhachHang> khachHangPage = khService.searchKH(key, trangThai, pageable);
+        Page<KhachHang> khachHangPage = khService.searchKH(key, trangThai, gioiTinh, pageable);
         // Convert the Page<KhachHang> to byte array
         byte[] khachHangBytes = convertPageToByteArray(khachHangPage);
 //
