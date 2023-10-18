@@ -16,4 +16,8 @@ const thanhToan = (id, values) => {
   return axios.put(`/api/gio-hang/update-hd-checkout/${id}`, values);
 };
 
-export { postGH, deleteByIdHD, addKhuyenMai, thanhToan };
+const count = (id) => {
+  return axios.get(`/api/gio-hang/countSP?id=${id}`);
+};
+
+export { postGH, deleteByIdHD, addKhuyenMai, thanhToan, count };

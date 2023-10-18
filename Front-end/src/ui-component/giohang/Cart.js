@@ -76,7 +76,7 @@ function Cart(props) {
     }
   };
 
-  const handleUpdate = (e, id, soLuong, tongSoLuong) => {
+  const handleUpdate = (e, id, tongSoLuong) => {
     // Lấy giá trị số lượng mới
     const newQuantity = e;
 

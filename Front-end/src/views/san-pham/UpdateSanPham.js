@@ -241,7 +241,7 @@ function UpdateSanPham() {
   };
 
   useEffect(() => {
-    detail(idCTSP);
+    detail(idCTSP !== null ? idCTSP : id);
     getAllAnh(idCTSP !== null ? idCTSP : id);
     if (idCTSP !== null && mainCardRef.current) {
       mainCardRef.current.scrollIntoView({ behavior: 'smooth' });

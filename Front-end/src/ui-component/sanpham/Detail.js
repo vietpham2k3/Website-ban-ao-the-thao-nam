@@ -34,6 +34,7 @@ function Detail(props) {
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount } = props;
   const [valuesHDCT, setValuesHDCT] = useState([]);
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
   useEffect(() => {
     fetchProductDetail(idCTSP === 0 ? id : idCTSP);
@@ -48,8 +49,6 @@ function Detail(props) {
       }
     ]);
   }, [idCTSP]);
-
-  console.log(valuesHDCT);
 
   useEffect(() => {
     if (check) {
@@ -443,7 +442,7 @@ function Detail(props) {
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={() => handleAddToCart()}>
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={!dataLogin ? () => handleAddToCart() : 1}>
                   Thêm vào giỏ hàng
                 </button>
                 <button className="add-to-cart1 btn btn-default" type="button" onClick={() => handleTaoHoaDon()}>

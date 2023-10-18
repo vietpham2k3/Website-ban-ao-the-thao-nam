@@ -71,8 +71,8 @@ function DonHang(props) {
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
     tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
-    tongTien: '',
-    tongTienKhiGiam: '',
+    tongTien: 0,
+    tongTienKhiGiam: 0.0,
     hinhThucThanhToan: {
       id: dataDetailHD.hinhThucThanhToan && dataDetailHD.hinhThucThanhToan.id,
       trangThai: 1,
@@ -80,6 +80,7 @@ function DonHang(props) {
     },
     trangThai: 0
   });
+
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
       id: ''

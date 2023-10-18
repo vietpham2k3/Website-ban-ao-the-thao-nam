@@ -13,6 +13,7 @@ function Header(props) {
     window.location.reload();
     localStorage.removeItem('dataLogin');
   };
+
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg bg-body-tertiary nav-1">

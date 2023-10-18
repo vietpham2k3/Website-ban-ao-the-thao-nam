@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.CoAo;
 import com.example.demo.entity.GioHang;
+import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HinhThucThanhToan;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
@@ -9,6 +10,7 @@ import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.GioHangChiTietServiceImpl;
 import com.example.demo.service.impl.GioHangServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
@@ -46,6 +48,8 @@ public class GioHangController {
     @Autowired
     private GioHangServiceImpl gioHangService;
     @Autowired
+    private GioHangChiTietServiceImpl gioHangChiTietService;
+    @Autowired
     public HoaDonServiceImpl serviceHD;
     @Autowired
     public HoaDon_KhuyenMaiServiceImpl hoaDon_khuyenMaiService;
@@ -65,6 +69,11 @@ public class GioHangController {
     @GetMapping("/getAll")
     public ResponseEntity<?> getALl() {
         return ResponseEntity.ok(gioHangService.getAll());
+    }
+
+    @GetMapping("/countSP")
+    public ResponseEntity<?> countSP(@RequestParam(required = false) UUID id) {
+        return ResponseEntity.ok(gioHangChiTietService.countSPOnGH(id));
     }
 
     @PutMapping("update-hd-checkout/{id}")
@@ -152,6 +161,16 @@ public class GioHangController {
         hoaDonChiTietService.taoHoaDon(hoaDonChiTietList);
         return ResponseEntity.ok(String.valueOf(hoaDon.getId()));
     }
+
+//    @PostMapping("/tao-hoa-don")
+//    public ResponseEntity<String> themGioHang(@RequestBody GioHangChiTiet gioHangChiTiet) {
+//        String ma = "GH" + new Random().nextInt(100000);
+//        GioHang gioHang = new GioHang().builder()
+//                .ma(ma)
+//                .ngayTao(new Date())
+//                .build();
+//        return ResponseEntity.ok().build();
+//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteByIdHD(@PathVariable UUID id) {
