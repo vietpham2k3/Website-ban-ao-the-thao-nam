@@ -11,7 +11,7 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { getAllKCByIdMSAndIdSP, getAllMSByIdSP, findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
-import { postGH } from 'services/GioHangService';
+import { postGH, themGioHang } from 'services/GioHangService';
 function Detail(props) {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
@@ -32,9 +32,15 @@ function Detail(props) {
   // ms kc
   const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
   // eslint-disable-next-line react/prop-types
-  const { setProductCount, productCount } = props;
+  const { setProductCount, productCount, countSP, idGH } = props;
   const [valuesHDCT, setValuesHDCT] = useState([]);
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const [valuesAddGH, setValuesAddGH] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    soLuong: 1
+  });
 
   useEffect(() => {
     fetchProductDetail(idCTSP === 0 ? id : idCTSP);
@@ -67,6 +73,12 @@ function Detail(props) {
     getAllMS(idSP);
     // console.log(idSP);
   }, [idSP]);
+
+  useEffect(() => {
+    if (idGH) {
+      countSP(idGH);
+    }
+  }, [idGH]);
 
   useEffect(() => {
     getAllKC(idMS, idSP);
@@ -113,6 +125,8 @@ function Detail(props) {
     setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
     setDetailProduct(product);
+
+    setValuesAddGH({ ...valuesAddGH, chiTietSanPham: { id: idCTSP } });
   };
 
   const getAllKC = async (idMS, idSP) => {
@@ -258,6 +272,23 @@ function Detail(props) {
     }
   };
 
+  const addSPToGH = async (id, value) => {
+    try {
+      const res = await themGioHang(id, value);
+      if (res) {
+        toast.success('Thành công');
+        localStorage.setItem('idGH', res.data.gioHang.id);
+        countSP(idGH);
+      }
+    } catch (error) {
+      toast.error('Vui lòng chọn sản phẩm');
+    }
+  };
+
+  const handleAddToCartGH = () => {
+    addSPToGH(dataLogin.id, valuesAddGH);
+  };
+
   return (
     <div className="container">
       <div>
@@ -265,11 +296,11 @@ function Detail(props) {
           <Link to="/trang-chu" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="trangChu">Trang chủ</p>
           </Link>
-          |
+          {'>'}
           <Link to="/san-pham/web" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="sanPham">Sản phẩm</p>
           </Link>
-          | {product.sanPham.ten}
+          {'>'} {product.sanPham.ten}
         </p>
       </div>
       <hr></hr>
@@ -435,6 +466,8 @@ function Detail(props) {
                       // Cập nhật giá trị soLuong trong phần tử đầu tiên của mảng
                       updatedValuesHDCT[0].soLuong = value;
                       setValuesHDCT(updatedValuesHDCT);
+
+                      setValuesAddGH({ ...valuesAddGH, soLuong: value });
                     }}
                   />
 
@@ -442,10 +475,10 @@ function Detail(props) {
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={!dataLogin ? () => handleAddToCart() : 1}>
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={!dataLogin ? handleAddToCart : handleAddToCartGH}>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="add-to-cart1 btn btn-default" type="button" onClick={() => handleTaoHoaDon()}>
+                <button className="add-to-cart1 btn btn-default" type="button" onClick={!dataLogin ? handleTaoHoaDon : handleAddToCartGH}>
                   Mua Ngay
                 </button>
               </div>
