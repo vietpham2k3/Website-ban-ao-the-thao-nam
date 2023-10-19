@@ -110,7 +110,6 @@ function AddKhachHang() {
       sdt: '',
       email: '',
       ngaySinh: '',
-      matKhau: '',
       gioiTinh: '',
       trangThai: 1
     },
@@ -130,7 +129,6 @@ function AddKhachHang() {
     formData.append('sdt', values.khachHang.sdt);
     formData.append('email', values.khachHang.email);
     formData.append('ngaySinh', values.khachHang.ngaySinh);
-    formData.append('matKhau', values.khachHang.matKhau);
     formData.append('gioiTinh', values.khachHang.gioiTinh);
     formData.append('trangThai', values.khachHang.trangThai);
     if (anh) {
@@ -282,24 +280,53 @@ function AddKhachHang() {
                 </label>
               </div>
             </div>
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Mật khẩu
+            <div className="col-md-6">
+              <label htmlFor="a" className="form-label me-3">
+                Trạng thái:{' '}
               </label>
-              <input
-                type="password"
-                className="form-control"
-                value={values.khachHang.matKhau}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      matKhau: e.target.value
-                    }
-                  })
-                }
-              />
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio1"
+                  value="1"
+                  checked={true}
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        trangThai: 1
+                      }
+                    })
+                  }
+                />
+                <label htmlFor="a" className="form-check-label">
+                  Hoạt động
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio2"
+                  value="0"
+                  onChange={() =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        trangThai: 0
+                      }
+                    })
+                  }
+                />
+                <label htmlFor="a" className="form-check-label">
+                  Không hoạt động
+                </label>
+              </div>
             </div>
 
             <div className="col-md-4">
@@ -362,54 +389,6 @@ function AddKhachHang() {
               </label>
               <input type="file" id="anh" className="form-control" accept="image/*" name="anh" onChange={handlePreviewAnh} />
               {anh && <img src={anh.preview} alt="" width="70%"></img>}
-            </div>
-            <div className="col-12">
-              <label htmlFor="a" className="form-label me-3">
-                Trạng thái:{' '}
-              </label>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio1"
-                  value="1"
-                  checked={true}
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        trangThai: 1
-                      }
-                    })
-                  }
-                />
-                <label htmlFor="a" className="form-check-label">
-                  Hoạt động
-                </label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio2"
-                  value="0"
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        trangThai: 0
-                      }
-                    })
-                  }
-                />
-                <label htmlFor="a" className="form-check-label">
-                  Không hoạt động
-                </label>
-              </div>
             </div>
             <div className="col-12">
               <button type="submit" onClick={handleSubmit} className="btn btn-primary">
