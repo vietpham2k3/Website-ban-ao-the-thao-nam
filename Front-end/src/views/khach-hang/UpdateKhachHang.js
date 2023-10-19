@@ -21,6 +21,7 @@ function UpdateKhachHang() {
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
+
   //Lấy tên
   const [selectedProvinceName, setSelectedProvinceName] = useState('');
   const [selectedDistrictName, setSelectedDistrictName] = useState('');
@@ -158,13 +159,22 @@ function UpdateKhachHang() {
   };
 
   const handleShow1 = (id) => {
-    const selectedDC = dc.find((item) => item.id === id);
-    setSelectedProvince(selectedDC.tinhThanh);
-    setSelectedDistrict(selectedDC.quanHuyen);
-    setSelectedWard(selectedDC.phuongXa);
-    console.log('Tỉnh:', selectedDC.tinhThanh);
-    console.log('Huyện:', selectedDC.quanHuyen);
-    console.log('Phường:', selectedDC.phuongXa);
+    const dcItem = dc.find((item) => item.id === id);
+
+    // Lấy các giá trị detail của địa chỉ
+    const selectedProvince = dcItem.tinhThanh;
+    const selectedDistrict = dcItem.quanHuyen;
+    const selectedWard = dcItem.phuongXa;
+
+    // Đặt giá trị cho các dropdown
+    setSelectedProvince(selectedProvince);
+    setSelectedDistrict(selectedDistrict);
+    setSelectedWard(selectedWard);
+
+    // Log ra các giá trị cần kiểm tra
+    console.log('Tỉnh:', dcItem.tinhThanh);
+    console.log('Huyện:', dcItem.quanHuyen);
+    console.log('Phường:', dcItem.phuongXa);
     setIdDc(id);
     setShow1(true);
   };
@@ -197,8 +207,7 @@ function UpdateKhachHang() {
     sdt: '',
     email: '',
     ngaySinh: '',
-    matKhau: '',
-    gioiTinh: true,
+    gioiTinh: '',
     trangThai: ''
   });
 
@@ -232,7 +241,6 @@ function UpdateKhachHang() {
     formData.append('sdt', values.sdt);
     formData.append('email', values.email);
     formData.append('ngaySinh', values.ngaySinh);
-    formData.append('matKhau', values.matKhau);
     formData.append('gioiTinh', values.gioiTinh);
     formData.append('trangThai', values.trangThai);
     formData.append('anh', anh);
@@ -357,14 +365,14 @@ function UpdateKhachHang() {
               </div>
               <div className="col-6">
                 <label htmlFor="a" className="form-label me-3">
-                  Giới Tính:{' '}
+                  Giới Tính:
                 </label>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="inlineRadioOptions3"
-                    id="inlineRadio4"
+                    name="gender"
+                    id="male"
                     value={true}
                     checked={values.gioiTinh === true}
                     onChange={() => setValues({ ...values, gioiTinh: true })}
@@ -377,8 +385,8 @@ function UpdateKhachHang() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="inlineRadioOptions3"
-                    id="inlineRadio3"
+                    name="genderOptions"
+                    id="female"
                     value={false}
                     checked={values.gioiTinh === false}
                     onChange={() => setValues({ ...values, gioiTinh: false })}
@@ -389,17 +397,6 @@ function UpdateKhachHang() {
                 </div>
               </div>
 
-              <div className="col-6">
-                <label htmlFor="a" className="form-label">
-                  Mật khẩu
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={values.matKhau}
-                  onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
-                />
-              </div>
               <div className="col-6">
                 <label htmlFor="a" className="form-label">
                   Ảnh
@@ -441,7 +438,7 @@ function UpdateKhachHang() {
                 </div>
               </div>
 
-              <div className="col-6">
+              <div className="col-md-6">
                 <div>
                   <label htmlFor="a" className="form-label">
                     Địa Chỉ
@@ -464,7 +461,7 @@ function UpdateKhachHang() {
                             <h7 style={{ paddingLeft: 15, paddingRight: 10 }}>
                               <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="dc">
                                 {' '}
-                                {dc.tinhThanh}, {dc.quanHuyen}, {dc.phuongXa}
+                                {dc.phuongXa}, {dc.quanHuyen}, {dc.tinhThanh}
                               </label>
                             </h7>
                             <span
@@ -506,7 +503,7 @@ function UpdateKhachHang() {
                                   <option
                                     key={province.province_id}
                                     value={province.province_id}
-                                    // selected={province.province_name === valueDC.tinhThanh}
+                                    // selected={province.province_name === selectedProvince}
                                   >
                                     {province.province_name}
                                   </option>
@@ -526,7 +523,11 @@ function UpdateKhachHang() {
                               >
                                 <option value="">Chọn quận huyện</option>
                                 {filteredDistricts.map((district) => (
-                                  <option key={district.district_id} value={district.district_id}>
+                                  <option
+                                    key={district.district_id}
+                                    value={district.district_id}
+                                    // selected={district.district_name === selectedDistrict}
+                                  >
                                     {district.district_name}
                                   </option>
                                 ))}
@@ -537,7 +538,7 @@ function UpdateKhachHang() {
                               <label htmlFor="ward" className="form-label">
                                 Phường xã
                               </label>
-                              <select id="ward" className="form-select" value={valueDC.selectedWard} onChange={handleWardChange}>
+                              <select id="ward" className="form-select" value={selectedWard} onChange={handleWardChange}>
                                 <option value="">Chọn phường xã</option>
                                 {filteredWards.map((ward) => (
                                   <option key={ward.ward_id} value={ward.ward_id}>
@@ -635,8 +636,8 @@ function UpdateKhachHang() {
                 </div>
               </div>
 
-              <div className="col-6" style={{ display: 'flex' }}>
-                <div className="text-start">
+              <div className="col-md-6">
+                <div className="text-start" style={{ display: 'flex', justifyContent: 'right' }}>
                   <button type="submit" className="btn btn-primary">
                     Update
                   </button>

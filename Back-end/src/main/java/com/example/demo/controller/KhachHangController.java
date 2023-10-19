@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
+import com.example.demo.dto.EmailContent;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.HoaDon;
@@ -8,6 +9,7 @@ import com.example.demo.entity.KhachHang;
 import com.example.demo.service.impl.DiaChiServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
+import com.example.demo.service.impl.SendEmailServicecImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class KhachHangController {
 
     @Autowired
     private DiaChiServiceImpl dcService;
+
+    @Autowired
+    private SendEmailServicecImpl emailService;
 
     @GetMapping("/getAll/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
@@ -128,6 +133,7 @@ public class KhachHangController {
         khachHangDTO.setEmail(khachHang.getEmail());
         khachHangDTO.setNgaySinh(khachHang.getNgaySinh());
         khachHangDTO.setMatKhau(khachHang.getMatKhau());
+        khachHangDTO.setGioiTinh(khachHang.getGioiTinh());
         khachHangDTO.setTrangThai(khachHang.getTrangThai());
         khachHangDTO.setAnh(anhBase64);
 
@@ -140,7 +146,6 @@ public class KhachHangController {
                                  @RequestParam("sdt") String sdt,
                                  @RequestParam("email") String email,
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
-                                 @RequestParam("matKhau") String matKhau,
                                  @RequestParam("gioiTinh") Boolean gioiTinh,
 //                                 @RequestBody DiaChi diaChi,
                                  @RequestParam("tinhThanh") String tinhThanh,
@@ -156,10 +161,14 @@ public class KhachHangController {
         khachHang.setSdt(sdt);
         khachHang.setEmail(email);
         khachHang.setNgaySinh(ngaySinh);
-        khachHang.setMatKhau(matKhau);
         khachHang.setGioiTinh(gioiTinh);
         khachHang.setTrangThai(trangThai);
 
+        //send email
+        String matKhauMoi = generateRandomPassword(8);
+
+        // Gán mật khẩu vào đối tượng KhachHang
+        khachHang.setMatKhau(matKhauMoi);
         // Check if a file is provided
         if (anh != null) {
             // Get the input stream of the file
@@ -175,16 +184,37 @@ public class KhachHangController {
         KhachHangDTO savedKhachHangDTO = convertToDto(khachHang);
 
         DiaChi diaChi = new DiaChi();
-//        diaChi.setTinhThanh(diaChi.getTinhThanh());
-//        diaChi.setQuanHuyen(diaChi.getQuanHuyen());
-//        diaChi.setPhuongXa(diaChi.getPhuongXa());
         diaChi.setTinhThanh(tinhThanh);
         diaChi.setQuanHuyen(quanHuyen);
         diaChi.setPhuongXa(phuongXa);
         diaChi.setTrangThai(1);
         diaChi.setKhachHang(khachHang);
         dcService.add(diaChi);
+
+        // Gửi email chứa mật khẩu mới
+        String subject = "Thông tin tài khoản";
+        String body = "<h2>Thông tin tài khoản của bạn</h2>"
+                + "<p>Xin chào, " + tenKhachHang + "</p>"
+                + "<p>Chúng tôi gửi thông tin truy cập hệ thông của bạn:</p>"
+                + "<p>Tên đăng nhập: " + email + "</p>"
+                + "<p>Mật khẩu truy cập tạm thời là: <strong>" + matKhauMoi + "</strong></p>"
+                + "<p>Lưu ý: Đây là mật khẩu mặc định được tạo bởi hệ thống, bạn vui lòng đổi lại để đảm bảo an toàn thông tin</p>"
+                + "<p>Đây là email tự động vui lòng không trả lời.</p>";
+        emailService.sendEmail(email, subject, body);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHangDTO);
+    }
+
+    private String generateRandomPassword(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 
     @PutMapping("/delete/{id}")
@@ -213,7 +243,6 @@ public class KhachHangController {
                                     @RequestParam("sdt") String sdt,
                                     @RequestParam("email") String email,
                                     @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
-                                    @RequestParam("matKhau") String matKhau,
                                     @RequestParam("gioiTinh") Boolean gioiTinh,
                                     @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
@@ -223,7 +252,6 @@ public class KhachHangController {
         khachHang.setSdt(sdt);
         khachHang.setEmail(email);
         khachHang.setNgaySinh(ngaySinh);
-        khachHang.setMatKhau(matKhau);
         khachHang.setGioiTinh(gioiTinh);
         khachHang.setTrangThai(trangThai);
 
