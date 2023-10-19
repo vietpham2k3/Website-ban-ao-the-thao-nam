@@ -2,7 +2,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct, updateSL } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
@@ -11,6 +11,7 @@ import InputSpinner from 'react-bootstrap-input-spinner';
 import { getAllKCByIdMSAndIdSP, getAllMSByIdSP, findAllAnhByIdMSAndIdSP } from 'services/ServiceDonHang';
 import { Button, ButtonToolbar } from 'rsuite';
 import { toast } from 'react-toastify';
+import { postGH } from 'services/GioHangService';
 function Detail(props) {
   const { id, idSP, idMS } = useParams();
   const [product, setProduct] = useState(null);
@@ -18,12 +19,61 @@ function Detail(props) {
   const [imageList, setImageList] = useState([]);
   const [val, setVal] = useState(0);
   const [idCTSP, setIdCTSP] = useState(0);
+  const [listKC, setListKC] = useState([]);
+  const [listMS, setListMS] = useState([]);
   const thumbnailContainerRef = useRef(null);
-  const [listSanPham, setListSanPham] = useState([]);
+  const [detailProduct, setDetailProduct] = useState(null);
+  const [check, setCheck] = useState(false);
+  // const [listSanPham, setListSanPham] = useState([]);
+  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
   const [quantity, setQuantity] = useState(1);
   const idMStest = localStorage.getItem('idMS');
+  const navigate = useNavigate();
+  // ms kc
+  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount } = props;
+  const [valuesHDCT, setValuesHDCT] = useState([]);
+
+  useEffect(() => {
+    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
+    setValuesHDCT([
+      {
+        chiTietSanPham: {
+          id: idCTSP === 0 ? id : idCTSP
+          // Các trường khác của chi tiết sản phẩm nếu cần
+        },
+        soLuong: quantity, // Thêm số lượng
+        donGia: quantity * (product && product.giaBan) // Thêm giá bán
+      }
+    ]);
+  }, [idCTSP]);
+
+  console.log(valuesHDCT);
+
+  useEffect(() => {
+    if (check) {
+      fetchProductDetail(idCTSP);
+    }
+  }, [check]);
+
+  useEffect(() => {
+    getAllCTSP();
+
+    JSON.parse(localStorage.getItem('product'));
+  }, []);
+
+  useEffect(() => {
+    // getAllMSKC(idSP);
+    getAllMS(idSP);
+    // console.log(idSP);
+  }, [idSP]);
+
+  useEffect(() => {
+    getAllKC(idMS, idSP);
+    getAllAnh(idMS, idSP);
+    // console.log(idSP);
+  }, [idMS, idSP]);
 
   const handleClick = (idSP) => {
     setVal(idSP);
@@ -60,37 +110,11 @@ function Detail(props) {
     });
   };
 
-  useEffect(() => {
-    getAllCTSP();
-
-    const storedListSanPham = JSON.parse(localStorage.getItem('product'));
-    if (storedListSanPham) {
-      setListSanPham(storedListSanPham);
-    }
-  }, []);
-
-  // ms kc
-  const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
-
   const handleClick2 = (idCTSP, idKCMS) => {
     setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
+    setDetailProduct(product);
   };
-
-  const [listKC, setListKC] = useState([]);
-  const [listMS, setListMS] = useState([]);
-
-  useEffect(() => {
-    // getAllMSKC(idSP);
-    getAllMS(idSP);
-    // console.log(idSP);
-  }, [idSP]);
-
-  useEffect(() => {
-    getAllKC(idMS, idSP);
-    getAllAnh(idMS, idSP);
-    // console.log(idSP);
-  }, [idMS, idSP]);
 
   const getAllKC = async (idMS, idSP) => {
     try {
@@ -103,7 +127,13 @@ function Detail(props) {
     }
   };
 
-  const navigate = useNavigate();
+  const putSl = async (idCTSP, soLuong) => {
+    try {
+      await updateSL(idCTSP, soLuong);
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
 
   const getAllMS = async (id) => {
     const res = await getAllMSByIdSP(id);
@@ -111,8 +141,6 @@ function Detail(props) {
       setListMS(res.data);
     }
   };
-
-  const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
 
   const handleChangeId = (idCTSP, idSP, idMS, idMSSP) => {
     setSelectedIdMSSP(idMSSP);
@@ -123,10 +151,11 @@ function Detail(props) {
       // localStorage.setItem("idMS",idMS);
       getAllAnh(idMS, idSP);
       setVal(0);
+      setDetailProduct(null);
+      setActiveIdKCMaMau('');
       // console.log(id);
     }
   };
-  ////////
 
   const getAllCTSP = async () => {
     const res = await getAllProduct();
@@ -142,10 +171,6 @@ function Detail(props) {
       setVal(0);
     }
   };
-
-  useEffect(() => {
-    fetchProductDetail(idCTSP === 0 ? id : idCTSP);
-  }, [idCTSP]);
 
   const fetchProductDetail = async (id) => {
     try {
@@ -175,21 +200,63 @@ function Detail(props) {
   };
 
   const handleAddToCart = () => {
-    const updatedListSanPham = [
-      ...listSanPham,
-      {
+    // Lấy danh sách sản phẩm từ localStorage
+    const storedProducts = JSON.parse(localStorage.getItem('product')) || [];
+
+    // Tìm sản phẩm có cùng id
+    const existingProduct = storedProducts.find((item) => item.id === product.id);
+    if (detailProduct === null) {
+      toast.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+    if (product.soLuong <= 0) {
+      toast.error('Không thể mua sản phẩm này');
+      return;
+    }
+    if (existingProduct) {
+      // Nếu sản phẩm đã tồn tại, cộng dồn số lượng
+      existingProduct.soLuong += quantity;
+      existingProduct.tongSoLuong = product.soLuong;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+      storedProducts.push({
         id: product.id,
         kichCo: product.kichCo,
         sanPham: product.sanPham,
         mauSac: product.mauSac,
         giaBan: product.giaBan,
         soLuong: quantity,
-        tongSoLuong: product.soLuong
-      }
-    ];
-    setListSanPham(updatedListSanPham);
-    localStorage.setItem('product', JSON.stringify(updatedListSanPham));
+        tongSoLuong: product.soLuong - quantity
+      });
+    }
+    putSl(product.id, product.soLuong - quantity);
+    setCheck(true);
+    fetchProductDetail(idCTSP);
+
+    // Lưu danh sách sản phẩm mới vào localStorage
+    localStorage.setItem('product', JSON.stringify(storedProducts));
+
+    // Cập nhật số lượng sản phẩm trong giỏ hàng
     setProductCount(productCount + quantity);
+  };
+
+  const handleTaoHoaDon = () => {
+    if (detailProduct === null) {
+      toast.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+    if (product.soLuong <= 0) {
+      toast.error('Không thể mua sản phẩm này');
+      return;
+    }
+    taoHoaDon(valuesHDCT);
+  };
+
+  const taoHoaDon = async (value) => {
+    const res = await postGH(value);
+    if (res) {
+      navigate(`/checkoutquick/${res.data}`);
+    }
   };
 
   return (
@@ -198,11 +265,11 @@ function Detail(props) {
         <p style={{ paddingLeft: 30, fontSize: 20, paddingTop: 30, display: 'flex' }}>
           <Link to="/trang-chu" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="trangChu">Trang chủ</p>
-          </Link>{' '}
-          |{' '}
+          </Link>
+          |
           <Link to="/san-pham/web" style={{ color: 'black', textDecorationLine: 'none' }}>
             <p className="sanPham">Sản phẩm</p>
-          </Link>{' '}
+          </Link>
           | {product.sanPham.ten}
         </p>
       </div>
@@ -362,8 +429,16 @@ function Detail(props) {
                     type="real"
                     size="md"
                     value={quantity}
-                    onChange={(value) => setQuantity(value)}
+                    onChange={(value) => {
+                      setQuantity(value);
+                      // Tạo một bản sao của mảng valuesHDCT
+                      const updatedValuesHDCT = [...valuesHDCT];
+                      // Cập nhật giá trị soLuong trong phần tử đầu tiên của mảng
+                      updatedValuesHDCT[0].soLuong = value;
+                      setValuesHDCT(updatedValuesHDCT);
+                    }}
                   />
+
                   {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
@@ -371,7 +446,7 @@ function Detail(props) {
                 <button className="add-to-cart2 btn btn-default" type="button" onClick={() => handleAddToCart()}>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="add-to-cart1 btn btn-default" type="button">
+                <button className="add-to-cart1 btn btn-default" type="button" onClick={() => handleTaoHoaDon()}>
                   Mua Ngay
                 </button>
               </div>

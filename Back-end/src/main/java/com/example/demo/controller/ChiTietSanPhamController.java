@@ -129,6 +129,14 @@ public class ChiTietSanPhamController {
                 .ngayTao(date)
                 .trangThai(1)
                 .build();
+        List<ChiTietSanPham> sp = chiTietSanPhamService.detailByIdSP(chiTietSanPham.getSanPham().getId());
+        for (ChiTietSanPham ctsp : sp) {
+            if (chiTietSanPham.getMauSac().getId().equals(ctsp.getMauSac().getId())
+                    && chiTietSanPham.getKichCo().getId().equals(ctsp.getKichCo().getId())) {
+                chiTietSanPhamService.update(chiTietSanPham.getSoLuong()+ ctsp.getSoLuong(), ctsp.getId());
+                return ResponseEntity.ok("da ton tai");
+            }
+        }
 
         // Lưu sanPham vào cơ sở dữ liệu trước
         sanPham = sanPhamRepository.add(sanPham);

@@ -54,5 +54,9 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             "ORDER BY ma", nativeQuery = true)
     List<KhachHang> searchKHinBH(@Param("key") String key);
 
+    @Query(value = "SELECT kh FROM KhachHang kh WHERE kh.email = :email AND" +
+            " kh.matKhau = :matKhau ")
+    KhachHang findKhachHangByEmailAndMatKhau(String email, String matKhau);
+
 
 }

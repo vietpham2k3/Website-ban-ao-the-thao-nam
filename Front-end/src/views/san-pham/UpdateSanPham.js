@@ -192,7 +192,6 @@ function UpdateSanPham() {
     if (res) {
       toast.success('Xoá thành công');
       getAllAnh(idCTSP !== null ? idCTSP : id);
-
     }
   };
 
@@ -340,7 +339,10 @@ function UpdateSanPham() {
 
   const postctsp = async (id, value) => {
     const res = await postCTSP(value);
-    if (res) {
+    if (res.data === 'da ton tai') {
+      toast.success('Thêm số lượng thành công');
+      getAllMSKC(id);
+    } else {
       toast.success('Thêm thành công');
       getAllMSKC(id);
     }
@@ -353,11 +355,22 @@ function UpdateSanPham() {
 
   const handleChangeId = (id) => {
     if (idCTSP === id) {
-      toast.warning('Bạn đang xem ảnh của sản phẩm này');
+      // toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       setIdCTSP(id);
     }
   };
+  function confirmDeleteImage(imageId) {
+    // Sử dụng hộp thoại xác nhận
+    const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa hình ảnh này?');
+    if (shouldDelete) {
+      // Gọi hàm xóa hình ảnh khi người dùng xác nhận
+      handleDeleteImage(imageId);
+    }
+  }
+  function confirmDeleteItem(itemId) {
+    handleDelete(itemId);
+  }
 
   return (
     <div>
@@ -702,7 +715,7 @@ function UpdateSanPham() {
                       <td>{d.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                       <td>
                         <button onClick={() => handleUpdate(d.id)} className="fa-solid fa-pen"></button>
-                        <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                        <button onClick={() => confirmDeleteItem(d.id)} className="fa-solid fa-trash mx-3"></button>
                       </td>
                     </tr>
                   ))
@@ -772,10 +785,10 @@ function UpdateSanPham() {
                         className="fa-solid fa-trash"
                         role="button"
                         tabIndex={0}
-                        onClick={() => handleDeleteImage(image.id)}
+                        onClick={() => confirmDeleteImage(image.id)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
-                            handleDeleteImage(image.id);
+                            confirmDeleteImage(image.id);
                           }
                         }}
                       ></i>

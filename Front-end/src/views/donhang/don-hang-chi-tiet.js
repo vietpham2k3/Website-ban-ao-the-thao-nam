@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import { detailCTSP, getAllByIdSP } from 'services/SanPhamService';
 import Modal from 'react-bootstrap/Modal';
+import { getTP, getQH, getP, getFee, getServices } from 'services/ApiGHNService';
 import {
   detailHD,
   detailLSHD,
@@ -23,7 +24,9 @@ import {
   updateSL,
   getAllSP,
   searchCTSPofDH,
-  addSP
+  addSP,
+  getKmById,
+  updateTienHD
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -35,7 +38,13 @@ function DonHangCT() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
-
+  const [thanhPho, setThanhPho] = useState([]);
+  const [quan, setQuan] = useState([]);
+  const [phuong, setPhuong] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedWard, setSelectedWard] = useState('');
+  // const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [inputDetail, setInputDetail] = useState(null);
@@ -45,6 +54,11 @@ function DonHangCT() {
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
+  const [valuesUpdateHDTien, setValuesUpdateHDTien] = useState({
+    tongTien: 0,
+    tongTienKhiGiam: 0,
+    tienShip: 0
+  });
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
       id: ''
@@ -137,17 +151,15 @@ function DonHangCT() {
       soLuong: soLuong
     });
   };
-
-  useEffect(() => {
-    update(idHDCT, valuesUpdate);
-  }, [valuesUpdate]);
-
   const update = async (idHDCT, values) => {
     const res = await updateSL(idHDCT, values);
     if (res) {
       getAllById(id);
     }
   };
+  useEffect(() => {
+    update(idHDCT, valuesUpdate);
+  }, [valuesUpdate]);
 
   // kcms sp
   const handleAddSoLuong = (id, idSP) => {
@@ -200,8 +212,6 @@ function DonHangCT() {
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
-
-  console.log(valuesAdd);
 
   useEffect(() => {
     getAllMSKC(idSP);
@@ -280,8 +290,11 @@ function DonHangCT() {
   // cap nhat khach hang
   const [values, setValues] = useState({
     tenNguoiNhan: '',
+    soDienThoai: '',
     diaChi: '',
-    soDienThoai: ''
+    tinh: '',
+    huyen: '',
+    xa: ''
   });
 
   const updateKH = async (id, value) => {
@@ -299,51 +312,13 @@ function DonHangCT() {
   const [none4, setNone4] = useState(true);
   const [none5, setNone5] = useState(true);
 
-  const handleUpdate = async (event) => {
-    event.preventDefault();
-
-    if (values.tenNguoiNhan === '') {
-      setNone(false);
-      return;
-    }
-
-    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\s]+$/.test(values.tenNguoiNhan)) {
-      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái và khoảng trắng
-      setNone1(false);
-      return;
-    }
-
-    if (values.soDienThoai === '') {
-      setNone2(false);
-      return;
-    }
-
-    // Kiểm tra định dạng số điện thoại
-    const phoneRegex = /^0[0-9]{9}$/;
-    if (!phoneRegex.test(values.soDienThoai)) {
-      setNone3(false);
-      return;
-    }
-
-    if (values.diaChi === '') {
-      setNone4(false);
-      return;
-    }
-
-    if (values.diaChi.length > 250) {
-      setNone5(false);
-      return;
-    }
-
-    await updateKH(id, values);
-  };
-
   // detailHD
   const [hoaDon, setHoaDon] = useState({});
 
   useEffect(() => {
     detail(id);
     detailListLSHD(id);
+    getKMByIdHD(id);
   }, [id]);
 
   useEffect(() => {
@@ -354,6 +329,15 @@ function DonHangCT() {
     const res = await detailHD(id);
     if (res && res.data) {
       setHoaDon(res.data);
+    }
+  };
+
+  const [hd_km, setHD_KM] = useState(null);
+
+  const getKMByIdHD = async (id) => {
+    const res = await getKmById(id);
+    if (res && res.data && res.data.length > 0) {
+      setHD_KM(res.data[0]);
     }
   };
 
@@ -431,6 +415,296 @@ function DonHangCT() {
   const handleXacNhanThanhToan = async (event) => {
     event.preventDefault();
     await thanhToan(id, lshd3);
+  };
+
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  // Tính tổng tiền khi valuesSanPham thay đổi
+  useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    valuesSanPham.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [valuesSanPham]);
+
+  useEffect(() => {
+    setHoaDon(() => ({
+      ...hoaDon,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+    setValuesUpdateHDTien(() => ({
+      ...valuesUpdateHDTien,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (valuesUpdateHDTien && valuesUpdateHDTien.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+  }, [totalAmount, valuesUpdateHDTien.tienShip]);
+
+  const handleUpdateHD = () => {
+    updateTienHD(id, valuesUpdateHDTien);
+  };
+
+  useEffect(() => {
+    handleUpdateHD();
+  }, [valuesUpdateHDTien]);
+  // apiGHN
+
+  const [valuesServices, setValuesServices] = useState({
+    shop_id: 4625720,
+    from_district: 1710,
+    to_district: 0
+  });
+  const [valuesFee, setValuesFee] = useState({
+    service_id: 0,
+    insurance_value: 0,
+    coupon: null,
+    from_district_id: 1710,
+    to_district_id: 0,
+    to_ward_code: '',
+    height: 15,
+    length: 15,
+    weight: 5000,
+    width: 15
+  });
+
+  useEffect(() => {
+    getThanhPho();
+  }, []);
+
+  const handleProvinceChange = (event) => {
+    const provinceId = {
+      province_id: event.target.value
+    };
+    setSelectedProvince(event.target.value);
+    getQuanHuyen(provinceId);
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = thanhPho.find((province) => province.ProvinceID === parseInt(selectedProvinceId, 10));
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.NameExtension[1];
+      setValues({
+        ...values,
+        tinh: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        tinh: selectedProvinceName
+      });
+    }
+  };
+
+  const handleDistrictChange = (event) => {
+    const districtId = {
+      district_id: event.target.value
+    };
+    setSelectedDistrict(event.target.value);
+
+    setValuesServices({
+      ...valuesServices,
+      to_district: parseInt(event.target.value, 10)
+    });
+    // setTgDuKien({
+    //   ...tgDuKien,
+    //   to_district_id: parseInt(event.target.value, 10)
+    // });
+    getPhuong(districtId);
+    setValuesFee({
+      ...valuesFee,
+      to_district_id: parseInt(event.target.value, 10)
+    });
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = quan.find((province) => province.DistrictID === parseInt(selectedProvinceId, 10));
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.DistrictName;
+      setValues({
+        ...values,
+        huyen: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        huyen: selectedProvinceName
+      });
+    }
+  };
+
+  const handleWardChange = (event) => {
+    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    setSelectedWard(event.target.value);
+    setValuesFee({
+      ...valuesFee,
+      insurance_value: totalAmount,
+      to_ward_code: event.target.value
+    });
+    // setTgDuKien({
+    //   ...tgDuKien,
+    //   to_ward_code: event.target.value
+    // });
+    // setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHDTien.tienShip);
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.WardName;
+      setValues({
+        ...values,
+        xa: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        xa: selectedProvinceName
+      });
+    }
+  };
+
+  const getService = async (value) => {
+    try {
+      const res = await getServices(value);
+      if (res) {
+        setValuesFee({
+          ...valuesFee,
+          service_id: res.data.data[0].service_id
+        });
+        // setTgDuKien({
+        //   ...tgDuKien,
+        //   service_id: res.data.data[0].service_id
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fee = async (value) => {
+    try {
+      const res = await getFee(value);
+      if (res) {
+        const total = res.data.data.total;
+        setValuesUpdateHDTien({
+          ...valuesUpdateHDTien,
+          tienShip: total
+        });
+        setHoaDon({
+          ...hoaDon,
+          tienShip: total
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getService({
+      ...valuesServices
+    });
+  }, [valuesServices]);
+
+  /////
+
+  useEffect(() => {
+    fee(valuesFee);
+    // thoiGiaoHang(tgDuKien);
+  }, [valuesFee.to_ward_code]);
+
+  const getThanhPho = async () => {
+    try {
+      const res = await getTP();
+      if (res) {
+        setThanhPho(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getQuanHuyen = async (value) => {
+    try {
+      const res = await getQH(value);
+      if (res) {
+        setQuan(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPhuong = async (value) => {
+    try {
+      const res = await getP(value);
+      if (res) {
+        setPhuong(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
+    if (values.tenNguoiNhan === '') {
+      setNone(false);
+      return;
+    }
+
+    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(values.tenNguoiNhan)) {
+      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
+      setNone1(false);
+      return;
+    }
+
+    if (values.soDienThoai === '') {
+      setNone2(false);
+      return;
+    }
+
+    // Kiểm tra định dạng số điện thoại
+    const phoneRegex = /^0[0-9]{9}$/;
+    if (!phoneRegex.test(values.soDienThoai)) {
+      setNone3(false);
+      return;
+    }
+
+    if (values.diaChi === '') {
+      setNone4(false);
+      return;
+    }
+
+    if (values.diaChi.length > 250) {
+      setNone5(false);
+      return;
+    }
+
+    if (!selectedProvince) {
+      toast.error('Vui lòng chọn tỉnh/thành phố.');
+      return;
+    }
+
+    if (!selectedDistrict) {
+      toast.error('Vui lòng chọn quận/huyện.');
+      return;
+    }
+
+    if (!selectedWard) {
+      toast.error('Vui lòng chọn phường/xã.');
+      return;
+    }
+
+    setValues((values) => ({
+      ...values,
+      tinh: values.tinh,
+      huyen: values.huyen,
+      xa: values.xa
+    }));
+
+    await updateKH(id, values);
   };
 
   function convertToCurrency(number) {
@@ -1126,79 +1400,170 @@ function DonHangCT() {
                       </div>
                     </div>
 
-                    <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show} onHide={handleUpdate}>
+                    <Modal
+                      size="lg"
+                      aria-labelledby="contained-modal-title-vcenter"
+                      centered
+                      style={{ marginLeft: 150 }}
+                      show={show}
+                      onHide={handleUpdate}
+                    >
                       <Modal.Header onClick={handleUpdate}>
-                        <Modal.Title style={{ marginLeft: 66 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
+                        <Modal.Title style={{ marginLeft: 225 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
                       </Modal.Header>
-                      <Modal.Body style={{ width: 500 }}>
+                      <Modal.Body>
                         <form className="needs-validation" noValidate onSubmit={handleUpdate}>
-                          <div className="form-group row">
-                            <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
-                              Họ Và Tên:
-                            </label>
-                            <div className="col-sm-9">
-                              <input
-                                type="text"
-                                className="form-control"
-                                name="tenNguoiNhan"
-                                placeholder=""
-                                value={hoaDon.tenNguoiNhan}
-                                onChange={(e) => {
-                                  setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
-                                  setNone(true);
-                                  setNone1(true);
-                                }}
-                              />
-                              {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
-                              {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 20 ký tự và phải là chữ !</div>}
+                          <div className="row">
+                            <div className="col-6">
+                              <div className="form-group row">
+                                <label style={{ fontWeight: 'bold' }} htmlFor="tenNguoiNhan" className="col-sm-3 col-form-label">
+                                  Họ Và Tên:
+                                </label>
+                                <div className="col-sm-9">
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    name="tenNguoiNhan"
+                                    placeholder="Họ Và Tên"
+                                    value={values.tenNguoiNhan}
+                                    onChange={(e) => {
+                                      setValues({ ...values, tenNguoiNhan: e.target.value });
+                                      setNone(true);
+                                      setNone1(true);
+                                    }}
+                                  />
+                                  {!none && <div style={{ color: 'red' }}>Tên người nhận không được để trống !</div>}
+                                  {!none1 && <div style={{ color: 'red' }}>Tên người nhận không được quá 30 ký tự và phải là chữ !</div>}
+                                </div>
+                              </div>
+                              <br></br>
+                              <div className="form-group row">
+                                <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
+                                  Số ĐT:
+                                </label>
+                                <div className="col-sm-9">
+                                  <input
+                                    type="tel"
+                                    className="form-control"
+                                    name="soDienThoai"
+                                    placeholder="Số Điện Thoại"
+                                    value={values.soDienThoai}
+                                    onChange={(e) => {
+                                      setValues({ ...values, soDienThoai: e.target.value });
+                                      setNone2(true);
+                                      setNone3(true);
+                                    }}
+                                  />
+                                  {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
+                                  {!none3 && (
+                                    <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>
+                                  )}
+                                </div>
+                              </div>
+                              <br></br>
+                              <div className="form-group row">
+                                <label style={{ fontWeight: 'bold' }} htmlFor="diaChi" className="col-sm-3 col-form-label">
+                                  Địa Chỉ:
+                                </label>
+                                <div className="col-sm-9">
+                                  <textarea
+                                    className="form-control"
+                                    rows="4"
+                                    name="diaChi"
+                                    placeholder="Địa Chỉ"
+                                    value={values.diaChi}
+                                    onChange={(e) => {
+                                      setValues({ ...values, diaChi: e.target.value });
+                                      setNone4(true);
+                                      setNone5(true);
+                                    }}
+                                  ></textarea>
+                                  {!none4 && <div style={{ color: 'red' }}>Địa chỉ không được để trống !</div>}
+                                  {!none5 && <div style={{ color: 'red' }}>Địa chỉ không được vượt quá 250 ký tự !</div>}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-6">
+                              <div className="form-group row">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="tenNguoiNhan"
+                                  className="col-sm-5 col-form-label"
+                                >
+                                  Tỉnh/Thành Phố:
+                                </label>
+                                <div className="col-sm-7">
+                                  <select
+                                    id="province"
+                                    className="form-select fsl"
+                                    value={selectedProvince}
+                                    onChange={handleProvinceChange}
+                                  >
+                                    <option value="">-----Chọn tỉnh thành-----</option>
+                                    {thanhPho.map((province) => (
+                                      <option key={province.ProvinceID} value={province.ProvinceID}>
+                                        {province.NameExtension[1]}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                              <br></br>
+                              <div className="form-group row">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="soDienThoai"
+                                  className="col-sm-5 col-form-label"
+                                >
+                                  Quận/Huyện:
+                                </label>
+                                <div className="col-sm-7">
+                                  <select
+                                    id="district"
+                                    className="form-select fsl"
+                                    value={selectedDistrict || ''}
+                                    onChange={(e) => handleDistrictChange(e)}
+                                    disabled={!selectedProvince}
+                                  >
+                                    <option value="">----Chọn quận huyện-----</option>
+                                    {quan.map((district) => (
+                                      <option key={district.DistrictID} value={district.DistrictID}>
+                                        {district.DistrictName}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                              <br></br>
+                              <div className="form-group row">
+                                <label
+                                  style={{ fontStyle: 'italic', paddingLeft: 29 }}
+                                  htmlFor="diaChi"
+                                  className="col-sm-5 col-form-label"
+                                >
+                                  Phường/Xã:
+                                </label>
+                                <div className="col-sm-7">
+                                  <select
+                                    id="ward"
+                                    className="form-select fsl"
+                                    value={selectedWard || ''}
+                                    onChange={handleWardChange}
+                                    disabled={!selectedDistrict || !selectedProvince}
+                                  >
+                                    <option value="">-----Chọn phường xã-----</option>
+                                    {phuong.map((ward) => (
+                                      <option key={ward.WardCode} value={ward.WardCode}>
+                                        {ward.WardName}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
                             </div>
                           </div>
+
                           <br></br>
-                          <div className="form-group row">
-                            <label style={{ fontWeight: 'bold' }} htmlFor="soDienThoai" className="col-sm-3 col-form-label">
-                              Số Điện Thoại:
-                            </label>
-                            <div className="col-sm-9">
-                              <input
-                                type="tel"
-                                className="form-control"
-                                name="soDienThoai"
-                                placeholder=""
-                                value={hoaDon.soDienThoai}
-                                onChange={(e) => {
-                                  setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
-                                  setNone2(true);
-                                  setNone3(true);
-                                }}
-                              />
-                              {!none2 && <div style={{ color: 'red' }}>Số điện thoại không được để trống !</div>}
-                              {!none3 && (
-                                <div style={{ color: 'red' }}>Số điện thoại phải là số, bắt đầu bằng số 0 và phải đúng 10 số !</div>
-                              )}
-                            </div>
-                          </div>
-                          <br></br>
-                          <div className="form-group row">
-                            <label style={{ fontWeight: 'bold' }} htmlFor="diaChi" className="col-sm-3 col-form-label">
-                              Địa Chỉ:
-                            </label>
-                            <div className="col-sm-9">
-                              <textarea
-                                className="form-control"
-                                rows="4"
-                                name="diaChi"
-                                placeholder=""
-                                value={hoaDon.diaChi}
-                                onChange={(e) => {
-                                  setHoaDon({ ...hoaDon, diaChi: e.target.value });
-                                  setNone4(true);
-                                  setNone5(true);
-                                }}
-                              ></textarea>
-                              {!none4 && <div style={{ color: 'red' }}>Địa chỉ không được để trống !</div>}
-                              {!none5 && <div style={{ color: 'red' }}>Địa chỉ không được vượt quá 250 ký tự !</div>}
-                            </div>
-                          </div>
                           <br></br>
                           <div className="text-center">
                             <button
@@ -1233,436 +1598,462 @@ function DonHangCT() {
             </div>
             <hr />
             {/* //detail */}
-            {hoaDon && (
-              <div style={{ paddingLeft: '100px' }}>
-                <Container>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Mã Đơn:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.ma}
-                        </span>
-                      </Col>
+
+            <div style={{ paddingLeft: '100px' }}>
+              <Container>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Mã Đơn:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Người Tạo:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
-                          Phạm Quốc Việt
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.ma}
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
 
-                <br />
-
-                <Container>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Tổng Tiền:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {convertToCurrency(hoaDon.tongTien)}
-                        </span>
-                      </Col>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Người Tạo:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Ngày Tạo:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {formatDate(hoaDon.ngayTao)}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
+                        Phạm Quốc Việt
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
+                </Row>
+              </Container>
 
-                <br />
+              <br />
 
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Trạng Thái:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {hoaDon.trangThai === 0 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                fontWeight: 'bold',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                            >
-                              Đang chờ xác nhận
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 1 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-secondary status-pending"
-                            >
-                              Chờ giao hàng
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 2 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                fontWeight: 'bold',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                            >
-                              Đã hủy đơn
-                            </span>
-                          )}
-
-                          {hoaDon.trangThai === 3 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-warning status-pending"
-                            >
-                              Đang giao hàng
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 4 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                fontWeight: 'bold',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-info status-completed"
-                            >
-                              Giao hàng thành công
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 5 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
-                            >
-                              Giao hàng thất bại
-                            </span>
-                          )}
-                          {hoaDon.trangThai === 6 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                fontWeight: 'bold',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-info status-completed"
-                            >
-                              Thanh toán thành công
-                            </span>
-                          )}
-                        </div>
-                      </Col>
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Trạng Thái:
+                      </span>
                     </Col>
+                    <Col sm={3}>
+                      <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
+                        {hoaDon.trangThai === 0 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              fontWeight: 'bold',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                          >
+                            Đang chờ xác nhận
+                          </span>
+                        )}
 
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Người Nhận:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.tenNguoiNhan}
-                        </span>
-                      </Col>
+                        {hoaDon.trangThai === 1 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-secondary status-pending"
+                          >
+                            Chờ giao hàng
+                          </span>
+                        )}
+
+                        {hoaDon.trangThai === 2 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          >
+                            Đã hủy đơn
+                          </span>
+                        )}
+
+                        {hoaDon.trangThai === 3 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                          >
+                            Đang giao hàng
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 4 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              fontWeight: 'bold',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          >
+                            Giao hàng thành công
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 5 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          >
+                            Giao hàng thất bại
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 6 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              fontWeight: 'bold',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          >
+                            Thanh toán thành công
+                          </span>
+                        )}
+                      </div>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
 
-                <br />
-
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Loại:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
-                          {hoaDon.loaiDon === 0 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                display: 'flex',
-                                fontWeight: 'bold',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-dark status-pending"
-                            >
-                              Tại Quầy
-                            </span>
-                          )}
-                          {hoaDon.loaiDon === 1 && (
-                            <span
-                              style={{
-                                width: '250px',
-                                pointerEvents: 'none',
-                                height: '30px',
-                                borderRadius: '20px',
-                                fontWeight: 'bold',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: '#126e3bff',
-                                color: 'white'
-                              }}
-                              className="btn btn-labeled shadow-button btn btn-primary status-pending"
-                            >
-                              Đặt Hàng Online
-                            </span>
-                          )}
-                        </div>
-                      </Col>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Ngày Tạo:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '120px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Số Điện Thoại:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.soDienThoai}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {formatDate(hoaDon.ngayTao)}
+                      </span>
                     </Col>
-                  </Row>
-                </Container>
+                  </Col>
+                </Row>
+              </Container>
 
-                <br />
+              <br />
 
-                <Container>
-                  <Row>
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Ghi Chú:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.ghiChu}
-                        </span>
-                      </Col>
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Loại:
+                      </span>
                     </Col>
-
-                    <Col sm={6} className="row">
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '200px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Địa Chỉ:
-                        </span>
-                      </Col>
-                      <Col sm={3}>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '300px',
-                            fontSize: '15px'
-                          }}
-                        >
-                          {hoaDon.diaChi}
-                        </span>
-                      </Col>
+                    <Col sm={3}>
+                      <div style={{ display: 'inline-block', width: '300px', fontSize: '15px' }}>
+                        {hoaDon.loaiDon === 0 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              fontWeight: 'bold',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-dark status-pending"
+                          >
+                            Tại Quầy
+                          </span>
+                        )}
+                        {hoaDon.loaiDon === 1 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#126e3bff',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn btn-primary status-pending"
+                          >
+                            Đặt Hàng Online
+                          </span>
+                        )}
+                      </div>
                     </Col>
-                  </Row>
-                </Container>
-              </div>
-            )}
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Người Nhận:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.tenNguoiNhan}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
+              <br />
+
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold',
+                          paddingTop: '7px'
+                        }}
+                      >
+                        Hình Thức:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : ''}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt' && (
+                          <img
+                            style={{ display: 'inline-block' }}
+                            width={'35px'}
+                            height={'15px'}
+                            src="https://symbols.vn/wp-content/uploads/2021/11/Bieu-tuong-tien-mat-doc-dao.png"
+                            alt="COD Logo"
+                            className="payment-logo"
+                          />
+                        )}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' && (
+                          <img
+                            style={{ display: 'inline-block' }}
+                            width={'35px'}
+                            height={'20px'}
+                            src="https://on.net.vn/web/image/3876184-2b57e083/202166185_2021396718013233_8499389898242103910_n.png"
+                            alt="VNPay Logo"
+                            className="payment-logo"
+                          />
+                        )}
+                      </span>
+                    </Col>
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '120px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Số Điện Thoại:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.soDienThoai}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
+              <br />
+
+              <Container>
+                <Row>
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Ghi Chú:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {hoaDon.ghiChu}
+                      </span>
+                    </Col>
+                  </Col>
+
+                  <Col sm={6} className="row">
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '200px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Địa Chỉ:
+                      </span>
+                    </Col>
+                    <Col sm={3}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '300px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {values.diaChi}, {values.xa}, {values.huyen}, {values.tinh}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
           </div>
         </Card>
 
@@ -1823,15 +2214,15 @@ function DonHangCT() {
             <hr />
             {/* noi dung */}
             <div className="table-container">
-              <Table style={{ textAlign: 'center' }} hover className="my-4">
-                <tr className="ps-3">
-                  <th>#</th>
-                  <th>Mã</th>
-                  <th>Ảnh</th>
-                  <th>Sản phẩm</th>
-                  <th>Số lượng</th>
-                  <th>Đơn giá</th>
-                  <th>Tổng tiền</th>
+              <Table hover className="my-4">
+                <tr>
+                  <th style={{ paddingLeft: 5 }}>#</th>
+                  <th style={{ paddingLeft: 5 }}>Mã</th>
+                  <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                  <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                  <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                  <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                  <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
                 </tr>
                 <tbody>
                   {valuesSanPham.map((d, i) => (
@@ -1847,17 +2238,22 @@ function DonHangCT() {
                         />
                       </td>
                       <td>
-                        <div style={{ fontWeight: 'bold', fontSize: 16 }}> {d.chiTietSanPham.sanPham.ten} </div> <br />
-                        <div style={{ fontStyle: 'italic' }}> {d.chiTietSanPham.kichCo.ten} </div> <br />
-                        <div style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, width: 30, borderRadius: '10px', marginLeft: 80 }}>
-                          &nbsp;
-                        </div>
+                        <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                        <br />
+                        <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                        <span
+                          className="color-circle"
+                          style={{
+                            backgroundColor: d.chiTietSanPham.mauSac.ten,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            height: '15px',
+                            width: '15px'
+                          }}
+                        ></span>
                       </td>
                       <td>
-                        <div
-                          className="input-spinner"
-                          style={{ alignItems: 'center', width: 120, justifyContent: 'center', marginLeft: 90, marginTop: 20 }}
-                        >
+                        <div className="input-spinner" style={{ width: 120 }}>
                           {hoaDon.trangThai === 0 || hoaDon.trangThai === 1 ? (
                             <InputSpinner
                               type={'real'}
@@ -1871,11 +2267,7 @@ function DonHangCT() {
                               size="sm"
                             />
                           ) : (
-                            <span
-                              style={{ fontWeight: 'bold', fontSize: 16, justifyContent: 'center', marginLeft: 20, fontStyle: 'italic' }}
-                            >
-                              {d.soLuong}
-                            </span>
+                            <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>{d.soLuong}</span>
                           )}
                         </div>
                         {d.chiTietSanPham.soLuong < 10 && hoaDon.trangThai === 0 ? (
@@ -1897,6 +2289,138 @@ function DonHangCT() {
                   ))}
                 </tbody>
               </Table>
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Tiền hàng:
+                      </span>
+                    </Col>
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px'
+                        }}
+                      >
+                        {convertToCurrency(hoaDon.tongTien)}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
+
+              <br></br>
+
+              {hoaDon && hoaDon.tienGiam !== 0 && (
+                <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          Phí ship:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px'
+                          }}
+                        >
+                          {convertToCurrency(hoaDon.tienShip)}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
+              )}
+              <br></br>
+
+              {hd_km && hd_km.tienGiam !== 0 && (
+                <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            fontWeight: 'bold',
+                            color: 'red',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          Khuyến mãi:
+                        </span>
+                      </Col>
+                      <Col sm={6}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '100px',
+                            fontSize: '15px',
+                            color: 'red',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          {'- ' + convertToCurrency(hd_km.tienGiam)}
+                        </span>
+                      </Col>
+                    </Col>
+                  </Row>
+                </Container>
+              )}
+
+              <br></br>
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '150px',
+                          fontSize: '22px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        Tổng tiền:
+                      </span>
+                    </Col>
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '22px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
+                      </span>
+                    </Col>
+                  </Col>
+                </Row>
+              </Container>
             </div>
           </div>
         </Card>

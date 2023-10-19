@@ -44,7 +44,7 @@ function DonHang(props) {
   const [check, setCheck] = useState(true);
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
-  const [httt, setHttt] = useState('1');
+  const [httt, setHttt] = useState('Tiền mặt');
   const [urlPay, setUrlPay] = useState('');
   const [values, setValues] = useState([]);
   const [dataKM, setDataKM] = useState([]);
@@ -69,13 +69,13 @@ function DonHang(props) {
     tienGiam: 0
   });
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
-    tenNguoiNhan: '',
+    tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
     tongTien: '',
     tongTienKhiGiam: '',
     hinhThucThanhToan: {
       id: dataDetailHD.hinhThucThanhToan && dataDetailHD.hinhThucThanhToan.id,
-      trangThai: 0,
+      trangThai: 1,
       tien: 0
     },
     trangThai: 0
@@ -345,12 +345,16 @@ function DonHang(props) {
     findAllKM(id);
     getAllById(id);
     detailHDById(id);
-    VNP(id);
+    if (dataDetailHD.tongTienKhiGiam) {
+      VNP(id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
-    update(idHDCT, valuesUpdate);
+    if (idHDCT) {
+      update(idHDCT, valuesUpdate);
+    }
   }, [valuesUpdate]);
 
   useEffect(() => {
@@ -362,7 +366,9 @@ function DonHang(props) {
   }, [totalAmount]);
 
   useEffect(() => {
-    detailMaKM(idKM);
+    if (idKM) {
+      detailMaKM(idKM);
+    }
   }, [idKM]);
 
   useEffect(() => {
@@ -372,7 +378,7 @@ function DonHang(props) {
   useEffect(() => {
     if (dataDetailHD.tongTienKhiGiam === 0) {
       toast.error('Mày mà spam là t cho m bay acc fb');
-    } else {
+    } else if (valuesAddKM.khuyenMai.id) {
       postKM(valuesAddKM);
     }
   }, [valuesAddKM]);
@@ -573,6 +579,7 @@ function DonHang(props) {
       ...valuesUpdateHD.hinhThucThanhToan,
       trangThai: 6,
       hinhThucThanhToan: {
+        ten: httt,
         tien: tienKhachDua,
         trangThai: 1
       }
@@ -587,6 +594,7 @@ function DonHang(props) {
       ...valuesUpdateHD.hinhThucThanhToan,
       trangThai: 6,
       hinhThucThanhToan: {
+        ten: httt,
         tien: tienKhachDua,
         trangThai: 1
       }
@@ -629,7 +637,7 @@ function DonHang(props) {
     setShow2(false);
   };
   //sp
-  const [inputDetail, setInputDetail] = useState(null);
+  // const [inputDetail, setInputDetail] = useState(null);
   const [dataSP, setDataSP] = useState([]);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
@@ -668,8 +676,7 @@ function DonHang(props) {
     // chuachac dong
     setShow2(false);
     //
-    setInputDetail(null);
-    inputDetail(null);
+    // setInputDetail(null);
     getAllById(id);
     setValuesAdd({
       chiTietSanPham: {
@@ -683,17 +690,21 @@ function DonHang(props) {
   };
 
   const handleDetail = (id) => {
-    setInputDetail(id);
+    // setInputDetail(id);
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
 
   useEffect(() => {
-    getAllMSKC(idSP);
+    if (idSP) {
+      getAllMSKC(idSP);
+    }
   }, [idSP]);
 
   useEffect(() => {
-    detail2(idCTSP);
+    if (idCTSP) {
+      detail2(idCTSP);
+    }
   }, [idCTSP]);
 
   const detail2 = async (idCTSP) => {
@@ -1432,11 +1443,18 @@ function DonHang(props) {
                 value={httt}
                 onChange={(e) => {
                   setHttt(e.target.value);
+                  setValuesUpdateHD({
+                    ...valuesUpdateHD,
+                    ...valuesUpdateHD.hinhThucThanhToan,
+                    hinhThucThanhToan: {
+                      ten: e.target.value
+                    }
+                  });
                   VNP(id);
                 }}
               >
-                <option value="1">Tiền mặt</option>
-                <option value="0">VNPAY</option>
+                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="VNPAY">VNPAY</option>
               </select>
             </div>
           </div>
@@ -1472,7 +1490,7 @@ function DonHang(props) {
           In hoá đơn
           <div className="button-thanh-toan">
             {check ? (
-              httt === '0' ? (
+              httt === 'VNPAY' ? (
                 <button
                   type="button"
                   className="btn btn-success"
@@ -1495,7 +1513,7 @@ function DonHang(props) {
                   </PDFDownloadLink>
                 </button>
               )
-            ) : httt === '1' ? (
+            ) : httt === 'Tiền mặt' ? (
               <button
                 type="button"
                 className="btn btn-success"

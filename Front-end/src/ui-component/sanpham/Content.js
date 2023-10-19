@@ -4,9 +4,7 @@ import Card from 'react-bootstrap/Card';
 import { getAllCTSPWeb, getAllListCL, getAllListKC, getAllListMS, getAllListCO, getAllListNSX } from 'services/SanPhamService';
 // import '../../scss/SanPham.scss';
 import '../../scss/ChiTietSanPham.scss';
-
 import ReactPaginate from 'react-paginate';
-
 // Bộ lọc
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';

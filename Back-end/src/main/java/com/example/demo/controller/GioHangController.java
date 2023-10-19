@@ -76,7 +76,7 @@ public class GioHangController {
                 .ma(ma)
                 .ten(hoaDon.getHinhThucThanhToan().getTen())
                 .ngayTao(new Date())
-                .trangThai(1)
+                .trangThai(hoaDon.getHinhThucThanhToan().getTrangThai())
                 .tien(hoaDon.getHinhThucThanhToan().getTien())
                 .build();
         hoaDon.setId(id);
@@ -88,6 +88,10 @@ public class GioHangController {
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         hoaDon.setDiaChi(hoaDon.getDiaChi());
+        hoaDon.setTinh(hoaDon.getTinh());
+        hoaDon.setHuyen(hoaDon.getHuyen());
+        hoaDon.setXa(hoaDon.getXa());
+        hoaDon.setTrangThai(0);
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);
         return ResponseEntity.ok(serviceHD.add(hoaDon));

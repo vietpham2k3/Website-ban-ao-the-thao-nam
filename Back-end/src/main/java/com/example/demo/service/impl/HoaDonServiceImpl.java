@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.controller.HoaDonController;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.repository.ChiTietSanPhamRepository;
 import com.example.demo.repository.HoaDonRespository;
 import com.example.demo.response.HoaDonCustom;
@@ -11,7 +9,6 @@ import com.example.demo.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -66,8 +63,15 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi) {
-        res.updateKH(id, tenNguoiNhan, soDienThoai, diaChi);
+    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai,
+                           String diaChi, String tinh,
+                           String huyen, String xa) {
+        res.updateKH(id, tenNguoiNhan, soDienThoai, diaChi,tinh,huyen,xa);
+    }
+
+    @Override
+    public void updateHDTien(UUID id, Double tongTien, Double tongTienKhiGiam,Double tienShip) {
+        res.updateTienHD(id,tongTien,tongTienKhiGiam,tienShip);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
-import com.example.demo.dto.EmailContent;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.entity.DiaChi;
-import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.service.impl.DiaChiServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;

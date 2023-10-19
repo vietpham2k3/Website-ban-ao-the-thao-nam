@@ -191,7 +191,6 @@ function AddSanPham() {
       }
     }
   };
-  console.log(values);
 
   return (
     <div>

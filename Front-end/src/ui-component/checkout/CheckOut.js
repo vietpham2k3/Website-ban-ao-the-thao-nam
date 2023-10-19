@@ -8,11 +8,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router';
 import { getById, getKmById } from 'services/ServiceDonHang';
-import { deleteByIdHD, addKhuyenMai, thanhToan } from 'services/GioHangService';
+import { addKhuyenMai, thanhToan } from 'services/GioHangService';
 import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
 
-function CheckoutForm() {
+function CheckoutForm(props) {
+  // eslint-disable-next-line react/prop-types
+  const { handleBackToCart, label } = props;
   const [dataHDCT, setDataHDCT] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
   const [quan, setQuan] = useState([]);
@@ -59,6 +61,9 @@ function CheckoutForm() {
     tenNguoiNhan: '',
     soDienThoai: '',
     diaChi: '',
+    tinh: '',
+    huyen: '',
+    xa: '',
     tongTien: 0,
     tongTienKhiGiam: 0,
     trangThai: 0,
@@ -71,11 +76,7 @@ function CheckoutForm() {
       trangThai: 1
     }
   });
-  const [diaChi, setDiaChi] = useState({
-    tinh: '',
-    quan: '',
-    xa: ''
-  });
+
   const [errors, setErrors] = useState({
     tenNguoiNhan: true,
     soDienThoai: true,
@@ -187,8 +188,8 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.NameExtension[1];
-      setDiaChi({
-        ...diaChi,
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
         tinh: selectedProvinceName
       });
     }
@@ -222,9 +223,9 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.DistrictName;
-      setDiaChi({
-        ...diaChi,
-        quan: selectedProvinceName
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
+        huyen: selectedProvinceName
       });
     }
     setErrors({
@@ -252,8 +253,8 @@ function CheckoutForm() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.WardName;
-      setDiaChi({
-        ...diaChi,
+      setValuesUpdateHD({
+        ...valuesUpdateHD,
         xa: selectedProvinceName
       });
     }
@@ -272,10 +273,6 @@ function CheckoutForm() {
     return formatter.format(number);
   }
 
-  const handleBackToCart = () => {
-    backToCart(id);
-  };
-
   const addVToHD = async (value) => {
     try {
       const res = await addKhuyenMai(value);
@@ -288,17 +285,6 @@ function CheckoutForm() {
         const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
         setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
         toast.success('Thêm mã thành công');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const backToCart = async (idHD) => {
-    try {
-      const res = await deleteByIdHD(idHD);
-      if (res) {
-        setDataHDCT(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -444,19 +430,19 @@ function CheckoutForm() {
         diaChi: false
       });
       return;
-    } else if (diaChi.tinh === '') {
+    } else if (valuesUpdateHD.tinh === '') {
       setErrors({
         ...errors,
         tinh: false
       });
       return;
-    } else if (diaChi.quan === '') {
+    } else if (valuesUpdateHD.huyen === '') {
       setErrors({
         ...errors,
         quan: false
       });
       return;
-    } else if (diaChi.xa === '') {
+    } else if (valuesUpdateHD.xa === '') {
       setErrors({
         ...errors,
         xa: false
@@ -471,9 +457,12 @@ function CheckoutForm() {
     setIsUpdatingDiaChi(true);
 
     // Cập nhật giá trị diaChi
-    setValuesUpdateHD((prev) => ({
-      ...prev,
-      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh,
+    setValuesUpdateHD((valuesUpdateHD) => ({
+      ...valuesUpdateHD,
+      diaChi: valuesUpdateHD.diaChi,
+      tinh: valuesUpdateHD.tinh,
+      huyen: valuesUpdateHD.huyen,
+      xa: valuesUpdateHD.xa,
       ngayDuKienNhan: ngayDuKienNhan
     }));
   };
@@ -497,19 +486,19 @@ function CheckoutForm() {
         diaChi: false
       });
       return;
-    } else if (diaChi.tinh === '') {
+    } else if (valuesUpdateHD.tinh === '') {
       setErrors({
         ...errors,
         tinh: false
       });
       return;
-    } else if (diaChi.quan === '') {
+    } else if (valuesUpdateHD.huyen === '') {
       setErrors({
         ...errors,
         quan: false
       });
       return;
-    } else if (diaChi.xa === '') {
+    } else if (valuesUpdateHD.xa === '') {
       setErrors({
         ...errors,
         xa: false
@@ -524,9 +513,13 @@ function CheckoutForm() {
     setIsUpdatingDiaChi(true);
 
     // Cập nhật giá trị diaChi
-    setValuesUpdateHD((prev) => ({
-      ...prev,
-      diaChi: prev.diaChi + ', ' + diaChi.xa + ', ' + diaChi.quan + ', ' + diaChi.tinh
+    setValuesUpdateHD((valuesUpdateHD) => ({
+      ...valuesUpdateHD,
+      diaChi: valuesUpdateHD.diaChi,
+      tinh: valuesUpdateHD.tinh,
+      huyen: valuesUpdateHD.huyen,
+      xa: valuesUpdateHD.xa,
+      ngayDuKienNhan: ngayDuKienNhan
     }));
     window.location.href = urlPay;
   };
@@ -690,11 +683,10 @@ function CheckoutForm() {
                 <p
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                    navigate('/gio-hang');
                     handleBackToCart();
                   }}
                 >
-                  <i className="fa-solid fa-chevron-left"></i> Quay về giỏ hàng
+                  <i className="fa-solid fa-chevron-left"></i> {label}
                 </p>
               </div>
             </div>
@@ -835,7 +827,9 @@ function CheckoutForm() {
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
                                 hinhThucThanhToan: {
-                                  ten: 'VNPay'
+                                  ten: 'VNPay',
+                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  trangThai: 1
                                 }
                               })
                             }
@@ -867,7 +861,9 @@ function CheckoutForm() {
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
                                 hinhThucThanhToan: {
-                                  ten: 'Tiền mặt'
+                                  ten: 'Tiền mặt',
+                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  trangThai: 0
                                 }
                               })
                             }

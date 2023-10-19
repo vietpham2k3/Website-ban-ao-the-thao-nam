@@ -31,7 +31,6 @@ function AddNhanVien() {
     email: '',
     diaChi: '',
     ngaySinh: '',
-    matKhau: '',
     vaiTro: '',
     trangThai: 0
   });
@@ -61,7 +60,6 @@ function AddNhanVien() {
     formData.append('email', values.email);
     formData.append('diaChi', values.diaChi);
     formData.append('ngaySinh', values.ngaySinh);
-    formData.append('matKhau', values.matKhau);
     formData.append('vaiTro', values.vaiTro);
     formData.append('trangThai', values.trangThai);
     formData.append('anh', anh);
@@ -169,18 +167,6 @@ function AddNhanVien() {
                 className="form-control"
                 value={values.ngaySinh}
                 onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
-              />
-            </div>
-            <div className="col-6">
-              <label htmlFor="matKhau" className="form-label">
-                Mật khẩu
-              </label>
-              <input
-                id="matKhau"
-                type="text"
-                className="form-control"
-                value={values.matKhau}
-                onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
               />
             </div>
 
