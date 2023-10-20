@@ -36,6 +36,7 @@ public class DiaChiServiceImpl implements DiaChiService {
         Optional<DiaChi> optional = diaChiRepository.findById(id);
         return optional.map(o->{
             o.setTinhThanh(diaChi.getTinhThanh());
+            o.setDiaChi(diaChi.getDiaChi());
             o.setQuanHuyen(diaChi.getQuanHuyen());
             o.setPhuongXa(diaChi.getPhuongXa());
             return diaChiRepository.save(o);
@@ -48,6 +49,7 @@ public class DiaChiServiceImpl implements DiaChiService {
         KhachHang kh = khachHangRepository.findById(id).orElse(null);
         diaChi.setKhachHang(kh);
         diaChi.setPhuongXa(diaChi.getPhuongXa());
+        diaChi.setDiaChi(diaChi.getDiaChi());
         diaChi.setQuanHuyen(diaChi.getQuanHuyen());
         diaChi.setTinhThanh(diaChi.getTinhThanh());
         diaChi.setTrangThai(1);
