@@ -1,13 +1,28 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
 
-const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddDC, thanhPho, setValuesId }) => {
+const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddDC, thanhPho, setValuesId, setIsShowUpdate, setIdDC }) => {
   const handleChange = (diaChi, phuongXa, quanHuyen, tinhThanh) => {
     setValuesDC({ ...valuesDC, diaChi: diaChi, phuongXa: phuongXa, quanHuyen: quanHuyen, tinhThanh: tinhThanh });
     thanhPho.forEach((province) => {
       if (province.NameExtension[1] === tinhThanh) {
-        console.log('idTP:' + province.ProvinceID);
+        setValuesId({
+          province_id: province.ProvinceID
+        });
+      }
+    });
+  };
+
+  const handleShowDC = (id, quanHuyen, tinhThanh) => {
+    setValuesDC({ ...valuesDC, quanHuyen: quanHuyen });
+    handleClose();
+    setIdDC(id);
+    setIsShowUpdate(true);
+    thanhPho.forEach((province) => {
+      if (province.NameExtension[1] === tinhThanh) {
         setValuesId({
           province_id: province.ProvinceID
         });
@@ -48,7 +63,9 @@ const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddD
                   {d.trangThai === 1 ? <p className="text-default-dc">Mặc định</p> : ''}
                 </div>
               </p>
-              <span className="change-dc change-dc-modal">Thay đổi</span>
+              <span className="change-dc change-dc-modal" onClick={() => handleShowDC(d.id, d.quanHuyen, d.tinhThanh)}>
+                Thay đổi
+              </span>
             </div>
           ))}
         </Modal.Body>

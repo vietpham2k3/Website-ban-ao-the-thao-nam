@@ -334,7 +334,7 @@ function AddKhachHang() {
             </div>
 
             <div className="col-md-6">
-              <div className="col-md-12">
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
                 <label htmlFor="address" className="text-black" style={{ paddingBottom: 5 }}>
                   Địa Chỉ
                 </label>
@@ -353,7 +353,7 @@ function AddKhachHang() {
                   placeholder="Địa chỉ..."
                 />
               </div>
-              <div className="col-md-12">
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
                 <label htmlFor="ward" className="form-label">
                   Tỉnh/Thành Phố
                 </label>
@@ -367,7 +367,7 @@ function AddKhachHang() {
                 </select>
               </div>
 
-              <div className="col-md-12">
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
                 <label htmlFor="ward" className="form-label">
                   Quận Huyện
                 </label>
@@ -387,7 +387,7 @@ function AddKhachHang() {
                 </select>
               </div>
 
-              <div className="col-md-12">
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
                 <label htmlFor="ward" className="form-label">
                   Phường xã
                 </label>
