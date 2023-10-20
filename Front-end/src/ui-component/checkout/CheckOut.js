@@ -99,7 +99,9 @@ function CheckoutForm(props) {
   }, []);
 
   useEffect(() => {
-    getService(valuesServices);
+    if (valuesServices) {
+      getService(valuesServices);
+    }
   }, [valuesServices]);
 
   useEffect(() => {

@@ -14,7 +14,6 @@ import { getTP, getQH, getP, getFee, getServices } from 'services/ApiGHNService'
 import {
   detailHD,
   detailLSHD,
-  updateKHDH,
   xacNhanDH,
   huyDonHang,
   xacNhanGiao,
@@ -26,7 +25,9 @@ import {
   searchCTSPofDH,
   addSP,
   getKmById,
-  updateTienHD
+  giaoHangThanhCong,
+  giaoHangThatBai,
+  updateHoaDon
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -44,7 +45,6 @@ function DonHangCT() {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedWard, setSelectedWard] = useState('');
-  // const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [inputDetail, setInputDetail] = useState(null);
@@ -54,11 +54,39 @@ function DonHangCT() {
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
-  const [valuesUpdateHDTien, setValuesUpdateHDTien] = useState({
+  // detailHD
+  const [hoaDon, setHoaDon] = useState({});
+  const [valuesServices, setValuesServices] = useState({
+    shop_id: 4625720,
+    from_district: 1710,
+    to_district: 0
+  });
+  const [valuesFee, setValuesFee] = useState({
+    service_id: 0,
+    insurance_value: 0,
+    coupon: null,
+    from_district_id: 1710,
+    to_district_id: 0,
+    to_ward_code: '',
+    height: 15,
+    length: 15,
+    weight: 5000,
+    width: 15
+  });
+  // cap nhat hoa don
+  const [values, setValues] = useState({
+    tenNguoiNhan: '',
+    soDienThoai: '',
+    diaChi: '',
+    tinh: '',
+    huyen: '',
+    xa: '',
     tongTien: 0,
     tongTienKhiGiam: 0,
     tienShip: 0
   });
+  const [totalAmount, setTotalAmount] = useState(0);
+
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
       id: ''
@@ -78,6 +106,7 @@ function DonHangCT() {
     },
     soLuong: ''
   });
+
   useEffect(() => {
     getAll(0);
   }, []);
@@ -115,6 +144,30 @@ function DonHangCT() {
     setTerm(e.target.value);
   };
 
+  // Tính tổng tiền khi valuesSanPham thay đổi
+  useEffect(() => {
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    valuesSanPham.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [valuesSanPham]);
+
+  useEffect(() => {
+    setHoaDon(() => ({
+      ...hoaDon,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+    setValues(() => ({
+      ...values,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (values && values.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+  }, [totalAmount, values.tienShip, hoaDon.tienShip]);
+
   const deleteHD = async (idHDCT) => {
     const res = await deleteHDCT(idHDCT);
     if (res) {
@@ -137,8 +190,78 @@ function DonHangCT() {
     }
   };
 
+  const updateHD = async (id, value) => {
+    const res = await updateHoaDon(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      detail(id);
+      setShow(false);
+    }
+  };
+
+  const handleUpdateHD = async (event) => {
+    event.preventDefault();
+    if (values.tenNguoiNhan === '') {
+      setNone(false);
+      return;
+    }
+
+    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(values.tenNguoiNhan)) {
+      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
+      setNone1(false);
+      return;
+    }
+
+    if (values.soDienThoai === '') {
+      setNone2(false);
+      return;
+    }
+
+    // Kiểm tra định dạng số điện thoại
+    const phoneRegex = /^0[0-9]{9}$/;
+    if (!phoneRegex.test(values.soDienThoai)) {
+      setNone3(false);
+      return;
+    }
+
+    if (values.diaChi === '') {
+      setNone4(false);
+      return;
+    }
+
+    if (values.diaChi.length > 250) {
+      setNone5(false);
+      return;
+    }
+
+    if (!selectedProvince) {
+      toast.error('Vui lòng chọn tỉnh/thành phố.');
+      return;
+    }
+
+    if (!selectedDistrict) {
+      toast.error('Vui lòng chọn quận/huyện.');
+      return;
+    }
+
+    if (!selectedWard) {
+      toast.error('Vui lòng chọn phường/xã.');
+      return;
+    }
+
+    setValues((values) => ({
+      ...values,
+      tinh: values.tinh,
+      huyen: values.huyen,
+      xa: values.xa
+    }));
+
+    await updateHD(id, values);
+  };
+
   const handleUpdateSl = (id, idHD, idCTSP, soLuong) => {
     setIdHDCT(id);
+
     setValuesUpdate({
       ...valuesUpdate,
       chiTietSanPham: {
@@ -148,8 +271,22 @@ function DonHangCT() {
         id: idHD
       },
       soLuong: soLuong
-    });
+    }); 
+    
+    // setHoaDon(() => ({
+    //   ...hoaDon,
+    //   tongTien: totalAmount,
+    //   tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    // }));
+    setValues(() => ({
+      ...values,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (values && values.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+
   };
+
+  console.log(totalAmount);
 
   const update = async (idHDCT, values) => {
     const res = await updateSL(idHDCT, values);
@@ -173,7 +310,6 @@ function DonHangCT() {
   };
 
   const handleAdd = () => {
-    // getAllById(id);
     if (parseInt(valuesAdd.soLuong) > parseInt(dataDetail.soLuong)) {
       toast.error('Đã vượt quá số lượng hiện có !');
       return;
@@ -251,6 +387,8 @@ function DonHangCT() {
   const [show5, setShow5] = useState(false);
   const [show6, setShow6] = useState(false);
   const [show7, setShow7] = useState(false);
+  const [show8, setShow8] = useState(false);
+  const [show9, setShow9] = useState(false);
 
   // const handleClose = () => {
   //   setShow(false);
@@ -278,6 +416,12 @@ function DonHangCT() {
   const handleClose7 = () => setShow7(false);
   // const handleShow7 = () => setShow7(true);
 
+  const handleClose8 = () => setShow8(false);
+  const handleShow8 = () => setShow8(true);
+
+  const handleClose9 = () => setShow9(false);
+  const handleShow9 = () => setShow9(true);
+
   const [lshd, setLshd] = useState({
     ghiChu: ''
   });
@@ -294,23 +438,13 @@ function DonHangCT() {
     ghiChu: ''
   });
 
-  // cap nhat khach hang
-  const [values, setValues] = useState({
-    tenNguoiNhan: '',
-    soDienThoai: '',
-    diaChi: '',
-    tinh: '',
-    huyen: '',
-    xa: ''
+  const [lshd4, setLshd4] = useState({
+    ghiChu: ''
   });
 
-  const updateKH = async (id, value) => {
-    const res = await updateKHDH(id, value);
-    if (res) {
-      toast.success('Cập nhật thành công !');
-      setShow(false);
-    }
-  };
+  const [lshd5, setLshd5] = useState({
+    ghiChu: ''
+  });
 
   const [none, setNone] = useState(true);
   const [none1, setNone1] = useState(true);
@@ -318,28 +452,6 @@ function DonHangCT() {
   const [none3, setNone3] = useState(true);
   const [none4, setNone4] = useState(true);
   const [none5, setNone5] = useState(true);
-
-  // detailHD
-  const [hoaDon, setHoaDon] = useState({});
-
-  useEffect(() => {
-    const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
-    const huyen = quan.find((province) => province.DistrictName === values.huyen);
-    const xa = phuong.find((province) => province.WardName === values.xa);
-    const districtId = {
-      district_id: huyen && huyen.DistrictID
-    };
-    getQuanHuyen(tinh && tinh.ProvinceId);
-    if (districtId.district_id === undefined) {
-      districtId.district_id = huyen && huyen.DistrictID;
-    } else {
-      getPhuong(districtId);
-    }
-    setSelectedProvince(tinh && tinh.ProvinceID);
-    setSelectedDistrict(huyen && huyen.DistrictID);
-    setSelectedWard(xa && xa.WardCode);
-    console.log(selectedDistrict);
-  }, [values, hoaDon, id, valuesAdd, valuesUpdate, valuesUpdateHDTien]);
 
   useEffect(() => {
     if (id) {
@@ -349,16 +461,16 @@ function DonHangCT() {
     }
   }, [id]);
 
-  useEffect(() => {
-    setValues(hoaDon);
-  }, [hoaDon]);
-
   const detail = async (id) => {
     const res = await detailHD(id);
     if (res && res.data) {
       setHoaDon(res.data);
     }
   };
+
+  useEffect(() => {
+    setValues(hoaDon);
+  }, [hoaDon]);
 
   const [hd_km, setHD_KM] = useState(null);
 
@@ -427,6 +539,40 @@ function DonHangCT() {
     await giaoHang(id, lshd2);
   };
 
+  // xac nhan giao hang thanh cong
+
+  const giaoHangTC = async (id, value) => {
+    const res = await giaoHangThanhCong(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow8(false);
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleXacNhanGiaoHangThanhCong = async (event) => {
+    event.preventDefault();
+    await giaoHangTC(id, lshd4);
+  };
+
+  // xac nhan giao hang that bai
+
+  const giaoHangTB = async (id, value) => {
+    const res = await giaoHangThatBai(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow9(false);
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleXacNhanGiaoHangThatBai = async (event) => {
+    event.preventDefault();
+    await giaoHangTB(id, lshd5);
+  };
+
   // xac nhan thanh toan
 
   const thanhToan = async (id, value) => {
@@ -443,235 +589,7 @@ function DonHangCT() {
     event.preventDefault();
     await thanhToan(id, lshd3);
   };
-
-  const [totalAmount, setTotalAmount] = useState(0);
-
-  // Tính tổng tiền khi valuesSanPham thay đổi
-  useEffect(() => {
-    // Tính tổng tiền khi valuesSanPham thay đổi
-    let sum = 0;
-    valuesSanPham.forEach((d) => {
-      sum += d.soLuong * d.donGia;
-    });
-    // Cập nhật giá trị tổng tiền
-    setTotalAmount(sum);
-  }, [valuesSanPham]);
-
-  useEffect(() => {
-    setHoaDon(() => ({
-      ...hoaDon,
-      tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
-    }));
-    setValuesUpdateHDTien(() => ({
-      ...valuesUpdateHDTien,
-      tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount + (valuesUpdateHDTien && valuesUpdateHDTien.tienShip) - (hd_km && hd_km.tienGiam)
-    }));
-  }, [totalAmount, valuesUpdateHDTien.tienShip]);
-
-  const handleUpdateHD = () => {
-    updateTienHD(id, valuesUpdateHDTien);
-  };
-
-  useEffect(() => {
-    handleUpdateHD();
-  }, [valuesUpdateHDTien]);
   // apiGHN
-
-  const [valuesServices, setValuesServices] = useState({
-    shop_id: 4625720,
-    from_district: 1710,
-    to_district: 0
-  });
-  const [valuesFee, setValuesFee] = useState({
-    service_id: 0,
-    insurance_value: 0,
-    coupon: null,
-    from_district_id: 1710,
-    to_district_id: 0,
-    to_ward_code: '',
-    height: 15,
-    length: 15,
-    weight: 5000,
-    width: 15
-  });
-
-  useEffect(() => {
-    getThanhPho();
-  }, []);
-
-  const handleProvinceChange = (event) => {
-    const provinceId = {
-      province_id: event.target.value
-    };
-
-    setSelectedProvince(event.target.value);
-    getQuanHuyen(provinceId);
-    const selectedProvinceId = event.target.value;
-    const selectedProvince = thanhPho.find((province) => province.ProvinceID === parseInt(selectedProvinceId, 10));
-    setValuesUpdateHDTien((prevT) =>({
-      ...prevT,
-      tienShip: valuesUpdateHDTien.tienShip
-    }))
-
-    setHoaDon((prevHoaDon) =>({
-      ...prevHoaDon,
-      tienShip: hoaDon.tienShip
-    }))
-    if (selectedProvince) {
-      // Lấy thông tin tỉnh/thành phố được chọn
-      const selectedProvinceName = selectedProvince.NameExtension[1];
-      setValues({
-        ...values,
-        tinh: selectedProvinceName
-      });
-      setHoaDon({
-        ...hoaDon,
-        tinh: selectedProvinceName
-      });
-    }
-    console.log(valuesUpdateHDTien.tienShip);
-  };
-
-  const handleDistrictChange = (event) => {
-    const districtId = {
-      district_id: event.target.value
-    };
-    setSelectedDistrict(event.target.value);
-
-    setValuesUpdateHDTien((prevT) =>({
-      ...prevT,
-      tienShip: valuesUpdateHDTien.tienShip
-    }))
-
-    setHoaDon((prevHoaDon) =>({
-      ...prevHoaDon,
-      tienShip: hoaDon.tienShip
-    }))
-    
-    setValuesServices({
-      ...valuesServices,
-      to_district: parseInt(event.target.value, 10)
-    });
-    // setTgDuKien({
-    //   ...tgDuKien,
-    //   to_district_id: parseInt(event.target.value, 10)
-    // });
-    getPhuong(districtId);
-    setValuesFee({
-      ...valuesFee,
-      to_district_id: parseInt(event.target.value, 10)
-    });
-    const selectedProvinceId = event.target.value;
-    const selectedProvince = quan.find((province) => province.DistrictID === parseInt(selectedProvinceId, 10));
-
-    if (selectedProvince) {
-      // Lấy thông tin tỉnh/thành phố được chọn
-      const selectedProvinceName = selectedProvince.DistrictName;
-      setValues({
-        ...values,
-        huyen: selectedProvinceName
-      });
-      setHoaDon({
-        ...hoaDon,
-        huyen: selectedProvinceName
-      });
-    }
-    console.log(valuesUpdateHDTien.tienShip);
-  };
-
-  const handleWardChange = (event) => {
-    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setSelectedWard(event.target.value);
-    setValuesUpdateHDTien((prevT) =>({
-      ...prevT,
-      tienShip: valuesUpdateHDTien.tienShip
-    }))
-
-    setHoaDon((prevHoaDon) =>({
-      ...prevHoaDon,
-      tienShip: hoaDon.tienShip
-    }))
-    setValuesFee({
-      ...valuesFee,
-      insurance_value: totalAmount,
-      to_ward_code: event.target.value
-    });
-    // setTgDuKien({
-    //   ...tgDuKien,
-    //   to_ward_code: event.target.value
-    // });
-    // setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHDTien.tienShip);
-    const selectedProvinceId = event.target.value;
-    const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
-
-    if (selectedProvince) {
-      // Lấy thông tin tỉnh/thành phố được chọn
-      const selectedProvinceName = selectedProvince.WardName;
-      setValues({
-        ...values,
-        xa: selectedProvinceName
-      });
-      setHoaDon({
-        ...hoaDon,
-        xa: selectedProvinceName
-      });
-    }
-    console.log(valuesUpdateHDTien.tienShip);
-
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const getService = async (value) => {
-    try {
-      const res = await getServices(value);
-      if (res) {
-        setValuesFee({
-          ...valuesFee,
-          service_id: res.data.data[0].service_id
-        });
-        // setTgDuKien({
-        //   ...tgDuKien,
-        //   service_id: res.data.data[0].service_id
-        // });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fee = async (value) => {
-    try {
-      const res = await getFee(value);
-      if (res) {
-        const total = res.data.data.total;
-        setValuesUpdateHDTien({
-          ...valuesUpdateHDTien,
-          tienShip: total
-        });
-        setHoaDon({
-          ...hoaDon,
-          tienShip: total
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   getService();
-  // }, [valuesServices]);
-
-  /////
-
-  useEffect(() => {
-    if (valuesFee.to_district_id !== 0) {
-      fee(valuesFee);
-    }
-    // thoiGiaoHang(tgDuKien);
-  }, [valuesFee.to_ward_code]);
 
   const getThanhPho = async () => {
     try {
@@ -702,75 +620,166 @@ function DonHangCT() {
     }
   };
 
-  const handleUpdate = async (event) => {
-    event.preventDefault();
-    if (values.tenNguoiNhan === '') {
-      setNone(false);
-      return;
+  useEffect(() => {
+    getThanhPho();
+    getQuanHuyen();
+    getPhuong();
+  }, []);
+
+  const handleProvinceChange = (event) => {
+    const provinceId = {
+      province_id: event.target.value
+    };
+
+    setSelectedProvince(event.target.value);
+    getQuanHuyen(provinceId);
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = thanhPho.find((province) => province.ProvinceID === parseInt(selectedProvinceId, 10));
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.NameExtension[1];
+      setValues({
+        ...values,
+        tinh: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        tinh: selectedProvinceName
+      });
     }
-
-    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(values.tenNguoiNhan)) {
-      // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
-      setNone1(false);
-      return;
-    }
-
-    if (values.soDienThoai === '') {
-      setNone2(false);
-      return;
-    }
-
-    // Kiểm tra định dạng số điện thoại
-    const phoneRegex = /^0[0-9]{9}$/;
-    if (!phoneRegex.test(values.soDienThoai)) {
-      setNone3(false);
-      return;
-    }
-
-    if (values.diaChi === '') {
-      setNone4(false);
-      return;
-    }
-
-    if (values.diaChi.length > 250) {
-      setNone5(false);
-      return;
-    }
-
-    if (!selectedProvince) {
-      toast.error('Vui lòng chọn tỉnh/thành phố.');
-      return;
-    }
-
-    if (!selectedDistrict) {
-      toast.error('Vui lòng chọn quận/huyện.');
-      return;
-    }
-
-    if (!selectedWard) {
-      toast.error('Vui lòng chọn phường/xã.');
-      return;
-    }
-
-    setValues((values) => ({
-      ...values,
-      tinh: values.tinh,
-      huyen: values.huyen,
-      xa: values.xa
-    }));
-
-    setValuesUpdateHDTien((prevT) =>({
-      ...prevT,
-      tienShip: valuesUpdateHDTien.tienShip
-    }))
-
-    setHoaDon((prevHoaDon) =>({
-      ...prevHoaDon,
-      tienShip: hoaDon.tienShip
-    }))
-
-    await updateKH(id, values);
   };
+
+  const handleDistrictChange = (event) => {
+    const districtId = {
+      district_id: event.target.value
+    };
+    setSelectedDistrict(event.target.value);
+    setValuesServices({
+      ...valuesServices,
+      to_district: parseInt(event.target.value, 10)
+    });
+    // setTgDuKien({
+    //   ...tgDuKien,
+    //   to_district_id: parseInt(event.target.value, 10)
+    // });
+    getPhuong(districtId);
+    setValuesFee({
+      ...valuesFee,
+      to_district_id: parseInt(event.target.value, 10)
+    });
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = quan.find((province) => province.DistrictID === parseInt(selectedProvinceId, 10));
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.DistrictName;
+      setValues({
+        ...values,
+        huyen: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        huyen: selectedProvinceName
+      });
+    }
+  };
+
+  const handleWardChange = (event) => {
+    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    setSelectedWard(event.target.value);
+    setValuesFee({
+      ...valuesFee,
+      insurance_value: totalAmount,
+      to_ward_code: event.target.value
+    });
+    // setTgDuKien({
+    //   ...tgDuKien,
+    //   to_ward_code: event.target.value
+    // });
+    // setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+    const selectedProvinceId = event.target.value;
+    const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
+
+    if (selectedProvince) {
+      // Lấy thông tin tỉnh/thành phố được chọn
+      const selectedProvinceName = selectedProvince.WardName;
+      setValues({
+        ...values,
+        xa: selectedProvinceName
+      });
+      setHoaDon({
+        ...hoaDon,
+        xa: selectedProvinceName
+      });
+    }
+  };
+
+  const getService = async (value) => {
+    try {
+      const res = await getServices(value);
+      if (res) {
+        setValuesFee({
+          ...valuesFee,
+          service_id: res.data.data[0].service_id
+        });
+        // setTgDuKien({
+        //   ...tgDuKien,
+        //   service_id: res.data.data[0].service_id
+        // });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fee = async (value) => {
+    try {
+      const res = await getFee(value);
+      if (res) {
+        const total = res.data.data.total;
+        setValues({
+          ...values,
+          tienShip: total
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (valuesServices) {
+      getService(valuesServices);
+    }
+  }, [valuesServices]);
+
+  /////
+  useEffect(() => {
+    if (valuesFee) {
+      fee(valuesFee);
+    }
+    // thoiGiaoHang(tgDuKien);
+  }, [valuesFee.to_ward_code]);
+
+  // useEffect(() => {
+  //   const tinh = thanhPho.find((province) => province.NameExtension[1] === values.tinh);
+  //   const huyen = quan.find((province) => province.DistrictName === values.huyen);
+  //   const xa = phuong.find((province) => province.WardName === values.xa);
+  //   const districtId = {
+  //     district_id: huyen && huyen.DistrictID
+  //   };
+  //   getQuanHuyen(tinh && tinh.ProvinceId);
+  //   if (districtId.district_id === undefined) {
+  //     districtId.district_id = huyen && huyen.DistrictID;
+  //   } else {
+  //     getPhuong(districtId);
+  //   }
+  //   setSelectedProvince(tinh && tinh.ProvinceID);
+  //   setSelectedDistrict(huyen && huyen.DistrictID);
+  //   setSelectedWard(xa && xa.WardCode);
+  //   console.log(selectedDistrict);
+  // }, [values, hoaDon, id, valuesAdd, valuesUpdate, valuesUpdateHDTien]);
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -1111,7 +1120,7 @@ function DonHangCT() {
                           {lshd.trangThai === 4 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
-                                <span className="p-timeline-date">Giao hàng thành công</span>
+                                <span className="p-timeline-date">{lshd.ten}</span>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
                                   style={lshd.hoaDon.trangThai === 4 ? { backgroundColor: '#0ad406', color: 'black' } : {}}
@@ -1125,7 +1134,7 @@ function DonHangCT() {
                           {lshd.trangThai === 5 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
-                                <time className="p-timeline-date">Giao hàng thất bại</time>
+                                <time className="p-timeline-date">{lshd.ten}</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
                                   style={lshd.hoaDon.trangThai === 5 ? { backgroundColor: 'orangered', color: 'white' } : {}}
@@ -1190,9 +1199,24 @@ function DonHangCT() {
                     ></span>
                   </button>
                 )}
-                {/* //xac nhan thanh toan */}
 
+                {/* //giao hang thanh cong */}
                 {hoaDon.trangThai === 3 && (
+                  <button onClick={handleShow8} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative">Giao thành công</span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+
+                {/* //xac nhan thanh toan */}
+                {hoaDon.trangThai === 4 && (
                   <button onClick={handleShow5} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1305,6 +1329,55 @@ function DonHangCT() {
                   </form>
                 </Modal.Body>
               </Modal>
+              {/* //giao hang thanh cong*/}
+              <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show8} onHide={handleClose8}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className="needs-validation" noValidate>
+                    <div className="form-group row">
+                      <div className="col-sm-12">
+                        <textarea
+                          className="form-control"
+                          rows="4"
+                          placeholder="Nhập ghi chú (nếu có)"
+                          value={lshd4.ghiChu}
+                          onChange={(e) => {
+                            setLshd4({ ghiChu: e.target.value });
+                          }}
+                        ></textarea>
+                      </div>
+                    </div>
+                    <br></br>
+                    <div className="text-center">
+                      <button
+                        onClick={handleXacNhanGiaoHangThanhCong}
+                        type="submit"
+                        className="btn btn-labeled shadow-button"
+                        style={{
+                          background: 'deepskyblue',
+                          borderRadius: '50px',
+                          border: '1px solid black',
+                          justifyItems: 'center'
+                        }}
+                      >
+                        <span
+                          style={{
+                            marginBottom: '3px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn-text"
+                        >
+                          Ghi Chú
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </Modal.Body>
+              </Modal>
               {/* //xac nhan thanh toan */}
               <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show5} onHide={handleClose5}>
                 <Modal.Header closeButton>
@@ -1356,7 +1429,7 @@ function DonHangCT() {
                 </Modal.Body>
               </Modal>
               {/* //huy don */}
-              <div className="col-2">
+              <div className="col-3">
                 {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
                   <button onClick={handleShow3} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
@@ -1396,6 +1469,71 @@ function DonHangCT() {
                       <div className="text-center">
                         <button
                           onClick={handleHuyDon}
+                          type="submit"
+                          className="btn btn-labeled shadow-button"
+                          style={{
+                            background: 'deepskyblue',
+                            borderRadius: '50px',
+                            border: '1px solid black',
+                            justifyItems: 'center'
+                          }}
+                        >
+                          <span
+                            style={{
+                              marginBottom: '3px',
+                              color: 'white',
+                              fontSize: '15px',
+                              fontWeight: 'bold'
+                            }}
+                            className="btn-text"
+                          >
+                            Ghi Chú
+                          </span>
+                        </button>
+                      </div>
+                    </form>
+                  </Modal.Body>
+                </Modal>
+                {/* //giao hang that bai */}
+                {hoaDon.trangThai === 3 && (
+                  <button onClick={handleShow9} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative" style={{ color: 'red' }}>
+                        Giao thất bại
+                      </span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show9} onHide={handleClose9}>
+                  <Modal.Header closeButton>
+                    <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <form className="needs-validation" noValidate>
+                      <div className="form-group row">
+                        <div className="col-sm-12">
+                          <textarea
+                            className="form-control"
+                            rows="4"
+                            name="diaChi"
+                            placeholder="Nhập ghi chú (nếu có)"
+                            value={lshd5.ghiChu}
+                            onChange={(e) => {
+                              setLshd5({ ghiChu: e.target.value });
+                            }}
+                          ></textarea>
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="text-center">
+                        <button
+                          onClick={handleXacNhanGiaoHangThatBai}
                           type="submit"
                           className="btn btn-labeled shadow-button"
                           style={{
@@ -1471,13 +1609,13 @@ function DonHangCT() {
                       centered
                       style={{ marginLeft: 150 }}
                       show={show}
-                      onHide={handleUpdate}
+                      onHide={handleUpdateHD}
                     >
-                      <Modal.Header onClick={handleUpdate}>
+                      <Modal.Header onClick={handleUpdateHD}>
                         <Modal.Title style={{ marginLeft: 225 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <form className="needs-validation" noValidate onSubmit={handleUpdate}>
+                        <form className="needs-validation" noValidate onSubmit={handleUpdateHD}>
                           <div className="row">
                             <div className="col-6">
                               <div className="form-group row">
@@ -1619,9 +1757,7 @@ function DonHangCT() {
                                   <select id="ward" className="form-select fsl" value={selectedWard} onChange={handleWardChange}>
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
-                                      <option key={ward.WardCode}
-                                       selected={ward.WardName === values.xa}
-                                        value={ward.WardCode}>
+                                      <option key={ward.WardCode} selected={ward.WardName === values.xa} value={ward.WardCode}>
                                         {ward.WardName}
                                       </option>
                                     ))}
@@ -2115,7 +2251,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {values.diaChi}, {values.xa}, {values.huyen}, {values.tinh}
+                        {hoaDon.diaChi}, {hoaDon.xa}, {hoaDon.huyen}, {hoaDon.tinh}
                       </span>
                     </Col>
                   </Col>

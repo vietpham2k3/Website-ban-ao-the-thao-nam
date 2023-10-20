@@ -53,10 +53,6 @@ const addKH2 = (id, values) => {
   return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
 };
 
-const updateKHDH = (id, values) => {
-  return axios.put(`/api/hoa-don/updateKH/` + id, values);
-};
-
 const xacNhanDH = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan/` + id, values);
 };
@@ -75,6 +71,14 @@ const huyDonListIds = (values) => {
 
 const xacNhanGiao = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan-giao-hang/` + id, values);
+};
+
+const giaoHangThanhCong = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-thanh-cong/` + id, values);
+};
+
+const giaoHangThatBai = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai/` + id, values);
 };
 
 const xacNhanThanhToan = (id, values) => {
@@ -97,16 +101,16 @@ const updateSL = (id, values) => {
   return axios.put(`/api/hoa-don/update-sl/${id}`, values);
 };
 
-const updateTienHD = (id, values) => {
-  return axios.put(`/api/hoa-don/updateHDTien/${id}`, values);
-};
-
 const deleteHDCT = (id) => {
   return axios.delete(`/api/hoa-don/delete-hdct/${id}`);
 };
 
 const updateHD = (id, values) => {
   return axios.put(`/api/hoa-don/update-hd/${id}`, values);
+};
+
+const updateHoaDon = (id, values) => {
+  return axios.put(`/api/hoa-don/updateHD/${id}`, values);
 };
 
 const getKmById = (id) => {
@@ -135,7 +139,6 @@ export {
   xacNhanThanhToan,
   xacNhanGiao,
   huyDonHang,
-  updateKHDH,
   detailLSHD,
   detailHD,
   addHD,
@@ -155,5 +158,7 @@ export {
   xacNhanListIds,
   huyDonListIds,
   findAllAnhByIdMSAndIdSP,
-  updateTienHD
+  giaoHangThanhCong,
+  giaoHangThatBai,
+  updateHoaDon
 };

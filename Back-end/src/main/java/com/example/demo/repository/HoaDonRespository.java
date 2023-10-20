@@ -60,18 +60,14 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Modifying
     @Query(value = "UPDATE HoaDon SET ten_nguoi_nhan = :tenNguoiNhan, \n" +
             "            sdt = :soDienThoai, dia_chi = :diaChi, tinh = :tinh," +
-            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
-    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai,
+            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE(),tong_tien = :tongTien," +
+            " tong_tien_sau_khi_giam = :tongTienKhiGiam," +
+            "tien_ship = :tienShip WHERE id = :id", nativeQuery = true)
+    public void updateHD(UUID id, String tenNguoiNhan, String soDienThoai,
                          String diaChi, String tinh,
-                         String huyen, String xa);
+                         String huyen, String xa, Double tongTien,
+                         Double tongTienKhiGiam, Double tienShip);
 
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE HoaDon SET tong_tien = :tongTien, \n" +
-            "            tong_tien_sau_khi_giam = :tongTienKhiGiam," +
-            "            tien_ship = :tienShip" +
-            " WHERE id = :id", nativeQuery = true)
-    public void updateTienHD(UUID id, Double tongTien, Double tongTienKhiGiam,Double tienShip);
 
     @Query(value = "SELECT KM.ma, KM.ten, KM.muc_giam, KM_HD.tien_giam" +
             " FROM HoaDon_KhuyenMai KM_HD JOIN\n" +
