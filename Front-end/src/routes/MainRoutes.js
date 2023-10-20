@@ -25,6 +25,7 @@ import BanHangTaiQuay from 'views/ban-hang-tai-quay/BanHangTaiQuay';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
+
 //chatlieu
 const AddChatLieu = Loadable(lazy(() => import('views/chat-lieu/addchatlieu')));
 const ChatLieu = Loadable(lazy(() => import('views/chat-lieu/chatlieu')));
@@ -279,10 +280,6 @@ const MainRoutes = {
     },
 
     //============//
-    {
-      path: '/thong-ke',
-      element: <UpdateKhachHang />
-    },
     {
       path: '/thong-ke',
       element: <DashboardDefault />
