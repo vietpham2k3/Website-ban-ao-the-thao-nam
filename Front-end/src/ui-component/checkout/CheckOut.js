@@ -10,16 +10,16 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router';
 import { getById, getKmById } from 'services/ServiceDonHang';
-import { addKhuyenMai, thanhToan } from 'services/GioHangService';
+import { addKhuyenMai, clearGH, thanhToan } from 'services/GioHangService';
 import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
-import { detailKH, getAllDcKh, detailDC } from 'services/KhachHangService';
+import { detailKH, getAllDcKh, detailDC, addDCKH } from 'services/KhachHangService';
 import ChangeDC from './ChangeDC';
 import UpdateDC from './UpdateDC';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
-  const { handleBackToCart, label, dataLogin } = props;
+  const { handleBackToCart, label, idGH, dataLogin } = props;
   const [dataHDCT, setDataHDCT] = useState([]);
   const [dataKH, setDataKH] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
@@ -28,9 +28,9 @@ function CheckoutForm(props) {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedWard, setSelectedWard] = useState('');
-  const [wardCode, setWardCode] = useState('');
   const [urlPay, setUrlPay] = useState('');
   const [idDC, setIdDC] = useState('');
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
   const [ngayDuKienNhan, setNgayDuKienNhan] = useState(0);
   const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
@@ -42,6 +42,9 @@ function CheckoutForm(props) {
   const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
+  const [wardCode, setWardCode] = useState({
+    code: ''
+  });
   const [valuesId, setValuesId] = useState({
     province_id: ''
   });
@@ -140,14 +143,28 @@ function CheckoutForm(props) {
   }, [valuesIdWard.district_id]);
 
   useEffect(() => {
+    if (!isShow) {
+      fee(valuesFee);
+      thoiGiaoHang(tgDuKien);
+    }
+  }, [isShow]);
+
+  useEffect(() => {
+    setTgDuKien({
+      ...tgDuKien,
+      to_ward_code: wardCode.code
+    });
+  }, [tgDuKien.service_id]);
+
+  useEffect(() => {
     setValuesFee({
       ...valuesFee,
       insurance_value: totalAmount,
-      to_ward_code: wardCode
+      to_ward_code: wardCode.code
     });
     setTgDuKien({
       ...tgDuKien,
-      to_ward_code: wardCode
+      to_ward_code: wardCode.code
     });
   }, [wardCode]);
 
@@ -157,7 +174,6 @@ function CheckoutForm(props) {
         setValuesIdWard({
           district_id: district.DistrictID
         });
-        console.log(district.DistrictID);
       }
     });
   }, [quan, valuesId]);
@@ -166,17 +182,7 @@ function CheckoutForm(props) {
     phuong.forEach((ward) => {
       if (ward.WardName === valuesDC.phuongXa) {
         if (ward.WardCode) {
-          console.log('idX:' + ward.WardCode);
-          setWardCode(ward.WardCode);
-          setValuesFee({
-            ...valuesFee,
-            insurance_value: totalAmount,
-            to_ward_code: `${ward.WardCode}`
-          });
-          setTgDuKien({
-            ...tgDuKien,
-            to_ward_code: `${ward.WardCode}`
-          });
+          setWardCode({ code: ward.WardCode });
         }
       }
     });
@@ -185,7 +191,6 @@ function CheckoutForm(props) {
   useEffect(() => {
     quan.forEach((district) => {
       if (district.DistrictName === valuesDC.quanHuyen) {
-        console.log('idH:' + district.DistrictID);
         setValuesIdWard({
           district_id: district.DistrictID
         });
@@ -238,10 +243,8 @@ function CheckoutForm(props) {
   }, [valuesUpdateHD.tienShip]);
 
   useEffect(() => {
-    if (valuesFee.service_id !== 0) {
-      fee(valuesFee);
-      thoiGiaoHang(tgDuKien);
-    }
+    fee(valuesFee);
+    thoiGiaoHang(tgDuKien);
   }, [valuesFee.to_ward_code]);
 
   useEffect(() => {
@@ -273,6 +276,10 @@ function CheckoutForm(props) {
       // Ngừng cập nhật địa chỉ
       setIsUpdatingDiaChi(false);
 
+      if (dataLogin) {
+        clear(idGH);
+      }
+
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
         thanhToanHD(id, valuesUpdateHD);
@@ -291,6 +298,10 @@ function CheckoutForm(props) {
   };
 
   const handleAddDC = () => {
+    if (selectedAddressId === null) {
+      toast.error('Vui lòng chọn địa chỉ');
+      return;
+    }
     setValuesUpdateHD({
       ...valuesUpdateHD,
       diaChi: valuesDC.diaChi,
@@ -299,6 +310,10 @@ function CheckoutForm(props) {
       xa: valuesDC.phuongXa
     });
     setIsShow(false);
+  };
+
+  const handleUpdateDC = () => {
+    addDC(dataDetailDC);
   };
 
   const handleChange = (value) => {
@@ -328,6 +343,10 @@ function CheckoutForm(props) {
       setValuesUpdateHD({
         ...valuesUpdateHD,
         tinh: selectedProvinceName
+      });
+      setDataDetailDC({
+        ...dataDetailDC,
+        tinhThanh: selectedProvinceName
       });
     }
     setErrors({
@@ -364,6 +383,10 @@ function CheckoutForm(props) {
         ...valuesUpdateHD,
         huyen: selectedProvinceName
       });
+      setDataDetailDC({
+        ...dataDetailDC,
+        quanHuyen: selectedProvinceName
+      });
     }
     setErrors({
       ...errors,
@@ -372,33 +395,44 @@ function CheckoutForm(props) {
   };
 
   const handleWardChange = (event) => {
-    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setSelectedWard(event.target.value);
-    setValuesFee({
-      ...valuesFee,
-      insurance_value: totalAmount,
-      to_ward_code: event.target.value
-    });
-    setTgDuKien({
-      ...tgDuKien,
-      to_ward_code: event.target.value
-    });
-    setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
     const selectedProvinceId = event.target.value;
     const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
+    if (dataLogin) {
+      if (selectedProvince) {
+        // Lấy thông tin tỉnh/thành phố được chọn
+        const selectedProvinceName = selectedProvince.WardName;
+        setDataDetailDC({
+          ...dataDetailDC,
+          phuongXa: selectedProvinceName
+        });
+      }
+    } else {
+      const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+      setSelectedWard(event.target.value);
+      setValuesFee({
+        ...valuesFee,
+        insurance_value: totalAmount,
+        to_ward_code: event.target.value
+      });
+      setTgDuKien({
+        ...tgDuKien,
+        to_ward_code: event.target.value
+      });
+      setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
 
-    if (selectedProvince) {
-      // Lấy thông tin tỉnh/thành phố được chọn
-      const selectedProvinceName = selectedProvince.WardName;
-      setValuesUpdateHD({
-        ...valuesUpdateHD,
-        xa: selectedProvinceName
+      if (selectedProvince) {
+        // Lấy thông tin tỉnh/thành phố được chọn
+        const selectedProvinceName = selectedProvince.WardName;
+        setValuesUpdateHD({
+          ...valuesUpdateHD,
+          xa: selectedProvinceName
+        });
+      }
+      setErrors({
+        ...errors,
+        xa: true
       });
     }
-    setErrors({
-      ...errors,
-      xa: true
-    });
   };
 
   function convertToCurrency(number) {
@@ -410,11 +444,33 @@ function CheckoutForm(props) {
     return formatter.format(number);
   }
 
+  const clear = async (id) => {
+    try {
+      await clearGH(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getAllDC = async (id) => {
     try {
       const res = await getAllDcKh(id);
       if (res.data) {
         setDataDC(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addDC = async (value) => {
+    try {
+      const res = await addDCKH(value);
+      if (res.data) {
+        toast.success('Cập nhật thành công');
+        getAllDC(dataLogin.id);
+        setIsShowUpdate(false);
+        setIsShow(true);
       }
     } catch (error) {
       console.log(error);
@@ -456,12 +512,10 @@ function CheckoutForm(props) {
       if (res) {
         setValuesFee({
           ...valuesFee,
-          to_ward_code: wardCode,
           service_id: res.data.data[0].service_id
         });
         setTgDuKien({
           ...tgDuKien,
-          to_ward_code: wardCode,
           service_id: res.data.data[0].service_id
         });
       }
@@ -535,7 +589,7 @@ function CheckoutForm(props) {
         setNgayDuKienNhan(res.data.data.leadtime);
       }
     } catch (error) {
-      toast.error('Lỗi, vui lòng chọn lại địa chỉ giao hàng');
+      console.log(error);
     }
   };
 
@@ -1118,6 +1172,8 @@ function CheckoutForm(props) {
         setIsShowUpdate={setIsShowUpdate}
         isShowUpdate={isShowUpdate}
         setIdDC={setIdDC}
+        setSelectedAddressId={setSelectedAddressId}
+        selectedAddressId={selectedAddressId}
       ></ChangeDC>
       <UpdateDC
         show={isShowUpdate}
@@ -1133,6 +1189,8 @@ function CheckoutForm(props) {
         phuong={phuong}
         selectedWard={selectedWard}
         dataDetailDC={dataDetailDC}
+        setDataDetailDC={setDataDetailDC}
+        handleUpdateDC={handleUpdateDC}
       ></UpdateDC>
     </div>
   );

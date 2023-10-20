@@ -23,4 +23,9 @@ public interface GioHangChiTietRepsitory extends JpaRepository<GioHangChiTiet, U
     @Modifying
     @Query(value = "update GioHangChiTiet c set c.soLuong = :soLuong  where c.id = :id")
     void updateSL(Integer soLuong, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from GioHangChiTiet c where c.gioHang.id = :id")
+    void deleteAll(UUID id);
 }

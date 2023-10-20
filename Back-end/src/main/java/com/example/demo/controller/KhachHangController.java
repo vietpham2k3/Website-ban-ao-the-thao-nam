@@ -145,10 +145,10 @@ public class KhachHangController {
                                  @RequestParam("email") String email,
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                  @RequestParam("gioiTinh") Boolean gioiTinh,
-//                                 @RequestBody DiaChi diaChi,
                                  @RequestParam("tinhThanh") String tinhThanh,
                                  @RequestParam("quanHuyen") String quanHuyen,
                                  @RequestParam("phuongXa") String phuongXa,
+                                 @RequestParam("diaChi") String diaChi,
                                  @RequestParam("trangThai") Integer trangThai
     ) throws IOException, SQLException {
         // Create a new KhachHang object
@@ -181,13 +181,14 @@ public class KhachHangController {
         khachHang = khService.add(khachHang);
         KhachHangDTO savedKhachHangDTO = convertToDto(khachHang);
 
-        DiaChi diaChi = new DiaChi();
-        diaChi.setTinhThanh(tinhThanh);
-        diaChi.setQuanHuyen(quanHuyen);
-        diaChi.setPhuongXa(phuongXa);
-        diaChi.setTrangThai(1);
-        diaChi.setKhachHang(khachHang);
-        dcService.add(diaChi);
+        DiaChi diaChi1 = new DiaChi();
+        diaChi1.setDiaChi(diaChi);
+        diaChi1.setTinhThanh(tinhThanh);
+        diaChi1.setQuanHuyen(quanHuyen);
+        diaChi1.setPhuongXa(phuongXa);
+        diaChi1.setTrangThai(1);
+        diaChi1.setKhachHang(khachHang);
+        dcService.add(diaChi1);
 
         // Gửi email chứa mật khẩu mới
         String subject = "Thông tin tài khoản";

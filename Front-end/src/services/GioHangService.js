@@ -40,4 +40,8 @@ const updateSLGH = (id, values) => {
   return axios.put(`/api/gio-hang/update-sl/${id}`, values);
 };
 
-export { postGH, deleteByIdHD, addKhuyenMai, thanhToan, count, themGioHang, detailGH, getAllGH, deleteSPInGH, updateSLGH };
+const clearGH = (id) => {
+  return axios.delete(`/api/gio-hang/clearGH/${id}`);
+};
+
+export { postGH, deleteByIdHD, addKhuyenMai, thanhToan, count, themGioHang, detailGH, getAllGH, deleteSPInGH, updateSLGH, clearGH };

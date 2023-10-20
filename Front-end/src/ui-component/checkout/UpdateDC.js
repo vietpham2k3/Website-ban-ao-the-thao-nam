@@ -11,7 +11,9 @@ const UpdateDC = ({
   quan,
   handleWardChange,
   phuong,
-  dataDetailDC
+  dataDetailDC,
+  setDataDetailDC,
+  handleUpdateDC
 }) => {
   return (
     <div>
@@ -40,6 +42,7 @@ const UpdateDC = ({
                 name="address"
                 placeholder="Địa chỉ"
                 value={dataDetailDC.diaChi}
+                onChange={(e) => setDataDetailDC({ ...dataDetailDC, diaChi: e.target.value })}
               />
             </div>
           </div>
@@ -94,7 +97,9 @@ const UpdateDC = ({
           <Button variant="secondary" onClick={handleClose}>
             Trở lại
           </Button>
-          <Button variant="primary">Update</Button>
+          <Button variant="primary" onClick={handleUpdateDC}>
+            Update
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
