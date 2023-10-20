@@ -253,16 +253,31 @@ function Detail(props) {
     setProductCount(productCount + quantity);
   };
 
+  // const getAll = async (id) => {
+  //   try {
+  //     const res = await getAllGH(id);
+  //     if (res) {
+  //       setListSP(res.data);
+  //     }
+  //   } catch (error) {
+  //     // Xử lý lỗi nếu cần
+  //   }
+  // };
+
   const handleTaoHoaDon = () => {
-    if (detailProduct === null) {
-      toast.error('Vui lòng chọn màu sắc và kích cỡ');
-      return;
+    if (dataLogin) {
+      taoHoaDon(valuesHDCT);
+    } else {
+      if (detailProduct === null) {
+        toast.error('Vui lòng chọn màu sắc và kích cỡ');
+        return;
+      }
+      if (product.soLuong <= 0) {
+        toast.error('Không thể mua sản phẩm này');
+        return;
+      }
+      taoHoaDon(valuesHDCT);
     }
-    if (product.soLuong <= 0) {
-      toast.error('Không thể mua sản phẩm này');
-      return;
-    }
-    taoHoaDon(valuesHDCT);
   };
 
   const taoHoaDon = async (value) => {
@@ -478,7 +493,7 @@ function Detail(props) {
                 <button className="add-to-cart2 btn btn-default" type="button" onClick={!dataLogin ? handleAddToCart : handleAddToCartGH}>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="add-to-cart1 btn btn-default" type="button" onClick={!dataLogin ? handleTaoHoaDon : handleAddToCartGH}>
+                <button className="add-to-cart1 btn btn-default" type="button" onClick={handleTaoHoaDon}>
                   Mua Ngay
                 </button>
               </div>

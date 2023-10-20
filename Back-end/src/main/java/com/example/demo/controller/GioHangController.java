@@ -85,9 +85,24 @@ public class GioHangController {
 
     @DeleteMapping("/deleteSPInGH/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
+        GioHangChiTiet hd = gioHangChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hd.getChiTietSanPham().getId());
+        chiTietSanPhamService.update(sp.getSoLuong() + hd.getSoLuong(), sp.getId());
         gioHangChiTietService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/clearGH/{id}")
+    public ResponseEntity<?> clearGH(@PathVariable UUID id) {
+        List<GioHangChiTiet> list = gioHangChiTietService.getAll(id);
+        for (GioHangChiTiet gioHangChiTiet : list) {
+            if (gioHangChiTiet.getGioHang().getId().equals(id)) {
+                gioHangChiTietService.delete(gioHangChiTiet.getId());
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
+
 
     @PutMapping("update-sl/{id}")
     public ResponseEntity<?> updateSL(@PathVariable UUID id, @RequestBody GioHangChiTiet hoaDon) {
@@ -212,13 +227,35 @@ public class GioHangController {
             gioHang = gioHangService.add(gioHang);
         }
 
-        gioHangChiTiet.setGioHang(gioHang);
-        gioHangChiTiet.setChiTietSanPham(gioHangChiTiet.getChiTietSanPham());
-        gioHangChiTiet.setDonGia(ctsp.getGiaBan());
-        gioHangChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+        List<GioHangChiTiet> list = gioHangChiTietService.getAll(gioHang.getId());
+        boolean productExistsInCart = false;
 
-        return ResponseEntity.ok(gioHangChiTietService.add(gioHangChiTiet));
+        for (GioHangChiTiet gioHangChiTiet1 : list) {
+            if (gioHangChiTiet1.getChiTietSanPham().getId().equals(gioHangChiTiet.getChiTietSanPham().getId())) {
+                // Nếu sản phẩm tương tự đã tồn tại trong giỏ hàng, cập nhật số lượng
+                gioHangChiTiet1.setSoLuong(gioHangChiTiet1.getSoLuong() + gioHangChiTiet.getSoLuong());
+                gioHangChiTiet.setGioHang(gioHang);
+                gioHangChiTiet.setChiTietSanPham(gioHangChiTiet.getChiTietSanPham());
+                gioHangChiTiet.setDonGia(ctsp.getGiaBan());
+                gioHangChiTietService.add(gioHangChiTiet1); // Cập nhật chi tiết giỏ hàng
+                chiTietSanPhamService.update(ctsp.getSoLuong() - gioHangChiTiet.getSoLuong(), gioHangChiTiet.getChiTietSanPham().getId());
+                productExistsInCart = true;
+                break;
+            }
+        }
+
+        if (!productExistsInCart) {
+            gioHangChiTiet.setGioHang(gioHang);
+            gioHangChiTiet.setChiTietSanPham(gioHangChiTiet.getChiTietSanPham());
+            gioHangChiTiet.setDonGia(ctsp.getGiaBan());
+            gioHangChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+            chiTietSanPhamService.update(ctsp.getSoLuong() - gioHangChiTiet.getSoLuong(), gioHangChiTiet.getChiTietSanPham().getId());
+            gioHangChiTietService.add(gioHangChiTiet); // Thêm chi tiết giỏ hàng
+        }
+
+        return ResponseEntity.ok(gioHangChiTiet);
     }
+
 
 
     @DeleteMapping("/delete/{id}")

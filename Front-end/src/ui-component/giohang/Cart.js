@@ -76,7 +76,11 @@ function Cart(props) {
   }, [productList, listSP, dataLogin]);
 
   const handleTaoHoaDon = () => {
-    taoHoaDon(hoaDonChiTietList);
+    if (dataLogin) {
+      taoHoaDon(listSP);
+    } else {
+      taoHoaDon(hoaDonChiTietList);
+    }
   };
 
   const taoHoaDon = async (value) => {

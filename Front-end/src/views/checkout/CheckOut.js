@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router';
 
 function Checkout() {
   const navigate = useNavigate();
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const idGH = localStorage.getItem('idGH') || '';
   const { id } = useParams();
   const handleBackToCart = () => {
     backToCart(id);
@@ -22,7 +24,7 @@ function Checkout() {
   };
   return (
     <div>
-      <CheckoutForm handleBackToCart={handleBackToCart} label={'Quay về giỏ hàng'} />
+      <CheckoutForm dataLogin={dataLogin} idGH={idGH} handleBackToCart={handleBackToCart} label={'Quay về giỏ hàng'} />
     </div>
   );
 }
