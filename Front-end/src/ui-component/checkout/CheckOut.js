@@ -13,8 +13,9 @@ import { getById, getKmById } from 'services/ServiceDonHang';
 import { addKhuyenMai, thanhToan } from 'services/GioHangService';
 import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
-import { detailKH, getAllDcKh } from 'services/KhachHangService';
+import { detailKH, getAllDcKh, detailDC } from 'services/KhachHangService';
 import ChangeDC from './ChangeDC';
+import UpdateDC from './UpdateDC';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
@@ -27,14 +28,18 @@ function CheckoutForm(props) {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedWard, setSelectedWard] = useState('');
+  const [wardCode, setWardCode] = useState('');
   const [urlPay, setUrlPay] = useState('');
+  const [idDC, setIdDC] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
   const [ngayDuKienNhan, setNgayDuKienNhan] = useState(0);
   const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
   const [dataHDKM, setDataHDKM] = useState([]);
+  const [dataDetailDC, setDataDetailDC] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const [isShow, setIsShow] = useState(false);
+  const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
   const [valuesId, setValuesId] = useState({
@@ -116,7 +121,11 @@ function CheckoutForm(props) {
     getThanhPho();
   }, []);
 
-  console.log(phuong);
+  useEffect(() => {
+    if (idDC) {
+      getOneDC(idDC);
+    }
+  }, [idDC]);
 
   useEffect(() => {
     if (valuesId.province_id) {
@@ -131,9 +140,44 @@ function CheckoutForm(props) {
   }, [valuesIdWard.district_id]);
 
   useEffect(() => {
+    setValuesFee({
+      ...valuesFee,
+      insurance_value: totalAmount,
+      to_ward_code: wardCode
+    });
+    setTgDuKien({
+      ...tgDuKien,
+      to_ward_code: wardCode
+    });
+  }, [wardCode]);
+
+  useEffect(() => {
+    quan.forEach((district) => {
+      if (district.DistrictName === valuesDC.quanHuyen) {
+        setValuesIdWard({
+          district_id: district.DistrictID
+        });
+        console.log(district.DistrictID);
+      }
+    });
+  }, [quan, valuesId]);
+
+  useEffect(() => {
     phuong.forEach((ward) => {
       if (ward.WardName === valuesDC.phuongXa) {
-        console.log('idX:' + ward.WardCode);
+        if (ward.WardCode) {
+          console.log('idX:' + ward.WardCode);
+          setWardCode(ward.WardCode);
+          setValuesFee({
+            ...valuesFee,
+            insurance_value: totalAmount,
+            to_ward_code: `${ward.WardCode}`
+          });
+          setTgDuKien({
+            ...tgDuKien,
+            to_ward_code: `${ward.WardCode}`
+          });
+        }
       }
     });
   }, [phuong, valuesDC]);
@@ -144,6 +188,18 @@ function CheckoutForm(props) {
         console.log('idH:' + district.DistrictID);
         setValuesIdWard({
           district_id: district.DistrictID
+        });
+        setValuesServices({
+          ...valuesServices,
+          to_district: district.DistrictID
+        });
+        setValuesFee({
+          ...valuesFee,
+          to_district_id: district.DistrictID
+        });
+        setTgDuKien({
+          ...tgDuKien,
+          to_district_id: district.DistrictID
         });
       }
     });
@@ -400,10 +456,12 @@ function CheckoutForm(props) {
       if (res) {
         setValuesFee({
           ...valuesFee,
+          to_ward_code: wardCode,
           service_id: res.data.data[0].service_id
         });
         setTgDuKien({
           ...tgDuKien,
+          to_ward_code: wardCode,
           service_id: res.data.data[0].service_id
         });
       }
@@ -477,7 +535,7 @@ function CheckoutForm(props) {
         setNgayDuKienNhan(res.data.data.leadtime);
       }
     } catch (error) {
-      console.log(error);
+      toast.error('Lỗi, vui lòng chọn lại địa chỉ giao hàng');
     }
   };
 
@@ -508,6 +566,17 @@ function CheckoutForm(props) {
       const res = await payOnline(tien);
       if (res) {
         setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getOneDC = async (id) => {
+    try {
+      const res = await detailDC(id);
+      if (res) {
+        setDataDetailDC(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -650,24 +719,28 @@ function CheckoutForm(props) {
           <div className="col-md-6 mb-5 mb-md-0">
             <h2 className="h3 mb-3 text-black">Thông Tin Khách Hàng</h2>
             <div className="p-3 p-lg-5 border">
-              <div className="form-group row fgr">
-                <div className="col-md-12">
-                  <label htmlFor="full_name" className="text-black">
-                    Địa chỉ <span className="text-danger">*</span>
-                  </label>
-                  <div className="dia-chi-checkout">
-                    <p htmlFor="full_name">
-                      {!valuesUpdateHD.diaChi
-                        ? 'Không có địa chỉ'
-                        : valuesUpdateHD.diaChi + ', ' + valuesUpdateHD.xa + ', ' + valuesUpdateHD.huyen + ', ' + valuesUpdateHD.tinh}
-                    </p>
-                    <span className="change-dc change-dc-modal" onClick={() => setIsShow(true)}>
-                      Thay đổi
-                    </span>
+              {dataLogin ? (
+                <div className="form-group row fgr">
+                  <div className="col-md-12">
+                    <label htmlFor="full_name" className="text-black">
+                      Địa chỉ <span className="text-danger">*</span>
+                    </label>
+                    <div className="dia-chi-checkout">
+                      <p htmlFor="full_name">
+                        {!valuesUpdateHD.diaChi
+                          ? 'Không có địa chỉ'
+                          : valuesUpdateHD.diaChi + ', ' + valuesUpdateHD.xa + ', ' + valuesUpdateHD.huyen + ', ' + valuesUpdateHD.tinh}
+                      </p>
+                      <span className="change-dc change-dc-modal" onClick={() => setIsShow(true)}>
+                        Thay đổi
+                      </span>
+                    </div>
                   </div>
+                  <span style={{ display: errors.diaChi ? 'none' : '', color: 'red' }}>Không được để trống</span>
                 </div>
-                <span style={{ display: errors.diaChi ? 'none' : '', color: 'red' }}>Không được để trống</span>
-              </div>
+              ) : (
+                ''
+              )}
               <div className="form-group row fgr">
                 <div className="col-md-12">
                   <label htmlFor="full_name" className="text-black">
@@ -1042,7 +1115,25 @@ function CheckoutForm(props) {
         phuong={phuong}
         getQuanHuyen={getQuanHuyen}
         setValuesId={setValuesId}
+        setIsShowUpdate={setIsShowUpdate}
+        isShowUpdate={isShowUpdate}
+        setIdDC={setIdDC}
       ></ChangeDC>
+      <UpdateDC
+        show={isShowUpdate}
+        handleClose={() => {
+          setIsShowUpdate(false);
+          setIsShow(true);
+        }}
+        handleWardChange={handleWardChange}
+        handleDistrictChange={handleDistrictChange}
+        handleProvinceChange={handleProvinceChange}
+        thanhPho={thanhPho}
+        quan={quan}
+        phuong={phuong}
+        selectedWard={selectedWard}
+        dataDetailDC={dataDetailDC}
+      ></UpdateDC>
     </div>
   );
 }

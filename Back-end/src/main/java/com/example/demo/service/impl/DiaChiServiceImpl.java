@@ -28,10 +28,6 @@ public class DiaChiServiceImpl implements DiaChiService {
 
     @Override
     public DiaChi add(DiaChi diaChi) {
-        diaChi.setKhachHang(diaChi.getKhachHang());
-        diaChi.setPhuongXa(diaChi.getPhuongXa());
-        diaChi.setQuanHuyen(diaChi.getQuanHuyen());
-        diaChi.setTinhThanh(diaChi.getTinhThanh());
         diaChi.setTrangThai(1);
         return diaChiRepository.save(diaChi);
     }
