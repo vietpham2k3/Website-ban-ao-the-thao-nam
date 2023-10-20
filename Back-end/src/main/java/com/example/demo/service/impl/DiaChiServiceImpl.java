@@ -28,7 +28,6 @@ public class DiaChiServiceImpl implements DiaChiService {
 
     @Override
     public DiaChi add(DiaChi diaChi) {
-        diaChi.setTrangThai(1);
         return diaChiRepository.save(diaChi);
     }
 

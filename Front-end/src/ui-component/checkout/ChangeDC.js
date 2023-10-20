@@ -4,8 +4,21 @@
 /* eslint-disable react/prop-types */
 import { Button, Modal } from 'react-bootstrap';
 
-const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddDC, thanhPho, setValuesId, setIsShowUpdate, setIdDC }) => {
-  const handleChange = (diaChi, phuongXa, quanHuyen, tinhThanh) => {
+const ChangeDC = ({
+  handleClose,
+  show,
+  dataDC,
+  setValuesDC,
+  valuesDC,
+  handleAddDC,
+  thanhPho,
+  setValuesId,
+  setIsShowUpdate,
+  setIdDC,
+  selectedAddressId,
+  setSelectedAddressId
+}) => {
+  const handleChange = (id, diaChi, phuongXa, quanHuyen, tinhThanh) => {
     setValuesDC({ ...valuesDC, diaChi: diaChi, phuongXa: phuongXa, quanHuyen: quanHuyen, tinhThanh: tinhThanh });
     thanhPho.forEach((province) => {
       if (province.NameExtension[1] === tinhThanh) {
@@ -14,6 +27,13 @@ const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddD
         });
       }
     });
+    if (selectedAddressId === id) {
+      // Đã chọn ô checkbox này, bỏ chọn nó
+      setSelectedAddressId(null);
+    } else {
+      // Chọn ô checkbox và cập nhật selectedAddressId với ID của địa chỉ đã chọn
+      setSelectedAddressId(id);
+    }
   };
 
   const handleShowDC = (id, quanHuyen, tinhThanh) => {
@@ -44,19 +64,20 @@ const ChangeDC = ({ handleClose, show, dataDC, setValuesDC, valuesDC, handleAddD
         <Modal.Header closeButton>
           <Modal.Title>Địa chỉ của tôi</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ height: 500 }}>
+        <Modal.Body style={{ height: 300 }}>
           {dataDC.map((d, i) => (
             <div key={i} className="dia-chi-checkout container">
               <p>
                 <div className="form-check">
                   <input
                     className="form-check-input"
-                    type="radio"
-                    name="flexRadioDefault"
-                    id="flexRadioDefault1"
-                    onChange={() => handleChange(d.diaChi, d.phuongXa, d.quanHuyen, d.tinhThanh)}
+                    type="checkbox"
+                    name={d.id}
+                    id={d.id}
+                    checked={selectedAddressId === d.id}
+                    onChange={() => handleChange(d.id, d.diaChi, d.phuongXa, d.quanHuyen, d.tinhThanh)}
                   />
-                  <label className="form-check-label" htmlFor="flexRadioDefault1">
+                  <label className="form-check-label" htmlFor={d.id}>
                     {d.diaChi}, {d.phuongXa}, {d.quanHuyen}, {d.tinhThanh}
                   </label>
                   <br />
