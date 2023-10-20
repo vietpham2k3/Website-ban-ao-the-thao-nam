@@ -9,7 +9,7 @@ import { Button, Table } from 'react-bootstrap';
 import { useState } from 'react';
 import _ from 'lodash';
 import { useEffect } from 'react';
-import { searchCTSP, getAllByIdSP, detailCTSP } from 'services/SanPhamService';
+import { searchCTSP, getAllByIdSPTT, detailCTSP } from 'services/SanPhamService';
 import SearchResult from './SearchResultList';
 import {
   getById,
@@ -71,8 +71,8 @@ function DonHang(props) {
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
     tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
-    tongTien: '',
-    tongTienKhiGiam: '',
+    tongTien: 0,
+    tongTienKhiGiam: 0.0,
     hinhThucThanhToan: {
       id: dataDetailHD.hinhThucThanhToan && dataDetailHD.hinhThucThanhToan.id,
       trangThai: 1,
@@ -80,6 +80,7 @@ function DonHang(props) {
     },
     trangThai: 0
   });
+
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
       id: ''
@@ -715,7 +716,7 @@ function DonHang(props) {
   };
 
   const getAllMSKC = async (id) => {
-    let res = await getAllByIdSP(id);
+    let res = await getAllByIdSPTT(id);
     if (res) {
       setMauSacKC(res.data);
     }

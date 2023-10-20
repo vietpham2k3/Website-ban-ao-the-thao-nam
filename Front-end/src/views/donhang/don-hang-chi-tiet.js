@@ -8,7 +8,7 @@ import '../../scss/TableMSKC.scss';
 import '../../scss/SearchResult.scss';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
-import { detailCTSP, getAllByIdSP } from 'services/SanPhamService';
+import { detailCTSP , getAllByIdSPTT} from 'services/SanPhamService';
 import Modal from 'react-bootstrap/Modal';
 import { getTP, getQH, getP, getFee, getServices } from 'services/ApiGHNService';
 import {
@@ -372,7 +372,7 @@ function DonHangCT() {
   };
 
   const getAllMSKC = async (id) => {
-    let res = await getAllByIdSP(id);
+    let res = await getAllByIdSPTT(id);
     if (res) {
       setMauSacKC(res.data);
     }
@@ -742,6 +742,10 @@ function DonHangCT() {
           ...values,
           tienShip: total
         });
+        setHoaDon({
+          ...hoaDon,
+          tienShip: total
+        });
       }
     } catch (error) {
       console.log(error);
@@ -749,9 +753,7 @@ function DonHangCT() {
   };
 
   useEffect(() => {
-    if (valuesServices) {
       getService(valuesServices);
-    }
   }, [valuesServices]);
 
   /////
@@ -2525,7 +2527,7 @@ function DonHangCT() {
 
               <br></br>
 
-              {hoaDon && hoaDon.tienGiam !== 0 && (
+              {hoaDon && hoaDon.tienShip !== 0 && (
                 <Container style={{ display: 'flex', justifyContent: 'end' }}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col sm={12} className="row">

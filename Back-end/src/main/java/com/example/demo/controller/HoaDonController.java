@@ -189,7 +189,7 @@ public class HoaDonController {
                 .build();
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
-        if (hoaDon.getTongTienKhiGiam().doubleValue() < 0) {
+        if (hoaDon.getTongTienKhiGiam().doubleValue() <= 0) {
             hoaDon.setTongTienKhiGiam(0.0);
         }
         hoaDon.setNgayThanhToan(new Date());
@@ -202,7 +202,9 @@ public class HoaDonController {
         }
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
-        hoaDon.setDiaChi("NULL");
+        if (hoaDon.getTrangThai() != 6) {
+            hoaDon.setTrangThai(0);
+        }
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);
         return ResponseEntity.ok(serviceHD.add(hoaDon));
@@ -210,7 +212,7 @@ public class HoaDonController {
 
 
     @PutMapping("/thanh-toan/{id}")
-    public ResponseEntity<?> thanhToan(@PathVariable UUID id){
+    public ResponseEntity<?> thanhToan(@PathVariable UUID id) {
         HoaDon hd = serviceHD.detailHD(id);
         String maLS = "LSHD" + new Random().nextInt(100000);
         LichSuHoaDon ls = serviceLSHD.detail(hd.getId()).builder()
@@ -221,6 +223,8 @@ public class HoaDonController {
                 .hoaDon(hd)
                 .ghiChu("Đã thanh toán")
                 .build();
+        hd.setTrangThai(6);
+        serviceHD.add(hd);
         return ResponseEntity.ok(serviceLSHD.add(ls));
     }
 
@@ -338,7 +342,7 @@ public class HoaDonController {
         serviceHD.updateHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
                 hoaDon.getDiaChi(),hoaDon.getTinh(),hoaDon.getHuyen(),hoaDon.getXa(),
                 hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam(),hoaDon.getTienShip());
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok().body("ok");
     }
 
     @PostMapping("xac-nhan/{id}")
@@ -544,14 +548,14 @@ public class HoaDonController {
 
 
     @PostMapping("/addKHinBH/{id}")
-    public ResponseEntity<?> addKHinBH(@PathVariable UUID id,@RequestBody KhachHang kh, MultipartFile anh) throws IOException, SQLException {
+    public ResponseEntity<?> addKHinBH(@PathVariable UUID id, @RequestBody KhachHang kh, MultipartFile anh) throws IOException, SQLException {
         // Create a new KhachHang object
         if (kh.getMaKhachHang() == null) {
             String ma = "KH" + new Random().nextInt(100000);
             kh.setMaKhachHang(ma);
         }
         kh.setTrangThai(1);
-        HoaDon hd= serviceHD.detailHD(id);
+        HoaDon hd = serviceHD.detailHD(id);
         hd.setSoDienThoai(kh.getSdt());
         hd.setTenNguoiNhan(kh.getTenKhachHang());
         serviceHD.add(hd);

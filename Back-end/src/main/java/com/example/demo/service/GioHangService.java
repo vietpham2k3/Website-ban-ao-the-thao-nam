@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GioHangService {
-    List<GioHang> getAll();
+    GioHang getAll(UUID id);
 
     GioHang add(GioHang gioHang);
+
 
 
 }

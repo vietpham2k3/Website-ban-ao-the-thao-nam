@@ -18,10 +18,9 @@ public class GioHangServiceImpl implements GioHangService {
     private GioHangRepository gioHangRepository;
 
     @Override
-    public List<GioHang> getAll() {
-        return gioHangRepository.findAll();
+    public GioHang getAll(UUID id) {
+        return gioHangRepository.getAll(id);
     }
-
 
     @Override
     public GioHang add(GioHang gioHang) {
