@@ -166,7 +166,7 @@ function DonHangCT() {
       tongTien: totalAmount,
       tongTienKhiGiam: totalAmount + (values && values.tienShip) - (hd_km && hd_km.tienGiam)
     }));
-  }, [totalAmount, values.tienShip, hoaDon.tienShip]);
+  }, [values.tienShip, hoaDon.tienShip]);
 
   const deleteHD = async (idHDCT) => {
     const res = await deleteHDCT(idHDCT);
@@ -249,12 +249,6 @@ function DonHangCT() {
       return;
     }
 
-    setValues((values) => ({
-      ...values,
-      tinh: values.tinh,
-      huyen: values.huyen,
-      xa: values.xa
-    }));
 
     await updateHD(id, values);
   };
@@ -273,11 +267,12 @@ function DonHangCT() {
       soLuong: soLuong
     }); 
     
-    // setHoaDon(() => ({
-    //   ...hoaDon,
-    //   tongTien: totalAmount,
-    //   tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
-    // }));
+    setHoaDon(() => ({
+      ...hoaDon,
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount + (hoaDon && hoaDon.tienShip) - (hd_km && hd_km.tienGiam)
+    }));
+
     setValues(() => ({
       ...values,
       tongTien: totalAmount,
@@ -285,8 +280,6 @@ function DonHangCT() {
     }));
 
   };
-
-  console.log(totalAmount);
 
   const update = async (idHDCT, values) => {
     const res = await updateSL(idHDCT, values);
@@ -300,6 +293,14 @@ function DonHangCT() {
       update(idHDCT, valuesUpdate);
     }
   }, [valuesUpdate]);
+
+  
+  useEffect(() => {
+    if (totalAmount) {
+      updateHD(id, values);
+    }
+    console.log(totalAmount);
+  }, [totalAmount]);
 
   // kcms sp
   const handleAddSoLuong = (id, idSP) => {
@@ -622,8 +623,6 @@ function DonHangCT() {
 
   useEffect(() => {
     getThanhPho();
-    getQuanHuyen();
-    getPhuong();
   }, []);
 
   const handleProvinceChange = (event) => {
