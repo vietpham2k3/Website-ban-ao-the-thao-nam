@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface DiaChiRepository extends JpaRepository<DiaChi, UUID> {
     @Query(value = "SELECT *\n" +
             "from DiaChi \n" +
-            "WHERE id_kh = :idKH AND trang_thai = 1", nativeQuery = true)
+            "WHERE id_kh = :idKH", nativeQuery = true)
     List<DiaChi> getAllIdKh(UUID idKH);
 }

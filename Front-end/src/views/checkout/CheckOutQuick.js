@@ -5,6 +5,8 @@ import { useParams } from 'react-router';
 function CheckOutQuick() {
   // const navigate = useNavigate();
   const { id } = useParams();
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const idGH = localStorage.getItem('idGH') || '';
   const handleBackToCart = () => {
     backToCart(id);
   };
@@ -23,7 +25,7 @@ function CheckOutQuick() {
   };
   return (
     <div>
-      <CheckoutForm handleBackToCart={handleBackToCart} label={'Quay về trang sản phẩm'} />
+      <CheckoutForm dataLogin={dataLogin} idGH={idGH} handleBackToCart={handleBackToCart} label={'Quay về trang sản phẩm'} />
     </div>
   );
 }

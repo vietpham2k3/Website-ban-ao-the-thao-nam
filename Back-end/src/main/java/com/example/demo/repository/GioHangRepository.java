@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface GioHangRepository extends JpaRepository<GioHang, UUID> {
-//    @Query(value = "select gh from GioHang gh where gh.trangThai = 1")
-//    List<GioHang> getAll();
+
+    @Query(value = "select gh from GioHang gh where gh.khachHang.id = :id")
+    GioHang getAll(UUID id);
+
 }

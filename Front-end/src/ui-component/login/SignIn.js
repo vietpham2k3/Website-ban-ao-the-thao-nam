@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import { detailGH } from 'services/GioHangService';
 import { login } from 'services/LoginService';
 
 function SignInForm() {
@@ -9,6 +10,7 @@ function SignInForm() {
     email: '',
     password: ''
   });
+  // const [id, setId] = React.useState('');
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -27,6 +29,7 @@ function SignInForm() {
         navigate('/trang-chu');
         toast.success('Đăng nhập thành công');
         localStorage.setItem('dataLogin', JSON.stringify(res.data));
+        detail(res.data.id);
       } else {
         navigate('/don-hang');
         toast.success('Đăng nhập thành công');
@@ -35,7 +38,12 @@ function SignInForm() {
     }
   };
 
-  console.log(state);
+  const detail = async (id) => {
+    const res = await detailGH(id);
+    if (res.data) {
+      localStorage.setItem('idGH', res.data.id);
+    }
+  };
 
   const handleOnSubmit = () => {
     dangNhap(state.email, state.password);

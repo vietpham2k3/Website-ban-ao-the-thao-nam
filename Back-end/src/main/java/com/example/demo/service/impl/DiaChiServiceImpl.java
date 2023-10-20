@@ -33,8 +33,6 @@ public class DiaChiServiceImpl implements DiaChiService {
         diaChi.setQuanHuyen(diaChi.getQuanHuyen());
         diaChi.setTinhThanh(diaChi.getTinhThanh());
         diaChi.setTrangThai(1);
-        diaChi.setGhiChu(diaChi.getGhiChu());
-        diaChi.setSdt(diaChi.getSdt());
         return diaChiRepository.save(diaChi);
     }
 
