@@ -54,6 +54,12 @@ function DonHangCT() {
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
+  const [valuesId, setValuesId] = useState({
+    province_id: ''
+  });
+  const [valuesIdWard, setValuesIdWard] = useState({
+    district_id: ''
+  });
   // detailHD
   const [hoaDon, setHoaDon] = useState({});
   const [valuesServices, setValuesServices] = useState({
@@ -624,6 +630,51 @@ function DonHangCT() {
   useEffect(() => {
     getThanhPho();
   }, []);
+
+  console.log(phuong);
+
+  useEffect(() => {
+    thanhPho.forEach((province) => {
+      if (province.NameExtension[1] === values.tinh) {
+        console.log('idTP:' + province.ProvinceID);
+        setValuesId({
+          province_id: province.ProvinceID
+        });
+      }
+    });
+  }, [thanhPho, values]);
+
+  useEffect(() => {
+    if (valuesId.province_id) {
+      getQuanHuyen(valuesId);
+    }
+  }, [valuesId.province_id]);
+
+  useEffect(() => {
+    if (valuesIdWard.district_id) {
+      getPhuong(valuesIdWard);
+    }
+  }, [valuesIdWard.district_id]);
+
+  useEffect(() => {
+    phuong.forEach((ward) => {
+      if (ward.WardName === values.xa) {
+        console.log('idX:' + ward.WardCode);
+      }
+    });
+  }, [phuong, values]);
+
+  useEffect(() => {
+    quan.forEach((district) => {
+      if (district.DistrictName === values.huyen) {
+        console.log('idH:' + district.DistrictID);
+        setValuesIdWard({
+          district_id: district.DistrictID
+        });
+      }
+    });
+  }, [quan, values]);
+
 
   const handleProvinceChange = (event) => {
     const provinceId = {
