@@ -44,7 +44,7 @@ const utilities = {
       id: 'thong-ke',
       title: 'Thống kê',
       type: 'item',
-      url: '/khach-hang',
+      url: '/thong-ke',
       icon: icons.IconWindmill,
       breadcrumbs: false
     }

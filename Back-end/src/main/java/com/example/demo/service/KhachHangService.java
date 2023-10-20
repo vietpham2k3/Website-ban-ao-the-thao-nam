@@ -34,5 +34,5 @@ public interface KhachHangService {
 
     Blob createBlob(InputStream inputStream) throws SQLException, IOException;
 
-    Page<KhachHang>searchKH(String key, Integer trangThai, Pageable pageable);
+    Page<KhachHang>searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable);
 }

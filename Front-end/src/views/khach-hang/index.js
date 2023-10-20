@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 const KhachHang = () => {
   const navigate = useNavigate();
   const [filterStatus, setFilterStatus] = useState(' ');
+  const [filterGender, setFilterGender] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -38,27 +39,29 @@ const KhachHang = () => {
     }
   };
 
+  const handleFilterGenderChange = (selectedGender) => {
+    setFilterGender(selectedGender);
+    search(searchTerm, filterStatus, selectedGender, 0);
+  };
+
   const handleFilterStatusChange = (status) => {
     setFilterStatus(status);
-    search(searchTerm, status, 0);
+    search(searchTerm, status, filterGender, 0);
   };
 
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    search(term, filterStatus, 0);
+    search(term, filterStatus, filterGender, 0);
   };
 
-  const search = async (term, trangThai, page) => {
-    const res = await searchKh(term, trangThai, page);
+  const search = async (term, trangThai, gioiTinh, page) => {
+    const res = await searchKh(term, trangThai, gioiTinh, page);
     if (res && res.data) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
-  // const handleClose = () => {
-  //   setIsShow(false);
-  // };
 
   const handleDeleteKH = (id) => {
     del(id);
@@ -96,10 +99,58 @@ const KhachHang = () => {
                   onChange={handleSearch}
                 />
               </div>
+              <div>
+                <div style={{ paddingBottom: 10 }}>
+                  <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                    Giới tính:
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="genderOptions"
+                    id="all"
+                    checked={filterGender === ''}
+                    onChange={() => handleFilterGenderChange('')}
+                  />
+                  <label htmlFor="all" style={{ marginLeft: 10 }} className="form-check-label">
+                    Tất Cả
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="genderOptions"
+                    id="male"
+                    checked={filterGender === true}
+                    onChange={() => handleFilterGenderChange(true)}
+                  />
+                  <label htmlFor="male" className="form-check-label">
+                    Nam
+                  </label>
+                </div>
+                <div style={{ marginLeft: 10 }} className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="genderOptions"
+                    id="female"
+                    checked={filterGender === false}
+                    onChange={() => handleFilterGenderChange(false)}
+                  />
+                  <label htmlFor="female" className="form-check-label">
+                    Nữ
+                  </label>
+                </div>
+              </div>
               <div style={{ marginRight: 50 }}>
-                <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
-                  Trạng Thái:
-                </label>
+                <div style={{ paddingBottom: 10 }}>
+                  <label htmlFor="all" style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                    Trạng Thái:
+                  </label>
+                </div>
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -156,7 +207,6 @@ const KhachHang = () => {
                   <th>SĐT</th>
                   <th>Ngày sinh</th>
                   <th>Giới tính</th>
-                  {/* <th>Người Tạo</th> */}
                   <th>Ảnh</th>
                   <th>Trạng thái</th>
                   <th>Action</th>

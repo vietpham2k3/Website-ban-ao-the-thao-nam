@@ -109,8 +109,7 @@ function UpdateDiaChi() {
                 <label htmlFor="province" className="form-label">
                   Tỉnh thành
                 </label>
-                <select id="province" className="form-select" value={selectedProvince}
-                 onChange={handleProvinceChange}>
+                <select id="province" className="form-select" value={selectedProvince} onChange={handleProvinceChange}>
                   <option value="">Chọn tỉnh thành</option>
                   {provinces.map((province) => (
                     <option key={province.province_id} value={province.province_id}>

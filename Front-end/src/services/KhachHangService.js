@@ -24,8 +24,8 @@ const detailKH = (id) => {
   return axios.get('/api/khach-hang/detail/' + id);
 };
 
-const searchKh = (key, trangThai, page) => {
-  return axios.get(`/api/khach-hang/searchKH?key=${key}&trangThai=${trangThai}&page=${page}`);
+const searchKh = (key, trangThai, gioiTinh, page) => {
+  return axios.get(`/api/khach-hang/searchKH?key=${key}&trangThai=${trangThai}&gioiTinh=${gioiTinh}&page=${page}`);
 };
 
 const getAllDcKh = (id) => {

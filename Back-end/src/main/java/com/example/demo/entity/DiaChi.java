@@ -18,11 +18,8 @@ public class DiaChi {
     @Column(name="id")
     private UUID id;
 
-    @Column(name="ten_nguoi_nhan")
-    private String tenNguoiNhan;
-
-    @Column(name="sdt")
-    private String sdt;
+    @Column(name="dia_chi")
+    private String diaChi;
 
     @Column(name="tinh_thanh")
     private String tinhThanh;
@@ -32,9 +29,6 @@ public class DiaChi {
 
     @Column(name="phuong_xa")
     private String phuongXa;
-
-    @Column(name="ghi_chu")
-    private String ghiChu;
 
     @Column(name="trang_thai")
     private Integer trangThai;

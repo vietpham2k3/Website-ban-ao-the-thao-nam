@@ -5,7 +5,7 @@ import { Card } from '@mui/material';
 
 import { toast } from 'react-toastify';
 import { addKH } from 'services/KhachHangService';
-import axios from 'axios';
+import { getP, getQH, getTP } from 'services/ApiGHNService';
 
 function AddKhachHang() {
   const navigate = useNavigate();
@@ -19,74 +19,77 @@ function AddKhachHang() {
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
+
+  //Lấy tên
   const [selectedProvinceName, setSelectedProvinceName] = useState('');
   const [selectedDistrictName, setSelectedDistrictName] = useState('');
   const [selectedWardName, setSelectedWardName] = useState('');
 
-  useEffect(() => {
-    const fetchProvinces = async () => {
-      try {
-        const response = await axios.get('https://vapi.vnappmob.com/api/province');
-        setProvinces(response.data.results);
-      } catch (error) {
-        console.error(error);
-        toast.error('Đã xảy ra lỗi khi lấy danh sách tỉnh thành');
+  const getThanhPho = async () => {
+    try {
+      const res = await getTP();
+      if (res) {
+        setProvinces(res.data.data);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    fetchProvinces();
+  const getQuanHuyen = async (value) => {
+    try {
+      const res = await getQH(value);
+      if (res) {
+        setDistricts(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPhuong = async (value) => {
+    try {
+      const res = await getP(value);
+      if (res) {
+        setWards(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getThanhPho();
   }, []);
 
   const handleProvinceChange = async (event) => {
-    const provinceId = event.target.value;
-    setSelectedProvince(provinceId);
+    const provinceId = {
+      province_id: event.target.value
+    };
+    setSelectedProvince(event.target.value);
     setSelectedProvinceName(event.target.options[event.target.selectedIndex].text);
     setSelectedDistrict(null);
     setSelectedWard(null);
     setSelectedDistrictName('');
     setSelectedWardName('');
-    try {
-      if (provinceId) {
-        const response = await axios.get(`https://vapi.vnappmob.com/api/province/district/${provinceId}`);
-        setDistricts(response.data.results);
-        setWards([]);
-      } else {
-        setDistricts([]);
-        setWards([]);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Đã xảy ra lỗi khi lấy danh sách quận huyện');
-    }
+    getQuanHuyen(provinceId);
   };
 
   const handleDistrictChange = async (event) => {
-    const districtId = event.target.value;
-    setSelectedDistrict(districtId);
+    const districtId = {
+      district_id: event.target.value
+    };
+    setSelectedDistrict(event.target.value);
     setSelectedDistrictName(event.target.options[event.target.selectedIndex].text);
     setSelectedWard(null);
     setSelectedWardName('');
-    try {
-      if (districtId) {
-        const response = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${districtId}`);
-        setWards(response.data.results);
-      } else {
-        setWards([]);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Đã xảy ra lỗi khi lấy danh sách phường xã');
-    }
+    getPhuong(districtId);
   };
 
   const handleWardChange = (event) => {
-    const wardId = event.target.value;
-    setSelectedWard(wardId);
+    setSelectedWard(event.target.value);
     setSelectedWardName(event.target.options[event.target.selectedIndex].text);
   };
-
-  const filteredDistricts = districts.filter((district) => district.province_id === selectedProvince);
-  const filteredWards = wards.filter((ward) => ward.district_id === selectedDistrict);
 
   useEffect(() => {
     return () => {
@@ -104,17 +107,16 @@ function AddKhachHang() {
     tinhThanh: '',
     quanHuyen: '',
     phuongXa: '',
+    diaChi: '',
     khachHang: {
       maKhachHang: '',
       tenKhachHang: '',
       sdt: '',
       email: '',
       ngaySinh: '',
-      matKhau: '',
       gioiTinh: '',
       trangThai: 1
-    },
-    trangThai: 1
+    }
   });
 
   const handleSubmit = async (event) => {
@@ -130,12 +132,12 @@ function AddKhachHang() {
     formData.append('sdt', values.khachHang.sdt);
     formData.append('email', values.khachHang.email);
     formData.append('ngaySinh', values.khachHang.ngaySinh);
-    formData.append('matKhau', values.khachHang.matKhau);
     formData.append('gioiTinh', values.khachHang.gioiTinh);
     formData.append('trangThai', values.khachHang.trangThai);
     if (anh) {
       formData.append('anh', anh);
     }
+    formData.append('diaChi', values.diaChi);
     formData.append('tinhThanh', selectedProvinceName);
     formData.append('quanHuyen', selectedDistrictName);
     formData.append('phuongXa', selectedWardName);
@@ -282,88 +284,7 @@ function AddKhachHang() {
                 </label>
               </div>
             </div>
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Mật khẩu
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                value={values.khachHang.matKhau}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      matKhau: e.target.value
-                    }
-                  })
-                }
-              />
-            </div>
-
-            <div className="col-md-4">
-              <label htmlFor="province" className="form-label">
-                Tỉnh thành
-              </label>
-              <select id="province" className="form-select" value={selectedProvince} onChange={handleProvinceChange}>
-                <option value="">Chọn tỉnh thành</option>
-                {provinces.map((province) => (
-                  <option key={province.province_id} value={province.province_id}>
-                    {province.province_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-4">
-              <label htmlFor="district" className="form-label">
-                Quận huyện
-              </label>
-              <select
-                id="district"
-                className="form-select"
-                value={selectedDistrict}
-                onChange={handleDistrictChange}
-                disabled={!selectedProvince}
-              >
-                <option value="">Chọn quận huyện</option>
-                {filteredDistricts.map((district) => (
-                  <option key={district.district_id} value={district.district_id}>
-                    {district.district_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-4">
-              <label htmlFor="ward" className="form-label">
-                Phường xã
-              </label>
-              <select
-                id="ward"
-                className="form-select"
-                value={selectedWard}
-                onChange={handleWardChange}
-                disabled={!selectedDistrict || !selectedProvince}
-              >
-                <option value="">Chọn phường xã</option>
-                {filteredWards.map((ward) => (
-                  <option key={ward.ward_id} value={ward.ward_id}>
-                    {ward.ward_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Ảnh
-              </label>
-              <input type="file" id="anh" className="form-control" accept="image/*" name="anh" onChange={handlePreviewAnh} />
-              {anh && <img src={anh.preview} alt="" width="70%"></img>}
-            </div>
-            <div className="col-12">
+            <div className="col-md-6">
               <label htmlFor="a" className="form-label me-3">
                 Trạng thái:{' '}
               </label>
@@ -410,6 +331,89 @@ function AddKhachHang() {
                   Không hoạt động
                 </label>
               </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                <label htmlFor="address" className="text-black" style={{ paddingBottom: 5 }}>
+                  Địa Chỉ
+                </label>
+                <input
+                  type="text"
+                  className="form-control fct"
+                  id="address"
+                  value={values.diaChi}
+                  onChange={(e) =>
+                    setValues({
+                      ...values,
+                      diaChi: e.target.value
+                    })
+                  }
+                  name="address"
+                  placeholder="Địa chỉ..."
+                />
+              </div>
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                <label htmlFor="ward" className="form-label">
+                  Tỉnh/Thành Phố
+                </label>
+                <select id="province" className="form-select fsl" value={selectedProvince} onChange={handleProvinceChange}>
+                  <option value="">Chọn tỉnh thành</option>
+                  {provinces.map((province) => (
+                    <option key={province.ProvinceID} value={province.ProvinceID}>
+                      {province.NameExtension[1]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                <label htmlFor="ward" className="form-label">
+                  Quận Huyện
+                </label>
+                <select
+                  id="district"
+                  className="form-select fsl"
+                  value={selectedDistrict || ''}
+                  onChange={(e) => handleDistrictChange(e)}
+                  disabled={!selectedProvince}
+                >
+                  <option value="">Chọn quận huyện</option>
+                  {districts.map((district) => (
+                    <option key={district.DistrictID} value={district.DistrictID}>
+                      {district.DistrictName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                <label htmlFor="ward" className="form-label">
+                  Phường xã
+                </label>
+                <select
+                  id="ward"
+                  className="form-select fsl"
+                  value={selectedWard || ''}
+                  onChange={handleWardChange}
+                  disabled={!selectedDistrict || !selectedProvince}
+                >
+                  <option value="">Chọn phường xã</option>
+                  {wards.map((ward) => (
+                    <option key={ward.WardCode} value={ward.WardCode}>
+                      {ward.WardName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="col-6">
+              <label htmlFor="a" className="form-label">
+                Ảnh
+              </label>
+              <input type="file" id="anh" className="form-control" accept="image/*" name="anh" onChange={handlePreviewAnh} />
+              {anh && <img src={anh.preview} alt="" width="70%"></img>}
             </div>
             <div className="col-12">
               <button type="submit" onClick={handleSubmit} className="btn btn-primary">
