@@ -19,5 +19,7 @@ public interface GioHangChiTietService {
 
     void updateSL(Integer soLuong, UUID id);
 
+    void deleteAll(UUID id);
+
     void delete(UUID id);
 }

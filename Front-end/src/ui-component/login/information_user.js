@@ -44,7 +44,6 @@ function UserAccount() {
           <div className="col-2">
             <ul>
               <li>
-                
                 <div className="user-column">
                   <div className="avatar">
                     <div className="avatar-image">

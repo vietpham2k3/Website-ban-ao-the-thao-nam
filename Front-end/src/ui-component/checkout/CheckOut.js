@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router';
 import { getById, getKmById } from 'services/ServiceDonHang';
-import { addKhuyenMai, thanhToan } from 'services/GioHangService';
+import { addKhuyenMai, clearGH, thanhToan } from 'services/GioHangService';
 import { getTP, getQH, getP, getServices, getFee, TGGH } from 'services/ApiGHNService';
 import { payOnline } from 'services/PayService';
 import { detailKH, getAllDcKh, detailDC, addDCKH } from 'services/KhachHangService';
@@ -19,7 +19,7 @@ import UpdateDC from './UpdateDC';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
-  const { handleBackToCart, label, dataLogin } = props;
+  const { handleBackToCart, label, idGH, dataLogin } = props;
   const [dataHDCT, setDataHDCT] = useState([]);
   const [dataKH, setDataKH] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
@@ -276,6 +276,10 @@ function CheckoutForm(props) {
       // Ngừng cập nhật địa chỉ
       setIsUpdatingDiaChi(false);
 
+      if (dataLogin) {
+        clear(idGH);
+      }
+
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
         thanhToanHD(id, valuesUpdateHD);
@@ -439,6 +443,14 @@ function CheckoutForm(props) {
     });
     return formatter.format(number);
   }
+
+  const clear = async (id) => {
+    try {
+      await clearGH(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getAllDC = async (id) => {
     try {

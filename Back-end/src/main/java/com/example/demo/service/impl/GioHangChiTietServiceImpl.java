@@ -41,6 +41,11 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     }
 
     @Override
+    public void deleteAll(UUID id) {
+        repository.deleteAll(id);
+    }
+
+    @Override
     public void delete(UUID id) {
         repository.deleteById(id);
     }

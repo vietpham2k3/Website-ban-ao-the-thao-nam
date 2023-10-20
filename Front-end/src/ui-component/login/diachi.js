@@ -5,16 +5,14 @@ import Footer from 'ui-component/trangchu/Footer';
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-
 function DiaChi() {
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
   const handleSubmit = () => {
-   setIsModalOpen(true);
+    setIsModalOpen(true);
   };
 
   const handleCancel = () => {
@@ -61,7 +59,7 @@ function DiaChi() {
                 </a>
               </li>
               <li>
-                <a href="#" >
+                <a href="#">
                   <button className="no-border"></button>
                 </a>
               </li>
@@ -70,7 +68,6 @@ function DiaChi() {
                   <button className="no-border"></button>
                 </a>
               </li>
-              
             </ul>
           </div>
 
@@ -83,7 +80,7 @@ function DiaChi() {
               <h4>Sổ Địa Chỉ</h4>
               <p>Đỗ Mạnh Hùng</p>
               <p>Giới Tính: Huyện Thạch Thất, Hà Nội</p>
-              <Modal isOpen={isModalOpen}  contentLabel="Địa chỉ" className="modal" >
+              <Modal isOpen={isModalOpen} contentLabel="Địa chỉ" className="modal">
                 <h2>Biểu mẫu Địa chỉ</h2>
                 <form onSubmit={handleSubmit}>
                   <label htmlFor="u">Chọn Quận/Huyện:</label>

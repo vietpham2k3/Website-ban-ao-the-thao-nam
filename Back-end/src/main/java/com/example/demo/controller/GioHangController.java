@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.CoAo;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HinhThucThanhToan;
@@ -21,8 +20,6 @@ import com.example.demo.service.impl.HoaDon_KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
 import com.example.demo.service.impl.KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
-import jakarta.validation.Valid;
-import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -255,8 +252,6 @@ public class GioHangController {
 
         return ResponseEntity.ok(gioHangChiTiet);
     }
-
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteByIdHD(@PathVariable UUID id) {

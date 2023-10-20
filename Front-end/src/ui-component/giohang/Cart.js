@@ -77,15 +77,23 @@ function Cart(props) {
 
   const handleTaoHoaDon = () => {
     if (dataLogin) {
+      if (listSP.length === 0) {
+        toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
+        return;
+      }
       taoHoaDon(listSP);
     } else {
+      if (hoaDonChiTietList.length === 0) {
+        toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
+        return;
+      }
       taoHoaDon(hoaDonChiTietList);
     }
   };
 
   const taoHoaDon = async (value) => {
     const res = await postGH(value);
-    if (res) {
+    if (res || value) {
       navigate(`/checkout/${res.data}`);
     }
   };
@@ -359,14 +367,7 @@ function Cart(props) {
                     Tổng tiền: <strong>{convertToCurrency(totalAmount)}</strong>
                   </p>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={() => {
-                    // navigate('/checkout');
-                    handleTaoHoaDon();
-                  }}
-                >
+                <button type="button" className="btn btn-success" onClick={handleTaoHoaDon}>
                   Thanh toán
                 </button>
               </div>
