@@ -243,10 +243,8 @@ function DonHangCT() {
       ...prevValues,
       tongTien: totalAmount,
       tongTienKhiGiam: tongTienKhiGiam
-    })); 
-    
+    }));
   };
-
 
   const update = async (idHDCT, hoaDon) => {
     const res = await updateSL(idHDCT, hoaDon);
@@ -260,7 +258,7 @@ function DonHangCT() {
     if (totalAmount) {
       updateHD(id, hoaDon);
     }
-  }, [totalAmount]);
+  }, [hoaDon.tongTien]);
 
   useEffect(() => {
     if (idHDCT) {
@@ -277,8 +275,9 @@ function DonHangCT() {
       tongTien: totalAmount,
       tongTienKhiGiam: totalAmount - totalGiam + hoaDon.tienShip
     });
-
   }, [hoaDon.tienShip, totalAmount]);
+
+  console.log(hoaDon.tong);
 
   // kcms sp
   const handleAddSoLuong = (id, idSP) => {
@@ -2504,7 +2503,9 @@ function DonHangCT() {
                               value={d.soLuong}
                               onChange={(e) => {
                                 handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e);
-                              }} variant={'dark'} size="sm"
+                              }}
+                              variant={'dark'}
+                              size="sm"
                             />
                           ) : (
                             <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>{d.soLuong}</span>
