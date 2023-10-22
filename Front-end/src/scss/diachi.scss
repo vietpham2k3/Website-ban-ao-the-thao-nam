@@ -59,7 +59,6 @@ button:hover {
   cursor: pointer;
   font-family: 'Tahoma', sans-serif;
   font-size: 16px;
-  // font-weight: bold;
   color: black;
 }
 .col-2 {
@@ -83,79 +82,8 @@ button:hover {
   background-color: #fff; /* Màu nền của đường dọc */
   margin: 0;
 }
-.right-aligned-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white; /* Optional, add background color if needed */
-  padding: 20px; /* Optional, add padding to the modal */
-  border: 1px solid #ccc; /* Optional, add a border to the modal */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional, add box shadow */
-  max-width: 80%;
-}
 
-.modal-content {
-  border: 1px solid #0d89d7;
-  padding: 20px;
-  background-color: #fff;
-}
-.input-group {
-  position: relative;
-  margin-bottom: 20px;
-}
-input {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 1px solid #000;
-  outline: none;
-}
-input,
-select {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 1px solid #000;
-  background: transparent;
-  outline: none;
-  font-size: 16px;
-}
-.button1 {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
 
-.button1 button {
-  flex: 1;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #3498db;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.button1 button:last-child {
-  margin-right: 0;
-}
-
-.button1 button:hover {
-  background-color: #2980b9;
-}
-
-.centered-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .button2 {
   display: inline-block;
   margin: 10px;
@@ -173,4 +101,108 @@ select {
 
 .button2 button:hover {
   background-color: #1fc66a;
+}
+
+.right-aligned-modal {
+ position: fixed;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ background-color: white;
+ padding: 20px;
+ border: 1px solid #ccc;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+ max-width: 95%;
+}
+
+
+.modal-content {
+ border: 1px solid #0d89d7;
+ padding: 20px;
+ background-color: #fff;
+}
+.input-group {
+ position: relative;
+ margin-bottom: 20px;
+}
+.input1 input,
+.input1 select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgb(144, 144, 144); /* Add a border */
+  border-radius: 5px; /* Add border-radius to round the corners */
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a box shadow */
+}
+
+
+
+.button1 {
+ display: flex;
+ justify-content: space-between;
+ margin-top: 20px;
+}
+
+.button1 button {
+ flex: 1;
+ padding: 10px 20px;
+ font-size: 16px;
+ background-color: #3498db;
+ color: #fff;
+ border: none;
+ cursor: pointer;
+ border-radius: 5px;
+ margin-right: 10px;
+}
+
+.button1 button:last-child {
+ margin-right: 0;
+}
+
+.button1 button:hover {
+ background-color: #2980b9;
+}
+
+.centered-modal {
+ position: fixed;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+.button3 {
+ display: flex;
+ justify-content: space-between;
+ margin-top: 20px;
+}
+
+.button3 button {
+ background: #0074d9;
+ color: white;
+ border: none;
+ padding: 10px 20px;
+ cursor: pointer;
+ flex: 1;
+ margin: 0 10px; /* Add spacing between buttons */
+}
+
+.button3 button:hover {
+ background: #1a9461;
+}
+.button4 button {
+ background: gray;
+ color: white;
+ border: none;
+ padding: 10px 20px;
+ cursor: pointer;
+ flex: 1;
+ margin: 0 10px; /* Add spacing between buttons */
+}
+
+.button4 button:hover {
+ background: #060606;
 }
