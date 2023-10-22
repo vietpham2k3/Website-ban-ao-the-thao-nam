@@ -298,7 +298,6 @@ function DonHangCT() {
     console.log(values.tongTienKhiGiam);
     // console.log(totalAmount);
     // console.log(tongTienKhiGiam);
-
   }, [values.tienShip, totalAmount]);
 
   // kcms sp
@@ -663,7 +662,7 @@ function DonHangCT() {
   //     }
   //   });
   //   }
-   
+
   // }, [thanhPho, valuesId]);
 
   // useEffect(() => {

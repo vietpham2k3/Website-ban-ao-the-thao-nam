@@ -48,8 +48,8 @@ const addDC = (id, values) => {
   return axios.post('/api/dia-chi/addDCKH/' + id, values);
 };
 
-const addDCKH = (values) => {
-  return axios.post('/api/dia-chi/add', values);
+const addDCKH = (id, values) => {
+  return axios.post('/api/dia-chi/add/' + id, values);
 };
 
 export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh, getAllDcKh, deleteDC, detailDC, updateDC, addDC, addDCKH };

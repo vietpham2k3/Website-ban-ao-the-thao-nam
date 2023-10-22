@@ -13,8 +13,15 @@ const UpdateDC = ({
   phuong,
   dataDetailDC,
   setDataDetailDC,
-  handleUpdateDC
+  handleUpdateDC,
+  label
 }) => {
+  const handleCheckboxChange = () => {
+    const updatedDataDetailDC = { ...dataDetailDC };
+    updatedDataDetailDC.trangThai = dataDetailDC.trangThai === 0 ? 1 : 0; // Đảo ngược trạng thái
+
+    setDataDetailDC(updatedDataDetailDC);
+  };
   return (
     <div>
       <Modal
@@ -27,7 +34,7 @@ const UpdateDC = ({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Update địa chỉ</Modal.Title>
+          <Modal.Title>{label} địa chỉ</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="form-group row fgr">
@@ -92,13 +99,21 @@ const UpdateDC = ({
               ))}
             </select>
           </div>
+          <div className="col-md-12 mt-3">
+            <div className="form-check">
+              <input className="form-check-input" type="radio" checked={dataDetailDC.trangThai === 1} onChange={handleCheckboxChange} />
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Đặt làm mặc định
+              </label>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Trở lại
           </Button>
           <Button variant="primary" onClick={handleUpdateDC}>
-            Update
+            {label}
           </Button>
         </Modal.Footer>
       </Modal>

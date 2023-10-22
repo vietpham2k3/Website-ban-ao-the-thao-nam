@@ -39,14 +39,12 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
-  const handleLogout = async () => {
-    console.log('Logout');
-  };
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -75,6 +73,12 @@ const ProfileSection = () => {
 
     prevOpen.current = open;
   }, [open]);
+
+  const handleLogout = () => {
+    navigate('/login');
+    localStorage.removeItem('dataLogin');
+    localStorage.removeItem('idGH');
+  };
 
   return (
     <>
@@ -148,7 +152,7 @@ const ProfileSection = () => {
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          Johne Doe
+                          {dataLogin.ten}
                         </Typography>
                       </Stack>
                     </Stack>

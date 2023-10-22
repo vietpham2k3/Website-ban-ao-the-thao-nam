@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
+import '../../scss/Card.scss';
 import { Table } from 'react-bootstrap';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -8,7 +9,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { deleteSPInGH, getAllGH, postGH, updateSLGH } from 'services/GioHangService';
 import { updateSL } from 'services/SanPhamService';
 import { toast } from 'react-toastify';
-// import { toast } from 'react-toastify';
 
 function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
@@ -16,7 +16,9 @@ function Cart(props) {
   const [check, setCheck] = useState(false);
   const [idGHCT, setIdGHCT] = useState('');
   const [productList, setProductList] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [listSP, setListSP] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const navigate = useNavigate();
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount, idGH, dataLogin, countSP } = props;
@@ -26,14 +28,14 @@ function Cart(props) {
     },
     soLuong: 1
   });
-  const hoaDonChiTietList = productList.map((product) => {
+  const hoaDonChiTietList = selectedProducts.map((product) => {
     return {
       chiTietSanPham: {
         id: product.id
         // Các trường khác của chi tiết sản phẩm nếu cần
       },
       soLuong: product.soLuong, // Thêm số lượng
-      donGia: product.soLuong * product.giaBan // Thêm giá bán
+      donGia: product.soLuong * product.donGia // Thêm giá bán
     };
   });
 
@@ -60,33 +62,21 @@ function Cart(props) {
   useEffect(() => {
     // Tính tổng tiền khi valuesSanPham thay đổi
     let sum = 0;
-    if (dataLogin) {
-      listSP.forEach((d) => {
-        sum += d.soLuong * d.donGia;
-      });
-      // Cập nhật giá trị tổng tiền
-      setTotalAmount(sum);
-    } else {
-      productList.forEach((d) => {
-        sum += d.soLuong * d.giaBan;
-      });
-      // Cập nhật giá trị tổng tiền
-      setTotalAmount(sum);
-    }
-  }, [productList, listSP, dataLogin]);
+    selectedProducts.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+  }, [selectedProducts, dataLogin]);
 
   const handleTaoHoaDon = () => {
+    if (selectedProducts.length === 0) {
+      toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
+      return;
+    }
     if (dataLogin) {
-      if (listSP.length === 0) {
-        toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
-        return;
-      }
-      taoHoaDon(listSP);
+      taoHoaDon(selectedProducts);
     } else {
-      if (hoaDonChiTietList.length === 0) {
-        toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
-        return;
-      }
       taoHoaDon(hoaDonChiTietList);
     }
   };
@@ -140,6 +130,17 @@ function Cart(props) {
         },
         soLuong: e
       });
+      const updatedSelectedProducts = selectedProducts.map((product) => {
+        if (product.chiTietSanPham.id === idCTSP) {
+          return {
+            ...product,
+            soLuong: e
+          };
+        }
+        return product;
+      });
+
+      setSelectedProducts(updatedSelectedProducts);
     } else {
       // Lấy giá trị số lượng mới
       const newQuantity = e;
@@ -176,6 +177,18 @@ function Cart(props) {
 
       // Gọi hàm để cập nhật tổng số lượng trong local storage
       putSl(id, storedProductList[productIndex].tongSoLuong);
+
+      const updatedSelectedProducts = selectedProducts.map((product) => {
+        if (product.id === id) {
+          return {
+            ...product,
+            soLuong: e
+          };
+        }
+        return product;
+      });
+
+      setSelectedProducts(updatedSelectedProducts);
     }
   };
 
@@ -217,6 +230,33 @@ function Cart(props) {
     return formatter.format(number);
   }
 
+  const handleCheckAll = () => {
+    setSelectAll(!selectAll);
+
+    // Tùy thuộc vào trạng thái selectAll, bạn có thể cập nhật danh sách sản phẩm đã chọn
+    if (selectAll) {
+      setSelectedProducts([]);
+    } else {
+      if (dataLogin) {
+        setSelectedProducts([...listSP]);
+      } else {
+        setSelectedProducts([...productList]);
+      }
+    }
+  };
+
+  const handleCheckboxChange = (product) => {
+    const isSelected = selectedProducts.some((p) => p.id === product.id);
+
+    if (isSelected) {
+      // Nếu đã chọn, loại bỏ sản phẩm khỏi danh sách đã chọn
+      setSelectedProducts(selectedProducts.filter((p) => p.id !== product.id));
+    } else {
+      // Nếu chưa chọn, thêm sản phẩm vào danh sách đã chọn
+      setSelectedProducts([...selectedProducts, product]);
+    }
+  };
+
   return (
     <div>
       <div className="container">
@@ -243,6 +283,17 @@ function Cart(props) {
               <div className="col-12" style={{ paddingLeft: '25px', paddingBottom: '10px', paddingRight: '25px' }}>
                 <Table striped hover className="my-2">
                   <tr>
+                    <td>
+                      <input
+                        className={`form-check-input`}
+                        style={{ border: '1px solid black' }}
+                        type="checkbox"
+                        value=""
+                        id="checkAll"
+                        checked={selectAll}
+                        onChange={handleCheckAll}
+                      />
+                    </td>
                     <td>Sản phẩm</td>
                     <td>&nbsp;</td>
                     <td>Đơn giá</td>
@@ -253,6 +304,15 @@ function Cart(props) {
                   {dataLogin
                     ? listSP.map((product, index) => (
                         <tr key={index}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              name=""
+                              id=""
+                              checked={selectedProducts.some((p) => p.id === product.id)}
+                              onChange={() => handleCheckboxChange(product)}
+                            />
+                          </td>
                           <td>
                             <img
                               src={`http://localhost:8080/api/chi-tiet-san-pham/${product.chiTietSanPham.id}`}
@@ -307,6 +367,15 @@ function Cart(props) {
                     : productList.map((product, index) => (
                         <tr key={index}>
                           <td>
+                            <input
+                              type="checkbox"
+                              name=""
+                              id=""
+                              checked={selectedProducts.some((p) => p.id === product.id)}
+                              onChange={() => handleCheckboxChange(product)}
+                            />
+                          </td>
+                          <td>
                             <img
                               src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
                               className="img-cart"
@@ -327,7 +396,7 @@ function Cart(props) {
                               }}
                             ></span>
                           </td>
-                          <td>{convertToCurrency(product.giaBan)}</td>
+                          <td>{convertToCurrency(product.donGia)}</td>
                           <td>
                             <div
                               className="input-spinner"
@@ -346,7 +415,7 @@ function Cart(props) {
                               />
                             </div>
                           </td>
-                          <td>{convertToCurrency(product.giaBan * product.soLuong)}</td>
+                          <td>{convertToCurrency(product.donGia * product.soLuong)}</td>
                           <td>
                             <button
                               onClick={() => handleDelete(product.id, product.soLuong, product.tongSoLuong)}
