@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import useStateWithPromise from './useStateWithPromise';
 import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -49,12 +50,12 @@ function DonHangCT() {
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [inputDetail, setInputDetail] = useState(null);
   const [dataSP, setDataSP] = useState([]);
-  const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
+  const [checkDelay, setCheckDelay] = useState(false);
   // const [valuesId, setValuesId] = useState({
   //   province_id: ''
   // });
@@ -81,7 +82,7 @@ function DonHangCT() {
     width: 15
   });
   // cap nhat hoa don
-  const [values, setValues] = useState({
+  const [values, setValues] = useStateWithPromise({
     tenNguoiNhan: '',
     soDienThoai: '',
     diaChi: '',
@@ -92,7 +93,9 @@ function DonHangCT() {
     tongTienKhiGiam: 0,
     tienShip: 0
   });
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useStateWithPromise(0);
+  const [tongTienKhiGiam, setTongTienKhiGiam] = useStateWithPromise(0);
+
 
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
@@ -232,11 +235,13 @@ function DonHangCT() {
       return;
     }
 
-    setValues({
-      ...values,
-      tongTien: totalAmount,
-      tongTienKhiGiam: tongTienKhiGiam
-    });
+    // setValues({
+    //   ...values,
+    //   tongTien: totalAmount,
+    //   tongTienKhiGiam: tongTienKhiGiam
+    // });
+
+
 
     await updateHD(id, values);
   };
@@ -261,6 +266,8 @@ function DonHangCT() {
       tongTienKhiGiam: tongTienKhiGiam
     }));
 
+    setCheckDelay(true);
+
     console.log(totalAmount);
     console.log(tongTienKhiGiam);
   };
@@ -279,10 +286,21 @@ function DonHangCT() {
   }, [valuesUpdate]);
 
   useEffect(() => {
-    if (totalAmount) {
-      updateHD(id, values);
-    }
-  }, [totalAmount]);
+    console.log(totalAmount);
+    console.log(tongTienKhiGiam);
+  }, [valuesUpdate.soLuong]);
+
+  useEffect(() => {
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    // Tính tổng tiền khi valuesSanPham thay đổi
+    let sum = 0;
+    valuesSanPham.forEach((d) => {
+      sum += d.soLuong * d.donGia;
+    });
+    // Cập nhật giá trị tổng tiền
+    setTotalAmount(sum);
+    setTongTienKhiGiam(sum - totalGiam + values.tienShip);
+  }, [checkDelay]);
 
   useEffect(() => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
@@ -294,11 +312,10 @@ function DonHangCT() {
       tongTienKhiGiam: totalAmount - totalGiam + values.tienShip
     });
 
-    console.log(values.tongTien);
-    console.log(values.tongTienKhiGiam);
+    // console.log(values.tongTien);
+    // console.log(values.tongTienKhiGiam);
     // console.log(totalAmount);
     // console.log(tongTienKhiGiam);
-
   }, [values.tienShip, totalAmount]);
 
   // kcms sp
@@ -663,7 +680,7 @@ function DonHangCT() {
   //     }
   //   });
   //   }
-   
+
   // }, [thanhPho, valuesId]);
 
   // useEffect(() => {
@@ -2635,7 +2652,7 @@ function DonHangCT() {
               )}
               <br></br>
 
-              {dataHDKM && dataHDKM.tienGiam !== 0 && (
+              {dataHDKM && dataHDKM.length > 0 && (
                 <Container style={{ display: 'flex', justifyContent: 'end' }}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col sm={12} className="row">
