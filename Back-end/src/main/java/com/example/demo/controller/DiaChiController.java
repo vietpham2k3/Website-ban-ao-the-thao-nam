@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.DiaChi;
+import com.example.demo.entity.KhachHang;
 import com.example.demo.service.impl.DiaChiServiceImpl;
+import com.example.demo.service.impl.KhachHangServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -14,16 +17,29 @@ import java.util.UUID;
 public class DiaChiController {
     @Autowired
     private DiaChiServiceImpl dcService;
+    @Autowired
+    private KhachHangServiceImpl khService;
 
     @GetMapping("/getAllIdKh/{idKH}")
     public ResponseEntity<?> getAll(@PathVariable("idKH") UUID idKH) {
         return ResponseEntity.ok(dcService.getAllIdKh(idKH));
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody DiaChi diaChi) {
-        return ResponseEntity.ok(dcService.add(diaChi));
+    @PostMapping("/add/{id}")
+    public ResponseEntity<?> add(@PathVariable UUID id, @RequestBody DiaChi diaChi) {
+        List<DiaChi> list = dcService.getAllIdKh(id);
+        if (diaChi.getTrangThai() == 1) {
+            for (DiaChi dc : list) {
+                dc.setTrangThai(0);
+                dcService.add(dc);
+            }
+        }
+        KhachHang khachHang = khService.getOne(id);
+        diaChi.setKhachHang(khachHang);
+        dcService.add(diaChi);
+        return ResponseEntity.ok("Thêm thành công");
     }
+
 
     @PostMapping("/addDCKH/{id}")
     public ResponseEntity<?> addDCKH(@RequestBody DiaChi diaChi, @PathVariable UUID id) {

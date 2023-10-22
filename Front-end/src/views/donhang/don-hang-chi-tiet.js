@@ -277,8 +277,6 @@ function DonHangCT() {
     });
   }, [hoaDon.tienShip, totalAmount]);
 
-  console.log(hoaDon.tong);
-
   // kcms sp
   const handleAddSoLuong = (id, idSP) => {
     setShow7(true);

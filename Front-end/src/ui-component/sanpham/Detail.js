@@ -237,7 +237,7 @@ function Detail(props) {
         kichCo: product.kichCo,
         sanPham: product.sanPham,
         mauSac: product.mauSac,
-        giaBan: product.giaBan,
+        donGia: product.giaBan,
         soLuong: quantity,
         tongSoLuong: product.soLuong - quantity
       });
