@@ -82,11 +82,17 @@ export default function BanHangTaiQuay() {
             <i className="fa-solid fa-plus"></i>
           </Button>
         </Box>
-        {values.map((d, i) => (
-          <CustomTabPanel key={i} value={value} index={i}>
-            <DonHang id={d.id} getAll={getAll}></DonHang>
+        {values ? (
+          values.map((d, i) => (
+            <CustomTabPanel key={i} value={value} index={i}>
+              <DonHang id={d.id} getAllHD={getAll}></DonHang>
+            </CustomTabPanel>
+          ))
+        ) : (
+          <CustomTabPanel>
+            <h1>Không có đơn nào</h1>
           </CustomTabPanel>
-        ))}
+        )}
       </Box>
     </MainCard>
   );

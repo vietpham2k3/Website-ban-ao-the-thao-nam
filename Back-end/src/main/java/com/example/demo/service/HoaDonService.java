@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.HoaDonController;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 import java.util.*;
 
@@ -30,7 +28,11 @@ public interface HoaDonService {
 
     void delete(UUID id);
 
-    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
+    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai,
+                           String diaChi, String tinh,
+                           String huyen, String xa);
+
+    public void updateHDTien(UUID id, Double tongTien,Double tongTienKhiGiam,Double tienShip);
 
     HoaDon add(HoaDon hoaDon);
 }

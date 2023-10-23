@@ -8,46 +8,138 @@ import ReactPaginate from 'react-paginate';
 import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getAllCTSP, deleteCTSP, searchCTSP } from 'services/SanPhamService';
-import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 // import defaul from '../../assets/images/default-placeholder.png';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Slider from 'react-slider';
+import { Form, Row, Col } from 'react-bootstrap';
+import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
 
 const MIN = 0;
-const MAX = 999999;
-
+const MAX = 1000000;
 function SanPham() {
+  const [values, setValues] = useState([MIN, 0]);
+
+  const [maxPrice, setMaxPrice] = useState(MAX);
   const [data, setData] = useState([]);
   // const [imageErrors, setImageErrors] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const [values, setValues] = useState([MIN, MAX]);
   const [term, setTerm] = useState('');
   const [status, setStatus] = useState('');
   const [radio, setRadio] = useState('');
   // const [isLoading, setIsLoading] = useState(true);
+  const [mauSac, setMauSac] = useState('');
+  const [chatLieu, setChatLieu] = useState('');
+  const [loaiSanPham, setLoaiSanPham] = useState('');
+  const [nhaSanXuat, setNhaSanXuat] = useState('');
+  const [coAo, setCoAo] = useState('');
 
+  const [listCL, setListCL] = useState([]);
+  const [listNSX, setListNSX] = useState([]);
+  const [listLSP, setListLSP] = useState([]);
+  const [listCA, setListCO] = useState([]);
+  const [listMS, setListMS] = useState([]);
+
+  const [chatLieuDefaultSelected, setChatLieuDefaultSelected] = useState(false); // Biến để theo dõi giá trị mặc định chất liệu
+  const [loaiSanPhamDefaultSelected, setLoaiSanPhamDefaultSelected] = useState(false);
+  const [nhaSanXuatDefaultSelected, setNhaSanXuatDefaultSelected] = useState(false);
+  const [coAoDefaultSelected, setCoAoDefaultSelected] = useState(false);
+  const [mauSacDefaultSelected, setMauSacDefaultSelected] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     getAll(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getListCO();
+    getListLSP();
+    getListMS();
+    getListNSX();
+    getListCL();
   }, []);
 
-  const getAll = async (page) => {
-    const res = await getAllCTSP(page);
+  useEffect(() => {
+    if (maxPrice === MAX && data.length > 0) {
+      const max = findMaxPrice(data);
+      setMaxPrice(max);
+      setValues([MIN, max]);
+    }
+  }, [data, maxPrice]);
+
+  const findMaxPrice = (products) => {
+    let maxPrice = 0;
+    products.forEach((product) => {
+      if (product.giaBan > maxPrice) {
+        maxPrice = product.giaBan;
+      }
+    });
+    return maxPrice;
+  };
+
+  const getListCL = async () => {
     try {
+      const response = await getAllListCL();
+      if (response && response.data) {
+        setListCL(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListLSP = async () => {
+    try {
+      const response = await getAllListLSP();
+      if (response && response.data) {
+        setListLSP(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListCO = async () => {
+    try {
+      const response = await getAllListCO();
+      if (response && response.data) {
+        setListCO(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+
+  const getListMS = async () => {
+    try {
+      const response = await getAllListMS(); // Gọi API hoặc thực hiện tác vụ lấy danh sách màu sắc
+      if (response && response.data) {
+        setListMS(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+  const getListNSX = async () => {
+    try {
+      const response = await getAllListNSX(); // Gọi API hoặc thực hiện tác vụ lấy danh sách NSX
+      if (response && response.data) {
+        setListNSX(response.data);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+    }
+  };
+  const getAll = async (page) => {
+    try {
+      const res = await getAllCTSP(term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page);
+
       if (res) {
         setData(res.data.content);
         setTotalPages(res.data.totalPages);
       }
     } catch (error) {
-      // Errors
-    } finally {
-      // setIsLoading(false);
+      // Xử lý lỗi nếu có
     }
   };
 
@@ -84,17 +176,23 @@ function SanPham() {
   };
 
   const handleSearchUsers = _.debounce(async () => {
-    const res = await searchCTSP(term, status, values[0], values[1], '0');
-    if (res && res.data) {
-      setData(res.data.content);
-    } else {
-      getAll(0);
+    try {
+      const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, '0');
+
+      if (res && res.data) {
+        setData(res.data.content);
+        setTotalPages(res.data.totalPages);
+      } else {
+        getAll(0);
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có
     }
   }, 100);
 
   useEffect(() => {
     handleSearchUsers();
-  }, [term, status, values]);
+  }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
@@ -114,6 +212,72 @@ function SanPham() {
     navigate(`/san-pham/chi-tiet-san-pham/detail/${id}/${idSp}`);
     localStorage.setItem('idSP', idSp);
   };
+  const uniqueColors = listMS.filter((color, index, self) => index === self.findIndex((c) => c.ten === color.ten));
+
+  const handleSubstring = (selectedValue) => {
+    return selectedValue.replace('#', '');
+  };
+
+  const handleMauSacChange = (e) => {
+    const selectedValue = e.target.value;
+
+    const mauSacWithoutHash = handleSubstring(selectedValue);
+    setMauSac(mauSacWithoutHash);
+
+    if (selectedValue === '' || selectedValue === 'default') {
+      setMauSacDefaultSelected(true);
+      getAll(0);
+    } else {
+      setMauSacDefaultSelected(false);
+    }
+  };
+
+  // ...
+
+  // Trong JSX của combobox, bạn có thể hiển thị selectedValue thay vì mauSac.
+
+  const handleChatLieuChange = (e) => {
+    const selectedValue = e.target.value;
+    setChatLieu(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setChatLieuDefaultSelected(true);
+    } else {
+      setChatLieuDefaultSelected(false);
+    }
+  };
+  const handleLoaiSanPhamChange = (e) => {
+    const selectedValue = e.target.value;
+    setLoaiSanPham(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setLoaiSanPhamDefaultSelected(true);
+    } else {
+      setLoaiSanPhamDefaultSelected(false);
+    }
+  };
+
+  const handleNhaSanXuatChange = (e) => {
+    const selectedValue = e.target.value;
+    setNhaSanXuat(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setNhaSanXuatDefaultSelected(true);
+    } else {
+      setNhaSanXuatDefaultSelected(false);
+    }
+  };
+
+  const handleCoAoChange = (e) => {
+    const selectedValue = e.target.value;
+    setCoAo(selectedValue);
+    if (selectedValue === '') {
+      getAll(0);
+      setCoAoDefaultSelected(true);
+    } else {
+      setCoAoDefaultSelected(false);
+    }
+  };
 
   return (
     <div>
@@ -122,7 +286,7 @@ function SanPham() {
           <div className="col-6 search d-flex align-items-center row">
             <input
               type="text"
-              className="input-search box col-auto"
+              className="input-search-sp box col-auto"
               placeholder="Search..."
               value={term}
               onChange={handleInputChange}
@@ -166,7 +330,17 @@ function SanPham() {
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>
-              <Slider className="slider" onChange={setValues} value={values} min={MIN} max={MAX}></Slider>
+              <div>{/* <strong>giá cao nhất:</strong> {convertToCurrency(maxPrice)} */}</div>
+
+              <Slider
+                className="slider"
+                value={values}
+                min={MIN}
+                max={maxPrice}
+                onChange={(newValues) => {
+                  setValues(newValues);
+                }}
+              ></Slider>
             </div>
           </div>
           <div className="col-6 d-none d-md-block">
@@ -176,6 +350,71 @@ function SanPham() {
               </Link>
             </div>
           </div>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleChatLieuChange} value={chatLieu}>
+                  <option value="" disabled={chatLieuDefaultSelected}>
+                    CHẤT LIỆU
+                  </option>
+                  {listCL.map((c) => (
+                    <option key={c.ten} value={c.ten}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleLoaiSanPhamChange} value={loaiSanPham}>
+                  <option value="" disabled={loaiSanPhamDefaultSelected}>
+                    LOẠI SẢN PHẨM
+                  </option>
+                  {listLSP.map((c) => (
+                    <option key={c.ten} value={c.ten}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleNhaSanXuatChange} value={nhaSanXuat}>
+                  <option value="" disabled={nhaSanXuatDefaultSelected}>
+                    NHÀ SẢN XUẤT
+                  </option>
+                  {listNSX.map((c) => (
+                    <option key={c.ten} value={c.ten}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleCoAoChange} value={coAo}>
+                  <option value="" disabled={coAoDefaultSelected}>
+                    CỔ ÁO
+                  </option>
+                  {listCA.map((c) => (
+                    <option key={c.ten} value={c.ten}>
+                      {c.ten}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
+                  {uniqueColors.map((c) => (
+                    <option key={c.ma} value={c.ma}>
+                      &nbsp;{c.ma}
+                    </option>
+                  ))}
+                  <option value="" disabled={mauSacDefaultSelected}>
+                    MÀU SẮC
+                  </option>
+                </Form.Select>
+              </Col>
+            </Row>
+          </Form>
+
           <div className="col-12">
             <Table striped hover className="my-4">
               <thead>
@@ -205,6 +444,11 @@ function SanPham() {
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
+                    {/* <td><div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>{d.mauSac.ten}</td>
+                    <td>{d.chatLieu.ten}</td>
+                    <td>{d.loaiSanPham.ten}</td>
+                    <td>{d.nhaSanXuat.ten}</td>
+                    <td>{d.coAo.ten}</td> */}
                     <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>

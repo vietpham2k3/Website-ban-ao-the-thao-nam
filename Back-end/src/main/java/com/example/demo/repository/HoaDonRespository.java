@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,8 +59,26 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE HoaDon SET ten_nguoi_nhan = :tenNguoiNhan, \n" +
-            "            sdt = :soDienThoai, dia_chi = :diaChi ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
-    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai, String diaChi);
+            "            sdt = :soDienThoai, dia_chi = :diaChi, tinh = :tinh," +
+            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
+    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai,
+                         String diaChi, String tinh,
+                         String huyen, String xa);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE HoaDon SET tong_tien = :tongTien, \n" +
+            "            tong_tien_sau_khi_giam = :tongTienKhiGiam," +
+            "            tien_ship = :tienShip" +
+            " WHERE id = :id", nativeQuery = true)
+    public void updateTienHD(UUID id, Double tongTien, Double tongTienKhiGiam,Double tienShip);
+
+    @Query(value = "SELECT KM.ma, KM.ten, KM.muc_giam, KM_HD.tien_giam" +
+            " FROM HoaDon_KhuyenMai KM_HD JOIN\n" +
+            "KhuyenMai KM ON KM_HD.id_km = KM.id JOIN\n" +
+            "HoaDon HD ON HD.id = KM_HD.id_hd \n" +
+            "WHERE KM_HD.id_hd = :idHD", nativeQuery = true)
+    public HoaDon_KhuyenMai hd_km(@Param("idHD") UUID idHD);
 
     @Query(value = "select h from HoaDon h where h.trangThai = 0 and h.loaiDon = 0")
     List<HoaDon> getAllHD();

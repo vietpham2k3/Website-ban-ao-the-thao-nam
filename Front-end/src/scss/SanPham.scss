@@ -50,7 +50,15 @@
 // Here you can add other styles
 .input-search {
   width: 50%;
-  height: 50%;
+  height: 100%;
+  border: 1px solid gray;
+  border-radius: 15px;
+  padding-left: 10px;
+}
+.input-search-sp {
+  width: 50%;
+  height: 30%;
+  border: 1px solid gray;
   border-radius: 15px;
   padding-left: 10px;
 }
@@ -121,3 +129,4 @@ select.form-select option[selected]::before {
 .box {
   width: 250px;
 }
+

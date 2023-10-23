@@ -134,7 +134,8 @@
         align-items: center;
         margin-right: 20px;
 
-        input[type="checkbox"] {
+        input[type='checkbox'] {
+
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
@@ -148,7 +149,8 @@
           transition: background-color 0.2s ease-in-out;
         }
 
-        input[type="checkbox"]:checked {
+        input[type='checkbox']:checked {
+
           background-color: #434343;
         }
 
@@ -184,11 +186,11 @@
 
 /* Style for the product filters accordion */
 .accordion {
+    
 
   margin-top: 20px;
 
   .accordion-item {
-
     border: none;
 
     .accordion-header {
@@ -202,7 +204,6 @@
       align-items: center;
 
       .accordion-button {
-
         color: #000;
         font-weight: bold;
         border: none;
@@ -217,13 +218,11 @@
     }
 
     .accordion-collapse {
-
       transition: max-height 0.3s ease-in-out;
       overflow: hidden;
 
       &.show {
         max-height: 1000px;
-
       }
     }
 
@@ -247,3 +246,4 @@
   align-items: center;
   margin-bottom: 10px;
 }
+

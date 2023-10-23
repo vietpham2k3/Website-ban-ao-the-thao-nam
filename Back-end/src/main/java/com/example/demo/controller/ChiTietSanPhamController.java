@@ -133,6 +133,14 @@ public class ChiTietSanPhamController {
                 .ngayTao(date)
                 .trangThai(1)
                 .build();
+        List<ChiTietSanPham> sp = chiTietSanPhamService.detailByIdSP(chiTietSanPham.getSanPham().getId());
+        for (ChiTietSanPham ctsp : sp) {
+            if (chiTietSanPham.getMauSac().getId().equals(ctsp.getMauSac().getId())
+                    && chiTietSanPham.getKichCo().getId().equals(ctsp.getKichCo().getId())) {
+                chiTietSanPhamService.update(chiTietSanPham.getSoLuong()+ ctsp.getSoLuong(), ctsp.getId());
+                return ResponseEntity.ok("da ton tai");
+            }
+        }
 
         // Lưu sanPham vào cơ sở dữ liệu trước
         sanPham = sanPhamRepository.add(sanPham);
@@ -159,7 +167,11 @@ public class ChiTietSanPhamController {
         if (files.length == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vui lòng chọn ít nhất một tệp ảnh.");
         }
+        int maxImages = 5; // Đặt số lượng tối đa là 5 hoặc bất kỳ con số nào bạn muốn
 
+        if (files.length > maxImages) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bạn chỉ được tải lên tối đa " + maxImages + " ảnh.");
+        }
         ChiTietSanPham ctsp = chiTietSanPhamService.detail(id);
 
         try {
@@ -274,12 +286,18 @@ public class ChiTietSanPhamController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(value = "key", required = false) String key,
-                                    @RequestParam(value = "trangThai", required = false) Integer trangThai,
-                                    @RequestParam(value = "min", required = false) Double min,
-                                    @RequestParam(value = "max", required = false) Double max,
-                                    @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, page));
+    public ResponseEntity<?> search(
+            @RequestParam(value = "key", required = false) String key,
+            @RequestParam(value = "trangThai", required = false) Integer trangThai,
+            @RequestParam(value = "min", required = false) Double min,
+            @RequestParam(value = "max", required = false) Double max,
+            @RequestParam(value = "mauSac", required = false) List<String> mauSac,
+            @RequestParam(value = "chatLieu", required = false) List<String> chatLieu,
+            @RequestParam(value = "loaiSanPham", required = false) List<String> loaiSanPham,
+            @RequestParam(value = "nhaSanXuat", required = false) List<String> nhaSanXuat,
+            @RequestParam(value = "coAo", required = false) List<String> coAo,
+            @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.search(key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page));
     }
 
 

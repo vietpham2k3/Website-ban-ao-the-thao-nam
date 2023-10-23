@@ -69,15 +69,33 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> detailByIdSP(UUID id) {
+        return repository.detailByIdSP(id);
+    }
+
+
+    @Override
     public List<ChiTietSanPham> getAllProduct() {
         return repository.getAllProduct();
     }
 
     @Override
-    public Page<ChiTietSanPham> search(String key, Integer trangThai, Double min, Double max, Integer page) {
+    public Page<ChiTietSanPham> search(
+            String key,
+            Integer trangThai,
+            Double min,
+            Double max,
+            List<String> mauSac,
+            List<String> chatLieu,
+            List<String> loaiSanPham,
+            List<String> nhaSanXuat,
+            List<String> coAo,
+            Integer page
+    ) {
         Pageable pageable = PageRequest.of(page, 5);
-        return repository.search(key, trangThai, min, max, pageable);
+        return repository.search(key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, pageable);
     }
+
 
     @Override
     public ChiTietSanPham add(ChiTietSanPham chiTietSanPham) {

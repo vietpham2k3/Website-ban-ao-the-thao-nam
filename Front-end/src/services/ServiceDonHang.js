@@ -97,8 +97,8 @@ const updateSL = (id, values) => {
   return axios.put(`/api/hoa-don/update-sl/${id}`, values);
 };
 
-const getALLTT = (id, idSP) => {
-  return axios.get(`/api/api/hoa-don/getAllTT?id=${id}&idSP=${idSP}`);
+const updateTienHD = (id, values) => {
+  return axios.put(`/api/hoa-don/updateHDTien/${id}`, values);
 };
 
 const deleteHDCT = (id) => {
@@ -142,7 +142,6 @@ export {
   getById,
   addSP,
   findVIP,
-  getALLTT,
   updateSL,
   deleteHDCT,
   xacNhanDH,
@@ -155,5 +154,6 @@ export {
   addKH2,
   xacNhanListIds,
   huyDonListIds,
-  findAllAnhByIdMSAndIdSP
+  findAllAnhByIdMSAndIdSP,
+  updateTienHD
 };

@@ -28,6 +28,9 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.trangThai = 0 where c.id = :id")
     void deleteMSKC(UUID id);
 
+    @Query(value = "select sp from ChiTietSanPham sp where sp.sanPham.id = :id")
+    List<ChiTietSanPham> detailByIdSP(UUID id);
+
     @Query("SELECT a FROM Anh a JOIN a.chiTietSanPham ctsp " +
             "WHERE ctsp.mauSac.id = :idMS AND ctsp.sanPham.id = :idSP AND a.trangThai = 1 " +
             "ORDER BY a.ngayTao")
@@ -105,62 +108,69 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "update ChiTietSanPham c set c.soLuong = :soLuong where c.id = :id")
     void update(Integer soLuong, UUID id);
 
-    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
-            "c.id_ca, c.ma, T.so_luong, " +
-            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
-            "FROM ChiTietSanPham C " +
-            "JOIN ( " +
-            "SELECT id_sp, SUM(so_luong) AS so_luong " +
-            "FROM ChiTietSanPham " +
-            "WHERE ChiTietSanPham.trang_thai = 1 " +
-            "GROUP BY id_sp " +
-            ") AS T " +
-            "ON C.id_sp = T.id_sp " +
-            "JOIN ( " +
-            "SELECT id_sp, MIN(id) AS min_id " +
-            "FROM ChiTietSanPham " +
-            "GROUP BY id_sp " +
-            ") AS MinIDs " +
-            "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
-            "JOIN SanPham S ON S.id = C.id_sp " +
-            "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
-            "AND (:trangThai IS NULL OR S.trang_thai = :trangThai) " +
-            "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max)) " +
-            "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
-            "c.id_ca, c.ma, T.so_luong, " +
-            "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
-            "ORDER BY c.ngay_tao DESC",
-            countQuery = "SELECT COUNT(*) " +
-                    "FROM ChiTietSanPham C " +
-                    "JOIN ( " +
-                    "SELECT id_sp, SUM(so_luong) AS so_luong " +
-                    "FROM ChiTietSanPham " +
-                    "WHERE ChiTietSanPham.trang_thai = 1 " +
-                    "GROUP BY id_sp " +
-                    ") AS T " +
-                    "ON C.id_sp = T.id_sp " +
-                    "JOIN ( " +
-                    "SELECT id_sp, MIN(id) AS min_id " +
-                    "FROM ChiTietSanPham " +
-                    "GROUP BY id_sp " +
-                    ") AS MinIDs " +
-                    "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
-                    "JOIN SanPham S ON S.id = C.id_sp " +
-                    "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
-                    "AND (:trangThai IS NULL OR S.trang_thai = :trangThai) " +
-                    "AND ((:min IS NULL OR C.gia_ban >= :min) AND (:max IS NULL OR C.gia_ban <= :max)) " +
-                    "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
-                    "c.id_ca, c.ma, T.so_luong, " +
-                    "c.gia_ban,c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
-                    "ORDER BY c.ngay_tao DESC",
+    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, T.so_luong, c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai, cl.ten AS ChatLieu, ms.ten AS MauSac, lsp.ten AS LoaiSanPham, nsx.ten AS NhaSanXuat, ca.ten AS CoAo\n" +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "    SELECT id_sp, SUM(so_luong) AS so_luong\n" +
+            "    FROM ChiTietSanPham\n" +
+            "    WHERE ChiTietSanPham.trang_thai = 1\n" +
+            "    GROUP BY id_sp\n" +
+            ") AS T ON C.id_sp = T.id_sp\n" +
+            "JOIN (\n" +
+            "    SELECT id_sp, MIN(id) AS min_id\n" +
+            "    FROM ChiTietSanPham\n" +
+            "    GROUP BY id_sp\n" +
+            ") AS MinIDs ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp\n" +
+            "LEFT JOIN ChatLieu cl ON C.id_cl = cl.id\n" +
+            "LEFT JOIN MauSac ms ON C.id_ms = ms.id\n" +
+            "LEFT JOIN LoaiSanPham lsp ON C.id_lsp = lsp.id\n" +
+            "LEFT JOIN NhaSanXuat nsx ON C.id_nsx = nsx.id\n" +
+            "LEFT JOIN CoAo ca ON C.id_ca = ca.id\n" +
+            "WHERE\n" +
+            "    (\n" +
+            "        :key IS NULL OR\n" +
+            "        LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(c.ma) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(T.so_luong) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(cl.ten) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(ms.ten) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(lsp.ten) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(nsx.ten) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(ca.ten) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')  -- Thêm điều kiện tìm kiếm theo tên sản phẩm\n" +
+            "    )\n" +
+            "AND\n" +
+            "    (:trangThai IS NULL OR S.trang_thai = :trangThai)\n" +
+            "AND\n" +
+            "    (:min IS NULL OR C.gia_ban >= :min)\n" +
+            "AND\n" +
+            "    (:max IS NULL OR C.gia_ban <= :max)\n" +
+            "AND\n" +
+            "    (:mauSac IS NULL OR LOWER(ms.ma) LIKE CONCAT('%', LOWER(:mauSac), '%'))\n" +
+            "AND\n" +
+            "    (:chatLieu IS NULL OR LOWER(cl.ten) LIKE CONCAT('%', LOWER(:chatLieu), '%'))\n" +
+            "AND\n" +
+            "    (:loaiSanPham IS NULL OR LOWER(lsp.ten) LIKE CONCAT('%', LOWER(:loaiSanPham), '%'))\n" +
+            "AND\n" +
+            "    (:nhaSanXuat IS NULL OR LOWER(nsx.ten) LIKE CONCAT('%', LOWER(:nhaSanXuat), '%'))\n" +
+            "AND\n" +
+            "    (:coAo IS NULL OR LOWER(ca.ten) LIKE CONCAT('%', LOWER(:coAo), '%'))\n" +
+            "ORDER BY c.ngay_tao DESC;\n",
             nativeQuery = true)
     Page<ChiTietSanPham> search(
             @Param("key") String key,
             @Param("trangThai") Integer trangThai,
             @Param("min") Double min,
             @Param("max") Double max,
+            @Param("mauSac") List<String> mauSac,
+            @Param("chatLieu") List<String> chatLieu,
+            @Param("loaiSanPham") List<String> loaiSanPham,
+            @Param("nhaSanXuat") List<String> nhaSanXuat,
+            @Param("coAo") List<String> coAo,
             Pageable pageable
     );
+
 
     @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
             "c.id_ca, c.ma, T.so_luong, " +
@@ -405,6 +415,11 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
 
     @Query(value = "SELECT ctsp.*\n" +
             "FROM ChiTietSanPham ctsp\n" +
+            "JOIN MauSac MS ON ctsp.id_ms = MS.id\n" +
+            "JOIN KichCo KC ON ctsp.id_kc = KC.id\n" +
+            "JOIN ChatLieu CL ON ctsp.id_cl = CL.id\n" +
+            "JOIN CoAo CA ON ctsp.id_ca = CA.id\n" +
+            "JOIN NhaSanXuat NSX ON ctsp.id_nsx = NSX.id\n" +
             "JOIN (\n" +
             "  SELECT ctsp.id_sp, MAX(ctsp.id) AS max_id\n" +
             "  FROM ChiTietSanPham ctsp\n" +
@@ -412,18 +427,19 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "  WHERE ctsp.trang_thai = 1\n" +
             "  GROUP BY ctsp.id_sp\n" +
             ") AS sp ON sp.max_id = ctsp.id\n" +
-            "WHERE ((ctsp.id_ms LIKE CONCAT('%', :mauSac, '%') OR :mauSac IS NULL)\n" +
-            "  AND (ctsp.id_kc LIKE CONCAT('%', :kichCo, '%') OR :kichCo IS NULL)\n" +
-            "  AND (ctsp.id_cl LIKE CONCAT('%', :chatLieu, '%') OR :chatLieu IS NULL)\n" +
-            "  AND (ctsp.id_ca LIKE CONCAT('%', :coAo, '%') OR :coAo IS NULL)\n" +
-            "  AND (ctsp.id_nsx LIKE CONCAT('%', :nhaSanXuat, '%') OR :nhaSanXuat IS NULL)\n" +
+            "WHERE ((MS.ten LIKE CONCAT('%', :mauSac, '%') OR :mauSac IS NULL)\n" +
+            "  AND (KC.ten LIKE CONCAT('%', :kichCo, '%') OR :kichCo IS NULL)\n" +
+            "  AND (CL.ten LIKE CONCAT('%', :chatLieu, '%') OR :chatLieu IS NULL)\n" +
+            "  AND (CA.ten LIKE CONCAT('%', :coAo, '%') OR :coAo IS NULL)\n" +
+            "  AND (NSX.ten LIKE CONCAT('%', :nhaSanXuat, '%') OR :nhaSanXuat IS NULL)\n" +
             "  AND (ctsp.gia_ban >= :minGiaBan OR :minGiaBan IS NULL)\n" +
             "  AND (ctsp.gia_ban <= :maxGiaBan OR :maxGiaBan IS NULL))\n" +
             "  GROUP BY ctsp.id, ctsp.gia_ban, ctsp.id_ca, ctsp.id_cl, ctsp.id_kc,\n" +
             "  ctsp.id_lsp, ctsp.id_ms, ctsp.id_nsx, ctsp.id_sp,\n" +
-            "  ctsp.ma,ctsp.so_luong,ctsp.ngay_sua,ctsp.ngay_tao,\n" +
-            "  ctsp.nguoi_sua,ctsp.nguoi_tao,ctsp.trang_thai", nativeQuery = true)
-Page<ChiTietSanPham> locChiTietSanPham(
+            "  ctsp.ma, ctsp.so_luong, ctsp.ngay_sua, ctsp.ngay_tao,\n" +
+            "  ctsp.nguoi_sua, ctsp.nguoi_tao, ctsp.trang_thai", nativeQuery = true)
+
+    Page<ChiTietSanPham> locChiTietSanPham(
             @Param("mauSac") String mauSac,
             @Param("kichCo") String kichCo,
             @Param("chatLieu") String chatLieu,

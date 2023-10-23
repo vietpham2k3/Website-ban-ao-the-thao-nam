@@ -26,7 +26,23 @@ function AddSanPham() {
   const [modalShowCA, setModalShowCA] = useState(false);
   const [modalShowLSP, setModalShowLSP] = useState(false);
   const [modalShowNSX, setModalShowNSX] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
+  const [confirmClicked, setConfirmClicked] = useState(false);
+
   const navigate = useNavigate();
+
+  const handleConfirmClick = () => {
+    // Perform validation
+    if (values.sanPham.ten.trim() === '' || values.giaBan.trim() === '' || values.sanPham.moTa.trim() === '') {
+      // Display an error message or prevent confirmation
+      toast.error('Vui lòng điền đầy đủ thông tin tên, mô tả và giá bán.');
+    } else {
+      // Validation passed, update the states
+      toast.success('Xác nhận thành công');
+      setIsHidden(false);
+      setConfirmClicked(true);
+    }
+  };
 
   const [values, setValues] = useState({
     chatLieu: {
@@ -175,7 +191,6 @@ function AddSanPham() {
       }
     }
   };
-  console.log(values);
 
   return (
     <div>
@@ -390,9 +405,20 @@ function AddSanPham() {
             </select>
           </div>
           <div className="col-12 d-flex justify-content-end">
-            <button type="submit" className="btn btn-primary">
-              Add
-            </button>
+            {!isHidden && (
+              <div className="hidden-element">
+                <button type="submit" className="btn btn-primary">
+                  ADD
+                </button>
+              </div>
+            )}
+            {confirmClicked ? (
+              <p></p>
+            ) : (
+              <button onClick={handleConfirmClick} className="btn btn-success">
+                Xác Nhận
+              </button>
+            )}
           </div>
         </form>
         <MyVerticallyCenteredModal
@@ -424,94 +450,98 @@ function AddSanPham() {
           setValues={setValuesCL}
         />
       </MainCard>
-      <MainCard className="my-3">
-        <div className="row">
-          <div className="col-12">
-            <h2>Thuộc tính</h2>
-          </div>
-          <div className="col-12">
-            <div className="col-12">
-              <div className="form-inline">
-                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
-                  Màu sắc:{' '}
-                </label>
-                {listMS.map((d, i) => (
-                  <div key={i} className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="1"
-                      id={d.id}
-                      value={d.id}
-                      onChange={() =>
-                        setValues({
-                          ...values,
-                          mauSac: {
-                            id: d.id
-                          }
-                        })
-                      }
-                    />
-                    <label className="form-check-label" htmlFor={d.id}>
-                      <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                    </label>
-                  </div>
-                ))}
+      {!isHidden && (
+        <div className="hidden-element">
+          <MainCard className="my-3">
+            <div className="row">
+              <div className="col-12">
+                <h2>Thuộc tính</h2>
               </div>
-            </div>
-            <div className="col-12">
-              <div className="form-inline">
-                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
-                  Kích cỡ:{' '}
-                </label>
-                {listKC.map((d, i) => (
-                  <div key={i} className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="2"
-                      id={d.id}
-                      value={d.id}
-                      onChange={() =>
-                        setValues({
-                          ...values,
-                          kichCo: {
-                            id: d.id
-                          }
-                        })
-                      }
-                    />
-                    <label className="form-check-label" htmlFor={d.id}>
-                      {d.ten}
+              <div className="col-12">
+                <div className="col-12">
+                  <div className="form-inline">
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                      Màu sắc:{' '}
                     </label>
+                    {listMS.map((d, i) => (
+                      <div key={i} className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="1"
+                          id={d.id}
+                          value={d.id}
+                          onChange={() =>
+                            setValues({
+                              ...values,
+                              mauSac: {
+                                id: d.id
+                              }
+                            })
+                          }
+                        />
+                        <label className="form-check-label" htmlFor={d.id}>
+                          <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                        </label>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="col-12">
-              <div className="form-inline">
-                <label style={{ fontWeight: 'bold' }} className="form-label me-3">
-                  Số lượng:{' '}
-                </label>
-                <div className="form-check form-check-inline">
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="exampleFormControlInput1"
-                    placeholder="Nhập số lượng"
-                    onChange={(e) =>
-                      setValues({
-                        ...values,
-                        soLuong: e.target.value
-                      })
-                    }
-                  />
+                </div>
+                <div className="col-12">
+                  <div className="form-inline">
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                      Kích cỡ:{' '}
+                    </label>
+                    {listKC.map((d, i) => (
+                      <div key={i} className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="2"
+                          id={d.id}
+                          value={d.id}
+                          onChange={() =>
+                            setValues({
+                              ...values,
+                              kichCo: {
+                                id: d.id
+                              }
+                            })
+                          }
+                        />
+                        <label className="form-check-label" htmlFor={d.id}>
+                          {d.ten}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="form-inline">
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                      Số lượng:{' '}
+                    </label>
+                    <div className="form-check form-check-inline">
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="exampleFormControlInput1"
+                        placeholder="Nhập số lượng"
+                        onChange={(e) =>
+                          setValues({
+                            ...values,
+                            soLuong: e.target.value
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </MainCard>
         </div>
-      </MainCard>
+      )}
     </div>
   );
 }

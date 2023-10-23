@@ -38,7 +38,6 @@ public class MauSacController {
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody MauSac mauSac){
         mauSac.setNgayTao(new Date());
-
         return ResponseEntity.ok(service.add(mauSac));
     }
     

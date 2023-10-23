@@ -169,25 +169,24 @@ function MauSac() {
               </div>
             </div>
 
-            <table style={{ textAlign: 'center', marginTop: 50 }} className="table table-hover">
+            <table style={{ marginTop: 50 }} className="table table-hover">
               <tr>
-                <th>#</th>
-                <th>Mã Màu</th>
-                <th>Tên Màu</th>
-                <th>Ngày Tạo</th>
-                <th>Ngày Sửa</th>
-                <th>Trạng Thái</th>
-                <th>Action</th>
+                <th className="ps-2">#</th>
+                <th className="ps-2">Tên Màu</th>
+                <th className="ps-2">Màu</th>
+                <th className="ps-2">Ngày Tạo</th>
+                <th className="ps-2">Ngày Sửa</th>
+                <th className="ps-2">Trạng Thái</th>
+                <th className="ps-2">Action</th>
               </tr>
               <tbody>
                 {data.map((d, i) => (
                   <tr key={i}>
                     <td>{i + 1}</td>
+                    <td>{d.ma}</td>
                     <td>
-                      {' '}
-                      <span className="color-code">{d.ma}</span>
+                      <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px', textAlign: 'center' }}>&nbsp;</div>
                     </td>
-                    <td className="color-code" style={{ backgroundColor: d.ten }}></td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>
                     <td>{d.trangThai === 0 ? 'Đang kích hoạt' : 'Ngừng kích hoạt'}</td>

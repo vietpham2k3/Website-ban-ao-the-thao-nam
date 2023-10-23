@@ -2,6 +2,7 @@ import React from 'react';
 // import { Image } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import '../../scss/Content.scss';
+import '../../scss/ChiTietSanPham.scss';
 import { getAllBestseller, getAllSPNEW, getAllProduct } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
