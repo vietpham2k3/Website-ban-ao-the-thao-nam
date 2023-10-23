@@ -16,7 +16,8 @@ const ChangeDC = ({
   setIsShowUpdate,
   setIdDC,
   selectedAddressId,
-  setSelectedAddressId
+  setSelectedAddressId,
+  setIsShowAdd
 }) => {
   const handleChange = (id, diaChi, phuongXa, quanHuyen, tinhThanh) => {
     setValuesDC({ ...valuesDC, diaChi: diaChi, phuongXa: phuongXa, quanHuyen: quanHuyen, tinhThanh: tinhThanh });
@@ -50,6 +51,11 @@ const ChangeDC = ({
     });
   };
 
+  const handleChangePage = () => {
+    setIsShowAdd(true);
+    handleClose();
+  };
+
   return (
     <div>
       <Modal
@@ -64,9 +70,9 @@ const ChangeDC = ({
         <Modal.Header closeButton>
           <Modal.Title>Địa chỉ của tôi</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ height: 300 }}>
+        <Modal.Body style={{ height: 300 }} className=" container">
           {dataDC.map((d, i) => (
-            <div key={i} className="dia-chi-checkout container">
+            <div key={i} className="dia-chi-checkout">
               <p>
                 <div className="form-check">
                   <input
@@ -89,6 +95,9 @@ const ChangeDC = ({
               </span>
             </div>
           ))}
+          <button type="button" className="btn btn-outline-primary" onClick={handleChangePage}>
+            <i className="fa-solid fa-plus"></i> Thêm địa chỉ
+          </button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

@@ -39,9 +39,18 @@ function CheckoutForm(props) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isShow, setIsShow] = useState(false);
+  const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [valuesAddDC, setValuesAddDC] = useState({
+    diaChi: '',
+    tinhThanh: '',
+    quanHuyen: '',
+    phuongXa: '',
+    trangThai: 1
+  });
   const [wardCode, setWardCode] = useState({
     code: ''
   });
@@ -124,6 +133,38 @@ function CheckoutForm(props) {
     getThanhPho();
   }, []);
 
+  console.log(valuesDC);
+  useEffect(() => {
+    if (dataLogin) {
+      dataDC.forEach((d) => {
+        if (d.trangThai === 1) {
+          setValuesDC({ ...valuesDC, diaChi: d.diaChi, phuongXa: d.phuongXa, quanHuyen: d.quanHuyen, tinhThanh: d.tinhThanh });
+          thanhPho.forEach((province) => {
+            if (province.NameExtension[1] === d.tinhThanh) {
+              setValuesId({
+                province_id: province.ProvinceID
+              });
+              setValuesUpdateHD({
+                ...valuesUpdateHD,
+                diaChi: d.diaChi,
+                tinh: d.tinhThanh,
+                huyen: d.quanHuyen,
+                xa: d.phuongXa
+              });
+            }
+          });
+        }
+      });
+    }
+  }, [thanhPho]);
+
+  useEffect(() => {
+    if (valuesFee.service_id !== 0) {
+      fee(valuesFee);
+      thoiGiaoHang(tgDuKien);
+    }
+  }, [tgDuKien]);
+
   useEffect(() => {
     if (idDC) {
       getOneDC(idDC);
@@ -143,7 +184,7 @@ function CheckoutForm(props) {
   }, [valuesIdWard.district_id]);
 
   useEffect(() => {
-    if (!isShow) {
+    if (!isShow && valuesFee.service_id !== 0) {
       fee(valuesFee);
       thoiGiaoHang(tgDuKien);
     }
@@ -160,23 +201,13 @@ function CheckoutForm(props) {
     setValuesFee({
       ...valuesFee,
       insurance_value: totalAmount,
-      to_ward_code: wardCode.code
+      to_ward_code: ''
     });
     setTgDuKien({
       ...tgDuKien,
       to_ward_code: wardCode.code
     });
   }, [wardCode]);
-
-  useEffect(() => {
-    quan.forEach((district) => {
-      if (district.DistrictName === valuesDC.quanHuyen) {
-        setValuesIdWard({
-          district_id: district.DistrictID
-        });
-      }
-    });
-  }, [quan, valuesId]);
 
   useEffect(() => {
     phuong.forEach((ward) => {
@@ -191,6 +222,7 @@ function CheckoutForm(props) {
   useEffect(() => {
     quan.forEach((district) => {
       if (district.DistrictName === valuesDC.quanHuyen) {
+        console.log(1);
         setValuesIdWard({
           district_id: district.DistrictID
         });
@@ -208,7 +240,7 @@ function CheckoutForm(props) {
         });
       }
     });
-  }, [quan, valuesDC]);
+  }, [quan, valuesDC, valuesId]);
 
   useEffect(() => {
     if (dataLogin) {
@@ -243,8 +275,10 @@ function CheckoutForm(props) {
   }, [valuesUpdateHD.tienShip]);
 
   useEffect(() => {
-    fee(valuesFee);
-    thoiGiaoHang(tgDuKien);
+    if (valuesFee.service_id !== 0) {
+      fee(valuesFee);
+      thoiGiaoHang(tgDuKien);
+    }
   }, [valuesFee.to_ward_code]);
 
   useEffect(() => {
@@ -313,7 +347,11 @@ function CheckoutForm(props) {
   };
 
   const handleUpdateDC = () => {
-    addDC(dataDetailDC);
+    if (isShowAdd) {
+      addDC(dataLogin.id, valuesAddDC);
+      return;
+    }
+    addDC(dataLogin.id, dataDetailDC);
   };
 
   const handleChange = (value) => {
@@ -346,6 +384,10 @@ function CheckoutForm(props) {
       });
       setDataDetailDC({
         ...dataDetailDC,
+        tinhThanh: selectedProvinceName
+      });
+      setValuesAddDC({
+        ...valuesAddDC,
         tinhThanh: selectedProvinceName
       });
     }
@@ -387,6 +429,10 @@ function CheckoutForm(props) {
         ...dataDetailDC,
         quanHuyen: selectedProvinceName
       });
+      setValuesAddDC({
+        ...valuesAddDC,
+        quanHuyen: selectedProvinceName
+      });
     }
     setErrors({
       ...errors,
@@ -403,6 +449,10 @@ function CheckoutForm(props) {
         const selectedProvinceName = selectedProvince.WardName;
         setDataDetailDC({
           ...dataDetailDC,
+          phuongXa: selectedProvinceName
+        });
+        setValuesAddDC({
+          ...valuesAddDC,
           phuongXa: selectedProvinceName
         });
       }
@@ -463,13 +513,14 @@ function CheckoutForm(props) {
     }
   };
 
-  const addDC = async (value) => {
+  const addDC = async (id, value) => {
     try {
-      const res = await addDCKH(value);
+      const res = await addDCKH(id, value);
       if (res.data) {
         toast.success('Cập nhật thành công');
         getAllDC(dataLogin.id);
         setIsShowUpdate(false);
+        setIsShowAdd(false);
         setIsShow(true);
       }
     } catch (error) {
@@ -1010,12 +1061,14 @@ function CheckoutForm(props) {
                             aria-describedby="button-addon2"
                             value={valuesKhuyenMai.khuyenMai.ma}
                             onChange={(e) => handleChange(e.target.value)}
+                            style={{ borderRadius: 5, height: '100%' }}
                           />
                           <div className="input-group-append">
                             <button
                               className="btn btn-primary btn-sm px-4 btn-apply"
                               type="button"
                               id="button-addon2"
+                              style={{ borderRadius: 5, height: '100%' }}
                               onClick={() => handleChangeValuesKM()}
                             >
                               Apply
@@ -1174,7 +1227,25 @@ function CheckoutForm(props) {
         setIdDC={setIdDC}
         setSelectedAddressId={setSelectedAddressId}
         selectedAddressId={selectedAddressId}
+        setIsShowAdd={setIsShowAdd}
       ></ChangeDC>
+      <UpdateDC
+        show={isShowAdd}
+        handleClose={() => {
+          setIsShowAdd(false);
+          setIsShow(true);
+        }}
+        handleWardChange={handleWardChange}
+        handleDistrictChange={handleDistrictChange}
+        handleProvinceChange={handleProvinceChange}
+        thanhPho={thanhPho}
+        quan={quan}
+        phuong={phuong}
+        dataDetailDC={valuesAddDC}
+        setDataDetailDC={setValuesAddDC}
+        handleUpdateDC={handleUpdateDC}
+        label={'Thêm'}
+      ></UpdateDC>
       <UpdateDC
         show={isShowUpdate}
         handleClose={() => {
@@ -1191,6 +1262,7 @@ function CheckoutForm(props) {
         dataDetailDC={dataDetailDC}
         setDataDetailDC={setDataDetailDC}
         handleUpdateDC={handleUpdateDC}
+        label={'Cập nhật'}
       ></UpdateDC>
     </div>
   );
