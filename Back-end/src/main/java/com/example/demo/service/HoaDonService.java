@@ -28,6 +28,18 @@ public interface HoaDonService {
 
     public Double doanhThuTongNamCurrent();
 
+    public Double doanhThuTaiQuayNgayCurrent();
+
+    public Double doanhThuTaiQuayThangCurrent();
+
+    public Double doanhThuTaiQuayNamCurrent();
+
+    public Double doanhThuOnlineNgayCurrent();
+
+    public Double doanhThuOnlineThangCurrent();
+
+    public Double doanhThuOnlineNamCurrent();
+
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);

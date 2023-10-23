@@ -27,4 +27,36 @@ public class ThongKeController {
     public ResponseEntity<?> doanhThuTongNamCurrent(){
         return ResponseEntity.ok().body(hdSer.doanhThuTongNamCurrent());
     }
+
+    @GetMapping("doanh-thu-tai-quay-ngay-hien-tai")
+    public ResponseEntity<?> doanhThuTQNgayCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuTaiQuayNgayCurrent());
+    }
+
+    @GetMapping("doanh-thu-tai-quay-thang-hien-tai")
+    public ResponseEntity<?> doanhThuTQThangCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuTaiQuayThangCurrent());
+    }
+
+    @GetMapping("doanh-thu-tai-quay-nam-hien-tai")
+    public ResponseEntity<?> doanhThuTQNamCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuTaiQuayNamCurrent());
+    }
+
+    @GetMapping("doanh-thu-online-ngay-hien-tai")
+    public ResponseEntity<?> doanhThuOnlineNgayCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuOnlineNgayCurrent());
+    }
+
+    @GetMapping("doanh-thu-online-thang-hien-tai")
+    public ResponseEntity<?> doanhThuOnlineThangCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuOnlineThangCurrent());
+    }
+
+    @GetMapping("doanh-thu-online-nam-hien-tai")
+    public ResponseEntity<?> doanhThuOnlineNamCurrent(){
+        return ResponseEntity.ok().body(hdSer.doanhThuOnlineNamCurrent());
+    }
+
+
 }

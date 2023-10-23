@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+
 public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     public HoaDonRespository res;
@@ -60,6 +61,36 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public Double doanhThuTongNamCurrent() {
         return res.doanhThuTongNamCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayNgayCurrent() {
+        return res.doanhThuTaiQuayNgayCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayThangCurrent() {
+        return res.doanhThuTaiQuayThangCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayNamCurrent() {
+        return res.doanhThuTaiquayNamCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineNgayCurrent() {
+        return res.doanhThuOnlineNgayCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineThangCurrent() {
+        return res.doanhThuOnlineThangCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineNamCurrent() {
+        return res.doanhThuOnlineNamCurrent();
     }
 
     @Override

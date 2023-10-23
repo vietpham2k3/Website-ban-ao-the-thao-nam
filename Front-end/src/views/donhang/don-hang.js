@@ -184,11 +184,11 @@ function DonHang() {
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
-    toast.warning('Bạn phải chọn hóa đơn trước !');
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, '');
-    }
-  };
+    }else{
+      toast.warning('Bạn phải chọn hóa đơn trước !');
+}  };
 
   // huy don
   const huyDon = async (ids, value) => {
@@ -202,9 +202,10 @@ function DonHang() {
   const handleHuyDon = async (event) => {
     event.preventDefault();
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
-    toast.warning('Bạn phải chọn hóa đơn trước !');
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, '');
+    }else{
+          toast.warning('Bạn phải chọn hóa đơn trước !');
     }
   };
 
