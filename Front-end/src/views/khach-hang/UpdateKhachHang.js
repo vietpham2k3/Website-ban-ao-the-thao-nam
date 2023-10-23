@@ -11,6 +11,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { getP, getQH, getTP } from 'services/ApiGHNService';
+// import UpdateDC from './UpdateDiaChi';
+// import ChangeDC from 'ui-component/checkout/ChangeDC';
 
 function UpdateKhachHang() {
   // Lấy danh sách tỉnh thành từ API
@@ -97,7 +99,8 @@ function UpdateKhachHang() {
     tinhThanh: '',
     quanHuyen: '',
     phuongXa: '',
-    diaChi: ''
+    diaChi: '',
+    trangThai: 1
   });
 
   const [idDC, setIdDc] = useState();
@@ -132,11 +135,17 @@ function UpdateKhachHang() {
       tinhThanh: selectedProvinceName,
       quanHuyen: selectedDistrictName,
       phuongXa: selectedWardName,
-      diaChi: valueDC.diaChi
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai // Đặt trạng thái là 1
     };
     try {
       const res = await updateDCKH(idDC, updatedValueDC);
       if (res) {
+        const updatedAddresses = dc.map((address) => ({
+          ...address,
+          trangThai: address.id === idDC ? 1 : 0
+        }));
+        await Promise.all(updatedAddresses.map((address) => updateDCKH(address.id, { ...address })));
         toast.success('Cập nhật thành công!');
       }
     } catch (error) {
@@ -288,7 +297,8 @@ function UpdateKhachHang() {
       tinhThanh: selectedProvinceName,
       quanHuyen: selectedDistrictName,
       phuongXa: selectedWardName,
-      diaChi: valueDC.diaChi
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai
     };
     await addDCKH(id, newAddress);
   };
@@ -447,14 +457,14 @@ function UpdateKhachHang() {
                   <span className="fa-solid fa-plus mx-3" onClick={handleShow}></span>
                   <div>
                     <ul>
-                      <li style={{ width: 500 }}>
+                      <li style={{ width: 550 }}>
                         {dc.map((dc, index) => (
                           <div
                             key={dc.id}
                             style={{
                               border: '2px solid skyblue',
                               borderRadius: 10,
-                              height: 50,
+                              height: 70,
                               paddingTop: 8,
                               marginTop: index > 0 ? 20 : 0 // Thêm khoảng cách 20px cho phần tử từ thứ 2 trở đi
                             }}
@@ -462,6 +472,7 @@ function UpdateKhachHang() {
                             <h7 style={{ paddingLeft: 15, paddingRight: 10 }}>
                               <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="dc">
                                 {' '}
+                                {dc.trangThai === 1 ? <p style={{ color: 'red', marginBottom: 0.01 }}>Mặc định</p> : ''}
                                 {dc.diaChi}, {dc.phuongXa}, {dc.quanHuyen}, {dc.tinhThanh}
                               </label>
                             </h7>
@@ -562,6 +573,21 @@ function UpdateKhachHang() {
                               </select>
                             </div>
 
+                            <div className="col-md-12">
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  id="flexCheckDefault"
+                                  checked={valueDC.trangThai === 1} // Kiểm tra nếu trạng thái là "1" thì được chọn
+                                  onChange={() => setValueDC({ ...valueDC, trangThai: 1 })}
+                                />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                  Đặt làm mặc định
+                                </label>
+                              </div>
+                            </div>
+
                             <div className="col-6" style={{ display: 'flex' }}>
                               <div className="text-start">
                                 <button type="submit" onClick={handleSubmitDC} className="btn btn-primary">
@@ -654,6 +680,15 @@ function UpdateKhachHang() {
                                   </option>
                                 ))}
                               </select>
+                            </div>
+
+                            <div className="col-md-12">
+                              <div className="form-check">
+                                <input className="form-check-input" type="radio" id="flexCheckDefault" checked={valueDC.trangThai} />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                  Đặt làm mặc định
+                                </label>
+                              </div>
                             </div>
 
                             <div className="text-start">
