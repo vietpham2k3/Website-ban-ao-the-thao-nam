@@ -54,6 +54,8 @@ public class HoaDonController {
     private ChiTietSanPhamServiceImpl chiTietSanPhamService;
     @Autowired
     private KhachHangServiceImpl khService;
+    @Autowired
+    private NhanVienServiceImpl nvService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -151,6 +153,7 @@ public class HoaDonController {
         hoaDon.setLoaiDon(0);
         hoaDon.setTenNguoiNhan("Khách lẻ");
         hoaDon.setTienShip(0.0);
+        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTrangThai(0);
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .ma(ma)
