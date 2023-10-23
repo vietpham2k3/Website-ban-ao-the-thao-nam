@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
-
+//service api
+import { doanhThuTongTheoNgay} from 'services/ServiceThongKe';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -12,11 +13,6 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-// import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-// import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-// import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-// import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-// import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -58,8 +54,48 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const EarningCard = ({ isLoading }) => {
   const theme = useTheme();
-
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const [ngay,setNgay] = useState(0);
+  const [thang,setThang] = useState(0);
+  const [nam,setNam] = useState(0);
+
+
+  const doanhThuTongNgay = async () =>{
+    const res = await doanhThuTongTheoNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  }
+
+  const doanhThuTongThang = async () =>{
+    const res = await doanhThuTongTheoNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  }
+
+  const doanhThuTongNam = async () =>{
+    const res = await doanhThuTongTheoNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  }
+
+  useEffect(() => {
+    doanhThuTongNgay();
+  }, []);
+
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+
+    return formatter.format(number);
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -139,29 +175,29 @@ const EarningCard = ({ isLoading }) => {
                         horizontal: 'right'
                       }}
                     >
-                      <MenuItem onClick={handleClose}>
-                        {/* <GetAppTwoToneIcon sx={{ mr: 1.75 }} />  */}
+                      <MenuItem >
+                       
                         Theo ngày
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        {/* <FileCopyTwoToneIcon sx={{ mr: 1.75 }} />  */}
+                      <MenuItem >
+                       
                         Theo tháng
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        {/* <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} />  */}
-                        Theo Năm
+                      <MenuItem >
+                        
+                        Theo năm
                       </MenuItem>
-                      {/* <MenuItem onClick={handleClose}>
-                        <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
-                      </MenuItem> */}
+                      
                     </Menu>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
-                  <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>500.000đ</Typography>
+                  <Grid item style={{display: 'flex', justifyContent: "space-between"}}>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{convertToCurrency(ngay)}</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{convertToCurrency(ngay)}</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{convertToCurrency(ngay)}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
