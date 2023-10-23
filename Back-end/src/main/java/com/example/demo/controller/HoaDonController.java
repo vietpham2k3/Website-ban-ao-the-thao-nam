@@ -197,7 +197,6 @@ public class HoaDonController {
         }
         hoaDon.setNgayThanhToan(new Date());
         hoaDon.setTienShip(0.0);
-        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setNgaySua(new Date());
         hoaDon.setMa(hd.getMa());
         hoaDon.setLoaiDon(0);
