@@ -13,8 +13,7 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import CloseIcon from '@mui/icons-material/Close'; 
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -167,6 +166,7 @@ const EarningCard = ({ isLoading }) => {
                   </Grid>
                   <Grid item>
                     <Avatar
+                    className='target-pointer'
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,

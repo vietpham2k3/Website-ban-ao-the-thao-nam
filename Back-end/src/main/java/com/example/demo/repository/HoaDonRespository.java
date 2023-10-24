@@ -175,4 +175,46 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "\t\tAND HD.loai_don = 1" , nativeQuery = true)
     public Double doanhThuOnlineNamCurrent();
 
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_ngay\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 2" , nativeQuery = true)
+    public Double soDonHuyNgay();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_ngay\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 6" , nativeQuery = true)
+    public Double soDonThanhCongNgay();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_thang\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 2" , nativeQuery = true)
+    public Double soDonHuyThang();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_thang\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 6" , nativeQuery = true)
+    public Double soDonThanhCongThang();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_nam\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 2" , nativeQuery = true)
+    public Double soDonHuyNam();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_nam\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 6" , nativeQuery = true)
+    public Double soDonThanhCongNam();
+
 }
