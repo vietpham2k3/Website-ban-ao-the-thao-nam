@@ -154,6 +154,7 @@ public class HoaDonController {
         hoaDon.setTenNguoiNhan("Khách lẻ");
         hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTienShip(0.0);
+        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTrangThai(0);
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .ma(ma)

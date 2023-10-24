@@ -79,4 +79,28 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "select h from HoaDon h where h.trangThai = 0 and h.loaiDon = 0")
     List<HoaDon> getAllHD();
 
+    @Query(value = "SELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_ngay_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    DAY(HD.ngay_tao) = DAY(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongNgayCurrent();
+
+    @Query(value = "SELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_thang_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    MONTH(HD.ngay_tao) = MONTH(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongThangCurrent();
+
+    @Query(value = "\tSELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_nam_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    YEAR(HD.ngay_tao) = YEAR(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongNamCurrent();
+
 }
