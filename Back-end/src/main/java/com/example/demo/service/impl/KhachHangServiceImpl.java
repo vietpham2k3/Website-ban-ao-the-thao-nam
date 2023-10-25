@@ -115,7 +115,7 @@ public class KhachHangServiceImpl implements KhachHangService {
     public void sendResetPasswordEmail(String email, String tenKhachHang) {
         String newPassword = generateRandomPassword();
         khRepo.updatePasswordByEmail(newPassword, email);
-        emailService.sendEmail(email, "Mật khẩu mới", "Thông tin tài khoản của bạn:\n" +
+        emailService.sendEmail(email, "Cấp Lại Mật khẩu mới", "Thông tin tài khoản của bạn:\n" +
                 "Xin chào, " + tenKhachHang + "\n" +
                 "Tên đăng nhập: " + email + "\n" +
                 "Mật khẩu cấp mới của bạn: " + newPassword + "\n" +
