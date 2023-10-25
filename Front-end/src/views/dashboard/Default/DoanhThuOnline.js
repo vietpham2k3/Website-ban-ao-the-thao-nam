@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
@@ -12,11 +13,11 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+// import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+// import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
+// import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
+// import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
+// import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -46,7 +47,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     borderRadius: '50%',
     top: -125,
     right: -15,
-    opacity: 0.5,
+    opacity: 0.4,
     [theme.breakpoints.down('sm')]: {
       top: -155,
       right: -70
@@ -56,7 +57,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const DoanhThuOnline = ({ isLoading }) => {
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -79,18 +80,33 @@ const EarningCard = ({ isLoading }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Avatar
-                      variant="rounded"
-                      sx={{
-                        ...theme.typography.commonAvatar,
-                        ...theme.typography.largeAvatar,
-                        backgroundColor: theme.palette.secondary[800],
-                        mt: 1
-                      }}
-                    >
-                      <img src={EarningIcon} alt="Notification" />
-                    </Avatar>
+                  <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Grid item sx={{ paddingRight: 2 }}>
+                      <Avatar
+                        variant="rounded"
+                        sx={{
+                          ...theme.typography.commonAvatar,
+                          ...theme.typography.largeAvatar,
+                          backgroundColor: theme.palette.secondary[800],
+                          mt: 1
+                        }}
+                      >
+                        <img src={EarningIcon} alt="Notification" />
+                      </Avatar>
+                    </Grid>
+                    <Grid item>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 500,
+                          color: theme.palette.secondary[900],
+                          zIndex: 2,
+                          position: 'relative'
+                        }}
+                      >
+                        DOANH THU BÁN ONLINE
+                      </Typography>
+                    </Grid>
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -125,17 +141,20 @@ const EarningCard = ({ isLoading }) => {
                       }}
                     >
                       <MenuItem onClick={handleClose}>
-                        <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
+                        {/* <GetAppTwoToneIcon sx={{ mr: 1.75 }} />  */}
+                        Theo ngày
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> Copy Data
+                        {/* <FileCopyTwoToneIcon sx={{ mr: 1.75 }} />  */}
+                        Theo tháng
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> Export
+                        {/* <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} />  */}
+                        Theo Năm
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>
+                      {/* <MenuItem onClick={handleClose}>
                         <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
-                      </MenuItem>
+                      </MenuItem> */}
                     </Menu>
                   </Grid>
                 </Grid>
@@ -143,32 +162,9 @@ const EarningCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Avatar
-                      sx={{
-                        cursor: 'pointer',
-                        ...theme.typography.smallAvatar,
-                        backgroundColor: theme.palette.secondary[200],
-                        color: theme.palette.secondary.dark
-                      }}
-                    >
-                      <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                    </Avatar>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>500.000đ</Typography>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item sx={{ mb: 1.25 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.secondary[200]
-                  }}
-                >
-                  Total Earning
-                </Typography>
               </Grid>
             </Grid>
           </Box>
@@ -178,8 +174,8 @@ const EarningCard = ({ isLoading }) => {
   );
 };
 
-EarningCard.propTypes = {
+DoanhThuOnline.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default DoanhThuOnline;

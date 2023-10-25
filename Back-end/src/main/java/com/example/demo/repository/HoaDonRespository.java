@@ -60,18 +60,14 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Modifying
     @Query(value = "UPDATE HoaDon SET ten_nguoi_nhan = :tenNguoiNhan, \n" +
             "            sdt = :soDienThoai, dia_chi = :diaChi, tinh = :tinh," +
-            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE() WHERE id = :id", nativeQuery = true)
-    public void updateKH(UUID id, String tenNguoiNhan, String soDienThoai,
+            " huyen = :huyen, xa = :xa ,ngay_sua = GETDATE(),tong_tien = :tongTien," +
+            " tong_tien_sau_khi_giam = :tongTienKhiGiam," +
+            "tien_ship = :tienShip WHERE id = :id", nativeQuery = true)
+    public void updateHD(UUID id, String tenNguoiNhan, String soDienThoai,
                          String diaChi, String tinh,
-                         String huyen, String xa);
+                         String huyen, String xa, Double tongTien,
+                         Double tongTienKhiGiam, Double tienShip);
 
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE HoaDon SET tong_tien = :tongTien, \n" +
-            "            tong_tien_sau_khi_giam = :tongTienKhiGiam," +
-            "            tien_ship = :tienShip" +
-            " WHERE id = :id", nativeQuery = true)
-    public void updateTienHD(UUID id, Double tongTien, Double tongTienKhiGiam,Double tienShip);
 
     @Query(value = "SELECT KM.ma, KM.ten, KM.muc_giam, KM_HD.tien_giam" +
             " FROM HoaDon_KhuyenMai KM_HD JOIN\n" +
@@ -82,5 +78,29 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
 
     @Query(value = "select h from HoaDon h where h.trangThai = 0 and h.loaiDon = 0")
     List<HoaDon> getAllHD();
+
+    @Query(value = "SELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_ngay_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    DAY(HD.ngay_tao) = DAY(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongNgayCurrent();
+
+    @Query(value = "SELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_thang_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    MONTH(HD.ngay_tao) = MONTH(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongThangCurrent();
+
+    @Query(value = "\tSELECT\n" +
+            "    SUM(HD.tong_tien_sau_khi_giam) AS doanh_thu_nam_hien_tai\n" +
+            "FROM\n" +
+            "    HoaDon HD\n" +
+            "WHERE\n" +
+            "    YEAR(HD.ngay_tao) = YEAR(GETDATE())" , nativeQuery = true)
+    public Double doanhThuTongNamCurrent();
 
 }

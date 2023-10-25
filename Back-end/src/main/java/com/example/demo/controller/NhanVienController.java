@@ -6,6 +6,7 @@ import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.VaiTro;
 import com.example.demo.service.NhanVienService;
 import com.example.demo.service.VaiTroService;
+import com.example.demo.service.impl.SendEmailServicecImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class NhanVienController {
 
     @Autowired
     private VaiTroService vtService;
+
+    @Autowired
+    private SendEmailServicecImpl emailService;
 
     @GetMapping("/getAll/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
@@ -154,7 +158,6 @@ public class NhanVienController {
             @RequestParam("email") String email,
             @RequestParam("diaChi") String diaChi,
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
-            @RequestParam("matKhau") String matKhau,
             @RequestParam("vaiTro") String vaiTro,
             @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
@@ -166,9 +169,11 @@ public class NhanVienController {
         nv.setEmail(email);
         nv.setDiaChi(diaChi);
         nv.setNgaySinh(ngaySinh);
-        nv.setMatKhau(matKhau);
         nv.setVaiTro(VaiTro.builder().id(UUID.fromString(vaiTro)).build());
         nv.setTrangThai(trangThai);
+
+        String matKhauMoi = generateRandomPassword(8);
+        nv.setMatKhau(matKhauMoi);
 
         // Check if a file is provided
 
@@ -181,10 +186,33 @@ public class NhanVienController {
             nv.setAnh(imageBlob);
         }
 
+        // Gửi email chứa mật khẩu mới
+        String subject = "Thông tin tài khoản";
+        String body = "<h2>Thông tin tài khoản của bạn</h2>"
+                + "<p>Xin chào, " + ten + "</p>"
+                + "<p>Chúng tôi gửi thông tin truy cập hệ thông của bạn:</p>"
+                + "<p>Tên đăng nhập: " + email + "</p>"
+                + "<p>Mật khẩu truy cập tạm thời là: <strong>" + matKhauMoi + "</strong></p>"
+                + "<p>Lưu ý: Đây là mật khẩu mặc định được tạo bởi hệ thống, bạn vui lòng đổi lại để đảm bảo an toàn thông tin</p>"
+                + "<p>Đây là email tự động vui lòng không trả lời.</p>";
+        emailService.sendEmail(email, subject, body);
+
         // Save the nv object
         NhanVien saveNhanVien = service.add(nv);
         NhanVienRequest saveNhanVienDTO = convertToDto(saveNhanVien);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveNhanVienDTO);
+    }
+
+    private String generateRandomPassword(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 
     private NhanVienRequest convertToDto(NhanVien nhanVien) {

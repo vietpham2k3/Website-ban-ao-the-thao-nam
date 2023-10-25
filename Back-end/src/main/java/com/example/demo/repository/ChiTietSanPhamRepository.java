@@ -40,15 +40,16 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id")
     List<ChiTietSanPham> getAllByIdSP(UUID id);
 
-    @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id and sp.trangThai = 1")
+    @Query(value = "SELECT sp from ChiTietSanPham sp where sp.sanPham.id = :id and" +
+            " sp.trangThai = 1 and sp.sanPham.trangThai = 1")
     List<ChiTietSanPham> getAllByIdSPTT(UUID id);
 
-    @Query(value = "SELECT MS.id, MS.ma, MIN(CTSP.id) AS id_ctsp, SP.id\n" +
+    @Query(value = "SELECT MS.id, MS.ten, MIN(CTSP.id) AS id_ctsp, SP.id\n" +
             "FROM ChiTietSanPham CTSP\n" +
             "JOIN MauSac MS ON CTSP.id_ms = MS.id\n" +
             "JOIN SanPham SP ON CTSP.id_sp = SP.id\n" +
             "WHERE CTSP.id_sp = :id AND CTSP.trang_thai = 1\n" +
-            "GROUP BY MS.id, MS.ma, SP.id;"
+            "GROUP BY MS.id, MS.ten, SP.id;"
             , nativeQuery = true)
     List<String> getAllMSByIdSP(UUID id);
 
@@ -100,6 +101,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             ") AS T\n" +
             "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
             "JOIN SanPham S ON S.id = C.id_sp\n" +
+            "Where S.trang_thai = 1\n" +
             "order by c.ngay_tao desc", nativeQuery = true)
     List<ChiTietSanPham> getAllSP();
 
@@ -191,6 +193,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
             "JOIN SanPham S ON S.id = C.id_sp " +
             "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+            " AND S.trang_thai = 1" +
             "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
             "c.id_ca, c.ma, T.so_luong, " +
             "c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
@@ -212,6 +215,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
                     "ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id " +
                     "JOIN SanPham S ON S.id = C.id_sp " +
                     "WHERE (:key IS NULL OR LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')) " +
+                    " AND S.trang_thai = 1  " +
                     "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
                     "c.id_ca, c.ma, T.so_luong, " +
                     "c.gia_ban,c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +

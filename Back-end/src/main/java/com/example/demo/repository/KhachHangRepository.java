@@ -20,15 +20,17 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
     @Query(value = "update KhachHang kh set kh.trangThai = 0 where kh.id = :id")
     void delete(UUID id);
 
-    @Query(value = "SELECT * FROM KhachHang \n" +
+    @Query(value = "SELECT * FROM KhachHang\n" +
             "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (sdt is null or sdt LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (email is null or email LIKE lower(CONCAT('%', ?1, '%'))))\n" +
-            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
+            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))\n" +
+            "and(gioi_tinh is null or gioi_tinh LIKE lower(CONCAT('%', ?3 , '%')))", nativeQuery = true)
     Page<KhachHang> searchKH(
             @Param("key") String key,
             @Param("trangThai") Integer trangThai,
+            @Param("gioiTinh") Boolean gioiTinh,
             Pageable pageable
     );
 
@@ -56,5 +58,14 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             " kh.matKhau = :matKhau ")
     KhachHang findKhachHangByEmailAndMatKhau(String email, String matKhau);
 
+    @Query("select kh from KhachHang kh where kh.email = :email")
+    KhachHang findByEmail(@Param("email") String email);
 
+
+    KhachHang findByResetPasswordToken(String token);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE KhachHang kh SET kh.matKhau = ?1 WHERE kh.email = ?2")
+    void updatePasswordByEmail(String newPassword, String email);
 }

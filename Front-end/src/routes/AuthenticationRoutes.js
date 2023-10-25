@@ -11,7 +11,9 @@ const CheckOut = Loadable(lazy(() => import('views/checkout/CheckOut')));
 const ThankYou = Loadable(lazy(() => import('ui-component/checkout/ThankYou')));
 const CheckOutQuick = Loadable(lazy(() => import('views/checkout/CheckOutQuick')));
 const Login = Loadable(lazy(() => import('views/login')));
-
+const UserAccount = Loadable(lazy(() => import('ui-component/login/information_user')));
+const DiaChi = Loadable(lazy(() => import('ui-component/login/diachi')));
+const History = Loadable(lazy(() => import('ui-component/login/lichsudonhang')));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // import { Navigate } from 'react-router';
@@ -55,7 +57,20 @@ const AuthenticationRoutes = {
     {
       path: '/error',
       element: <Login />
-    }
+    },
+    {
+      path: '/thong-tin_user',
+      element: <UserAccount />
+    },
+    {
+      path: '/diachi',
+      element: <DiaChi />
+    },
+    {
+      path: '/history',
+      element: <History />
+    },
+   
   ]
 };
 

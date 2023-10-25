@@ -22,17 +22,22 @@ public interface HoaDonService {
 
     public List<ChiTietSanPham> getAllSP();
 
+    public Double doanhThuTongNgayCurrent();
+
+    public Double doanhThuTongThangCurrent();
+
+    public Double doanhThuTongNamCurrent();
+
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);
 
     void delete(UUID id);
 
-    public void updateKHHD(UUID id, String tenNguoiNhan, String soDienThoai,
-                           String diaChi, String tinh,
-                           String huyen, String xa);
-
-    public void updateHDTien(UUID id, Double tongTien,Double tongTienKhiGiam,Double tienShip);
+    public void updateHD(UUID id, String tenNguoiNhan, String soDienThoai,
+                         String diaChi, String tinh,
+                         String huyen, String xa, Double tongTien,
+                         Double tongTienKhiGiam, Double tienShip);
 
     HoaDon add(HoaDon hoaDon);
 }

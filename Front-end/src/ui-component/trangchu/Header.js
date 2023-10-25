@@ -12,7 +12,9 @@ function Header(props) {
   const handleLogout = () => {
     window.location.reload();
     localStorage.removeItem('dataLogin');
+    localStorage.removeItem('idGH');
   };
+
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg bg-body-tertiary nav-1">
@@ -38,7 +40,7 @@ function Header(props) {
                     <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
                       <Dropdown.Item style={{ color: 'yellowgreen' }}>{dataLogin.tenKhachHang}</Dropdown.Item>
                       <hr />
-                      <Dropdown.Item href="/login">Tài khoản của tôi</Dropdown.Item>
+                      <Dropdown.Item href="thong-tin_user">Tài khoản của tôi</Dropdown.Item>
                       <Dropdown.Item href="/login">Đổi mật khẩu</Dropdown.Item>
                       <Dropdown.Item href="/login">Địa chỉ</Dropdown.Item>
                       <hr />
@@ -55,7 +57,9 @@ function Header(props) {
                 <a className="nav-link active" aria-current="page" href="/gio-hang">
                   <button type="button" className="btn btn-primary position-relative icon-login btn-login">
                     <i className="fa-solid fa-cart-shopping"></i>
-                    <span className="position-absolute top-0 start-90 translate-middle badge rounded-pill bg-danger">{productCount}</span>
+                    <span className="position-absolute top-0 start-90 translate-middle badge rounded-pill bg-danger">
+                      {!dataLogin ? productCount : productCount || 0}
+                    </span>
                   </button>
                 </a>
               </li>

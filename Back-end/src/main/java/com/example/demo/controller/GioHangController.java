@@ -1,14 +1,17 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.CoAo;
+import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.GioHang;
+import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HinhThucThanhToan;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.HoaDon_KhuyenMai;
+import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.GioHangChiTietServiceImpl;
 import com.example.demo.service.impl.GioHangServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
@@ -17,8 +20,6 @@ import com.example.demo.service.impl.HoaDon_KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
 import com.example.demo.service.impl.KhuyenMaiServiceImpl;
 import com.example.demo.service.impl.LichSuHoaDonServiceImpl;
-import jakarta.validation.Valid;
-import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,6 +47,8 @@ public class GioHangController {
     @Autowired
     private GioHangServiceImpl gioHangService;
     @Autowired
+    private GioHangChiTietServiceImpl gioHangChiTietService;
+    @Autowired
     public HoaDonServiceImpl serviceHD;
     @Autowired
     public HoaDon_KhuyenMaiServiceImpl hoaDon_khuyenMaiService;
@@ -62,9 +65,61 @@ public class GioHangController {
     @Autowired
     private KhuyenMaiServiceImpl khuyenMaiService;
 
+    @GetMapping("/countSP")
+    public ResponseEntity<?> countSP(@RequestParam(required = false) UUID id) {
+        return ResponseEntity.ok(gioHangChiTietService.countSPOnGH(id));
+    }
+
+    @GetMapping("/detailGH")
+    public ResponseEntity<?> detailGH(@RequestParam(required = false) UUID id) {
+        return ResponseEntity.ok(gioHangService.getAll(id));
+    }
+
     @GetMapping("/getAll")
-    public ResponseEntity<?> getALl() {
-        return ResponseEntity.ok(gioHangService.getAll());
+    public ResponseEntity<?> getAll(@RequestParam UUID id) {
+        return ResponseEntity.ok(gioHangChiTietService.getAll(id));
+    }
+
+    @DeleteMapping("/deleteSPInGH/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        GioHangChiTiet hd = gioHangChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hd.getChiTietSanPham().getId());
+        chiTietSanPhamService.update(sp.getSoLuong() + hd.getSoLuong(), sp.getId());
+        gioHangChiTietService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/clearGH/{id}/{idHD}")
+    public ResponseEntity<?> clearGH(@PathVariable UUID id, @PathVariable UUID idHD) {
+        List<GioHangChiTiet> list = gioHangChiTietService.getAll(id);
+        List<HoaDonChiTiet> listHD = hoaDonChiTietService.getAll(idHD);
+        for (GioHangChiTiet gioHangChiTiet : list) {
+            for (HoaDonChiTiet hd : listHD) {
+                if (gioHangChiTiet.getGioHang().getId().equals(id)
+                        && hd.getChiTietSanPham().getId().equals(gioHangChiTiet.getChiTietSanPham().getId())
+                        && hd.getHoaDon().getId().equals(idHD)) {
+                    gioHangChiTietService.delete(gioHangChiTiet.getId());
+                }
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("update-sl/{id}")
+    public ResponseEntity<?> updateSL(@PathVariable UUID id, @RequestBody GioHangChiTiet hoaDon) {
+        GioHangChiTiet hd = gioHangChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDon.getChiTietSanPham().getId());
+        if (hoaDon.getSoLuong() > hd.getSoLuong()) {
+            chiTietSanPhamService.update(sp.getSoLuong() - (hoaDon.getSoLuong() - hd.getSoLuong()), hoaDon.getChiTietSanPham().getId());
+            gioHangChiTietService.updateSL(hoaDon.getSoLuong(), hd.getId());
+            return ResponseEntity.ok("Tang cthd, giam ctsp");
+        } else {
+            // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+            chiTietSanPhamService.update(sp.getSoLuong() + (hd.getSoLuong() - hoaDon.getSoLuong()), hoaDon.getChiTietSanPham().getId());
+            gioHangChiTietService.updateSL(hoaDon.getSoLuong(), hd.getId());
+            return ResponseEntity.ok("Giam cthd, tang ctsp");
+        }
     }
 
     @PutMapping("update-hd-checkout/{id}")
@@ -151,6 +206,56 @@ public class GioHangController {
         serviceLSHD.createLichSuDonHang(lichSuHoaDon);
         hoaDonChiTietService.taoHoaDon(hoaDonChiTietList);
         return ResponseEntity.ok(String.valueOf(hoaDon.getId()));
+    }
+
+    @PostMapping("/them-gio-hang")
+    public ResponseEntity<?> themGioHang(@RequestParam UUID idKH, @RequestBody GioHangChiTiet gioHangChiTiet) {
+        String ma = "GH" + new Random().nextInt(100000);
+        KhachHang khachHang = khService.getOne(idKH);
+        ChiTietSanPham ctsp = chiTietSanPhamService.detail(gioHangChiTiet.getChiTietSanPham().getId());
+
+        // Kiểm tra xem có sẵn giỏ hàng cho khách hàng chưa
+        GioHang gioHang = gioHangService.getAll(idKH);
+
+        if (gioHang == null) {
+            // Nếu chưa có giỏ hàng, tạo mới
+            gioHang = new GioHang().builder()
+                    .ma(ma)
+                    .khachHang(khachHang)
+                    .ngayTao(new Date())
+                    .trangThai(0)
+                    .tenNguoiNhan(khachHang.getTenKhachHang())
+                    .build();
+            gioHang = gioHangService.add(gioHang);
+        }
+
+        List<GioHangChiTiet> list = gioHangChiTietService.getAll(gioHang.getId());
+        boolean productExistsInCart = false;
+
+        for (GioHangChiTiet gioHangChiTiet1 : list) {
+            if (gioHangChiTiet1.getChiTietSanPham().getId().equals(gioHangChiTiet.getChiTietSanPham().getId())) {
+                // Nếu sản phẩm tương tự đã tồn tại trong giỏ hàng, cập nhật số lượng
+                gioHangChiTiet1.setSoLuong(gioHangChiTiet1.getSoLuong() + gioHangChiTiet.getSoLuong());
+                gioHangChiTiet.setGioHang(gioHang);
+                gioHangChiTiet.setChiTietSanPham(gioHangChiTiet.getChiTietSanPham());
+                gioHangChiTiet.setDonGia(ctsp.getGiaBan());
+                gioHangChiTietService.add(gioHangChiTiet1); // Cập nhật chi tiết giỏ hàng
+                chiTietSanPhamService.update(ctsp.getSoLuong() - gioHangChiTiet.getSoLuong(), gioHangChiTiet.getChiTietSanPham().getId());
+                productExistsInCart = true;
+                break;
+            }
+        }
+
+        if (!productExistsInCart) {
+            gioHangChiTiet.setGioHang(gioHang);
+            gioHangChiTiet.setChiTietSanPham(gioHangChiTiet.getChiTietSanPham());
+            gioHangChiTiet.setDonGia(ctsp.getGiaBan());
+            gioHangChiTiet.setSoLuong(gioHangChiTiet.getSoLuong());
+            chiTietSanPhamService.update(ctsp.getSoLuong() - gioHangChiTiet.getSoLuong(), gioHangChiTiet.getChiTietSanPham().getId());
+            gioHangChiTietService.add(gioHangChiTiet); // Thêm chi tiết giỏ hàng
+        }
+
+        return ResponseEntity.ok(gioHangChiTiet);
     }
 
     @DeleteMapping("/delete/{id}")

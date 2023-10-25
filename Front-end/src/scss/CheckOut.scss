@@ -3,7 +3,21 @@
   padding: 50px 0;
   background-color: rgb(243, 243, 243);
 }
-
+.dia-chi-checkout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .change-dc {
+    cursor: pointer;
+    color: blue;
+  }
+}
+.change-dc-modal {
+  margin-top: -30px;
+}
+.text-default-dc {
+  color: orangered;
+}
 /* CheckoutForm container background */
 .ctn {
   background: #ffffff;

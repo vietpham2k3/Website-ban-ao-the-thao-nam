@@ -54,6 +54,8 @@ public class HoaDonController {
     private ChiTietSanPhamServiceImpl chiTietSanPhamService;
     @Autowired
     private KhachHangServiceImpl khService;
+    @Autowired
+    private NhanVienServiceImpl nvService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -150,7 +152,9 @@ public class HoaDonController {
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
         hoaDon.setTenNguoiNhan("Khách lẻ");
+        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTienShip(0.0);
+        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTrangThai(0);
         HinhThucThanhToan httt = new HinhThucThanhToan().builder()
                 .ma(ma)
@@ -189,7 +193,7 @@ public class HoaDonController {
                 .build();
         hoaDon.setId(id);
         hoaDon.setNgayTao(hd.getNgayTao());
-        if (hoaDon.getTongTienKhiGiam().doubleValue() < 0) {
+        if (hoaDon.getTongTienKhiGiam().doubleValue() <= 0) {
             hoaDon.setTongTienKhiGiam(0.0);
         }
         hoaDon.setNgayThanhToan(new Date());
@@ -202,7 +206,9 @@ public class HoaDonController {
         }
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
-        hoaDon.setDiaChi("NULL");
+        if (hoaDon.getTrangThai() != 6) {
+            hoaDon.setTrangThai(0);
+        }
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);
         return ResponseEntity.ok(serviceHD.add(hoaDon));
@@ -210,7 +216,7 @@ public class HoaDonController {
 
 
     @PutMapping("/thanh-toan/{id}")
-    public ResponseEntity<?> thanhToan(@PathVariable UUID id){
+    public ResponseEntity<?> thanhToan(@PathVariable UUID id) {
         HoaDon hd = serviceHD.detailHD(id);
         String maLS = "LSHD" + new Random().nextInt(100000);
         LichSuHoaDon ls = serviceLSHD.detail(hd.getId()).builder()
@@ -221,6 +227,8 @@ public class HoaDonController {
                 .hoaDon(hd)
                 .ghiChu("Đã thanh toán")
                 .build();
+        hd.setTrangThai(6);
+        serviceHD.add(hd);
         return ResponseEntity.ok(serviceLSHD.add(ls));
     }
 
@@ -333,18 +341,12 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceHD.searchVIP(key, tuNgayDate, denNgayDate, trangThai, loaiDon, minSL, maxSL, minTT, maxTT, pageable));
     }
 
-    @PutMapping("updateKH/{id}")
+    @PutMapping("updateHD/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
-        serviceHD.updateKHHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
-                hoaDon.getDiaChi(),hoaDon.getTinh(),hoaDon.getHuyen(),hoaDon.getXa());
-        return ResponseEntity.ok("ok");
-    }
-
-    @PutMapping("updateHDTien/{id}")
-    public ResponseEntity<?> updateTien(@PathVariable UUID id, @RequestBody HoaDon hoaDon) {
-        serviceHD.updateHDTien(id, hoaDon.getTongTien(),
-                hoaDon.getTongTienKhiGiam(),hoaDon.getTienShip());
-        return ResponseEntity.ok("ok");
+        serviceHD.updateHD(id, hoaDon.getTenNguoiNhan(), hoaDon.getSoDienThoai(),
+                hoaDon.getDiaChi(),hoaDon.getTinh(),hoaDon.getHuyen(),hoaDon.getXa(),
+                hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam(),hoaDon.getTienShip());
+        return ResponseEntity.ok().body("ok");
     }
 
     @PostMapping("xac-nhan/{id}")
@@ -450,6 +452,40 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
+    @PostMapping("giao-hang-thanh-cong/{id}")
+    public ResponseEntity<?> giaoHangThanhCong(@PathVariable UUID id,
+                                         @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(4);
+        hoaDon.setTrangThai(4);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao hàng thành công");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-hang-that-bai/{id}")
+    public ResponseEntity<?> giaoHangThatBai(@PathVariable UUID id,
+                                         @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(5);
+        hoaDon.setTrangThai(5);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao hàng thất bại");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
     @PostMapping("xac-nhan-thanh-toan/{id}")
     public ResponseEntity<?> xacNhanTT(@PathVariable UUID id,
                                        @RequestBody LichSuHoaDon lichSuHoaDon) {
@@ -516,14 +552,14 @@ public class HoaDonController {
 
 
     @PostMapping("/addKHinBH/{id}")
-    public ResponseEntity<?> addKHinBH(@PathVariable UUID id,@RequestBody KhachHang kh, MultipartFile anh) throws IOException, SQLException {
+    public ResponseEntity<?> addKHinBH(@PathVariable UUID id, @RequestBody KhachHang kh, MultipartFile anh) throws IOException, SQLException {
         // Create a new KhachHang object
         if (kh.getMaKhachHang() == null) {
             String ma = "KH" + new Random().nextInt(100000);
             kh.setMaKhachHang(ma);
         }
         kh.setTrangThai(1);
-        HoaDon hd= serviceHD.detailHD(id);
+        HoaDon hd = serviceHD.detailHD(id);
         hd.setSoDienThoai(kh.getSdt());
         hd.setTenNguoiNhan(kh.getTenKhachHang());
         serviceHD.add(hd);
