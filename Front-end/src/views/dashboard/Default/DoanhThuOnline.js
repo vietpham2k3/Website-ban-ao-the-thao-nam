@@ -93,18 +93,27 @@ const DoanhThuOnline = ({ isLoading }) => {
   const handleDoanhThuNgay = () => {
     setThang('');
     setNam('');
+    if (ngay === '') {
+      setNgay(0);
+    }
     doanhThuNgay();
   };
 
   const handleDoanhThuThang = () => {
     setNgay('');
     setNam('');
+    if (thang === '') {
+      setThang(0);
+    }
     doanhThuThang();
   };
 
   const handleDoanhThuNam = () => {
     setNgay('');
     setThang('');
+    if (nam === '') {
+      setNam(0);
+    }
     doanhThuNam();
   };
 

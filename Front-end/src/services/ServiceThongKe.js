@@ -25,7 +25,6 @@ const doanhThuTQTheoNam = () => {
 };
 
 const doanhThuOnlineTheoNgay = () => {
-
   return axios.get(`/api/thong-ke/doanh-thu-online-ngay-hien-tai`);
 };
 
@@ -37,6 +36,42 @@ const doanhThuOnlineTheoNam = () => {
   return axios.get(`/api/thong-ke/doanh-thu-online-nam-hien-tai`);
 };
 
+const soDonHuyNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-ngay`);
+};
+
+const soDonHuyThang = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-thang`);
+};
+
+const soDonHuyNam = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-nam`);
+};
+
+const soDonChoXacNhanNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-ngay`);
+};
+
+const soDonChoXacNhanThang = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-thang`);
+};
+
+const soDonChoXacNhanNam = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-nam`);
+};
+
+const soDonThanhCongNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-ngay`);
+};
+
+const soDonThanhCongThang = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-thang`);
+};
+
+const soDonThanhCongNam = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-nam`);
+};
+
 export {
   doanhThuTongTheoNgay,
   doanhThuTongTheoThang,
@@ -46,5 +81,14 @@ export {
   doanhThuOnlineTheoNgay,
   doanhThuTQTheoNam,
   doanhThuTQTheoNgay,
-  doanhThuTQTheoThang
+  doanhThuTQTheoThang,
+  soDonChoXacNhanNam,
+  soDonChoXacNhanNgay,
+  soDonChoXacNhanThang,
+  soDonHuyNam,
+  soDonHuyNgay,
+  soDonHuyThang,
+  soDonThanhCongNgay,
+  soDonThanhCongThang,
+  soDonThanhCongNam
 };

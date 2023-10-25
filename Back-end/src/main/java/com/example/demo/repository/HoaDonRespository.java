@@ -68,14 +68,6 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
                          String huyen, String xa, Double tongTien,
                          Double tongTienKhiGiam, Double tienShip);
 
-
-    @Query(value = "SELECT KM.ma, KM.ten, KM.muc_giam, KM_HD.tien_giam" +
-            " FROM HoaDon_KhuyenMai KM_HD JOIN\n" +
-            "KhuyenMai KM ON KM_HD.id_km = KM.id JOIN\n" +
-            "HoaDon HD ON HD.id = KM_HD.id_hd \n" +
-            "WHERE KM_HD.id_hd = :idHD", nativeQuery = true)
-    public HoaDon_KhuyenMai hd_km(@Param("idHD") UUID idHD);
-
     @Query(value = "select h from HoaDon h where h.trangThai = 0 and h.loaiDon = 0")
     List<HoaDon> getAllHD();
 
@@ -175,46 +167,100 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "\t\tAND HD.loai_don = 1" , nativeQuery = true)
     public Double doanhThuOnlineNamCurrent();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_ngay\n" +
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
             "            FROM HoaDon HD WHERE\n" +
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 2" , nativeQuery = true)
-    public Double soDonHuyNgay();
+    public Integer soDonHuyNgay();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_ngay\n" +
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
             "            FROM HoaDon HD WHERE\n" +
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 6" , nativeQuery = true)
-    public Double soDonThanhCongNgay();
+            "              AND HD.trang_thai = 0" , nativeQuery = true)
+    public Integer soDonChoXacNhanNgay();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_thang\n" +
+    @Query(value = "\tSELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
+            "FROM HoaDon HD\n" +
+            "WHERE\n" +
+            "    (\n" +
+            "        (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "         MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 6 AND\n" +
+            "         HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "        (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "         MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
+            "         HD.loai_don = 1)\n" +
+            "    );" , nativeQuery = true)
+    public Integer soDonThanhCongNgay();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 2" , nativeQuery = true)
-    public Double soDonHuyThang();
+    public Integer soDonHuyThang();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_thang\n" +
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 6" , nativeQuery = true)
-    public Double soDonThanhCongThang();
+            "              AND HD.trang_thai = 0" , nativeQuery = true)
+    public Integer soDonChoXacNhanThang();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_nam\n" +
+    @Query(value = "\tSELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
+            "FROM HoaDon HD\n" +
+            "WHERE\n" +
+            "    (\n" +
+            "        (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 6 AND\n" +
+            "         HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "        (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
+            "         HD.loai_don = 1)\n" +
+            "    );" , nativeQuery = true)
+    public Integer soDonThanhCongThang();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 2" , nativeQuery = true)
-    public Double soDonHuyNam();
+    public Integer soDonHuyNam();
 
-    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_huy_nam\n" +
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 6" , nativeQuery = true)
-    public Double soDonThanhCongNam();
+            "              AND HD.trang_thai = 0" , nativeQuery = true)
+    public Integer soDonChoXacNhanNam();
+
+    @Query(value = "\tSELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
+            "FROM HoaDon HD\n" +
+            "WHERE\n" +
+            "    (\n" +
+            "        (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 6 AND\n" +
+            "         HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "        (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
+            "         HD.loai_don = 1)\n" +
+            "    );" , nativeQuery = true)
+    public Integer soDonThanhCongNam();
 
 }

@@ -85,24 +85,32 @@ const EarningCard = ({ isLoading }) => {
   const handleDoanhThuTongNgay = () => {
     setThang('');
     setNam('');
+    if (ngay === '') {
+      setNgay(0);
+    }
     doanhThuTongNgay();
   };
 
   const handleDoanhThuTongThang = () => {
     setNgay('');
     setNam('');
+    if (thang === '') {
+      setThang(0);
+    }
     doanhThuTongThang();
   };
 
   const handleDoanhThuTongNam = () => {
     setNgay('');
     setThang('');
+    if (nam === '') {
+      setNam(0);
+    }
     doanhThuTongNam();
   };
 
   useEffect(() => {
     handleDoanhThuTongNgay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function convertToCurrency(number) {

@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types';
-
+import '../../../scss/ThongKe.scss';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from 'react';
+import '../../../scss/ThongKe.scss';
+// api
+import { soDonHuyNgay, soDonHuyThang, soDonHuyNam } from 'services/ServiceThongKe';
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
@@ -12,7 +17,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 // assets
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
-import { useState } from 'react';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -42,16 +46,76 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
-const TotalIncomeDarkCard = ({ isLoading }) => {
+const DonHuy = ({ isLoading }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const [ngay, setNgay] = useState(0);
+  const [thang, setThang] = useState(0);
+  const [nam, setNam] = useState(0);
+
+  const SLNgay = async () => {
+    const res = await soDonHuyNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  };
+
+  const SLThang = async () => {
+    const res = await soDonHuyThang();
+    if (res && res.data) {
+      setThang(res.data);
+    }
+  };
+
+  const SLNam = async () => {
+    const res = await soDonHuyNam();
+    if (res && res.data) {
+      setNam(res.data);
+    }
+  };
+
+  const handleSLNgay = () => {
+    setThang('');
+    setNam('');
+    if (ngay === '') {
+      setNgay(0);
+    }
+    SLNgay();
+  };
+
+  const handleSLThang = () => {
+    setNgay('');
+    setNam('');
+    if (thang === '') {
+      setThang(0);
+    }
+    SLThang();
+  };
+
+  const handleSLNam = () => {
+    setNgay('');
+    setThang('');
+    if (nam === '') {
+      setNam(0);
+    }
+    SLNam();
+  };
+
+  useEffect(() => {
+    handleSLNgay();
+  }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setIsModalOpen(true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -92,7 +156,11 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                         fontSize: 20
                       }}
                     >
-                      5
+                      {ngay !== '' && ngay}
+
+                      {thang !== '' && thang}
+
+                      {nam !== '' && nam}
                     </Typography>
                   }
                 />
@@ -110,7 +178,9 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                 aria-haspopup="true"
                 onClick={handleClick}
               >
-                <MoreHorizIcon fontSize="inherit" />
+                <div className={`close-icon ${isModalOpen ? 'open' : ''}`}>
+                  {isModalOpen ? <CloseIcon fontSize="inherit" /> : <MoreHorizIcon fontSize="inherit" />}
+                </div>
               </Avatar>
               <Menu
                 id="menu-earning-card"
@@ -128,9 +198,15 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   horizontal: 'right'
                 }}
               >
-                <MenuItem onClick={handleClose}>Theo ngày</MenuItem>
-                <MenuItem onClick={handleClose}>Theo tháng</MenuItem>
-                <MenuItem onClick={handleClose}>Theo Năm</MenuItem>
+                <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNgay}>
+                  Theo ngày
+                </MenuItem>
+                <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
+                  Theo tháng
+                </MenuItem>
+                <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
+                  Theo năm
+                </MenuItem>
               </Menu>
             </List>
           </Box>
@@ -140,8 +216,8 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
   );
 };
 
-TotalIncomeDarkCard.propTypes = {
+DonHuy.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default TotalIncomeDarkCard;
+export default DonHuy;

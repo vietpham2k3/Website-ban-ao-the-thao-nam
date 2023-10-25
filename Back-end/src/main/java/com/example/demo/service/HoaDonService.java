@@ -40,6 +40,24 @@ public interface HoaDonService {
 
     public Double doanhThuOnlineNamCurrent();
 
+    public Integer soDonHuyNgay();
+
+    public Integer soDonHuyThang();
+
+    public Integer soDonHuyNam();
+
+    public Integer soDonChoXacNhanNgay();
+
+    public Integer soDonChoXacNhanThang();
+
+    public Integer soDonChoXacNhanNam();
+
+    public Integer soDonThanhCongNgay();
+
+    public Integer soDonThanhCongThang();
+
+    public Integer soDonThanhCongNam();
+
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);
