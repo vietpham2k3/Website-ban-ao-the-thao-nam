@@ -89,12 +89,17 @@ public class GioHangController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/clearGH/{id}")
-    public ResponseEntity<?> clearGH(@PathVariable UUID id) {
+    @DeleteMapping("/clearGH/{id}/{idHD}")
+    public ResponseEntity<?> clearGH(@PathVariable UUID id, @PathVariable UUID idHD) {
         List<GioHangChiTiet> list = gioHangChiTietService.getAll(id);
+        List<HoaDonChiTiet> listHD = hoaDonChiTietService.getAll(idHD);
         for (GioHangChiTiet gioHangChiTiet : list) {
-            if (gioHangChiTiet.getGioHang().getId().equals(id)) {
-                gioHangChiTietService.delete(gioHangChiTiet.getId());
+            for (HoaDonChiTiet hd : listHD) {
+                if (gioHangChiTiet.getGioHang().getId().equals(id)
+                        && hd.getChiTietSanPham().getId().equals(gioHangChiTiet.getChiTietSanPham().getId())
+                        && hd.getHoaDon().getId().equals(idHD)) {
+                    gioHangChiTietService.delete(gioHangChiTiet.getId());
+                }
             }
         }
         return ResponseEntity.ok().build();

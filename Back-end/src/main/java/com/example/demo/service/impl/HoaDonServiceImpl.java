@@ -48,6 +48,21 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public Double doanhThuTongNgayCurrent() {
+        return res.doanhThuTongNgayCurrent();
+    }
+
+    @Override
+    public Double doanhThuTongThangCurrent() {
+        return res.doanhThuTongThangCurrent();
+    }
+
+    @Override
+    public Double doanhThuTongNamCurrent() {
+        return res.doanhThuTongNamCurrent();
+    }
+
+    @Override
     public List<ChiTietSanPham> searchSPofHDCT(String key) {
         return resCTSP.searchSPofHDCT(key);
     }

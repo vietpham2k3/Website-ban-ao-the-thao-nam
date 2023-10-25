@@ -43,6 +43,8 @@ function CheckoutForm(props) {
   const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
+
+  const product = localStorage.getItem('productAfter');
   // const [isLoading, setIsLoading] = useState(false);
   const [valuesAddDC, setValuesAddDC] = useState({
     diaChi: '',
@@ -133,7 +135,6 @@ function CheckoutForm(props) {
     getThanhPho();
   }, []);
 
-  console.log(valuesDC);
   useEffect(() => {
     if (dataLogin) {
       dataDC.forEach((d) => {
@@ -311,17 +312,17 @@ function CheckoutForm(props) {
       setIsUpdatingDiaChi(false);
 
       if (dataLogin) {
-        clear(idGH);
+        clear(idGH, id);
       }
 
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
         thanhToanHD(id, valuesUpdateHD);
         navigate('/checkout/thankyou');
-        localStorage.removeItem('product');
+        localStorage.setItem('product', product);
       } else {
         thanhToanHD(id, valuesUpdateHD);
-        localStorage.removeItem('product');
+        localStorage.setItem('product', product);
       }
     }
     VNP(tongTienKhiGiam);
@@ -494,9 +495,9 @@ function CheckoutForm(props) {
     return formatter.format(number);
   }
 
-  const clear = async (id) => {
+  const clear = async (id, idHD) => {
     try {
-      await clearGH(id);
+      await clearGH(id, idHD);
     } catch (error) {
       console.log(error);
     }
