@@ -12,41 +12,28 @@ const ForgotPasswordModal = ({ show, onHide }) => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-
-  // const handleResetPassword = () => {
-  //   if (!email) {
-  //     setErrorMessage('Vui lòng nhập địa chỉ email của bạn.');
-  //     return;
-  //   }
-
-  //   const requestData = { email };
-  //   axios.post('/api/forgot-password', requestData)
-  //     .then((response) => {
-  //       if (response.data && response.data.status === 200) {
-  //         setSuccessMessage(response.data.message); // Hiển thị thông báo thành công
-  //         setErrorMessage(''); // Xóa thông báo lỗi nếu có
-  //       } else {
-  //         setErrorMessage(response.data.message);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       setErrorMessage('Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu.');
-  //     });
-  // };
   const handleResetPassword = () => {
-   
+    // Kiểm tra trường email rỗng
+    if (!email) {
+      setErrorMessage('Email không được bỏ trống.');
+      setSuccessMessage('');
+      return;
+    }
+
     forgotPasswordKH(email)
       .then((response) => {
         if (response.status === 200) {
-          setSuccessMessage("Mật khẩu mới đã được gửi đến email của bạn.");
-        } else {
-          setErrorMessage("Email không tồn tại trong hệ thống.");
+          setSuccessMessage('Mật khẩu mới đã được gửi đến email của bạn.');
+          setErrorMessage('');
+        } else if (response.status === 404) {
+          setErrorMessage('Email không tồn tại trong hệ thống.');
+          setSuccessMessage('');
         }
       })
       .catch((error) => {
-        console.error("Lỗi khi gọi API:", error);
-        setErrorMessage("Đã xảy ra lỗi khi gửi yêu cầu.");
+        console.error('Lỗi khi gọi API:', error);
+        setErrorMessage('Email không tồn tại trong hệ thống.');
+        setSuccessMessage('');
       });
   };
 
