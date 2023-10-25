@@ -51,7 +51,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
 
   return (
     <div className="modal-shadow">
-    <Modal style={{ paddingTop: 250, position: '-moz-initial', zIndex: 99999 }} show={show} onHide={onHide}>
+      <Modal style={{ paddingTop: 250, position: '-moz-initial', zIndex: 99999 }} show={show} onHide={onHide}>
         <Modal.Header closeButton>
           <Modal.Title>Quên mật khẩu</Modal.Title>
         </Modal.Header>
