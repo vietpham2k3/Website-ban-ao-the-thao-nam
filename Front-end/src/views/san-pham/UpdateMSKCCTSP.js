@@ -148,7 +148,7 @@ function UpdateMSKCCTSP(props) {
           </div>
           <div className="col-12">
             <Button type="submit" className="btn btn-primary" onClick={onHide}>
-              Thêm
+              Cập nhật
             </Button>
           </div>
         </form>
