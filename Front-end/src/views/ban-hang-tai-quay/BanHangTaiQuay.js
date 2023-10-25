@@ -46,10 +46,14 @@ export default function BanHangTaiQuay() {
   }, []);
 
   const add = async () => {
-    const res = await addHD(nvID); // Sử dụng await để chờ kết quả trả về
-    if (res) {
-      toast.success('Thêm đơn thành công');
-      getAll();
+    try {
+      const res = await addHD(nvID); // Sử dụng await để chờ kết quả trả về
+      if (res) {
+        toast.success('Thêm đơn thành công');
+        getAll();
+      }
+    } catch (error) {
+      toast.error('Vui lòng đăng nhập để sử dụng chức năng này');
     }
   };
 

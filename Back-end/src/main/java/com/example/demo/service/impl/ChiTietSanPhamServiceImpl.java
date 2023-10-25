@@ -42,6 +42,11 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
+    public List<ChiTietSanPham> updateAll(List<ChiTietSanPham> chiTietSanPham) {
+        return repository.saveAll(chiTietSanPham);
+    }
+
+    @Override
     public List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP) {
         return repository.getKCByIdMSAndIdSP(idMS,idSP);
     }

@@ -1134,6 +1134,7 @@ function CheckoutForm(props) {
                               setValuesUpdateHD({
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
+                                trangThai: 6,
                                 hinhThucThanhToan: {
                                   ten: 'VNPay',
                                   tien: valuesUpdateHD.tongTienKhiGiam,
@@ -1168,6 +1169,7 @@ function CheckoutForm(props) {
                               setValuesUpdateHD({
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
+                                trangThai: 0,
                                 hinhThucThanhToan: {
                                   ten: 'Tiền mặt',
                                   tien: valuesUpdateHD.tongTienKhiGiam,

@@ -1,12 +1,15 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconTypography, IconPalette, IconShadow, IconWindmill, IconTicket, IconUsers, IconUserSearch } from '@tabler/icons';
 
 // constant
 const icons = {
   IconTypography,
   IconPalette,
   IconShadow,
-  IconWindmill
+  IconWindmill,
+  IconTicket,
+  IconUsers,
+  IconUserSearch
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -21,7 +24,7 @@ const utilities = {
       title: 'Voucher',
       type: 'item',
       url: '/voucher',
-      icon: icons.IconTypography,
+      icon: icons.IconTicket,
       breadcrumbs: false
     },
     {
@@ -29,7 +32,7 @@ const utilities = {
       title: 'Nhân viên',
       type: 'item',
       url: '/nhan-vien',
-      icon: icons.IconPalette,
+      icon: icons.IconUserSearch,
       breadcrumbs: false
     },
     {
@@ -37,15 +40,7 @@ const utilities = {
       title: 'Khách hàng',
       type: 'item',
       url: '/khach-hang',
-      icon: icons.IconShadow,
-      breadcrumbs: false
-    },
-    {
-      id: 'thong-ke',
-      title: 'Thống kê',
-      type: 'item',
-      url: '/thong-ke',
-      icon: icons.IconWindmill,
+      icon: icons.IconUsers,
       breadcrumbs: false
     }
   ]
