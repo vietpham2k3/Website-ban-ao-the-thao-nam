@@ -58,5 +58,14 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             " kh.matKhau = :matKhau ")
     KhachHang findKhachHangByEmailAndMatKhau(String email, String matKhau);
 
+    @Query("select kh from KhachHang kh where kh.email = :email")
+    KhachHang findByEmail(@Param("email") String email);
 
+
+    KhachHang findByResetPasswordToken(String token);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE KhachHang kh SET kh.matKhau = ?1 WHERE kh.email = ?2")
+    void updatePasswordByEmail(String newPassword, String email);
 }
