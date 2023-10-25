@@ -85,8 +85,8 @@ const xacNhanThanhToan = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
 
-const addHD = () => {
-  return axios.post('/api/hoa-don/add', {});
+const addHD = (values) => {
+  return axios.post('/api/hoa-don/add', values);
 };
 
 const getById = (id) => {

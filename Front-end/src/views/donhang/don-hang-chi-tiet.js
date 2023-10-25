@@ -49,18 +49,11 @@ function DonHangCT() {
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [inputDetail, setInputDetail] = useState(null);
   const [dataSP, setDataSP] = useState([]);
-  const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
   const [idHDCT, setIdHDCT] = useState('');
   const [idSP, setidSP] = useState('');
   const [idCTSP, setidCTSP] = useState('');
-  // const [valuesId, setValuesId] = useState({
-  //   province_id: ''
-  // });
-  // const [valuesIdWard, setValuesIdWard] = useState({
-  //   district_id: ''
-  // });
   // detailHD
   const [hoaDon, setHoaDon] = useState({});
   const [valuesServices, setValuesServices] = useState({
@@ -81,18 +74,9 @@ function DonHangCT() {
     width: 15
   });
   // cap nhat hoa don
-  const [values, setValues] = useState({
-    tenNguoiNhan: '',
-    soDienThoai: '',
-    diaChi: '',
-    tinh: '',
-    huyen: '',
-    xa: '',
-    tongTien: 0,
-    tongTienKhiGiam: 0,
-    tienShip: 0
-  });
+
   const [totalAmount, setTotalAmount] = useState(0);
+  const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
 
   const [valuesUpdate, setValuesUpdate] = useState({
     chiTietSanPham: {
@@ -176,7 +160,6 @@ function DonHangCT() {
   const updateHD = async (id, value) => {
     const res = await updateHoaDon(id, value);
     if (res) {
-      toast.success('Cập nhật thành công !');
       detail(id);
       setShow(false);
     }
@@ -184,35 +167,35 @@ function DonHangCT() {
 
   const handleUpdateHD = async (event) => {
     event.preventDefault();
-    if (values.tenNguoiNhan === '') {
+    if (hoaDon.tenNguoiNhan === '') {
       setNone(false);
       return;
     }
 
-    if (values.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(values.tenNguoiNhan)) {
+    if (hoaDon.tenNguoiNhan.length > 30 || !/^[a-zA-Z\sÀ-ỹ]+$/u.test(hoaDon.tenNguoiNhan)) {
       // Kiểm tra tên có vượt quá 30 ký tự hoặc không chỉ chứa chữ cái, khoảng trắng và dấu tiếng Việt
       setNone1(false);
       return;
     }
 
-    if (values.soDienThoai === '') {
+    if (hoaDon.soDienThoai === '') {
       setNone2(false);
       return;
     }
 
     // Kiểm tra định dạng số điện thoại
     const phoneRegex = /^0[0-9]{9}$/;
-    if (!phoneRegex.test(values.soDienThoai)) {
+    if (!phoneRegex.test(hoaDon.soDienThoai)) {
       setNone3(false);
       return;
     }
 
-    if (values.diaChi === '') {
+    if (hoaDon.diaChi === '') {
       setNone4(false);
       return;
     }
 
-    if (values.diaChi.length > 250) {
+    if (hoaDon.diaChi.length > 250) {
       setNone5(false);
       return;
     }
@@ -232,13 +215,8 @@ function DonHangCT() {
       return;
     }
 
-    setValues({
-      ...values,
-      tongTien: totalAmount,
-      tongTienKhiGiam: tongTienKhiGiam
-    });
-
-    await updateHD(id, values);
+    toast.success('Cập nhật thành công !');
+    await updateHD(id, hoaDon);
   };
 
   const handleUpdateSl = (id, idHD, idCTSP, soLuong) => {
@@ -255,22 +233,26 @@ function DonHangCT() {
       soLuong: soLuong
     });
 
-    setValues((prevValues) => ({
+    setHoaDon((prevValues) => ({
       ...prevValues,
       tongTien: totalAmount,
       tongTienKhiGiam: tongTienKhiGiam
     }));
-
-    console.log(totalAmount);
-    console.log(tongTienKhiGiam);
   };
 
-  const update = async (idHDCT, values) => {
-    const res = await updateSL(idHDCT, values);
+  const update = async (idHDCT, hoaDon) => {
+    const res = await updateSL(idHDCT, hoaDon);
     if (res) {
       getAllById(id);
+      detail(id);
     }
   };
+
+  useEffect(() => {
+    if (totalAmount) {
+      updateHD(id, hoaDon);
+    }
+  }, [hoaDon.tongTien]);
 
   useEffect(() => {
     if (idHDCT) {
@@ -279,26 +261,15 @@ function DonHangCT() {
   }, [valuesUpdate]);
 
   useEffect(() => {
-    if (totalAmount) {
-      updateHD(id, values);
-    }
-  }, [totalAmount]);
-
-  useEffect(() => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setTongTienKhiGiam(totalAmount - totalGiam + values.tienShip);
+    setTongTienKhiGiam(totalAmount - totalGiam + hoaDon.tienShip);
 
-    setValues({
-      ...values,
+    setHoaDon({
+      ...hoaDon,
       tongTien: totalAmount,
-      tongTienKhiGiam: totalAmount - totalGiam + values.tienShip
+      tongTienKhiGiam: totalAmount - totalGiam + hoaDon.tienShip
     });
-
-    console.log(values.tongTien);
-    console.log(values.tongTienKhiGiam);
-    // console.log(totalAmount);
-    // console.log(tongTienKhiGiam);
-  }, [values.tienShip, totalAmount]);
+  }, [hoaDon.tienShip, totalAmount]);
 
   // kcms sp
   const handleAddSoLuong = (id, idSP) => {
@@ -398,8 +369,8 @@ function DonHangCT() {
     });
     // Cập nhật giá trị tổng tiền
     setTotalAmount(sum);
-    setTongTienKhiGiam(sum - totalGiam + values.tienShip);
-  }, [valuesSanPham, values.tienShip]);
+    setTongTienKhiGiam(sum - totalGiam + hoaDon.tienShip);
+  }, [valuesSanPham, hoaDon.tienShip]);
 
   // modal
   const [show, setShow] = useState(false);
@@ -416,7 +387,65 @@ function DonHangCT() {
   // const handleClose = () => {
   //   setShow(false);
   // };
-  const handleShow = () => setShow(true);
+
+  const [valuesId, setValuesId] = useState({
+    province_id: ''
+  });
+  const [valuesIdWard, setValuesIdWard] = useState({
+    district_id: ''
+  });
+
+  const handleShow = () => {
+    thanhPho.forEach((province) => {
+      if (province.NameExtension[1] === hoaDon.tinh) {
+        setValuesId({
+          province_id: province.ProvinceID
+        });
+        console.log(province.ProvinceID);
+      }
+      setSelectedProvince(province.ProvinceID);
+    });
+
+    setShow(true);
+  };
+
+  useEffect(() => {
+    if (valuesId.province_id) {
+      getQuanHuyen(valuesId);
+    }
+    setSelectedDistrict(valuesId);
+  }, [valuesId.province_id]);
+
+  console.log(quan);
+
+  useEffect(() => {
+    quan.forEach((district) => {
+      if (district.DistrictName === hoaDon.huyen) {
+        setValuesIdWard({
+          district_id: district.DistrictID
+        });
+        setValuesServices({
+          ...valuesServices,
+          to_district: district.DistrictID
+        });
+        setValuesFee({
+          ...valuesFee,
+          to_district_id: district.DistrictID
+        });
+        // setTgDuKien({
+        //   ...tgDuKien,
+        //   to_district_id: district.DistrictID
+        // });
+      }
+    });
+  }, [quan, hoaDon, valuesId]);
+
+  useEffect(() => {
+    if (valuesIdWard.district_id) {
+      getPhuong(valuesIdWard);
+    }
+    setSelectedWard(valuesIdWard);
+  }, [valuesIdWard.district_id]);
 
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
@@ -490,10 +519,6 @@ function DonHangCT() {
       setHoaDon(res.data);
     }
   };
-
-  useEffect(() => {
-    setValues(hoaDon);
-  }, [hoaDon]);
 
   const [dataHDKM, setDataHDKM] = useState([]);
 
@@ -651,86 +676,6 @@ function DonHangCT() {
     getThanhPho();
   }, []);
 
-  // useEffect(() => {
-  //   if (valuesId) {
-  //      thanhPho.forEach((province) => {
-  //     if (province.NameExtension[1] === values.tinh) {
-  //       setValuesId({
-  //         province_id: province.ProvinceID
-  //       });
-  //       console.log("idT: " + province.ProvinceID);
-  //     }
-  //   });
-  //   }
-
-  // }, [thanhPho, valuesId]);
-
-  // useEffect(() => {
-  //   if (valuesId.province_id) {
-  //     getQuanHuyen(valuesId);
-  //   }
-  // }, [valuesId.province_id]);
-
-  // useEffect(() => {
-  //   if (valuesIdWard.district_id) {
-  //     getPhuong(valuesIdWard);
-  //   }
-  // }, [valuesIdWard.district_id]);
-
-  // useEffect(() => {
-  //   quan.forEach((district) => {
-  //     if (district.DistrictName === values.huyen) {
-  //       setValuesIdWard({
-  //         district_id: district.DistrictID
-  //       });
-  //       console.log("idQ" + district.DistrictID);
-  //     }
-  //   });
-  // }, [quan, valuesId]);
-
-  // useEffect(() => {
-  //   phuong.forEach((ward) => {
-  //     if (ward.WardName === values.xa) {
-  //       if (ward.WardCode) {
-  //         console.log('idX:' + ward.WardCode);
-  //         // setWardCode(ward.WardCode);
-  //         setValuesFee({
-  //           ...valuesFee,
-  //           insurance_value: totalAmount,
-  //           to_ward_code: `${ward.WardCode}`
-  //         });
-  //         // setTgDuKien({
-  //         //   ...tgDuKien,
-  //         //   to_ward_code: `${ward.WardCode}`
-  //         // });
-  //       }
-  //     }
-  //   });
-  // }, [phuong, values]);
-
-  // useEffect(() => {
-  //   quan.forEach((district) => {
-  //     if (district.DistrictName === values.huyen) {
-  //       console.log('idH:' + district.DistrictID);
-  //       setValuesIdWard({
-  //         district_id: district.DistrictID
-  //       });
-  //       setValuesServices({
-  //         ...valuesServices,
-  //         to_district: district.DistrictID
-  //       });
-  //       setValuesFee({
-  //         ...valuesFee,
-  //         to_district_id: district.DistrictID
-  //       });
-  //       // setTgDuKien({
-  //       //   ...tgDuKien,
-  //       //   to_district_id: district.DistrictID
-  //       // });
-  //     }
-  //   });
-  // }, [quan, values]);
-
   const handleProvinceChange = (event) => {
     const provinceId = {
       province_id: event.target.value
@@ -744,10 +689,6 @@ function DonHangCT() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.NameExtension[1];
-      setValues({
-        ...values,
-        tinh: selectedProvinceName
-      });
       setHoaDon({
         ...hoaDon,
         tinh: selectedProvinceName
@@ -779,10 +720,6 @@ function DonHangCT() {
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.DistrictName;
-      setValues({
-        ...values,
-        huyen: selectedProvinceName
-      });
       setHoaDon({
         ...hoaDon,
         huyen: selectedProvinceName
@@ -802,17 +739,13 @@ function DonHangCT() {
     //   ...tgDuKien,
     //   to_ward_code: event.target.value
     // });
-    setTongTienKhiGiam(totalAmount - totalGiam + values.tienShip);
+    setTongTienKhiGiam(totalAmount - totalGiam + hoaDon.tienShip);
     const selectedProvinceId = event.target.value;
     const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
 
     if (selectedProvince) {
       // Lấy thông tin tỉnh/thành phố được chọn
       const selectedProvinceName = selectedProvince.WardName;
-      setValues({
-        ...values,
-        xa: selectedProvinceName
-      });
       setHoaDon({
         ...hoaDon,
         xa: selectedProvinceName
@@ -843,10 +776,6 @@ function DonHangCT() {
       const res = await getFee(value);
       if (res) {
         const total = res.data.data.total;
-        setValues({
-          ...values,
-          tienShip: total
-        });
         setHoaDon({
           ...hoaDon,
           tienShip: total
@@ -1704,9 +1633,9 @@ function DonHangCT() {
                                     className="form-control"
                                     name="tenNguoiNhan"
                                     placeholder="Họ Và Tên"
-                                    value={values.tenNguoiNhan}
+                                    value={hoaDon.tenNguoiNhan}
                                     onChange={(e) => {
-                                      setValues({ ...values, tenNguoiNhan: e.target.value });
+                                      setHoaDon({ ...hoaDon, tenNguoiNhan: e.target.value });
                                       setNone(true);
                                       setNone1(true);
                                     }}
@@ -1726,9 +1655,9 @@ function DonHangCT() {
                                     className="form-control"
                                     name="soDienThoai"
                                     placeholder="Số Điện Thoại"
-                                    value={values.soDienThoai}
+                                    value={hoaDon.soDienThoai}
                                     onChange={(e) => {
-                                      setValues({ ...values, soDienThoai: e.target.value });
+                                      setHoaDon({ ...hoaDon, soDienThoai: e.target.value });
                                       setNone2(true);
                                       setNone3(true);
                                     }}
@@ -1750,9 +1679,9 @@ function DonHangCT() {
                                     rows="4"
                                     name="diaChi"
                                     placeholder="Địa Chỉ"
-                                    value={values.diaChi}
+                                    value={hoaDon.diaChi}
                                     onChange={(e) => {
-                                      setValues({ ...values, diaChi: e.target.value });
+                                      setHoaDon({ ...hoaDon, diaChi: e.target.value });
                                       setNone4(true);
                                       setNone5(true);
                                     }}
@@ -1772,17 +1701,12 @@ function DonHangCT() {
                                   Tỉnh/Thành Phố:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select
-                                    id="province"
-                                    className="form-select fsl"
-                                    value={selectedProvince}
-                                    onChange={handleProvinceChange}
-                                  >
+                                  <select id="province" className="form-select fsl" onChange={handleProvinceChange}>
                                     <option value="">-----Chọn tỉnh thành-----</option>
                                     {thanhPho.map((province) => (
                                       <option
                                         key={province.ProvinceID}
-                                        selected={province.NameExtension[1] === values.tinh}
+                                        selected={province.NameExtension[1] === hoaDon.tinh}
                                         value={province.ProvinceID}
                                       >
                                         {province.NameExtension[1]}
@@ -1801,17 +1725,12 @@ function DonHangCT() {
                                   Quận/Huyện:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select
-                                    id="district"
-                                    className="form-select fsl"
-                                    value={selectedDistrict}
-                                    onChange={(e) => handleDistrictChange(e)}
-                                  >
+                                  <select id="district" className="form-select fsl" onChange={(e) => handleDistrictChange(e)}>
                                     <option value="">----Chọn quận huyện-----</option>
                                     {quan.map((district) => (
                                       <option
                                         key={district.DistrictID}
-                                        selected={district.DistrictName === values.huyen}
+                                        selected={district.DistrictName === hoaDon.huyen}
                                         value={district.DistrictID}
                                       >
                                         {district.DistrictName}
@@ -1830,10 +1749,10 @@ function DonHangCT() {
                                   Phường/Xã:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select id="ward" className="form-select fsl" value={selectedWard} onChange={handleWardChange}>
+                                  <select id="ward" className="form-select fsl" onChange={handleWardChange}>
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
-                                      <option key={ward.WardCode} selected={ward.WardName === values.xa} value={ward.WardCode}>
+                                      <option key={ward.WardCode} selected={ward.WardName === hoaDon.xa} value={ward.WardCode}>
                                         {ward.WardName}
                                       </option>
                                     ))}
@@ -1929,8 +1848,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {/* {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''} */}
-                        Phạm Quốc Việt
+                        {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''}
                       </span>
                     </Col>
                   </Col>
@@ -2542,7 +2460,9 @@ function DonHangCT() {
                               key={d.id}
                               step={1}
                               value={d.soLuong}
-                              onChange={(e) => handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e)}
+                              onChange={(e) => {
+                                handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e);
+                              }}
                               variant={'dark'}
                               size="sm"
                             />
@@ -2634,7 +2554,7 @@ function DonHangCT() {
               )}
               <br></br>
 
-              {dataHDKM && dataHDKM.tienGiam !== 0 && (
+              {dataHDKM && dataHDKM.length > 0 && (
                 <Container style={{ display: 'flex', justifyContent: 'end' }}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col sm={12} className="row">

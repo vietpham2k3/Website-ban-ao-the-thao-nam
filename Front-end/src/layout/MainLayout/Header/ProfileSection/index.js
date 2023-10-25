@@ -152,7 +152,7 @@ const ProfileSection = () => {
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          {dataLogin.ten}
+                          {dataLogin && dataLogin.ten}
                         </Typography>
                       </Stack>
                     </Stack>

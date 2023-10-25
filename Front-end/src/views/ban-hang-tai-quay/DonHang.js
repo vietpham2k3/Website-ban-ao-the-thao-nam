@@ -68,6 +68,7 @@ function DonHang(props) {
     },
     tienGiam: 0
   });
+
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
     tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
@@ -90,6 +91,7 @@ function DonHang(props) {
     },
     soLuong: ''
   });
+
   const styles = StyleSheet.create({
     container: {
       marginLeft: '40px'

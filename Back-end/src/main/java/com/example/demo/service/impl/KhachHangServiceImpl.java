@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.KhachHangService;
+import com.google.firebase.auth.hash.Bcrypt;
+import org.bouncycastle.crypto.generators.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,8 @@ public class KhachHangServiceImpl implements KhachHangService {
 
     @Autowired
     private KhachHangRepository khRepo;
+    @Autowired
+    private SendEmailServicecImpl emailService;
 
     @Override
     public List<KhachHang> getAll() {
@@ -47,14 +51,14 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public KhachHang add(KhachHang khachHang){
+    public KhachHang add(KhachHang khachHang) {
         return khRepo.save(khachHang);
     }
 
     @Override
     public KhachHang delete(UUID id) {
-       KhachHang khachHang = khRepo.findById(id).orElse(null);
-       khachHang.setTrangThai(0);
+        KhachHang khachHang = khRepo.findById(id).orElse(null);
+        khachHang.setTrangThai(0);
         khachHang.setMaKhachHang(khachHang.getMaKhachHang());
         khachHang.setTenKhachHang(khachHang.getTenKhachHang());
         khachHang.setSdt(khachHang.getSdt());
@@ -107,10 +111,21 @@ public class KhachHangServiceImpl implements KhachHangService {
         return khRepo.searchKH(key, trangThai, gioiTinh, pageable);
     }
 
+    @Override
+    public void sendResetPasswordEmail(String email, String tenKhachHang) {
+        String newPassword = generateRandomPassword();
+        khRepo.updatePasswordByEmail(newPassword, email);
+        emailService.sendEmail(email, "Cấp Lại Mật khẩu mới", "Thông tin tài khoản của bạn:\n" +
+                "Xin chào, " + tenKhachHang + "\n" +
+                "Tên đăng nhập: " + email + "\n" +
+                "Mật khẩu cấp mới của bạn: " + newPassword + "\n" +
+                "Lưu ý: Đây là mật khẩu mặc định được tạo bởi hệ thống, bạn vui lòng đổi lại để đảm bảo an toàn thông tin."
+        );
+    }
 
-//    @Override
-//    public Page<KhachHang> getAll(Integer page) {
-//        Pageable pageable = PageRequest.of(page, 5);
-//        return khRepo.findAll(pageable);
-//    }
+    private String generateRandomPassword() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+
 }
