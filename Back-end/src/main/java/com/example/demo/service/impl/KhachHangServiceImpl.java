@@ -123,6 +123,18 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    @Override
+    public KhachHang dangKy(KhachHang khachHang) {
+        khRepo.save(khachHang);
+        return khachHang;
+    }
+
+    @Override
+    public boolean checkEmailExists(String email) {
+        KhachHang khachHang = khRepo.findByEmail(email);
+        return khachHang != null;
+    }
+
     private String generateRandomPassword() {
         return UUID.randomUUID().toString().substring(0, 8);
     }

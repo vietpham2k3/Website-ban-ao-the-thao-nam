@@ -36,4 +36,8 @@ public interface KhachHangService {
     Page<KhachHang> searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable);
 
    void sendResetPasswordEmail(String email,String tenKhachHang);
+
+    KhachHang dangKy(KhachHang khachHang);
+
+    boolean checkEmailExists(String email);
 }
