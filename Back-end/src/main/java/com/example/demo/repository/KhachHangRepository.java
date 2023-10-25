@@ -62,7 +62,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
     KhachHang findByEmail(@Param("email") String email);
 
 
-    KhachHang findByResetPasswordToken(String token);
+   
 
     @Modifying
     @Transactional

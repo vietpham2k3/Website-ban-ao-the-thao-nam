@@ -41,8 +41,8 @@ public class KhachHang implements Serializable {
     @Column(name="mat_khau")
     private String matKhau;
 
-    @Column(name="reset_password_token")
-    private String  resetPasswordToken;
+//    @Column(name="reset_password_token")
+//    private String  resetPasswordToken;
 
     @Column(name="trang_thai")
     private Integer trangThai;

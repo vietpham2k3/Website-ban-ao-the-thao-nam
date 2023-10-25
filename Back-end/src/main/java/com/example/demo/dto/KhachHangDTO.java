@@ -25,7 +25,7 @@ public class KhachHangDTO {
     private Boolean gioiTinh;
     private String anh;
     private String role;
-    private String  resetPasswordToken;
+//    private String  resetPasswordToken;
 //    private DiaChi diaChi;
 
 }
