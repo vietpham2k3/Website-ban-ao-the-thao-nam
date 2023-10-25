@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import '../../scss/ForgotPasswordModal.scss';
 import { forgotPasswordKH } from 'services/ForgotPassword';
 
+// eslint-disable-next-line react/prop-types
 const ForgotPasswordModal = ({ show, onHide }) => {
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -20,7 +21,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
       setSuccessMessage('');
       return;
     }
-    setIsLoading(true);// Bắt đầu hiển thị tiến trình quay trở lại
+    setIsLoading(true); // Bắt đầu hiển thị tiến trình quay trở lại
 
     forgotPasswordKH(email)
       .then((response) => {
@@ -90,7 +91,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
                 Đóng
               </Button>
               <Button className="submit-button" variant="primary" onClick={handleResetPassword}>
-              {isLoading ? 'Đang gửi...' : 'Gửi yêu cầu'}
+                {isLoading ? 'Đang gửi...' : 'Gửi yêu cầu'}
               </Button>
             </div>
           )}

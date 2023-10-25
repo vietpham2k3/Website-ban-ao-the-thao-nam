@@ -1,8 +1,8 @@
 // assets
-import { IconDashboard, IconShoppingCart, IconShirt } from '@tabler/icons';
+import { IconDashboard, IconShoppingCart, IconShirt, IconBuildingStore } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconShirt, IconShoppingCart };
+const icons = { IconDashboard, IconShirt, IconShoppingCart, IconBuildingStore };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -16,7 +16,7 @@ const BanHangTaiQuay = {
       title: 'Bán hàn tại quầy',
       type: 'item',
       url: '/ban-hang-tai-quay',
-      icon: icons.IconDashboard
+      icon: icons.IconBuildingStore
     }
   ]
 };

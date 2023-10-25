@@ -31,19 +31,6 @@ function AddSanPham() {
 
   const navigate = useNavigate();
 
-  const handleConfirmClick = () => {
-    // Perform validation
-    if (values.sanPham.ten.trim() === '' || values.giaBan.trim() === '' || values.sanPham.moTa.trim() === '') {
-      // Display an error message or prevent confirmation
-      toast.error('Vui lòng điền đầy đủ thông tin tên, mô tả và giá bán.');
-    } else {
-      // Validation passed, update the states
-      toast.success('Xác nhận thành công');
-      setIsHidden(false);
-      setConfirmClicked(true);
-    }
-  };
-
   const [values, setValues] = useState({
     chatLieu: {
       id: ''
@@ -155,7 +142,24 @@ function AddSanPham() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!values.mauSac.id || !values.kichCo.id || !values.soLuong) {
+      toast.error('Vui lòng chọn thuộc tính để thêm vào sản phẩm');
+      return;
+    }
     await postctsp(values);
+  };
+
+  const handleConfirmClick = () => {
+    // Perform validation
+    if (values.sanPham.ten.trim() === '' || values.giaBan.trim() === '' || values.sanPham.moTa.trim() === '') {
+      // Display an error message or prevent confirmation
+      toast.error('Vui lòng điền đầy đủ thông tin tên, mô tả và giá bán.');
+    } else {
+      // Validation passed, update the states
+      toast.success('Xác nhận thành công');
+      setIsHidden(false);
+      setConfirmClicked(true);
+    }
   };
 
   const getAllList = async () => {
@@ -195,7 +199,7 @@ function AddSanPham() {
   return (
     <div>
       <MainCard>
-        <form className="row g-3" onSubmit={handleSubmit}>
+        <div className="row g-3">
           <div className="col-md-12">
             <label className="form-label" htmlFor="trang-thai">
               Tên
@@ -407,7 +411,7 @@ function AddSanPham() {
           <div className="col-12 d-flex justify-content-end">
             {!isHidden && (
               <div className="hidden-element">
-                <button type="submit" className="btn btn-primary">
+                <button onClick={handleSubmit} type="submit" className="btn btn-primary">
                   ADD
                 </button>
               </div>
@@ -415,12 +419,12 @@ function AddSanPham() {
             {confirmClicked ? (
               <p></p>
             ) : (
-              <button onClick={handleConfirmClick} className="btn btn-success">
+              <button onClick={handleConfirmClick} type="submit" className="btn btn-success">
                 Xác Nhận
               </button>
             )}
           </div>
-        </form>
+        </div>
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
