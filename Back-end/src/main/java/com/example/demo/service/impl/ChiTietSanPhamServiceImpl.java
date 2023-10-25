@@ -126,4 +126,9 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
         Pageable pageable = PageRequest.of(page, 20);
         return repository.getAll(pageable);
     }
+
+    @Override
+    public ChiTietSanPham findID(UUID id) {
+        return repository.findById(id).orElse(null);
+    }
 }

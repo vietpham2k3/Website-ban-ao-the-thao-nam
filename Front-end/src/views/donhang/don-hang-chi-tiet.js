@@ -405,9 +405,9 @@ function DonHangCT() {
       }
       setSelectedProvince(province.ProvinceID);
     });
-      
+
     setShow(true);
-  }
+  };
 
   useEffect(() => {
     if (valuesId.province_id) {
@@ -675,7 +675,6 @@ function DonHangCT() {
   useEffect(() => {
     getThanhPho();
   }, []);
-
 
   const handleProvinceChange = (event) => {
     const provinceId = {
@@ -1702,11 +1701,7 @@ function DonHangCT() {
                                   Tỉnh/Thành Phố:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select
-                                    id="province"
-                                    className="form-select fsl"
-                                    onChange={handleProvinceChange}
-                                  >
+                                  <select id="province" className="form-select fsl" onChange={handleProvinceChange}>
                                     <option value="">-----Chọn tỉnh thành-----</option>
                                     {thanhPho.map((province) => (
                                       <option
@@ -1730,11 +1725,7 @@ function DonHangCT() {
                                   Quận/Huyện:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select
-                                    id="district"
-                                    className="form-select fsl"
-                                    onChange={(e) => handleDistrictChange(e)}
-                                  >
+                                  <select id="district" className="form-select fsl" onChange={(e) => handleDistrictChange(e)}>
                                     <option value="">----Chọn quận huyện-----</option>
                                     {quan.map((district) => (
                                       <option
@@ -1761,8 +1752,7 @@ function DonHangCT() {
                                   <select id="ward" className="form-select fsl" onChange={handleWardChange}>
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
-                                      <option key={ward.WardCode}
-                                       selected={ward.WardName === hoaDon.xa} value={ward.WardCode}>
+                                      <option key={ward.WardCode} selected={ward.WardName === hoaDon.xa} value={ward.WardCode}>
                                         {ward.WardName}
                                       </option>
                                     ))}

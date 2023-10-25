@@ -309,4 +309,13 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("ok");
     }
 
+    @GetMapping("/findID/{id}")
+    public ResponseEntity<?> findID(@PathVariable("id") UUID id){
+        ChiTietSanPham ctsp = chiTietSanPhamService.findID(id);
+        if (ctsp != null) {
+            return ResponseEntity.ok(ctsp);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

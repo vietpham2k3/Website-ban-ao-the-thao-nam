@@ -58,4 +58,6 @@ public interface ChiTietSanPhamService {
     List<ChiTietSanPham> detailByIdSP(UUID id);
 
     Page<ChiTietSanPham> pageWeb(Integer page);
+
+    ChiTietSanPham findID(UUID id);
 }
