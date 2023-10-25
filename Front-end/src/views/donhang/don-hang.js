@@ -144,7 +144,7 @@ function DonHang() {
 
   useEffect(() => {
     // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) =>( d.trang_thai !== 0 && d.trang_thai !== 1 || d.loai_don === 0));
+    const shouldDisableCheckAll = data.some((d) =>( d.trang_thai === 0 && d.trang_thai === 1 || d.loai_don === 0));
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 

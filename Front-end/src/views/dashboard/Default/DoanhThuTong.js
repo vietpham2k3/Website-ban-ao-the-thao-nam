@@ -210,13 +210,13 @@ const EarningCard = ({ isLoading }) => {
                       }}
                     >
                       <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNgay}>
-                        Theo ngày
+                        Hôm nay
                       </MenuItem>
                       <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongThang}>
-                        Theo tháng
+                        Tháng này
                       </MenuItem>
                       <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNam}>
-                        Theo năm
+                        Năm này
                       </MenuItem>
                     </Menu>
                   </Grid>

@@ -198,13 +198,13 @@ const DonChoXacNhan = ({ isLoading }) => {
                 }}
               >
                 <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNgay}>
-                  Theo ngày
+                  Hôm nay
                 </MenuItem>
                 <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
-                  Theo tháng
+                  Tháng này
                 </MenuItem>
                 <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
-                  Theo năm
+                  Năm này
                 </MenuItem>
               </Menu>
             </List>

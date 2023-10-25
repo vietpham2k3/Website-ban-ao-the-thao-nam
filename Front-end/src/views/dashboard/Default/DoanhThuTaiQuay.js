@@ -213,13 +213,13 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                       }}
                     >
                       <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuNgay}>
-                        Theo ngày
+                        Hôm nay
                       </MenuItem>
                       <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuThang}>
-                        Theo tháng
+                        Tháng này
                       </MenuItem>
                       <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuNam}>
-                        Theo năm
+                        Năm này
                       </MenuItem>
                     </Menu>
                   </Grid>

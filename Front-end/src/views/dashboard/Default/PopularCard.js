@@ -43,7 +43,7 @@ const PopularCard = ({ isLoading }) => {
               <Grid item xs={12}>
                 <Grid container alignContent="center" justifyContent="space-between">
                   <Grid item>
-                    <Typography variant="h4">Popular Stocks</Typography>
+                    <Typography variant="h4">Sản Phẩm Bán Chạy</Typography>
                   </Grid>
                   <Grid item>
                     <MoreHorizOutlinedIcon
@@ -84,7 +84,7 @@ const PopularCard = ({ isLoading }) => {
               </Grid>
               <Grid item xs={12}>
                 <Grid container direction="column">
-                  <Grid item>
+                  {/* <Grid item>
                     <Grid container alignItems="center" justifyContent="space-between">
                       <Grid item>
                         <Typography variant="subtitle1" color="inherit">
@@ -116,7 +116,7 @@ const PopularCard = ({ isLoading }) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                   <Grid item>
                     <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
                       10% Profit
@@ -292,7 +292,7 @@ const PopularCard = ({ isLoading }) => {
           </CardContent>
           <CardActions sx={{ p: 1.25, pt: 0, justifyContent: 'center' }}>
             <Button size="small" disableElevation>
-              View All
+              Tất Cả
               <ChevronRightOutlinedIcon />
             </Button>
           </CardActions>

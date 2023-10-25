@@ -158,9 +158,9 @@ const DonBan = ({ isLoading }) => {
                     >
                       {ngay !== '' && ngay}
 
-{thang !== '' && thang}
+                      {thang !== '' && thang}
 
-{nam !== '' && nam}
+                      {nam !== '' && nam}
                     </Typography>
                   }
                 />
@@ -198,14 +198,14 @@ const DonBan = ({ isLoading }) => {
                   horizontal: 'right'
                 }}
               >
-                 <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNgay}>
-                  Theo ngày
+                <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNgay}>
+                  Hôm nay
                 </MenuItem>
                 <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
-                  Theo tháng
+                  Tháng này
                 </MenuItem>
                 <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
-                  Theo năm
+                  Năm này
                 </MenuItem>
               </Menu>
             </List>
