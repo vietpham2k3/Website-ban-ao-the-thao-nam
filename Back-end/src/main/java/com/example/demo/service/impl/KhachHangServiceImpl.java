@@ -107,27 +107,6 @@ public class KhachHangServiceImpl implements KhachHangService {
         return khRepo.searchKH(key, trangThai, gioiTinh, pageable);
     }
 
-    public KhachHang dangKy(KhachHang khachHang) {
-        // Các thao tác để thêm dữ liệu vào cơ sở dữ liệu
-        khRepo.save(khachHang); // Lưu thông tin vào cơ sở dữ liệu
-        return khachHang; // Trả về đối tượng đã thêm
-    }
-
-    @Override
-    public boolean checkEmailExists(String email) {
-        KhachHang khachHang = khRepo.findByEmail(email);
-        return khachHang != null;
-    }
-
-
-
-
-//    public boolean isEmailExists(String email) {
-//        KhachHang existingKhachHang = khRepo.findByEmail(email);
-//        return existingKhachHang != null;
-//    }
-
-
 
 //    @Override
 //    public Page<KhachHang> getAll(Integer page) {

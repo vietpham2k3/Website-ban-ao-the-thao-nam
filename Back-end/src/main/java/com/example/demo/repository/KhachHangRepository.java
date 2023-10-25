@@ -20,9 +20,6 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
     @Query(value = "update KhachHang kh set kh.trangThai = 0 where kh.id = :id")
     void delete(UUID id);
 
-    @Query("SELECT kh FROM KhachHang kh WHERE kh.email = :email")
-    KhachHang findByEmail(@Param("email") String email);
-
     @Query(value = "SELECT * FROM KhachHang\n" +
             "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%')))\n" +
