@@ -102,6 +102,7 @@ const EarningCard = ({ isLoading }) => {
   // Mặc định khi tải lại trang, hiển thị theo ngày và đánh dấu MenuItem "Theo ngày" là active
   useEffect(() => {
     handleDoanhThuTongNgay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function convertToCurrency(number) {

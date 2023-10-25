@@ -5,6 +5,7 @@ import Footer from 'ui-component/trangchu/Footer';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { count } from 'services/GioHangService';
 
 function ThankYou() {
   const navigate = useNavigate();
@@ -26,7 +27,14 @@ function ThankYou() {
     if (idGH) {
       countSP(idGH);
     }
-  }, [dataLogin, idGH]);
+  }, [dataLogin, idGH, productCount]);
+
+  const countSP = async (id) => {
+    const res = await count(id);
+    if (res) {
+      setProductCount(res.data);
+    }
+  };
 
   return (
     <div>

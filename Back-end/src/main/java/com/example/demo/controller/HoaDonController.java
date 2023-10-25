@@ -152,6 +152,7 @@ public class HoaDonController {
         hoaDon.setNgayTao(new Date());
         hoaDon.setLoaiDon(0);
         hoaDon.setTenNguoiNhan("Khách lẻ");
+        hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTienShip(0.0);
         hoaDon.setNhanVien(nvService.getOne(hoaDon.getNhanVien().getId()));
         hoaDon.setTrangThai(0);

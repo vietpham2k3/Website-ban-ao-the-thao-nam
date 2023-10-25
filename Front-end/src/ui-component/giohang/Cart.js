@@ -19,6 +19,7 @@ function Cart(props) {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [listSP, setListSP] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [temporaryProductAfter, setTemporaryProductAfter] = useState([]);
   const navigate = useNavigate();
   // eslint-disable-next-line react/prop-types
   const { setProductCount, productCount, idGH, dataLogin, countSP } = props;
@@ -43,6 +44,7 @@ function Cart(props) {
     const storedProductList = JSON.parse(localStorage.getItem('product'));
     if (storedProductList) {
       setProductList(storedProductList);
+      setTemporaryProductAfter(storedProductList);
     }
   }, []);
 
@@ -78,6 +80,7 @@ function Cart(props) {
       taoHoaDon(selectedProducts);
     } else {
       taoHoaDon(hoaDonChiTietList);
+      localStorage.setItem('productAfter', JSON.stringify(temporaryProductAfter));
     }
   };
 
@@ -236,11 +239,13 @@ function Cart(props) {
     // Tùy thuộc vào trạng thái selectAll, bạn có thể cập nhật danh sách sản phẩm đã chọn
     if (selectAll) {
       setSelectedProducts([]);
+      setTemporaryProductAfter([...productList]);
     } else {
       if (dataLogin) {
         setSelectedProducts([...listSP]);
       } else {
         setSelectedProducts([...productList]);
+        setTemporaryProductAfter([]);
       }
     }
   };
@@ -251,11 +256,15 @@ function Cart(props) {
     if (isSelected) {
       // Nếu đã chọn, loại bỏ sản phẩm khỏi danh sách đã chọn
       setSelectedProducts(selectedProducts.filter((p) => p.id !== product.id));
+      setTemporaryProductAfter([...temporaryProductAfter, product]);
     } else {
       // Nếu chưa chọn, thêm sản phẩm vào danh sách đã chọn
       setSelectedProducts([...selectedProducts, product]);
+      setTemporaryProductAfter(temporaryProductAfter.filter((p) => p.id !== product.id));
     }
   };
+
+  console.log(temporaryProductAfter);
 
   return (
     <div>

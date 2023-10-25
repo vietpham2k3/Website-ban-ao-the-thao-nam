@@ -30,7 +30,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/khach-hang")
 @CrossOrigin(origins = "http://localhost:3000")
-public class    KhachHangController {
+public class KhachHangController {
 
     @Autowired
     public HoaDonServiceImpl serviceHD;
@@ -320,4 +320,7 @@ public class    KhachHangController {
 
         return khachHangDTO;
     }
-}
+
+
+
+    }

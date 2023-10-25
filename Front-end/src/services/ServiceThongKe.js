@@ -12,4 +12,4 @@ const doanhThuTongTheoNam = () => {
   return axios.get(`/api/thong-ke/doanh-thu-tong-nam-hien-tai`);
 };
 
-export {doanhThuTongTheoNgay,doanhThuTongTheoThang,doanhThuTongTheoNam};
+export { doanhThuTongTheoNgay, doanhThuTongTheoThang, doanhThuTongTheoNam };

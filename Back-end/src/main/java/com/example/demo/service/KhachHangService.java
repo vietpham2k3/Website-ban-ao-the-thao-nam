@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.KhachHang;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,5 +33,7 @@ public interface KhachHangService {
 
     Blob createBlob(InputStream inputStream) throws SQLException, IOException;
 
-    Page<KhachHang>searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable);
+    Page<KhachHang> searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable);
+
+   void sendResetPasswordEmail(String email,String tenKhachHang);
 }

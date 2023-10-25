@@ -37,8 +37,8 @@ export default function BanHangTaiQuay() {
 
   const [value, setValue] = useState(0);
   const [values, setValues] = useState([]);
-  const nvID  = {
-    nhanVien: {id: dataLogin.id}
+  const nvID = {
+    nhanVien: { id: dataLogin && dataLogin.id }
   };
 
   useEffect(() => {
