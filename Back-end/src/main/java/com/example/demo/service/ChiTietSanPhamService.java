@@ -18,6 +18,8 @@ public interface ChiTietSanPhamService {
 
     List<String> getAllMSByIdSP(UUID id);
 
+    List<ChiTietSanPham> updateAll(List<ChiTietSanPham> chiTietSanPham);
+
     List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP);
 
     List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS);

@@ -63,6 +63,7 @@ function UpdateSanPham() {
   const [isLoading, setIsLoading] = useState(true);
   const [idCTSP, setIdCTSP] = useState(null);
   const mainCardRef = useRef(null);
+  const maxImages = 5;
 
   const [values, setValues] = useState({
     chatLieu: {
@@ -79,12 +80,6 @@ function UpdateSanPham() {
       id: ''
     },
     coAo: {
-      id: ''
-    },
-    kichCo: {
-      id: ''
-    },
-    mauSac: {
       id: ''
     },
     soLuong: '',
@@ -161,7 +156,7 @@ function UpdateSanPham() {
       getAllAnh(idCTSP !== null ? idCTSP : id);
     }
   };
-  const maxImages = 5;
+
   const handleAddAnh = (event) => {
     event.preventDefault();
 
@@ -243,17 +238,7 @@ function UpdateSanPham() {
   useEffect(() => {
     detail(idCTSP !== null ? idCTSP : id);
     getAllAnh(idCTSP !== null ? idCTSP : id);
-    if (idCTSP !== null && mainCardRef.current) {
-      mainCardRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, [idCTSP]);
-
-  console.log(idCTSP);
-
-  useEffect(() => {
-    detail(id);
-    // getAllByIdCTSP(id);
-  }, [id]);
 
   const detail = async (idCTSP) => {
     const res = await detailCTSP(idCTSP);
@@ -288,7 +273,6 @@ function UpdateSanPham() {
   const putctsp = async (idSP, value) => {
     const res = await putCTSP(idSP, value);
     if (res) {
-      toast.success('Thành công');
       navigate('/san-pham/chi-tiet-san-pham');
     }
   };
@@ -301,9 +285,25 @@ function UpdateSanPham() {
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    await putctsp(id, values);
+
+    listMSKC.forEach((d) => {
+      // Tạo một bản sao của `values` để cập nhật
+      const updatedValues = { ...values };
+
+      // Xoá màu sắc và kích cỡ khỏi danh sách thuộc tính cần cập nhật
+      delete updatedValues.mauSac;
+      delete updatedValues.kichCo;
+
+      // Lấy màu sắc và kích cỡ từ sản phẩm hiện tại và thêm vào `updatedValues`
+      updatedValues.mauSac = d.mauSac;
+      updatedValues.kichCo = d.kichCo;
+
+      // Gọi hàm `putctsp` với giá trị đã được cập nhật
+      putctsp(d.id, updatedValues);
+    });
+    toast.success('Thành công');
   };
 
   const handleSubmitUpdate = async (event) => {
@@ -360,6 +360,7 @@ function UpdateSanPham() {
       setIdCTSP(id);
     }
   };
+
   function confirmDeleteImage(imageId) {
     // Sử dụng hộp thoại xác nhận
     const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa hình ảnh này?');
@@ -368,6 +369,7 @@ function UpdateSanPham() {
       handleDeleteImage(imageId);
     }
   }
+
   function confirmDeleteItem(itemId) {
     handleDelete(itemId);
   }
@@ -471,7 +473,7 @@ function UpdateSanPham() {
               }}
             >
               {listCL.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values && values.chatLieu.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.chatLieu.id}>
                   {c.ten}
                 </option>
               ))}
@@ -508,7 +510,7 @@ function UpdateSanPham() {
               }}
             >
               {listLSP.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values && values.loaiSanPham.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.loaiSanPham.id}>
                   {c.ten}
                 </option>
               ))}
@@ -545,7 +547,7 @@ function UpdateSanPham() {
               }}
             >
               {listCA.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values && values.coAo.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.coAo.id}>
                   {c.ten}
                 </option>
               ))}
@@ -582,7 +584,7 @@ function UpdateSanPham() {
               }}
             >
               {listNSX.map((c) => (
-                <option key={c.id} value={c.id} selected={c.id === values && values.nhaSanXuat.id}>
+                <option key={c.id} value={c.id} selected={c.id === values.nhaSanXuat.id}>
                   {c.ten}
                 </option>
               ))}
