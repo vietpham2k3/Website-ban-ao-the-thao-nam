@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import '../../scss/ForgotPasswordModal.scss';
 import { forgotPasswordKH } from 'services/ForgotPassword';
 
+// eslint-disable-next-line react/prop-types
 const ForgotPasswordModal = ({ show, onHide }) => {
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');

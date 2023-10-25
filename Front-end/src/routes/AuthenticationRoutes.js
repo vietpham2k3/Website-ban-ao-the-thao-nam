@@ -69,8 +69,7 @@ const AuthenticationRoutes = {
     {
       path: '/history',
       element: <History />
-    },
-   
+    }
   ]
 };
 
