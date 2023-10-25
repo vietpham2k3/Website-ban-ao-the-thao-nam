@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { detailGH } from 'services/GioHangService';
 import { login } from 'services/LoginService';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 function SignInForm() {
   const navigate = useNavigate();
@@ -49,15 +50,29 @@ function SignInForm() {
     dangNhap(state.email, state.password);
   };
 
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
+
+  const openForgotPasswordModal = () => {
+    setShowForgotPasswordModal(true);
+  };
+
+  const closeForgotPasswordModal = () => {
+    setShowForgotPasswordModal(false);
+  };
+
   return (
     <div className="form-container sign-in-container">
       <div className="frm">
         <h1 id="title">Đăng nhập</h1>
         <input className="ipt" type="email" placeholder="Email" name="email" value={state.email} onChange={handleChange} />
         <input className="ipt" type="password" name="password" placeholder="Password" value={state.password} onChange={handleChange} />
-        <a href="#" className="text-forgot">
-          Quên mật khẩu?
-        </a>
+
+        <div>
+          <button onClick={openForgotPasswordModal} className="text-forgot">
+            Quên mật khẩu?
+          </button>
+          <ForgotPasswordModal show={showForgotPasswordModal} onHide={closeForgotPasswordModal} />
+        </div>
         <button className="button-login" onClick={handleOnSubmit}>
           Đăng nhập
         </button>

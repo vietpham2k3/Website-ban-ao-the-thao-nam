@@ -17,6 +17,7 @@ export default function IndexLogin() {
       <div className={containerClass} id="container">
         <SignUpForm />
         <SignInForm />
+
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
