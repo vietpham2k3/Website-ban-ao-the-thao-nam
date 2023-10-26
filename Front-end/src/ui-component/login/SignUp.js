@@ -1,24 +1,24 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { SignUp } from 'services/LoginService';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../../scss/SignUp.scss';
 
-function SignUpForm() {
-  const navigate = useNavigate();
-
+function SignUpForm(props) {
+  const { setStates, handleOnClick } = props;
+  // const navigate = useNavigate();
   const [state, setState] = React.useState({
     name: '',
     email: '',
     password: '',
     passwordConfirmation: '',
-    passwordMatch: false, // Trạng thái kiểm tra mật khẩu xác nhận
+    passwordMatch: false // Trạng thái kiểm tra mật khẩu xác nhận
   });
-
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
-  
+
     setState({
       ...state,
       [name]: value,
@@ -28,14 +28,11 @@ function SignUpForm() {
     });
   };
 
-  
-
   const post = async ({ name, email, password, passwordConfirmation }) => {
     if (!name || !email || !password || !passwordConfirmation) {
       toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
-
     //Name
     if (/\d/.test(name)) {
       toast.error('Tên không được chứa chữ số');
@@ -44,13 +41,11 @@ function SignUpForm() {
       toast.error('Tên không được quá 30 ký tự');
       return;
     }
-
     //Email
     if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
       toast.error('Email không đúng định dạng');
       return;
     }
-
     //Password
     if (password.length > 16) {
       toast.error('Mật khẩu không được quá 16 ký tự');
@@ -79,8 +74,11 @@ function SignUpForm() {
       const res = await SignUp(userData);
       if (res) {
         toast.success('Đăng Ký Thành Công');
-        navigate('/login');
-        localStorage.setItem('dataLogin', JSON.stringify(res.data));
+        handleOnClick('signIn');
+        setStates({
+          email: email,
+          password: password
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -101,16 +99,23 @@ function SignUpForm() {
   return (
     <div className="form-container sign-up-container">
       <form className="frm" onSubmit={handleOnSubmit}>
-      
         <h1 id="title">Đăng ký</h1>
         <input className="ipt" type="text" name="name" value={state.name} onChange={handleChange} placeholder="Name" />
         <input className="ipt" type="email" name="email" value={state.email} onChange={handleChange} placeholder="Email" />
         <input className="ipt" type="password" name="password" value={state.password} onChange={handleChange} placeholder="Password" />
-        <input className={`ipt ${state.passwordMatch ? 'valid' : ''}`} type="password" name="passwordConfirmation" value={state.passwordConfirmation} onChange={handleChange} placeholder="Repeat Password" />
-        <button className="button-login" type="submit">Đăng ký</button>
+        <input
+          className={`ipt ${state.passwordMatch ? 'valid' : ''}`}
+          type="password"
+          name="passwordConfirmation"
+          value={state.passwordConfirmation}
+          onChange={handleChange}
+          placeholder="Repeat Password"
+        />
+        <button className="button-login" type="submit">
+          Đăng ký
+        </button>
       </form>
     </div>
-
   );
 }
 

@@ -103,6 +103,7 @@ const DonChoXacNhan = ({ isLoading }) => {
 
   useEffect(() => {
     handleSLNgay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);

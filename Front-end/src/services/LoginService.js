@@ -7,10 +7,9 @@ const login = (email, password) => {
 const SignUp = (data) => {
   return axios.post(`/api/SignUp`, data, {
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   });
-}
+};
 
 export { login, SignUp };
-
