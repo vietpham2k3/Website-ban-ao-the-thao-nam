@@ -1176,7 +1176,7 @@ function DonHangCT() {
             <div className="row">
               {/* xac nhan don hang */}
               <div style={{ paddingLeft: 32 }} className="col-3">
-                {(hoaDon.trangThai === 0 && hoaDon.loaiDon === 1) && (
+                {hoaDon.trangThai === 0 && hoaDon.loaiDon === 1 && (
                   <button onClick={handleShow2} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1191,7 +1191,7 @@ function DonHangCT() {
                 )}
 
                 {/* //xac nhan giao hang */}
-                {(hoaDon.trangThai === 1 && hoaDon.loaiDon === 1) && (
+                {hoaDon.trangThai === 1 && hoaDon.loaiDon === 1 && (
                   <button onClick={handleShow4} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1206,7 +1206,7 @@ function DonHangCT() {
                 )}
 
                 {/* //giao hang thanh cong */}
-                {(hoaDon.trangThai === 3 && hoaDon.loaiDon === 1) && (
+                {hoaDon.trangThai === 3 && hoaDon.loaiDon === 1 && (
                   <button onClick={handleShow8} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1221,7 +1221,7 @@ function DonHangCT() {
                 )}
 
                 {/* //xac nhan thanh toan */}
-                {(hoaDon.trangThai === 4 && hoaDon.loaiDon === 1) && (
+                {hoaDon.trangThai === 4 && hoaDon.loaiDon === 1 && (
                   <button onClick={handleShow5} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1435,7 +1435,7 @@ function DonHangCT() {
               </Modal>
               {/* //huy don */}
               <div className="col-3">
-                {((hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1) && (
+                {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1 && (
                   <button onClick={handleShow3} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -1597,7 +1597,7 @@ function DonHangCT() {
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
                       <div className="col-5">
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="justify-content-end">
-                          {(hoaDon.trangThai === 0 && hoaDon.loaiDon === 1) && (
+                          {hoaDon.trangThai === 0 && hoaDon.loaiDon === 1 && (
                             <button onClick={handleShow} className="btn btn-dark" data-bs-placement="right">
                               <i className="fa-solid fa-pen-to-square fa-bounce fa-lg"></i>
                               <span> | </span>
@@ -1725,7 +1725,12 @@ function DonHangCT() {
                                   Quận/Huyện:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select id="district" className="form-select fsl" disabled={!selectedProvince} onChange={(e) => handleDistrictChange(e)}>
+                                  <select
+                                    id="district"
+                                    className="form-select fsl"
+                                    disabled={!selectedProvince}
+                                    onChange={(e) => handleDistrictChange(e)}
+                                  >
                                     <option value="">----Chọn quận huyện-----</option>
                                     {quan.map((district) => (
                                       <option
@@ -1749,7 +1754,12 @@ function DonHangCT() {
                                   Phường/Xã:
                                 </label>
                                 <div className="col-sm-7">
-                                  <select id="ward" className="form-select fsl" disabled={!selectedProvince || !selectedDistrict} onChange={handleWardChange}>
+                                  <select
+                                    id="ward"
+                                    className="form-select fsl"
+                                    disabled={!selectedProvince || !selectedDistrict}
+                                    onChange={handleWardChange}
+                                  >
                                     <option value="">-----Chọn phường xã-----</option>
                                     {phuong.map((ward) => (
                                       <option key={ward.WardCode} selected={ward.WardName === hoaDon.xa} value={ward.WardCode}>
@@ -2270,7 +2280,7 @@ function DonHangCT() {
 
                   <div className="col-5">
                     <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
-                      {((hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1) && (
+                      {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1 && (
                         <button onClick={handleShow6} className="relative inline-block text-base group">
                           <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                             <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -2452,7 +2462,7 @@ function DonHangCT() {
                       </td>
                       <td>
                         <div className="input-spinner" style={{ width: 120 }}>
-                          {((hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1) ? (
+                          {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1 ? (
                             <InputSpinner
                               type={'real'}
                               max={d.chiTietSanPham.soLuong + d.soLuong}
@@ -2481,7 +2491,7 @@ function DonHangCT() {
                       <td>{convertToCurrency(d.donGia)}</td>
                       <td>{convertToCurrency(d.soLuong * d.donGia)}</td>
                       <td>
-                        {( hoaDon.loaiDon === 1 && ( hoaDon.trangThai === 0 || hoaDon.trangThai === 1))  && (
+                        {hoaDon.loaiDon === 1 && (hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
                           <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
                         )}
                       </td>

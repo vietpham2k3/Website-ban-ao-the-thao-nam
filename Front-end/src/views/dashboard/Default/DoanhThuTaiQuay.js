@@ -15,7 +15,7 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import CloseIcon from '@mui/icons-material/Close'; 
+import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -114,6 +114,7 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
 
   useEffect(() => {
     handleDoanhThuNgay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function convertToCurrency(number) {
@@ -137,7 +138,6 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
     setAnchorEl(null);
     setIsModalOpen(false);
   };
-
 
   return (
     <>
@@ -192,8 +192,7 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                       onClick={handleClick}
                     >
                       <div className={`close-icon ${isModalOpen ? 'open' : ''}`}>
-                        {isModalOpen ? <CloseIcon fontSize="inherit" /> 
-                        : <MoreHorizIcon fontSize="inherit" />}
+                        {isModalOpen ? <CloseIcon fontSize="inherit" /> : <MoreHorizIcon fontSize="inherit" />}
                       </div>
                     </Avatar>
                     <Menu

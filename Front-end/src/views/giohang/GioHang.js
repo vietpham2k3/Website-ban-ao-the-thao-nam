@@ -7,7 +7,7 @@ import { count } from 'services/GioHangService';
 
 function GioHang() {
   const [productCount, setProductCount] = useState(0);
-
+  const [showSearchInput, setShowSearchInput] = useState(false);
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const idGH = localStorage.getItem('idGH') || '';
 
@@ -32,11 +32,16 @@ function GioHang() {
       setProductCount(res.data);
     }
   };
+  const toggleSearchInput = () => {
+    setShowSearchInput(!showSearchInput);
+  };
 
   return (
     <div>
-      <Header productCount={productCount} />
-      <Cart setProductCount={setProductCount} productCount={productCount} countSP={countSP} dataLogin={dataLogin} idGH={idGH} />
+      <Header productCount={productCount} toggleSearchInput={toggleSearchInput} showSearchInput={showSearchInput} />
+      <div className="content-container">
+        <Cart setProductCount={setProductCount} productCount={productCount} countSP={countSP} dataLogin={dataLogin} idGH={idGH} />
+      </div>
       <Footer />
     </div>
   );

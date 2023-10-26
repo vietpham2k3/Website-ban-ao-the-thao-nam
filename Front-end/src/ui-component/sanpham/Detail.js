@@ -265,7 +265,7 @@ function Detail(props) {
   // };
 
   const handleTaoHoaDon = () => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       taoHoaDon(valuesHDCT);
     } else {
       if (detailProduct === null) {

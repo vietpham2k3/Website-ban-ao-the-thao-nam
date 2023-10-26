@@ -144,13 +144,13 @@ function DonHang() {
 
   useEffect(() => {
     // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) =>( d.trang_thai === 0 && d.trang_thai === 1 || d.loai_don === 0));
+    const shouldDisableCheckAll = data.some((d) => (d.trang_thai === 0 && d.trang_thai === 1) || d.loai_don === 0);
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 
   const handleCheckAll = (event) => {
     const { checked } = event.target;
-    const newCheckedArray = data.map((d) => (d.trang_thai === 0 || d.trang_thai === 1  ? checked : false));
+    const newCheckedArray = data.map((d) => (d.trang_thai === 0 || d.trang_thai === 1 ? checked : false));
     setIsChecked(newCheckedArray);
   };
 
@@ -186,9 +186,10 @@ function DonHang() {
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, '');
-    }else{
+    } else {
       toast.warning('Bạn phải chọn hóa đơn trước !');
-}  };
+    }
+  };
 
   // huy don
   const huyDon = async (ids, value) => {
@@ -201,11 +202,13 @@ function DonHang() {
 
   const handleHuyDon = async (event) => {
     event.preventDefault();
-    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 && d.loai_don === 1)).map((d) => d.id);
+    const selectedIds = data
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
+      .map((d) => d.id);
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, '');
-    }else{
-          toast.warning('Bạn phải chọn hóa đơn trước !');
+    } else {
+      toast.warning('Bạn phải chọn hóa đơn trước !');
     }
   };
 

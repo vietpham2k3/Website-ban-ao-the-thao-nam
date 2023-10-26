@@ -111,6 +111,7 @@ const EarningCard = ({ isLoading }) => {
 
   useEffect(() => {
     handleDoanhThuTongNgay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function convertToCurrency(number) {
@@ -175,7 +176,7 @@ const EarningCard = ({ isLoading }) => {
                   </Grid>
                   <Grid item>
                     <Avatar
-                    className='target-pointer'
+                      className="target-pointer"
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -189,8 +190,7 @@ const EarningCard = ({ isLoading }) => {
                       onClick={handleClick}
                     >
                       <div className={`close-icon ${isModalOpen ? 'open' : ''}`}>
-                        {isModalOpen ? <CloseIcon fontSize="inherit" /> 
-                        : <MoreHorizIcon fontSize="inherit" />}
+                        {isModalOpen ? <CloseIcon fontSize="inherit" /> : <MoreHorizIcon fontSize="inherit" />}
                       </div>
                     </Avatar>
                     <Menu
