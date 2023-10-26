@@ -140,6 +140,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public List<String> sanPhamBanChayTrongNgay() {
+        return res.sanPhamBanChayTrongNgay();
+    }
+
+    @Override
     public List<ChiTietSanPham> searchSPofHDCT(String key) {
         return resCTSP.searchSPofHDCT(key);
     }

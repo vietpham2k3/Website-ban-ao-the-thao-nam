@@ -102,7 +102,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "\t MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "\t YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "    AND HD.trang_thai = 6\n" +
+            "    AND HD.trang_thai = 7\n" +
             "\tAND HD.loai_don = 1" , nativeQuery = true)
     public Double doanhThuOnlineNgayCurrent();
 
@@ -134,7 +134,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "WHERE\n" +
             "    MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "\t YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "\tAND HD.trang_thai = 6\n" +
+            "\tAND HD.trang_thai = 7\n" +
             "\tAND HD.loai_don = 1" , nativeQuery = true)
     public Double doanhThuOnlineThangCurrent();
 
@@ -163,7 +163,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    HoaDon HD\n" +
             "WHERE\n" +
             "    YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "\t\tAND HD.trang_thai = 6\n" +
+            "\t\tAND HD.trang_thai = 7\n" +
             "\t\tAND HD.loai_don = 1" , nativeQuery = true)
     public Double doanhThuOnlineNamCurrent();
 
@@ -198,7 +198,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "        (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
             "         MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 4 AND\n" +
+            "         HD.trang_thai = 7 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );" , nativeQuery = true)
     public Integer soDonThanhCongNgay();
@@ -230,7 +230,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    (\n" +
             "        (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 4 AND\n" +
+            "         HD.trang_thai = 7 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );" , nativeQuery = true)
     public Integer soDonThanhCongThang();
@@ -258,9 +258,46 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    OR\n" +
             "    (\n" +
             "        (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 4 AND\n" +
+            "         HD.trang_thai = 7 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );" , nativeQuery = true)
     public Integer soDonThanhCongNam();
+
+    @Query(value = "WITH RankedData AS (\n" +
+            "  SELECT\n" +
+            "    HDCT.id_hd,\n" +
+            "    HDCT.id_ctsp,\n" +
+            "    CTSP.id_sp,\n" +
+            "    SUM(HDCT.so_luong) OVER (PARTITION BY CTSP.id_sp) AS so_luong_sp_dh,\n" +
+            "    ROW_NUMBER() OVER(PARTITION BY CTSP.id_sp ORDER BY HDCT.so_luong DESC) AS RowNum\n" +
+            "  FROM HoaDonChiTiet HDCT\n" +
+            "  JOIN ChiTietSanPham CTSP ON CTSP.id = HDCT.id_ctsp\n" +
+            "  JOIN HoaDon HD ON HD.id = HDCT.id_hd\n" +
+            "  WHERE\n" +
+            "    (\n" +
+            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 6 AND\n" +
+            "       HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 7 AND\n" +
+            "       HD.loai_don = 1)\n" +
+            "    )\n" +
+            ")\n" +
+            "\n" +
+            "SELECT\n" +
+            "  id_hd,\n" +
+            "  id_ctsp,\n" +
+            "  id_sp,\n" +
+            "  so_luong_sp_dh\n" +
+            "FROM RankedData\n" +
+            "WHERE RowNum = 1;\n" , nativeQuery = true)
+    public List<String> sanPhamBanChayTrongNgay();
 
 }

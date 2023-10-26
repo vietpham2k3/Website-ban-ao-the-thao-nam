@@ -58,6 +58,8 @@ public interface HoaDonService {
 
     public Integer soDonThanhCongNam();
 
+    public List<String> sanPhamBanChayTrongNgay();
+
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);

@@ -486,6 +486,9 @@ public class HoaDonController {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
+        if (hoaDon == null) {
+
+        }
         lichSuHoaDon.setTrangThai(5);
         hoaDon.setTrangThai(5);
         lichSuHoaDon.setNgayTao(new Date());
@@ -497,20 +500,104 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
-    @PostMapping("xac-nhan-thanh-toan/{id}")
-    public ResponseEntity<?> xacNhanTT(@PathVariable UUID id,
-                                       @RequestBody LichSuHoaDon lichSuHoaDon) {
+    @PostMapping("giao-hang-that-bai-lan-1/{id}")
+    public ResponseEntity<?> giaoHangThatBaiLan1(@PathVariable UUID id,
+                                             @RequestBody LichSuHoaDon lichSuHoaDon) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
-        lichSuHoaDon.setTrangThai(6);
-        hoaDon.setTrangThai(6);
+        lichSuHoaDon.setTrangThai(11);
+        hoaDon.setTrangThai(11);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
-        hoaDon.setNgayThanhToan(new Date());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setTen("Thanh toán thành công");
+        lichSuHoaDon.setTen("Giao hàng thất bại lần 1");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-hang-that-bai-lan-2/{id}")
+    public ResponseEntity<?> giaoHangThatBaiLan2(@PathVariable UUID id,
+                                                 @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(12);
+        hoaDon.setTrangThai(12);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao hàng thất bại lần 2");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-hang-that-bai-lan-3/{id}")
+    public ResponseEntity<?> giaoHangThatBaiLan3(@PathVariable UUID id,
+                                                 @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(13);
+        hoaDon.setTrangThai(13);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao hàng thất bại lần 3");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-lai-lan-1/{id}")
+    public ResponseEntity<?> giaoHangLan1(@PathVariable UUID id,
+                                             @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(8);
+        hoaDon.setTrangThai(8);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao lại lần 1");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-lai-lan-2/{id}")
+    public ResponseEntity<?> giaoHangLan2(@PathVariable UUID id,
+                                          @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(9);
+        hoaDon.setTrangThai(9);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao lại lần 2");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+    }
+
+    @PostMapping("giao-lai-lan-3/{id}")
+    public ResponseEntity<?> giaoHangLan3(@PathVariable UUID id,
+                                          @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(10);
+        hoaDon.setTrangThai(10);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Giao lại lần 3");
 
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }

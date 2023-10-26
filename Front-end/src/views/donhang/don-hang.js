@@ -34,10 +34,11 @@ function DonHang() {
     { value: '0', label: 'Đang chờ xác nhận' },
     { value: '1', label: 'Chờ giao hàng' },
     { value: '2', label: 'Đã hủy đơn' },
-    { value: '3', label: 'Đang giao hàng' },
+    { value: '3,8,9,10', label: 'Đang giao hàng' },
     { value: '4', label: 'Giao hàng thành công' },
-    { value: '5', label: 'Giao hàng thất bại' },
-    { value: '6', label: 'Thanh toán thành công' }
+    { value: '5,11,12,13', label: 'Giao hàng thất bại' },
+    { value: '6', label: 'Thanh toán thành công' },
+    { value: '7', label: 'Đã nhận hàng' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -75,10 +76,10 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6];
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13];
       search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      const values = [0, 1, 2, 3, 4, 5, 6];
+      const values = [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13];
       search('', null, null, values, '', page);
     }
     if (data.length === 0) {
@@ -144,13 +145,13 @@ function DonHang() {
 
   useEffect(() => {
     // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) =>( d.trang_thai === 0 && d.trang_thai === 1 || d.loai_don === 0));
+    const shouldDisableCheckAll = data.some((d) => (d.trang_thai === 0 && d.trang_thai === 1) || d.loai_don === 0);
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 
   const handleCheckAll = (event) => {
     const { checked } = event.target;
-    const newCheckedArray = data.map((d) => (d.trang_thai === 0 || d.trang_thai === 1  ? checked : false));
+    const newCheckedArray = data.map((d) => (d.trang_thai === 0 || d.trang_thai === 1 ? checked : false));
     setIsChecked(newCheckedArray);
   };
 
@@ -186,9 +187,10 @@ function DonHang() {
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, '');
-    }else{
+    } else {
       toast.warning('Bạn phải chọn hóa đơn trước !');
-}  };
+    }
+  };
 
   // huy don
   const huyDon = async (ids, value) => {
@@ -201,11 +203,13 @@ function DonHang() {
 
   const handleHuyDon = async (event) => {
     event.preventDefault();
-    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 && d.loai_don === 1)).map((d) => d.id);
+    const selectedIds = data
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
+      .map((d) => d.id);
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, '');
-    }else{
-          toast.warning('Bạn phải chọn hóa đơn trước !');
+    } else {
+      toast.warning('Bạn phải chọn hóa đơn trước !');
     }
   };
 
@@ -503,9 +507,11 @@ function DonHang() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            backgroundColor: '#990000',
+                            color: 'white'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          className="btn btn-labeled shadow-button btn status-cancelled"
                         >
                           Đã hủy đơn
                         </span>
@@ -538,9 +544,11 @@ function DonHang() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            backgroundColor: 'greenyellow',
+                            color: 'black'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-info status-completed"
+                          className="btn btn-labeled shadow-button btn status-completed"
                         >
                           Giao hàng thành công
                         </span>
@@ -555,9 +563,11 @@ function DonHang() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            backgroundColor: 'red',
+                            color: 'white'
                           }}
-                          className="btn btn-labeled shadow-button btn btn-danger status-cancelled"
+                          className="btn btn-labeled shadow-button btn status-cancelled"
                         >
                           Giao hàng thất bại
                         </span>
@@ -577,6 +587,133 @@ function DonHang() {
                           className="btn btn-labeled shadow-button btn btn-info status-completed"
                         >
                           Thanh toán thành công
+                        </span>
+                      )}
+                      {d.trang_thai === 7 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: 'darkblue',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-completed"
+                        >
+                          Đã nhận hàng
+                        </span>
+                      )}
+                      {d.trang_thai === 8 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                        >
+                           Đang giao hàng
+                        </span>
+                      )}
+                      {d.trang_thai === 9 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                        >
+                           Đang giao hàng
+                        </span>
+                      )}
+                      {d.trang_thai === 10 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn btn-labeled shadow-button btn btn-warning status-pending"
+                        >
+                           Đang giao hàng
+                        </span>
+                      )}
+                      {d.trang_thai === 11 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: 'red',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Giao hàng thất bại
+                        </span>
+                      )}
+                      {d.trang_thai === 12 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: 'red',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Giao hàng thất bại
+                        </span>
+                      )}
+                      {d.trang_thai === 13 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: 'red',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Giao hàng thất bại
                         </span>
                       )}
                     </td>

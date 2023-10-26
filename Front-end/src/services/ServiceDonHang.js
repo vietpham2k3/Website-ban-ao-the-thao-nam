@@ -81,6 +81,30 @@ const giaoHangThatBai = (id, values) => {
   return axios.post(`/api/hoa-don/giao-hang-that-bai/` + id, values);
 };
 
+const giaoLaiLan1 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-1/` + id, values);
+};
+
+const giaoLaiLan2 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-2/` + id, values);
+};
+
+const giaoLaiLan3 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-3/` + id, values);
+};
+
+const giaoThatBaiLan1 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-1/` + id, values);
+};
+
+const giaoThatBaiLan2 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-2/` + id, values);
+};
+
+const giaoThatBaiLan3 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-3/` + id, values);
+};
+
 const xacNhanThanhToan = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
@@ -160,5 +184,11 @@ export {
   findAllAnhByIdMSAndIdSP,
   giaoHangThanhCong,
   giaoHangThatBai,
-  updateHoaDon
+  updateHoaDon,
+  giaoLaiLan1,
+  giaoLaiLan2,
+  giaoLaiLan3,
+  giaoThatBaiLan1,
+  giaoThatBaiLan2,
+  giaoThatBaiLan3
 };
