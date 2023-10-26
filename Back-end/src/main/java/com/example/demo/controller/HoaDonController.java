@@ -371,26 +371,32 @@ public class HoaDonController {
         List<LichSuHoaDon> lichSuHoaDonList = new ArrayList<>();
 
         for (UUID id : ids) {
-            String maLSHD = "LSHD" + new Random().nextInt(100000);
             HoaDon hoaDon = serviceHD.detailHD(id);
-            hoaDon.setNgaySua(new Date());
+            if (hoaDon.getLoaiDon() == 1) {
+                String maLSHD = "LSHD" + new Random().nextInt(100000);
+                hoaDon.setNgaySua(new Date());
 
-            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-            lichSuHoaDon.setTrangThai(1);
-            hoaDon.setTrangThai(1);
-            lichSuHoaDon.setNgayTao(new Date());
-            lichSuHoaDon.setMa(maLSHD);
-            lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
-            lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setTen("Chờ giao hàng");
+                LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+                lichSuHoaDon.setTrangThai(1);
+                hoaDon.setTrangThai(1);
+                lichSuHoaDon.setNgayTao(new Date());
+                lichSuHoaDon.setMa(maLSHD);
+                lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setTen("Chờ giao hàng");
 
-            lichSuHoaDonList.add(lichSuHoaDon);
+                lichSuHoaDonList.add(lichSuHoaDon);
+            }
+        }
+
+        if (lichSuHoaDonList.isEmpty()) {
+            return ResponseEntity.ok("Khong the xac nhan");
         }
 
         serviceLSHD.createLichSuDonHangAll(lichSuHoaDonList);
-
         return ResponseEntity.ok("Xác nhận thành công");
     }
+
 
     @PostMapping("huy-don")
     public ResponseEntity<?> huyDon(@RequestBody List<UUID> ids) {
@@ -399,22 +405,27 @@ public class HoaDonController {
         for (UUID id : ids) {
             String maLSHD = "LSHD" + new Random().nextInt(100000);
             HoaDon hoaDon = serviceHD.detailHD(id);
-            hoaDon.setNgaySua(new Date());
+            if (hoaDon.getLoaiDon() == 1) {
+                hoaDon.setNgaySua(new Date());
 
-            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-            lichSuHoaDon.setTrangThai(2);
-            hoaDon.setTrangThai(2);
-            lichSuHoaDon.setNgayTao(new Date());
-            lichSuHoaDon.setMa(maLSHD);
-            lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
-            lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setTen("Đã hủy đơn hàng");
+                LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+                lichSuHoaDon.setTrangThai(2);
+                hoaDon.setTrangThai(2);
+                lichSuHoaDon.setNgayTao(new Date());
+                lichSuHoaDon.setMa(maLSHD);
+                lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setTen("Đã hủy đơn hàng");
 
-            lichSuHoaDonList.add(lichSuHoaDon);
+                lichSuHoaDonList.add(lichSuHoaDon);
+            }
+        }
+
+        if (lichSuHoaDonList.isEmpty()) {
+            return ResponseEntity.ok("Khong the huy");
         }
 
         serviceLSHD.createLichSuDonHangAll(lichSuHoaDonList);
-
         return ResponseEntity.ok("Hủy đơn thành công");
     }
 

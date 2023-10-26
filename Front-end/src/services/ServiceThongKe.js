@@ -12,4 +12,83 @@ const doanhThuTongTheoNam = () => {
   return axios.get(`/api/thong-ke/doanh-thu-tong-nam-hien-tai`);
 };
 
-export { doanhThuTongTheoNgay, doanhThuTongTheoThang, doanhThuTongTheoNam };
+const doanhThuTQTheoNgay = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-tai-quay-ngay-hien-tai`);
+};
+
+const doanhThuTQTheoThang = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-tai-quay-thang-hien-tai`);
+};
+
+const doanhThuTQTheoNam = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-tai-quay-nam-hien-tai`);
+};
+
+const doanhThuOnlineTheoNgay = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-online-ngay-hien-tai`);
+};
+
+const doanhThuOnineTheoThang = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-online-thang-hien-tai`);
+};
+
+const doanhThuOnlineTheoNam = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-online-nam-hien-tai`);
+};
+
+const soDonHuyNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-ngay`);
+};
+
+const soDonHuyThang = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-thang`);
+};
+
+const soDonHuyNam = () => {
+  return axios.get(`/api/thong-ke/so-don-huy-nam`);
+};
+
+const soDonChoXacNhanNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-ngay`);
+};
+
+const soDonChoXacNhanThang = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-thang`);
+};
+
+const soDonChoXacNhanNam = () => {
+  return axios.get(`/api/thong-ke/so-don-cho-xac-nhan-nam`);
+};
+
+const soDonThanhCongNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-ngay`);
+};
+
+const soDonThanhCongThang = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-thang`);
+};
+
+const soDonThanhCongNam = () => {
+  return axios.get(`/api/thong-ke/so-don-da-ban-nam`);
+};
+
+export {
+  doanhThuTongTheoNgay,
+  doanhThuTongTheoThang,
+  doanhThuTongTheoNam,
+  doanhThuOnineTheoThang,
+  doanhThuOnlineTheoNam,
+  doanhThuOnlineTheoNgay,
+  doanhThuTQTheoNam,
+  doanhThuTQTheoNgay,
+  doanhThuTQTheoThang,
+  soDonChoXacNhanNam,
+  soDonChoXacNhanNgay,
+  soDonChoXacNhanThang,
+  soDonHuyNam,
+  soDonHuyNgay,
+  soDonHuyThang,
+  soDonThanhCongNgay,
+  soDonThanhCongThang,
+  soDonThanhCongNam
+};

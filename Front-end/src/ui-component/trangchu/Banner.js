@@ -8,7 +8,7 @@ import AnhBanner2 from '../../assets/images/banner777.jpg';
 function Banner() {
   return (
     <div>
-      <Carousel className="banner" style={{ paddingTop: 20 }}>
+      <Carousel className="banner">
         <Carousel.Item interval={1000}>
           <Image src={AnhBanner} className="d-block w-100" alt="Anh1" />
         </Carousel.Item>

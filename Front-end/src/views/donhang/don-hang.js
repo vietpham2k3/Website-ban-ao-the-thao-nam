@@ -144,7 +144,7 @@ function DonHang() {
 
   useEffect(() => {
     // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) => d.trang_thai !== 0 && d.trang_thai !== 1);
+    const shouldDisableCheckAll = data.some((d) => (d.trang_thai === 0 && d.trang_thai === 1) || d.loai_don === 0);
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 
@@ -160,9 +160,9 @@ function DonHang() {
 
     // Cập nhật trạng thái disabled của các checkbox dựa trên newCheckedArray
     const updatedData = data.map((d) => {
-      if (d.trang_thai === 0) {
+      if (d.trang_thai === 0 && d.loai_don === 1) {
         return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 1) };
-      } else if (d.trang_thai === 1) {
+      } else if (d.trang_thai === 1 && d.loai_don === 1) {
         return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 0) };
       }
       return d;
@@ -184,9 +184,10 @@ function DonHang() {
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
-    toast.warning('Bạn phải chọn hóa đơn trước !');
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, '');
+    } else {
+      toast.warning('Bạn phải chọn hóa đơn trước !');
     }
   };
 
@@ -201,10 +202,13 @@ function DonHang() {
 
   const handleHuyDon = async (event) => {
     event.preventDefault();
-    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
-    toast.warning('Bạn phải chọn hóa đơn trước !');
+    const selectedIds = data
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
+      .map((d) => d.id);
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, '');
+    } else {
+      toast.warning('Bạn phải chọn hóa đơn trước !');
     }
   };
 
@@ -393,7 +397,7 @@ function DonHang() {
                   <tr key={i} onClick={() => navigate(`/don-hang/chi-tiet/${d.id}`)}>
                     <td>
                       <td>
-                        {d.trang_thai === 0 && (
+                        {d.trang_thai === 0 && d.loai_don === 1 && (
                           <input
                             onClick={(e) => e.stopPropagation()}
                             style={{ border: '1px solid black' }}
@@ -421,7 +425,7 @@ function DonHang() {
                             onChange={() => handleCheck(i, d.id)}
                           />
                         )}
-                        {d.trang_thai === 1 && (
+                        {d.trang_thai === 1 && d.loai_don === 1 && (
                           <input
                             onClick={(e) => e.stopPropagation()}
                             style={{ border: '1px solid black' }}

@@ -348,7 +348,7 @@ const fetchUserAddresses = async () => {
               </li>
               <li>
                 <a href="#">
-                  <button className="no-border">ĐĂNG XUẤT</button>
+                  <button className="no-border">Đăng xuất</button>
                 </a>
               </li>
             </ul>

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+
+
 public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     public HoaDonRespository res;
@@ -60,6 +62,81 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public Double doanhThuTongNamCurrent() {
         return res.doanhThuTongNamCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayNgayCurrent() {
+        return res.doanhThuTaiQuayNgayCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayThangCurrent() {
+        return res.doanhThuTaiQuayThangCurrent();
+    }
+
+    @Override
+    public Double doanhThuTaiQuayNamCurrent() {
+        return res.doanhThuTaiquayNamCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineNgayCurrent() {
+        return res.doanhThuOnlineNgayCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineThangCurrent() {
+        return res.doanhThuOnlineThangCurrent();
+    }
+
+    @Override
+    public Double doanhThuOnlineNamCurrent() {
+        return res.doanhThuOnlineNamCurrent();
+    }
+
+    @Override
+    public Integer soDonHuyNgay() {
+        return res.soDonHuyNgay();
+    }
+
+    @Override
+    public Integer soDonHuyThang() {
+        return res.soDonHuyThang();
+    }
+
+    @Override
+    public Integer soDonHuyNam() {
+        return res.soDonHuyNam();
+    }
+
+    @Override
+    public Integer soDonChoXacNhanNgay() {
+        return res.soDonChoXacNhanNgay();
+    }
+
+    @Override
+    public Integer soDonChoXacNhanThang() {
+        return res.soDonChoXacNhanThang();
+    }
+
+    @Override
+    public Integer soDonChoXacNhanNam() {
+        return res.soDonChoXacNhanNam();
+    }
+
+    @Override
+    public Integer soDonThanhCongNgay() {
+        return res.soDonThanhCongNgay();
+    }
+
+    @Override
+    public Integer soDonThanhCongThang() {
+        return res.soDonThanhCongThang();
+    }
+
+    @Override
+    public Integer soDonThanhCongNam() {
+        return res.soDonThanhCongNam();
     }
 
     @Override

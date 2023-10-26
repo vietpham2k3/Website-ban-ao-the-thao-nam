@@ -7,13 +7,13 @@ import { Grid } from '@mui/material';
 import EarningCard from './DoanhThuTong';
 import PopularCard from './PopularCard';
 // import TotalOrderLineChartCard from './TotalOrderLineChartCard';
-import TotalIncomeDarkCard from './DonHuy';
-import TotalIncomeLightCard from './DonTra';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 import DoanhThuTaiQuay from './DoanhThuTaiQuay';
 import DoanhThuOnline from './DoanhThuOnline';
 import DonBan from './DonBan';
+import DonChoXacNhan from './DonChoXacNhan';
+import DonHuy from './DonHuy';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -42,16 +42,31 @@ const Dashboard = () => {
           <Grid item xs={12} style={{ display: 'flex' }}>
             <Grid container spacing={gridSpacing}>
               <Grid item lg={4} md={6} sm={6} xs={12}>
-                <TotalIncomeDarkCard isLoading={isLoading} />
-              </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <TotalIncomeLightCard isLoading={isLoading} />
+                <DonChoXacNhan isLoading={isLoading} />
               </Grid>
               <Grid item lg={4} md={6} sm={6} xs={12}>
                 <DonBan isLoading={isLoading} />
               </Grid>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
+                <DonHuy isLoading={isLoading} />
+              </Grid>
             </Grid>
           </Grid>
+          {/* // */}
+          {/* <Grid item xs={12} style={{ display: 'flex' }}>
+            <Grid container spacing={gridSpacing}>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
+                <DonChoXacNhan isLoading={isLoading} />
+              </Grid>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
+                <DonBan isLoading={isLoading} />
+              </Grid>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
+                <DonHuy isLoading={isLoading} />
+              </Grid>
+            </Grid>
+          </Grid> */}
+          {/*  */}
         </Grid>
       </Grid>
       <Grid item xs={12}>
