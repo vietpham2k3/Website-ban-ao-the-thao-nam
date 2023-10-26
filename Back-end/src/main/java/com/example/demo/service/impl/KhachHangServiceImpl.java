@@ -3,8 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.KhachHangService;
-import com.google.firebase.auth.hash.Bcrypt;
-import org.bouncycastle.crypto.generators.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

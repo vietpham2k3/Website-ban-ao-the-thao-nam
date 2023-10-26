@@ -136,7 +136,7 @@ function CheckoutForm(props) {
   }, []);
 
   useEffect(() => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       dataDC.forEach((d) => {
         if (d.trangThai === 1) {
           setValuesDC({ ...valuesDC, diaChi: d.diaChi, phuongXa: d.phuongXa, quanHuyen: d.quanHuyen, tinhThanh: d.tinhThanh });
@@ -244,7 +244,7 @@ function CheckoutForm(props) {
   }, [quan, valuesDC, valuesId]);
 
   useEffect(() => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       // eslint-disable-next-line react/prop-types
       getKH(dataLogin.id);
       getAllDC(dataLogin.id);
@@ -252,7 +252,7 @@ function CheckoutForm(props) {
   }, [dataLogin]);
 
   useEffect(() => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       setValuesUpdateHD({ ...valuesUpdateHD, tenNguoiNhan: dataKH.tenKhachHang, soDienThoai: dataKH.sdt });
       return;
     }
@@ -311,7 +311,7 @@ function CheckoutForm(props) {
       // Ngừng cập nhật địa chỉ
       setIsUpdatingDiaChi(false);
 
-      if (dataLogin) {
+      if (dataLogin && dataLogin.role == 'KH') {
         clear(idGH, id);
       }
 
@@ -444,7 +444,7 @@ function CheckoutForm(props) {
   const handleWardChange = (event) => {
     const selectedProvinceId = event.target.value;
     const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       if (selectedProvince) {
         // Lấy thông tin tỉnh/thành phố được chọn
         const selectedProvinceName = selectedProvince.WardName;

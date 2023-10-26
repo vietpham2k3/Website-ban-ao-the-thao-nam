@@ -10,6 +10,7 @@ import ForgotPasswordModal from 'ui-component/login/ForgotPasswordModal';
 function Login() {
   const [productCount, setProductCount] = useState(0);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
+  const [showSearchInput, setShowSearchInput] = useState(false);
 
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const idGH = localStorage.getItem('idGH') || '';
@@ -28,6 +29,9 @@ function Login() {
       countSP(idGH);
     }
   }, [dataLogin, idGH]);
+  const toggleSearchInput = () => {
+    setShowSearchInput(!showSearchInput);
+  };
 
   const countSP = async (id) => {
     const res = await count(id);
@@ -46,7 +50,7 @@ function Login() {
 
   return (
     <div>
-      <Header productCount={productCount} />
+      <Header productCount={productCount} toggleSearchInput={toggleSearchInput} showSearchInput={showSearchInput} />
       <IndexLogin show={showForgotPasswordModal} onHide={closeForgotPasswordModal} openForgotPasswordModal={openForgotPasswordModal} />
       <Footer />
       <ForgotPasswordModal show={showForgotPasswordModal} onHide={closeForgotPasswordModal} />
