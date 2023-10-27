@@ -359,6 +359,7 @@ public class HoaDonController {
         hoaDon.setTrangThai(1);
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setNguoiTao(hoaDon.getNguoiTao());
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Chờ giao hàng");
