@@ -76,10 +76,10 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13];
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      const values = [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13];
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       search('', null, null, values, '', page);
     }
     if (data.length === 0) {
@@ -622,7 +622,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 9 && (
@@ -639,7 +639,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 10 && (
@@ -656,7 +656,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 11 && (

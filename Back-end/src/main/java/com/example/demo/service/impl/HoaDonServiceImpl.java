@@ -28,6 +28,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public List<HoaDon> searchByTrangThai(Integer[] trangThai, UUID idKH) {
+        return res.searchByTrangThai(trangThai, idKH);
+    }
+
+    @Override
     public Page<HoaDon> pageHD(Pageable pageable) {
         return res.findAll(pageable);
     }
