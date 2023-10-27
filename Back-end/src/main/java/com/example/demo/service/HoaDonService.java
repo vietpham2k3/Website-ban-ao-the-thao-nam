@@ -12,6 +12,8 @@ public interface HoaDonService {
 
     List<HoaDon> listHD();
 
+    List<HoaDon> searchByTrangThai(Integer[] trangThai, UUID idKH);
+
     Page<HoaDon> pageHD(Pageable pageable);
 
     Page<HoaDonCustom> hienThiPageHD(Pageable pageable);

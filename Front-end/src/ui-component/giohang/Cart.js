@@ -79,15 +79,15 @@ function Cart(props) {
     }
     // eslint-disable-next-line react/prop-types
     if (dataLogin && dataLogin.role == 'KH') {
-      taoHoaDon(selectedProducts);
+      taoHoaDon('', selectedProducts);
     } else {
-      taoHoaDon(hoaDonChiTietList);
+      taoHoaDon('', hoaDonChiTietList);
       localStorage.setItem('productAfter', JSON.stringify(temporaryProductAfter));
     }
   };
 
-  const taoHoaDon = async (value) => {
-    const res = await postGH(value);
+  const taoHoaDon = async (nguoiTao, value) => {
+    const res = await postGH(nguoiTao, value);
     if (res || value) {
       navigate(`/checkout/${res.data}`);
     }

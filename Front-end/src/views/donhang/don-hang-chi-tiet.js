@@ -476,6 +476,10 @@ function DonHangCT() {
   const handleClose9 = () => setShow9(false);
   const handleShow9 = () => setShow9(true);
 
+  const tenNV = {
+    nhanVien: { ten: dataLogin && dataLogin.ten }
+  };
+
   const [lshd, setLshd] = useState({
     ghiChu: '',
     nguoiTao: dataLogin && dataLogin.ten
@@ -547,7 +551,7 @@ function DonHangCT() {
   //Ghi chu and more haha
   //xac nhan don
   const xacNhan = async (id, value) => {
-    const res = await xacNhanDH(id, value);
+    const res = await xacNhanDH(id, value,tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow2(false);
@@ -558,12 +562,12 @@ function DonHangCT() {
 
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
-    await xacNhan(id, lshd);
+    await xacNhan(id, lshd, tenNV.nhanVien.ten);
   };
 
   // huy don
   const huyDon = async (id, value) => {
-    const res = await huyDonHang(id, value);
+    const res = await huyDonHang(id, value,tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow3(false);
@@ -574,7 +578,7 @@ function DonHangCT() {
 
   const handleHuyDon = async (event) => {
     event.preventDefault();
-    await huyDon(id, lshd1);
+    await huyDon(id, lshd1,tenNV.nhanVien.ten);
   };
 
   // xac nhan giao hang
@@ -680,31 +684,31 @@ function DonHangCT() {
     await giaoThatBai2(id, lshd16);
   };
 
-   // giao that bai lan 3
-   const [show18, setShow18] = useState(false);
+  // giao that bai lan 3
+  const [show18, setShow18] = useState(false);
 
-   const [lshd18, setLshd18] = useState({
-     ghiChu: '',
-     nguoiTao: dataLogin && dataLogin.ten
-   });
- 
-   const handleClose18 = () => setShow18(false);
-   const handleShow18 = () => setShow18(true);
- 
-   const giaoThatBai3 = async (id, value) => {
-     const res = await giaoThatBaiLan3(id, value);
-     if (res) {
-       toast.success('Cập nhật thành công !');
-       setShow18(false);
-       detail(id);
-       detailListLSHD(id);
-     }
-   };
- 
-   const handleGiaoTBLan3 = async (event) => {
-     event.preventDefault();
-     await giaoThatBai3(id, lshd18);
-   };
+  const [lshd18, setLshd18] = useState({
+    ghiChu: '',
+    nguoiTao: dataLogin && dataLogin.ten
+  });
+
+  const handleClose18 = () => setShow18(false);
+  const handleShow18 = () => setShow18(true);
+
+  const giaoThatBai3 = async (id, value) => {
+    const res = await giaoThatBaiLan3(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow18(false);
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleGiaoTBLan3 = async (event) => {
+    event.preventDefault();
+    await giaoThatBai3(id, lshd18);
+  };
 
   // giao lai lan 1
   const [show11, setShow11] = useState(false);
@@ -755,7 +759,7 @@ function DonHangCT() {
 
   const handleXacNhanGiaoLaiLan2 = async (event) => {
     event.preventDefault();
-    
+
     await giaoLai2(id, lshd12);
   };
 
@@ -1278,70 +1282,69 @@ function DonHangCT() {
                                           Giao lại lần 3
                                         </span>
                                       )}
-                                           {item.trangThai === 11 && (
-                                  <span
-                                    style={{
-                                      width: '200px',
-                                      pointerEvents: 'none',
-                                      height: '30px',
-                                      borderRadius: '20px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontWeight: 'bold',
-                                      backgroundColor: 'red',
-                                      color: 'white'
-                                    }}
-                                    className="btn btn-labeled shadow-button btn status-cancelled"
-                                  >
-                                    Giao hàng thất bại lần 1
-                                  </span>
-                                )}
-                                {item.trangThai === 12 && (
-                                  <span
-                                    style={{
-                                      width: '200px',
-                                      pointerEvents: 'none',
-                                      height: '30px',
-                                      borderRadius: '20px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontWeight: 'bold',
-                                      backgroundColor: 'red',
-                                      color: 'white'
-                                    }}
-                                    className="btn btn-labeled shadow-button btn status-cancelled"
-                                  >
-                                    Giao hàng thất bại lần 2
-                                  </span>
-                                )}
-                                 {item.trangThai === 13 && (
-                                  <span
-                                    style={{
-                                      width: '200px',
-                                      pointerEvents: 'none',
-                                      height: '30px',
-                                      borderRadius: '20px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontWeight: 'bold',
-                                      backgroundColor: 'red',
-                                      color: 'white'
-                                    }}
-                                    className="btn btn-labeled shadow-button btn status-cancelled"
-                                  >
-                                    Giao hàng thất bại lần 3
-                                  </span>
-                                )}
+                                      {item.trangThai === 11 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'red',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Giao hàng thất bại lần 1
+                                        </span>
+                                      )}
+                                      {item.trangThai === 12 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'red',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Giao hàng thất bại lần 2
+                                        </span>
+                                      )}
+                                      {item.trangThai === 13 && (
+                                        <span
+                                          style={{
+                                            width: '200px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'red',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Giao hàng thất bại lần 3
+                                        </span>
+                                      )}
                                     </td>
                                     <td>{formatDate(item.ngayTao)}</td>
                                     <td>{item.nguoiTao}</td>
                                     <td>{item.ghiChu}</td>
                                   </tr>
                                 ))}
-                           
                               </tbody>
                             </Table>
                           </div>
@@ -1949,7 +1952,13 @@ function DonHangCT() {
               </Modal>
               {/* //huy don */}
               <div className="col-3">
-                {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1 || hoaDon.trangThai === 6 || hoaDon.trangThai === 5 || hoaDon.trangThai === 11 || hoaDon.trangThai === 10 || hoaDon.trangThai === 12) &&
+                {(hoaDon.trangThai === 0 ||
+                  hoaDon.trangThai === 1 ||
+                  hoaDon.trangThai === 6 ||
+                  hoaDon.trangThai === 5 ||
+                  hoaDon.trangThai === 11 ||
+                  hoaDon.trangThai === 10 ||
+                  hoaDon.trangThai === 12) &&
                   hoaDon.loaiDon === 1 && (
                     <button onClick={handleShow3} className="relative inline-block text-base group">
                       <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
@@ -2209,8 +2218,8 @@ function DonHangCT() {
                     </form>
                   </Modal.Body>
                 </Modal>
-                 {/* //giao hang that bai lần 3*/}
-                 {hoaDon.trangThai === 19 && (
+                {/* //giao hang that bai lần 3*/}
+                {hoaDon.trangThai === 19 && (
                   <button onClick={handleShow18} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>

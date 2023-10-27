@@ -52,6 +52,7 @@ function UserAccount() {
   };
   useEffect(() => {
     detail(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleSubmit = async (event) => {

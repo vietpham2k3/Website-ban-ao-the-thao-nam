@@ -7,7 +7,7 @@ import { sanPhamBanChayNgay } from 'services/ServiceThongKe';
 import '../../../scss/ThongKe.scss';
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Button, CardActions, CardContent, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Button, CardActions, CardContent, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
 
 // project imports
 import BajajAreaChartCard from './BajajAreaChartCard';
@@ -19,7 +19,7 @@ import { gridSpacing } from 'store/constant';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 // import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+// import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 // ==============================|| DASHBOARD DEFAULT - POPULAR CARD ||============================== //
 
@@ -51,7 +51,6 @@ const PopularCard = ({ isLoading }) => {
   useEffect(() => {
     handleSPBCNgay();
   }, []);
-
 
   // function convertToCurrency(number) {
   //   // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -113,14 +112,7 @@ const PopularCard = ({ isLoading }) => {
                 <BajajAreaChartCard />
               </Grid>
               <Grid item xs={12}>
-                <Grid container direction="column">
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
-                      10% Profit
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 1.5 }} />
+                <Grid container direction="column"></Grid>
                 {ngay.map((n, index) => {
                   const sizeData = n.split(',');
                   // const anh = sizeData[0];
@@ -129,46 +121,38 @@ const PopularCard = ({ isLoading }) => {
                   // const giaBan = sizeData[2];
                   // const tienSP = sizeData[3];
 
-
                   return (
-                    <Grid key={index} container direction="column">
+                    <Grid key={index} container direction="column" style={{ paddingBottom: 25 }}>
                       <Grid item>
                         <Grid container alignItems="center" justifyContent="space-between">
                           <Grid item>
                             <Typography variant="subtitle1" color="inherit">
-                              {tenSP}
+                              <p><span>{tenSP}</span></p>
                             </Typography>
                           </Grid>
                           <Grid item>
                             <Grid container alignItems="center" justifyContent="space-between">
                               <Grid item>
                                 <Typography variant="subtitle1" color="inherit">
-                                  {soLuongSP}
+                                  <p style={{fontStyle: 'italic'}}>Đã bán: <span style={{fontStyle: 'revert-layer', fontWeight: 'initial'}}>{soLuongSP}</span></p>
                                 </Typography>
                               </Grid>
-                              <Grid item>
-                                <Avatar
-                                  variant="rounded"
-                                  sx={{
-                                    width: 16,
-                                    height: 16,
-                                    borderRadius: '5px',
-                                    backgroundColor: theme.palette.orange.light,
-                                    color: theme.palette.orange.dark,
-                                    marginLeft: 1.875
-                                  }}
-                                >
-                                  <KeyboardArrowDownOutlinedIcon fontSize="small" color="inherit" />
-                                </Avatar>
-                              </Grid>
+                           
                             </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
                       <Grid item>
-                        <Typography variant="subtitle2" sx={{ color: theme.palette.orange.dark }}>
+                        {/* <Typography variant="subtitle2" sx={{ color: theme.palette.orange.dark }}>
                           10% loss
-                        </Typography>
+                        </Typography> */}
+                        {/* <Grid item>
+                    <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
+                      10% Profit
+                    </Typography>
+                  </Grid> */}
+                                    <Divider sx={{ my: 1.5 }} />
+
                       </Grid>
                     </Grid>
                   );

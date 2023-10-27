@@ -1,5 +1,16 @@
 /* UserAccount.css */
 
+.card-box {
+  width: 100%;
+  border: 1px solid gray;
+  height: 300px;
+  border-radius: 15px;
+}
+
+.img-history {
+  height: 50px;
+}
+
 .user-profile {
   display: flex;
   align-items: center;

@@ -73,8 +73,8 @@ const AuthenticationRoutes = {
     },
     {
       path: '/khachhang-info/:id',
-      element: < UserAccount/>
-    },
+      element: <UserAccount />
+    }
   ]
 };
 

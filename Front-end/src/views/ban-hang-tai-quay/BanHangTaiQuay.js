@@ -47,7 +47,7 @@ export default function BanHangTaiQuay() {
 
   const add = async () => {
     try {
-      const res = await addHD(nvID); // Sử dụng await để chờ kết quả trả về
+      const res = await addHD(nvID, dataLogin && dataLogin.ten); // Sử dụng await để chờ kết quả trả về
       if (res) {
         toast.success('Thêm đơn thành công');
         getAll();

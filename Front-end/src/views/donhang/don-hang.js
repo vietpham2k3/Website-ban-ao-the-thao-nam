@@ -16,6 +16,11 @@ import { addMonths, subMonths, isWithinInterval } from 'date-fns';
 
 function DonHang() {
   const [currentPage, setCurrentPage] = useState(0);
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+
+  const tenNV = {
+    nhanVien: { ten: dataLogin && dataLogin.ten }
+  };
   const [totalPages, setTotalPages] = useState(0);
   const [tuNgay, setTuNgay] = useState(null);
   const [denNgay, setDenNgay] = useState(null);
@@ -76,10 +81,10 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13];
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      const values = [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13];
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
       search('', null, null, values, '', page);
     }
     if (data.length === 0) {
@@ -145,7 +150,7 @@ function DonHang() {
 
   useEffect(() => {
     // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) => (d.trang_thai === 0 && d.trang_thai === 1) || d.loai_don === 0);
+    const shouldDisableCheckAll = data.some((d) => (d.trang_thai !== 0 && d.trang_thai !== 1 ) || d.loai_don === 0);
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 
@@ -175,7 +180,7 @@ function DonHang() {
 
   //xac nhan don
   const xacNhan = async (ids, value) => {
-    const res = await xacNhanListIds(ids, value);
+    const res = await xacNhanListIds(ids, value,tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       getAll(0);
@@ -186,7 +191,7 @@ function DonHang() {
     event.preventDefault();
     const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
     if (selectedIds.length > 0) {
-      await xacNhan(selectedIds, '');
+      await xacNhan(selectedIds, tenNV.nhanVien.ten);
     } else {
       toast.warning('Bạn phải chọn hóa đơn trước !');
     }
@@ -194,7 +199,7 @@ function DonHang() {
 
   // huy don
   const huyDon = async (ids, value) => {
-    const res = await huyDonListIds(ids, value);
+    const res = await huyDonListIds(ids, value, tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       getAll(0);
@@ -207,7 +212,7 @@ function DonHang() {
       .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
       .map((d) => d.id);
     if (selectedIds.length > 0) {
-      await huyDon(selectedIds, '');
+      await huyDon(selectedIds, tenNV.nhanVien.ten);
     } else {
       toast.warning('Bạn phải chọn hóa đơn trước !');
     }
@@ -622,7 +627,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 9 && (
@@ -639,7 +644,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 10 && (
@@ -656,7 +661,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn btn-warning status-pending"
                         >
-                           Đang giao hàng
+                          Đang giao hàng
                         </span>
                       )}
                       {d.trang_thai === 11 && (
