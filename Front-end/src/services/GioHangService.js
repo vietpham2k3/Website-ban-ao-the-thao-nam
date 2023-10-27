@@ -1,7 +1,7 @@
 import axios from '../custommize-axios';
 
-const postGH = (values) => {
-  return axios.post('/api/gio-hang/tao-hoa-don', values);
+const postGH = (nguoiTao, values) => {
+  return axios.post(`/api/gio-hang/tao-hoa-don?nguoiTao=${nguoiTao}`, values);
 };
 
 const deleteByIdHD = (id) => {
@@ -12,8 +12,8 @@ const addKhuyenMai = (values) => {
   return axios.post('/api/gio-hang/add-km', values);
 };
 
-const thanhToan = (id, values) => {
-  return axios.put(`/api/gio-hang/update-hd-checkout/${id}`, values);
+const thanhToan = (id, values, nguoiTao) => {
+  return axios.put(`/api/gio-hang/update-hd-checkout/${id}?nguoiTao=${nguoiTao}`, values);
 };
 
 const count = (id) => {

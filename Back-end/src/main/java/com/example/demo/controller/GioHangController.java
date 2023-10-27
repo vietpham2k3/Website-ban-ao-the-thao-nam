@@ -123,7 +123,7 @@ public class GioHangController {
     }
 
     @PutMapping("update-hd-checkout/{id}")
-    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id) {
+    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id, @RequestParam String nguoiTao) {
         String ma = "HTTT" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hd = serviceHD.detailHD(id);
@@ -148,12 +148,13 @@ public class GioHangController {
         hoaDon.setXa(hoaDon.getXa());
         httt = serviceHttt.add(httt);
         hoaDon.setHinhThucThanhToan(httt);
-        if(httt.getTen().equalsIgnoreCase("VNPay")){
+        if (httt.getTen().equalsIgnoreCase("VNPay")) {
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                     .ma(maLSHD)
                     .ten("Thanh toán thành công")
                     .trangThai(6)
                     .ngayTao(new Date())
+                    .nguoiTao(nguoiTao)
                     .ghiChu("Thanh toán thành công")
                     .hoaDon(hd)
                     .build();
@@ -192,7 +193,7 @@ public class GioHangController {
 
 
     @PostMapping("/tao-hoa-don")
-    public ResponseEntity<String> themHoaDonChiTiet(@RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
+    public ResponseEntity<String> themHoaDonChiTiet(@RequestParam String nguoiTao, @RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
         String ma = "HD" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = new HoaDon().builder()
@@ -209,6 +210,7 @@ public class GioHangController {
                 .ma(maLSHD)
                 .ten("Tạo hoá đơn")
                 .trangThai(0)
+                .nguoiTao(nguoiTao)
                 .ngayTao(new Date())
                 .hoaDon(hoaDon)
                 .ghiChu("Tạo hoá đơn")

@@ -12,6 +12,8 @@ public interface HoaDonService {
 
     List<HoaDon> listHD();
 
+    List<HoaDon> searchByTrangThai(Integer[] trangThai, UUID idKH);
+
     Page<HoaDon> pageHD(Pageable pageable);
 
     Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
@@ -57,6 +59,8 @@ public interface HoaDonService {
     public Integer soDonThanhCongThang();
 
     public Integer soDonThanhCongNam();
+
+    public List<String> sanPhamBanChayTrongNgay();
 
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 

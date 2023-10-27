@@ -317,11 +317,11 @@ function CheckoutForm(props) {
 
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
-        thanhToanHD(id, valuesUpdateHD);
+        thanhToanHD(id, valuesUpdateHD, '');
         navigate('/checkout/thankyou');
         localStorage.setItem('product', product);
       } else {
-        thanhToanHD(id, valuesUpdateHD);
+        thanhToanHD(id, valuesUpdateHD, '');
         localStorage.setItem('product', product);
       }
     }
@@ -656,9 +656,9 @@ function CheckoutForm(props) {
     }
   };
 
-  const thanhToanHD = async (id, value) => {
+  const thanhToanHD = async (id, value, nguoiTao) => {
     try {
-      const res = await thanhToan(id, value);
+      const res = await thanhToan(id, value, nguoiTao);
       if (res) {
         toast.success('Thành công');
       }

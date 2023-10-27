@@ -109,4 +109,10 @@ public class ThongKeController {
         return ResponseEntity.ok().body(hdSer.soDonThanhCongNam());
     }
 
+    //
+    @GetMapping("san-pham-ban-chay-trong-ngay")
+    public ResponseEntity<?> sanPhamBanChayTrongNgay() {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNgay());
+    }
+
 }
