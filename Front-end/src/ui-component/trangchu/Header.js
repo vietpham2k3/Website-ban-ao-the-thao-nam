@@ -78,7 +78,7 @@ function Header(props) {
                     <DropdownButton id="dropdown-basic-button" title={<i className="fa-solid fa-user"></i>}>
                       <Dropdown.Item style={{ color: 'yellowgreen' }}>{dataLogin.tenKhachHang}</Dropdown.Item>
                       <hr />
-                      <Dropdown.Item href="thong-tin_user">Tài khoản của tôi</Dropdown.Item>
+                      <Dropdown.Item href="/thong-tin_user">Tài khoản của tôi</Dropdown.Item>
                       <Dropdown.Item href="/login">Đổi mật khẩu</Dropdown.Item>
                       <Dropdown.Item href="/login">Địa chỉ</Dropdown.Item>
                       <hr />
