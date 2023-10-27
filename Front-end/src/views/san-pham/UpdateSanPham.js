@@ -38,6 +38,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import AddMauSac from './AddQuicklyMauSac';
 import { postMS } from 'services/ServiceMauSac';
+import QRCode from 'qrcode.react';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -378,7 +379,7 @@ function UpdateSanPham() {
     <div>
       <MainCard>
         <form className="row g-3" onSubmit={handleSubmit}>
-          <div className="col-md-12">
+          <div className="col-md-8">
             <label className="form-label" htmlFor="trang-thai">
               Tên
             </label>
@@ -394,6 +395,9 @@ function UpdateSanPham() {
                 })
               }
             />
+          </div>
+          <div className="col-md-4" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {values && values.id && <QRCode style={{ width: 70, height: 70 }} value={values.id} />}
           </div>
           <div className="col-md-12">
             <label className="form-label" htmlFor="trang-thai1">

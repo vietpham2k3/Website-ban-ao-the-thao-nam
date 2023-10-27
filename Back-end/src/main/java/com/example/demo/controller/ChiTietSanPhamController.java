@@ -7,6 +7,13 @@ import com.example.demo.entity.SanPham;
 import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,14 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -114,7 +118,7 @@ public class ChiTietSanPhamController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) {
+    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) throws IOException, WriterException {
         String ma = "CTSP" + new Random().nextInt(100000);
         String maSP = "SP" + new Random().nextInt(100000);
 
@@ -309,13 +313,4 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("ok");
     }
 
-    @GetMapping("/findID/{id}")
-    public ResponseEntity<?> findID(@PathVariable("id") UUID id){
-        ChiTietSanPham ctsp = chiTietSanPhamService.findID(id);
-        if (ctsp != null) {
-            return ResponseEntity.ok(ctsp);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }
