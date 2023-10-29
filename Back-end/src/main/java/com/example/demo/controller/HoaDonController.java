@@ -146,8 +146,29 @@ public class HoaDonController {
 
     @GetMapping("searchByTrangThai/{id}")
     public ResponseEntity<?> searchByTrangThai(@PathVariable UUID id, @RequestParam Integer[] trangThai) {
-        return ResponseEntity.ok(serviceHD.searchByTrangThai(trangThai, id));
+        Map<String, Object> map = new HashMap<>();
+        List<HoaDon> list = serviceHD.searchByTrangThai(trangThai, id);
+
+        // Tạo danh sách chứa các thông tin hóa đơn và hóa đơn chi tiết
+        List<Map<String, Object>> hoaDonList = new ArrayList<>();
+
+        for (HoaDon hd : list) {
+            Map<String, Object> hoaDonData = new HashMap<>();
+
+            // Lấy thông tin hóa đơn
+            hoaDonData.put("hoaDon", hd);
+
+            // Lấy danh sách hóa đơn chi tiết tương ứng với hóa đơn
+            List<HoaDonChiTiet> listHCDCT = hoaDonChiTietService.getAll(hd.getId());
+            hoaDonData.put("hoaDonChiTiet", listHCDCT);
+
+            hoaDonList.add(hoaDonData);
+        }
+
+        map.put("hoaDonList", hoaDonList);
+        return ResponseEntity.ok(map);
     }
+
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody HoaDon hoaDon, @RequestParam String nguoiTao) {
@@ -434,6 +455,23 @@ public class HoaDonController {
 
         serviceLSHD.createLichSuDonHangAll(lichSuHoaDonList);
         return ResponseEntity.ok("Hủy đơn thành công");
+    }
+
+    @PostMapping("nhan-hang/{id}")
+    public ResponseEntity<?> nhanHang(@PathVariable UUID id,
+                                    @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(7);
+        hoaDon.setTrangThai(7);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Đã nhận được hàng");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
     @PostMapping("huy-don/{id}")

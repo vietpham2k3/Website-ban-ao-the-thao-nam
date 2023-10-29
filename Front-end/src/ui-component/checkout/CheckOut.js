@@ -112,6 +112,9 @@ function CheckoutForm(props) {
       tien: 0,
       ten: '',
       trangThai: 1
+    },
+    khachHang: {
+      id: dataLogin && dataLogin.id
     }
   });
   const [errors, setErrors] = useState({
@@ -733,6 +736,7 @@ function CheckoutForm(props) {
 
     // Bắt đầu cập nhật địa chỉ
     setIsUpdatingDiaChi(true);
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
 
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
@@ -741,7 +745,9 @@ function CheckoutForm(props) {
       tinh: valuesUpdateHD.tinh,
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
-      ngayDuKienNhan: ngayDuKienNhan
+      ngayDuKienNhan: ngayDuKienNhan,
+      tongTien: totalAmount + valuesUpdateHD.tienShip,
+      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
     }));
   };
 
@@ -790,6 +796,8 @@ function CheckoutForm(props) {
     // Bắt đầu cập nhật địa chỉ
     setIsUpdatingDiaChi(true);
 
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,
@@ -797,7 +805,9 @@ function CheckoutForm(props) {
       tinh: valuesUpdateHD.tinh,
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
-      ngayDuKienNhan: ngayDuKienNhan
+      ngayDuKienNhan: ngayDuKienNhan,
+      tongTien: totalAmount + valuesUpdateHD.tienShip,
+      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
     }));
     window.location.href = urlPay;
   };

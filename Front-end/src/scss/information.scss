@@ -2,13 +2,22 @@
 
 .card-box {
   width: 100%;
-  border: 1px solid gray;
-  height: 300px;
   border-radius: 15px;
+  box-shadow: 0px 0px 15px 1px black;
+}
+
+.card-box-center {
+  display: inline;
+  align-items: center;
+}
+
+.card-hdct {
+  display: flex;
+  justify-content: space-between;
 }
 
 .img-history {
-  height: 50px;
+  height: 90px;
 }
 
 .user-profile {

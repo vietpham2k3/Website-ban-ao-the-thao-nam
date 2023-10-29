@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Anhuser from '../../assets/images/bieutuong.jpg';
 import '../../scss/information.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
@@ -10,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ListDonHang from './ListDonHang';
 import { useState } from 'react';
+import SlideBar from 'layout/SlideBar';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,57 +48,13 @@ function History() {
     setValue(newValue);
   };
 
-  console.log(data);
-
   return (
     <div>
       <Header />
       <div className="container">
         <div className="row">
           <div className="col-2">
-            <ul>
-              <li>
-                <div className="user-column">
-                  <div className="avatar">
-                    <div className="avatar-image">
-                      <img src={Anhuser} alt="Ảnh đại diện" />
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                <a href="thong-tin_user">
-                  <button className="no-border">Tài khoản của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="history">
-                  <button className="no-border">Đơn Hàng của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="diachi">
-                  <button className="no-border">Địa Chỉ</button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border">ĐĂNG XUẤT</button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border"></button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border"></button>
-                </a>
-              </li>
-            </ul>
+            <SlideBar></SlideBar>
           </div>
           <div className="col-9">
             <div className="user-details">
