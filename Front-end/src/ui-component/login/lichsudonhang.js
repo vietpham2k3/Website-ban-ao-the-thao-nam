@@ -52,7 +52,7 @@ function History() {
     <div>
       <Header />
       <div className="container">
-        <div className="row">
+        <div className="row slide-bar">
           <div className="col-2">
             <SlideBar></SlideBar>
           </div>

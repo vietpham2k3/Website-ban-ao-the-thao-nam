@@ -85,8 +85,7 @@ function UserAccount() {
     <div>
       <Header />
       <div className="container">
-        <div className="row">
-          <br></br>
+        <div className="row slide-bar">
           <div className="col-2">
             <ul>
               <li>

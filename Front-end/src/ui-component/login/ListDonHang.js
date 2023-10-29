@@ -80,7 +80,7 @@ function ListDonHang(props) {
   return (
     <div>
       {values.map((d, i) => (
-        <div key={i} className="card-box row">
+        <div key={i} className="card-box row" style={{ marginTop: '20px' }}>
           <div className="col-md-12 card-box-center">
             <div className=" d-flex justify-content-between" style={{ borderBottom: '1px solid gray', alignItems: 'center' }}>
               <Button variant="outline-info ms-3 mt-3 mb-3" onClick={() => navigate(`/history/${d.hoaDon.id}`)}>
