@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -137,5 +138,18 @@ public class KhachHangServiceImpl implements KhachHangService {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
+
+
+    @Override
+    public KhachHang updateKhinfo(KhachHang khachHang, UUID id) {
+        Optional<KhachHang> op = khRepo.findById(id);
+        return op.map(o -> {
+            o.setTenKhachHang(khachHang.getTenKhachHang());
+            o.setEmail(khachHang.getEmail());
+            o.setNgaySinh(khachHang.getNgaySinh());
+            o.setGioiTinh(khachHang.getGioiTinh());
+            return khRepo.save(o);
+        }).orElse(null);
+    }
 
 }

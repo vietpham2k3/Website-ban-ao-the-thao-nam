@@ -4,9 +4,11 @@ import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { detailKH } from 'services/KhachHangService';
+
+import { detailKH, updateInfo } from 'services/KhachHangService';
 import { useNavigate, useParams } from 'react-router-dom';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+
 function UserAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
@@ -17,6 +19,7 @@ function UserAccount() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsChangePasswordModalOpen(false);
+    navigate('/thong-tin_user');
   };
 
   //đổi mật khẩu
@@ -26,19 +29,28 @@ function UserAccount() {
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
   const navigate = useNavigate();
-  const { id } = useParams();
+
   const [values, setValues] = useState({
     tenKhachHang: '',
     email: '',
     ngaySinh: '',
-    gioiTinh: ''
+    gioiTinh: null
   });
-
-  const formatDate = (date) => {
-    const formattedDate = new Date(date);
-    return formattedDate.toISOString().slice(0, 10);
+  const handleGenderChange = (newValue) => {
+    setValues({ ...values, gioiTinh: newValue });
   };
+  function formatDate(date) {
+    const dateObject = new Date(date);
 
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
+    const year = dateObject.getFullYear();
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  }
+  const { id } = useParams();
   const detail = async (id) => {
     const res = await detailKH(id);
     if (res) {
@@ -48,18 +60,27 @@ function UserAccount() {
         ngaySinh: formatDate(ngaySinh)
       });
     }
-    console.log(detail);
   };
   useEffect(() => {
-    detail(id);
+    detail(dataLogin.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [dataLogin.id]);
 
-  const handleSubmit = async (event) => {
+  const put = async (id, value) => {
+    const res = await updateInfo(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      navigate('/thong-tin_user');
+    }
+
     setIsModalOpen(false);
     setIsChangePasswordModalOpen(false);
-    event.preventDefault();
   };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    put(id, values);
+  };
+
   return (
     <div>
       <Header />
@@ -106,10 +127,14 @@ function UserAccount() {
           <div className="col-9">
             <div className="user-details">
               <h1>THÔNG TIN TÀI KHOẢN</h1>
-              <p>Họ Và Tên: {dataLogin.tenKhachHang}</p>
-              <p>Email: {dataLogin.email}</p>
-              <p>Ngày sinh: {formatDate(dataLogin.ngaySinh)}</p>
-              <p>Giới Tính: {dataLogin.gioiTinh === true ? 'Nam' : 'Nữ'}</p>
+              <p>Họ Và Tên: {values.tenKhachHang}</p>
+              <p>Email: {values.email}</p>
+              <p>Ngày sinh: {formatDate(values.ngaySinh)}</p>
+              <p>
+                Giới Tính:{' '}
+                {values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : values.gioiTinh === null ? 'Không xác định' : ''}
+              </p>
+
               <button
                 className="mx-2"
                 onClick={() => {
@@ -128,7 +153,7 @@ function UserAccount() {
                       <label htmlFor="name">Họ Và Tên:</label>
                       <input
                         type="text"
-                        id="name"
+                        id="tenKhachHang"
                         value={values.tenKhachHang}
                         onChange={(e) => setValues({ ...values, tenKhachHang: e.target.value })}
                       />
@@ -146,24 +171,24 @@ function UserAccount() {
                       <label htmlFor="birthdate">Ngày sinh:</label>
                       <input
                         type="date"
-                        id="birthdate"
+                        id="ngaySinh"
                         value={values.ngaySinh}
                         onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
                       />
                     </div>
                     <div>
-                      <label htmlFor="gender">Giới Tính:</label>
-                      <select
-                        id="gender"
-                        value={values.gioiTinh ? 'Nam' : 'Nữ'} // Sử dụng giá trị từ dataLogin
-                        onChange={(e) => {
-                          const newGender = e.target.value === 'Nam';
-                          setValues({ ...values, gioiTinh: newGender }); // Cập nhật giới tính
-                        }}
-                      >
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
-                      </select>
+                      <label htmlFor="gioiTinh">Giới Tính:</label>
+                      <div>
+                        <select
+                          id="gioiTinh"
+                          value={values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : 'null'}
+                          onChange={(e) => handleGenderChange(e.target.value === 'null' ? null : e.target.value === 'Nam')}
+                        >
+                          <option value="Nam">Nam</option>
+                          <option value="Nữ">Nữ</option>
+                          <option value="null">Không xác định</option>
+                        </select>
+                      </div>
                     </div>
                   </form>
                   <br></br>

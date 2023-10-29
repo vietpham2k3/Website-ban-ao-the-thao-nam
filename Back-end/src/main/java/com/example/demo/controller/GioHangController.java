@@ -208,12 +208,12 @@ public class GioHangController {
         }
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                 .ma(maLSHD)
-                .ten("Tạo hoá đơn")
+                .ten("Đã đặt đơn hàng")
                 .trangThai(0)
                 .nguoiTao(nguoiTao)
                 .ngayTao(new Date())
                 .hoaDon(hoaDon)
-                .ghiChu("Tạo hoá đơn")
+                .ghiChu("Đã đặt đơn hàng")
                 .build();
         serviceLSHD.createLichSuDonHang(lichSuHoaDon);
         hoaDonChiTietService.taoHoaDon(hoaDonChiTietList);

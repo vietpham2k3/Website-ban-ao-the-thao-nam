@@ -476,6 +476,10 @@ function DonHangCT() {
   const handleClose9 = () => setShow9(false);
   const handleShow9 = () => setShow9(true);
 
+  const tenNV = {
+    nhanVien: { ten: dataLogin && dataLogin.ten }
+  };
+
   const [lshd, setLshd] = useState({
     ghiChu: '',
     nguoiTao: dataLogin && dataLogin.ten
@@ -547,7 +551,7 @@ function DonHangCT() {
   //Ghi chu and more haha
   //xac nhan don
   const xacNhan = async (id, value) => {
-    const res = await xacNhanDH(id, value);
+    const res = await xacNhanDH(id, value, tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow2(false);
@@ -558,12 +562,12 @@ function DonHangCT() {
 
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
-    await xacNhan(id, lshd);
+    await xacNhan(id, lshd, tenNV.nhanVien.ten);
   };
 
   // huy don
   const huyDon = async (id, value) => {
-    const res = await huyDonHang(id, value);
+    const res = await huyDonHang(id, value, tenNV.nhanVien.ten);
     if (res) {
       toast.success('Cập nhật thành công !');
       setShow3(false);
@@ -574,7 +578,7 @@ function DonHangCT() {
 
   const handleHuyDon = async (event) => {
     event.preventDefault();
-    await huyDon(id, lshd1);
+    await huyDon(id, lshd1, tenNV.nhanVien.ten);
   };
 
   // xac nhan giao hang

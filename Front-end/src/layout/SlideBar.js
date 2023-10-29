@@ -1,7 +1,9 @@
 import React from 'react';
 import Anhuser from '../assets/images/bieutuong.jpg';
+import { useNavigate } from 'react-router';
 
 function SlideBar() {
+  const navigate = useNavigate();
   return (
     <div>
       <ul>
@@ -17,24 +19,24 @@ function SlideBar() {
       </ul>
       <ul>
         <li>
-          <a href="thong-tin_user">
-            <button className="no-border">Tài khoản của tôi</button>
-          </a>
+          <button onClick={() => navigate('/thong-tin_user')} className="no-border">
+            Tài khoản của tôi
+          </button>
         </li>
         <li>
-          <a href="history">
-            <button className="no-border">Đơn Hàng của tôi</button>
-          </a>
+          <button onClick={() => navigate('/history')} className="no-border">
+            Đơn Hàng của tôi
+          </button>
         </li>
         <li>
-          <a href="diachi">
-            <button className="no-border">Địa Chỉ</button>
-          </a>
+          <button onClick={() => navigate('/diachi')} className="no-border">
+            Địa Chỉ
+          </button>
         </li>
         <li>
-          <a href="#">
-            <button className="no-border">ĐĂNG XUẤT</button>
-          </a>
+          <button onClick={() => navigate('/thong-tin_user')} className="no-border">
+            Đăng xuất
+          </button>
         </li>
       </ul>
     </div>

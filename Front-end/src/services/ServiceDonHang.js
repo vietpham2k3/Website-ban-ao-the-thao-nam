@@ -57,24 +57,24 @@ const addKH2 = (id, values) => {
   return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
 };
 
-const xacNhanDH = (id, values) => {
-  return axios.post(`/api/hoa-don/xac-nhan/` + id, values);
+const xacNhanDH = (id, values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/xac-nhan/${id}?nguoiTao=${nguoiTao}`, values);
 };
 
-const huyDonHang = (id, values) => {
-  return axios.post(`/api/hoa-don/huy-don/` + id, values);
+const huyDonHang = (id, values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/huy-don/${id}?nguoiTao=${nguoiTao}`, values);
 };
 
 const nhanHang = (id, values) => {
   return axios.post(`/api/hoa-don/nhan-hang/` + id, values);
 };
 
-const xacNhanListIds = (values) => {
-  return axios.post(`/api/hoa-don/xac-nhan`, values);
+const xacNhanListIds = (values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/xac-nhan?nguoiTao=${nguoiTao}`, values);
 };
 
-const huyDonListIds = (values) => {
-  return axios.post(`/api/hoa-don/huy-don`, values);
+const huyDonListIds = (values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/huy-don?nguoiTao=${nguoiTao}`, values);
 };
 
 const xacNhanGiao = (id, values) => {

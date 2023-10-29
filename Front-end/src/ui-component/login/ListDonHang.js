@@ -9,11 +9,13 @@ import ButtonMUI from '@mui/material/Button';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
+import { useNavigate } from 'react-router';
 
 function ListDonHang(props) {
   const { data, dataLogin, values, setValues } = props;
   const [show, setShow] = useState(false);
   const [id, setId] = useState();
+  const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
   });
@@ -81,7 +83,9 @@ function ListDonHang(props) {
         <div key={i} className="card-box row">
           <div className="col-md-12 card-box-center">
             <div className=" d-flex justify-content-between" style={{ borderBottom: '1px solid gray', alignItems: 'center' }}>
-              <Button variant="outline-info ms-3 mt-3 mb-3">Chi tiết</Button>
+              <Button variant="outline-info ms-3 mt-3 mb-3" onClick={() => navigate(`/history/${d.hoaDon.id}`)}>
+                Chi tiết
+              </Button>
               <p className="mt-3 me-3 mb-3" style={{ color: 'red' }}>
                 {d.hoaDon.trangThai === 0
                   ? 'Chờ xác nhận'
