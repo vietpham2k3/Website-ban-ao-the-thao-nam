@@ -76,6 +76,13 @@ const sanPhamBanChayNgay = () => {
   return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-ngay`);
 };
 
+const sanPhamBanChayThang = () => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-thang`);
+};
+
+const sanPhamBanChayNam = () => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-nam`);
+};
 export {
   doanhThuTongTheoNgay,
   doanhThuTongTheoThang,
@@ -95,5 +102,7 @@ export {
   soDonThanhCongNgay,
   soDonThanhCongThang,
   soDonThanhCongNam,
-  sanPhamBanChayNgay
+  sanPhamBanChayNgay,
+  sanPhamBanChayThang,
+  sanPhamBanChayNam
 };

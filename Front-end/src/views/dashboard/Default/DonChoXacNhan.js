@@ -102,7 +102,7 @@ const DonChoXacNhan = ({ isLoading }) => {
   };
 
   useEffect(() => {
-    handleSLNgay();
+    handleSLThang();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

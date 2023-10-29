@@ -303,43 +303,75 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    );", nativeQuery = true)
     public Integer soDonThanhCongNam();
 
-    @Query(value = "WITH RankedData AS (\n" +
-            "  SELECT\n" +
-            "    SP.ten AS san_pham_ten,\n" +
-            "    SUM(HDCT.so_luong) OVER (PARTITION BY CTSP.id_sp) AS so_luong_sp_dh,\n" +
-            "    HDCT.don_gia,\n" +
-            "    ROW_NUMBER() OVER(PARTITION BY CTSP.id_sp ORDER BY HDCT.so_luong DESC) AS RowNum\n" +
-            "  FROM HoaDonChiTiet HDCT\n" +
-            "  JOIN ChiTietSanPham CTSP ON CTSP.id = HDCT.id_ctsp\n" +
-            "  JOIN HoaDon HD ON HD.id = HDCT.id_hd  \n" +
-            "  JOIN SanPham SP ON SP.id = CTSP.id_sp\n" +
-            "  WHERE\n" +
-            "    (\n" +
-            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
-            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
-            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 6 AND\n" +
-            "       HD.loai_don = 0)\n" +
-            "    )\n" +
-            "    OR\n" +
-            "    (\n" +
-            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
-            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
-            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
-            "       HD.loai_don = 1)\n" +
-            "    )\n" +
-            ")\n" +
-            "\n" +
-            "\n" +
-            "SELECT\n" +
-            "  san_pham_ten,\n" +
-            "  so_luong_sp_dh,\n" +
-            "  don_gia,\n" +
-            "  so_luong_sp_dh * don_gia as tienSP\n" +
-            "FROM RankedData\n" +
-            "WHERE RowNum = 1\n" +
+    @Query(value = "SELECT SP.ten AS san_pham_ten,\n" +
+            "       SUM(CASE\n" +
+            "             WHEN (\n" +
+            "               (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "                MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 6 AND\n" +
+            "                HD.loai_don = 0)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             WHEN (\n" +
+            "               (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "                MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 7 AND\n" +
+            "                HD.loai_don = 1)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             ELSE 0\n" +
+            "           END) AS so_luong_sp_dh\n" +
+            "FROM SanPham SP\n" +
+            "LEFT JOIN ChiTietSanPham CTSP ON CTSP.id_sp = SP.id\n" +
+            "LEFT JOIN HoaDonChiTiet HDCT ON HDCT.id_ctsp = CTSP.id\n" +
+            "LEFT JOIN HoaDon HD ON HD.id = HDCT.id_hd\n" +
+            "GROUP BY SP.ten\n" +
             "ORDER BY so_luong_sp_dh DESC" , nativeQuery = true)
     public List<String> sanPhamBanChayTrongNgay();
 
+    @Query(value = "SELECT SP.ten AS san_pham_ten,\n" +
+            "       SUM(CASE\n" +
+            "             WHEN (\n" +
+            "               (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 6 AND\n" +
+            "                HD.loai_don = 0)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             WHEN (\n" +
+            "               (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 7 AND\n" +
+            "                HD.loai_don = 1)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             ELSE 0\n" +
+            "           END) AS so_luong_sp_dh\n" +
+            "FROM SanPham SP\n" +
+            "LEFT JOIN ChiTietSanPham CTSP ON CTSP.id_sp = SP.id\n" +
+            "LEFT JOIN HoaDonChiTiet HDCT ON HDCT.id_ctsp = CTSP.id\n" +
+            "LEFT JOIN HoaDon HD ON HD.id = HDCT.id_hd\n" +
+            "GROUP BY SP.ten\n" +
+            "ORDER BY so_luong_sp_dh DESC" , nativeQuery = true)
+    public List<String> sanPhamBanChayTrongThang();
+
+    @Query(value = "SELECT SP.ten AS san_pham_ten,\n" +
+            "       SUM(CASE\n" +
+            "             WHEN (\n" +
+            "               (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 6 AND\n" +
+            "                HD.loai_don = 0)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             WHEN (\n" +
+            "               (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "                HD.trang_thai = 7 AND\n" +
+            "                HD.loai_don = 1)\n" +
+            "             ) THEN HDCT.so_luong\n" +
+            "             ELSE 0\n" +
+            "           END) AS so_luong_sp_dh\n" +
+            "FROM SanPham SP\n" +
+            "LEFT JOIN ChiTietSanPham CTSP ON CTSP.id_sp = SP.id\n" +
+            "LEFT JOIN HoaDonChiTiet HDCT ON HDCT.id_ctsp = CTSP.id\n" +
+            "LEFT JOIN HoaDon HD ON HD.id = HDCT.id_hd\n" +
+            "GROUP BY SP.ten\n" +
+            "ORDER BY so_luong_sp_dh DESC" , nativeQuery = true)
+    public List<String> sanPhamBanChayTrongNam();
 }

@@ -10,10 +10,9 @@
 .close-icon.open {
   transform: scale(1.2);
   color: red;
+  cursor: pointer;
 }
 .target-pointer {
   cursor: pointer; /* Sử dụng con trỏ bàn tay target */
 }
-.target-pointer:hover {
-  cursor: pointer; /* Sử dụng con trỏ bàn tay target khi di chuột qua Avatar */
-}
+

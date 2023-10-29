@@ -62,6 +62,10 @@ public interface HoaDonService {
 
     public List<String> sanPhamBanChayTrongNgay();
 
+    public List<String> sanPhamBanChayTrongThang();
+
+    public List<String> sanPhamBanChayTrongNam();
+
     public List<ChiTietSanPham> searchSPofHDCT(String key);
 
     HoaDon detailHD(UUID id);

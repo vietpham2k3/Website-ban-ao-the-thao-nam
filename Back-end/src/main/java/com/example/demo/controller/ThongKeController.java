@@ -115,4 +115,14 @@ public class ThongKeController {
         return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNgay());
     }
 
+    @GetMapping("san-pham-ban-chay-trong-thang")
+    public ResponseEntity<?> sanPhamBanChayTrongThang() {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongThang());
+    }
+
+    @GetMapping("san-pham-ban-chay-trong-nam")
+    public ResponseEntity<?> sanPhamBanChayTrongNam() {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNam());
+    }
+
 }
