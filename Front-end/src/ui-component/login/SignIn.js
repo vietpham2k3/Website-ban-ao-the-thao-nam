@@ -7,6 +7,20 @@ import { login } from 'services/LoginService';
 
 // eslint-disable-next-line react/prop-types
 function SignInForm(props) {
+
+  const handleLogin = async (username, password) => {
+    const response = await login(username, password);
+    
+    if (response.status === 200) {
+      const customerId = response.data.id;
+      localStorage.setItem('customerId', customerId);
+      navigate('/diachi');
+    } else {
+      // Xử lý lỗi đăng nhập
+    }
+  };
+
+
   const navigate = useNavigate();
   const { setState, state, openForgotPasswordModal } = props;
 
@@ -45,7 +59,9 @@ function SignInForm(props) {
 
   const handleOnSubmit = () => {
     dangNhap(state.email, state.password);
+    handleLogin(state.email, state.password);
   };
+  
 
   return (
     <div className="form-container sign-in-container">

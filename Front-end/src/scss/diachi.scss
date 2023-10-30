@@ -206,3 +206,32 @@ button:hover {
 .button4 button:hover {
  background: #060606;
 }
+
+
+
+/* ... */
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button2 button {
+  /* Bỏ background-color và border để nút "Thêm Địa Chỉ Mới" không có nền */
+  background: #ccc;
+  border: none;
+  color: #000000;
+  padding: 10px 20px;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 50px;
+  font-size: 16px;
+}
+
+.button2 button:hover {
+  background-color: #9ccff1; /* Màu nền xanh khi hover */
+  color: #fff; /* Màu chữ trắng khi hover */
+}
+
+
