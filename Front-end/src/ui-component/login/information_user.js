@@ -2,8 +2,12 @@ import Anhuser from '../../assets/images/bieutuong.jpg';
 import '../../scss/information.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+
+import { detailKH, updateInfo } from 'services/KhachHangService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function UserAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,30 +15,72 @@ function UserAccount() {
   const handleUpdate = () => {
     setIsModalOpen(true);
   };
-  const handleCapNhat = () => {
-    setIsChangePasswordModalOpen(true);
-  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsChangePasswordModalOpen(false);
+    navigate('/thong-tin_user');
   };
-  const handleSubmit = () => {
-    setIsModalOpen(false);
-    setIsChangePasswordModalOpen(false);
+
+  //đổi mật khẩu
+  const handleCapNhat = () => {
+    setIsChangePasswordModalOpen(true);
   };
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
-  function formatDate(dateString) {
-    const dateObject = new Date(dateString);
+  const navigate = useNavigate();
+
+  const [values, setValues] = useState({
+    tenKhachHang: '',
+    email: '',
+    ngaySinh: '',
+    gioiTinh: null
+  });
+  const handleGenderChange = (newValue) => {
+    setValues({ ...values, gioiTinh: newValue });
+  };
+  function formatDate(date) {
+    const dateObject = new Date(date);
 
     const day = dateObject.getDate();
     const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
     const year = dateObject.getFullYear();
 
-    const formattedDate = `${day}/${month}/${year}`;
+    const formattedDate = `${year}-${month}-${day}`;
 
     return formattedDate;
   }
+  const { id } = useParams();
+  const detail = async (id) => {
+    const res = await detailKH(id);
+    if (res) {
+      const { ngaySinh, ...values } = res.data;
+      setValues({
+        ...values,
+        ngaySinh: formatDate(ngaySinh)
+      });
+    }
+  };
+  useEffect(() => {
+    detail(dataLogin.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataLogin.id]);
+
+  const put = async (id, value) => {
+    const res = await updateInfo(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      navigate('/thong-tin_user');
+    }
+
+    setIsModalOpen(false);
+    setIsChangePasswordModalOpen(false);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    put(id, values);
+  };
+
   return (
     <div>
       <Header />
@@ -81,11 +127,23 @@ function UserAccount() {
           <div className="col-9">
             <div className="user-details">
               <h1>THÔNG TIN TÀI KHOẢN</h1>
-              <p>Họ Và Tên: {dataLogin.tenKhachHang}</p>
-              <p>Email: {dataLogin.email}</p>
-              <p>Ngày sinh: {formatDate(dataLogin.ngaySinh)}</p>
-              <p>Giới Tính: {dataLogin.gioiTinh === true ? 'Nam' : 'Nữ'}</p>
-              <button onClick={handleUpdate}>Cập nhật</button>
+              <p>Họ Và Tên: {values.tenKhachHang}</p>
+              <p>Email: {values.email}</p>
+              <p>Ngày sinh: {formatDate(values.ngaySinh)}</p>
+              <p>
+                Giới Tính:{' '}
+                {values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : values.gioiTinh === null ? 'Không xác định' : ''}
+              </p>
+
+              <button
+                className="mx-2"
+                onClick={() => {
+                  handleUpdate();
+                  navigate(`/khachhang-info/${dataLogin.id}`);
+                }}
+              >
+                Cập Nhật
+              </button>
 
               <Modal isOpen={isModalOpen} contentLabel="Update User Information" className="right-aligned-modal">
                 <div className="modal-content">
@@ -93,22 +151,44 @@ function UserAccount() {
                   <form>
                     <div>
                       <label htmlFor="name">Họ Và Tên:</label>
-                      <input type="text" id="name" />
+                      <input
+                        type="text"
+                        id="tenKhachHang"
+                        value={values.tenKhachHang}
+                        onChange={(e) => setValues({ ...values, tenKhachHang: e.target.value })}
+                      />
                     </div>
                     <div>
                       <label htmlFor="email">Email:</label>
-                      <input type="text" id="email" />
+                      <input
+                        type="text"
+                        id="email"
+                        value={values.email}
+                        onChange={(e) => setValues({ ...values, email: e.target.value })}
+                      />
                     </div>
                     <div>
                       <label htmlFor="birthdate">Ngày sinh:</label>
-                      <input type="date" id="birthdate" />
+                      <input
+                        type="date"
+                        id="ngaySinh"
+                        value={values.ngaySinh}
+                        onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
+                      />
                     </div>
                     <div>
-                      <label htmlFor="gender">Giới Tính:</label>
-                      <select id="gender">
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
-                      </select>
+                      <label htmlFor="gioiTinh">Giới Tính:</label>
+                      <div>
+                        <select
+                          id="gioiTinh"
+                          value={values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : 'null'}
+                          onChange={(e) => handleGenderChange(e.target.value === 'null' ? null : e.target.value === 'Nam')}
+                        >
+                          <option value="Nam">Nam</option>
+                          <option value="Nữ">Nữ</option>
+                          <option value="null">Không xác định</option>
+                        </select>
+                      </div>
                     </div>
                   </form>
                   <br></br>
@@ -146,7 +226,7 @@ function UserAccount() {
                   <br></br>
                   <div className="button1">
                     <button onClick={handleCloseModal}>Đóng</button>
-                    <button onClick={handleSubmit}>Cập nhật</button>
+                    <button onClick={handleCapNhat}>Cập nhật</button>
                   </div>
                 </div>
               </Modal>

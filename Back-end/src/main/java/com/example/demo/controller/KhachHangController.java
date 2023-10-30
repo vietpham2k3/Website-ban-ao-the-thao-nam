@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
 import com.example.demo.dto.KhachHangDTO;
+import com.example.demo.dto.KhachHangInfo;
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.service.impl.DiaChiServiceImpl;
@@ -19,13 +20,27 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/khach-hang")
@@ -328,6 +343,24 @@ public class KhachHangController {
         return khachHangDTO;
     }
 
+    private KhachHangInfo convertToinfo(KhachHang khachHang) {
+        KhachHangInfo khachHangInfo = KhachHangInfo.builder()
+                .tenKhachHang(khachHang.getTenKhachHang())
+                .email(khachHang.getEmail())
+                .gioiTinh(khachHang.getGioiTinh())
+                .ngaySinh(khachHang.getNgaySinh())
+                .build();
 
-
+        return khachHangInfo;
     }
+
+    @PutMapping("/updateinfo/{id}")
+    public ResponseEntity<?> updateinfo(@PathVariable UUID id, @RequestBody KhachHang khachHang
+    ) {
+        khachHang.setId(id);
+        KhachHang savedKhachHang = khService.updateKhinfo(khachHang, id);
+        KhachHangInfo savedKhachHanginfo = convertToinfo(savedKhachHang);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHanginfo);
+    }
+
+}

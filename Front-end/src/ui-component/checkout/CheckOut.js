@@ -112,6 +112,9 @@ function CheckoutForm(props) {
       tien: 0,
       ten: '',
       trangThai: 1
+    },
+    khachHang: {
+      id: dataLogin && dataLogin.id
     }
   });
   const [errors, setErrors] = useState({
@@ -317,11 +320,11 @@ function CheckoutForm(props) {
 
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
-        thanhToanHD(id, valuesUpdateHD);
+        thanhToanHD(id, valuesUpdateHD, '');
         navigate('/checkout/thankyou');
         localStorage.setItem('product', product);
       } else {
-        thanhToanHD(id, valuesUpdateHD);
+        thanhToanHD(id, valuesUpdateHD, '');
         localStorage.setItem('product', product);
       }
     }
@@ -656,9 +659,9 @@ function CheckoutForm(props) {
     }
   };
 
-  const thanhToanHD = async (id, value) => {
+  const thanhToanHD = async (id, value, nguoiTao) => {
     try {
-      const res = await thanhToan(id, value);
+      const res = await thanhToan(id, value, nguoiTao);
       if (res) {
         toast.success('Thành công');
       }
@@ -733,6 +736,7 @@ function CheckoutForm(props) {
 
     // Bắt đầu cập nhật địa chỉ
     setIsUpdatingDiaChi(true);
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
 
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
@@ -741,7 +745,9 @@ function CheckoutForm(props) {
       tinh: valuesUpdateHD.tinh,
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
-      ngayDuKienNhan: ngayDuKienNhan
+      ngayDuKienNhan: ngayDuKienNhan,
+      tongTien: totalAmount + valuesUpdateHD.tienShip,
+      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
     }));
   };
 
@@ -790,6 +796,8 @@ function CheckoutForm(props) {
     // Bắt đầu cập nhật địa chỉ
     setIsUpdatingDiaChi(true);
 
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,
@@ -797,7 +805,9 @@ function CheckoutForm(props) {
       tinh: valuesUpdateHD.tinh,
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
-      ngayDuKienNhan: ngayDuKienNhan
+      ngayDuKienNhan: ngayDuKienNhan,
+      tongTien: totalAmount + valuesUpdateHD.tienShip,
+      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
     }));
     window.location.href = urlPay;
   };

@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 // project imports
 import Loadable from 'ui-component/Loadable';
+import ChiTietDonHang from 'ui-component/login/ChiTietDonHang';
 
 // login option 3 routing
 const TrangChu = Loadable(lazy(() => import('views/home/TrangChu')));
@@ -12,6 +13,7 @@ const ThankYou = Loadable(lazy(() => import('ui-component/checkout/ThankYou')));
 const CheckOutQuick = Loadable(lazy(() => import('views/checkout/CheckOutQuick')));
 const Login = Loadable(lazy(() => import('views/login')));
 const UserAccount = Loadable(lazy(() => import('ui-component/login/information_user')));
+
 const DiaChi = Loadable(lazy(() => import('ui-component/login/diachi')));
 const History = Loadable(lazy(() => import('ui-component/login/lichsudonhang')));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
@@ -69,6 +71,14 @@ const AuthenticationRoutes = {
     {
       path: '/history',
       element: <History />
+    },
+    {
+      path: '/history/:id',
+      element: <ChiTietDonHang />
+    },
+    {
+      path: '/khachhang-info/:id',
+      element: <UserAccount />
     }
   ]
 };

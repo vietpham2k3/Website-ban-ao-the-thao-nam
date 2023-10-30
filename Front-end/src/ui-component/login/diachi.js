@@ -323,14 +323,14 @@ function DiaChi() {
                               handleShow1(address.id);
                             }}
                           >
-                            <span style={{ fontSize: '15px', color: 'black' }}>Cập nhật</span>
+                            <span style={{ fontSize: '15px', color: 'blue' }}>Cập nhật</span>
                           </button>
                           <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
                           <button
                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}
                             onClick={() => handleDeleteDC(address.id)}
                           >
-                            <span style={{ fontSize: '15px', color: 'black' , transition: 'color 0.3s',}}>Xóa</span>
+                            <span style={{ fontSize: '15px', color: 'red' , transition: 'color 0.3s',}}>Xóa</span>
                           </button>
                         </div>
                         <hr></hr>

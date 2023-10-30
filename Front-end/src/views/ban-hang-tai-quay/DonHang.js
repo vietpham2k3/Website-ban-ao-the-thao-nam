@@ -58,6 +58,7 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
+  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -473,8 +474,8 @@ function DonHang(props) {
     }
   };
 
-  const ThanhToanHD = async (idHD) => {
-    const res = await thanhToan(idHD);
+  const ThanhToanHD = async (idHD, nguoiTao) => {
+    const res = await thanhToan(idHD, nguoiTao);
     if (res) {
       toast.success('Thanh toán thành công');
       getAllHD();
@@ -576,7 +577,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id);
+    ThanhToanHD(id, dataLogin && dataLogin.ten);
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -591,7 +592,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id);
+    ThanhToanHD(id, dataLogin && dataLogin.ten);
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -834,7 +835,7 @@ function DonHang(props) {
     }
   };
 
-  const handleChooseKH = (tenKhachHang, soDienThoai) => {
+  const handleChooseKH = (idKH, tenKhachHang, soDienThoai) => {
     setValuesKH({
       ...valuesKH,
       tenKhachHang: tenKhachHang,
@@ -842,6 +843,9 @@ function DonHang(props) {
     });
     setValuesUpdateHD({
       ...valuesUpdateHD,
+      khachHang: {
+        id: idKH
+      },
       tenNguoiNhan: tenKhachHang,
       soDienThoai: soDienThoai
     });
@@ -850,8 +854,6 @@ function DonHang(props) {
     toast.success('Chọn thành công !');
     setShow4(false);
   };
-
-  console.log(urlPay);
 
   return (
     <div>
@@ -1131,7 +1133,7 @@ function DonHang(props) {
                       </div>
                       <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
                         <button
-                          onClick={() => handleChooseKH(k.tenKhachHang, k.sdt)}
+                          onClick={() => handleChooseKH(k.id,k.tenKhachHang, k.sdt)}
                           className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
                         >
                           <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
