@@ -1,17 +1,28 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { detailGH } from 'services/GioHangService';
 import { login } from 'services/LoginService';
-import ForgotPasswordModal from './ForgotPasswordModal';
 
-function SignInForm() {
+// eslint-disable-next-line react/prop-types
+function SignInForm(props) {
+
+  const handleLogin = async (username, password) => {
+    const response = await login(username, password);
+    
+    if (response.status === 200) {
+      const customerId = response.data.id;
+      localStorage.setItem('customerId', customerId);
+      navigate('/diachi');
+    } else {
+      // Xử lý lỗi đăng nhập
+    }
+  };
+
+
   const navigate = useNavigate();
-  const [state, setState] = React.useState({
-    email: '',
-    password: ''
-  });
-  // const [id, setId] = React.useState('');
+  const { setState, state, openForgotPasswordModal } = props;
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -32,7 +43,7 @@ function SignInForm() {
         localStorage.setItem('dataLogin', JSON.stringify(res.data));
         detail(res.data.id);
       } else {
-        navigate('/don-hang');
+        navigate('/thong-ke');
         toast.success('Đăng nhập thành công');
         localStorage.setItem('dataLogin', JSON.stringify(res.data));
       }
@@ -48,17 +59,9 @@ function SignInForm() {
 
   const handleOnSubmit = () => {
     dangNhap(state.email, state.password);
+    handleLogin(state.email, state.password);
   };
-
-  const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
-
-  const openForgotPasswordModal = () => {
-    setShowForgotPasswordModal(true);
-  };
-
-  const closeForgotPasswordModal = () => {
-    setShowForgotPasswordModal(false);
-  };
+  
 
   return (
     <div className="form-container sign-in-container">
@@ -71,7 +74,6 @@ function SignInForm() {
           <button onClick={openForgotPasswordModal} className="text-forgot">
             Quên mật khẩu?
           </button>
-          <ForgotPasswordModal show={showForgotPasswordModal} onHide={closeForgotPasswordModal} />
         </div>
         <button className="button-login" onClick={handleOnSubmit}>
           Đăng nhập

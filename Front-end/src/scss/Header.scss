@@ -4,13 +4,45 @@
   background-color: #eef2f6;
   text-align: center;
 }
+.header-content-container {
+  position: relative;
+}
+.navbar-expand-lg {
+  justify-content: center !important;
+}
+.search-container {
+  position: absolute;
+  top: 100%; /* Đặt top để ô tìm kiếm nằm dưới ô icon tìm kiếm */
+  right: 0;
+  z-index: 2; /* Đảm bảo ô tìm kiếm hiển thị trên nội dung */
+  height: 70%;
+  width: 250px;
+  // border: 1px solid gray;
+  border-radius: 15px;
+  background-color: #ffffff;
+  margin-right: 210px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  box-shadow: 2px 2px 2px 2px;
+}
+
+.search-input {
+  height: 100%;
+  width: 95%;
+}
+
 .header {
-  position: sticky;
+  // position: sticky;
   top: 0;
   width: 100%;
   z-index: 9999;
   text-align: center;
   justify-content: center;
+}
+.flex-header {
+  display: flex;
+  justify-content: space-evenly;
 }
 .nav-1 {
   display: flex;
@@ -19,7 +51,7 @@
 .nameShop {
   color: darkblue;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 30px;
+  font-size: 30px !important;
 }
 .nav-item {
   font-size: 20px;

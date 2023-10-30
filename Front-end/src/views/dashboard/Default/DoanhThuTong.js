@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-
+import '../../../scss/ThongKe.scss';
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
@@ -13,6 +13,7 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -84,22 +85,30 @@ const EarningCard = ({ isLoading }) => {
   const handleDoanhThuTongNgay = () => {
     setThang('');
     setNam('');
+    if (ngay === '') {
+      setNgay(0);
+    }
     doanhThuTongNgay();
   };
 
   const handleDoanhThuTongThang = () => {
     setNgay('');
     setNam('');
+    if (thang === '') {
+      setThang(0);
+    }
     doanhThuTongThang();
   };
 
   const handleDoanhThuTongNam = () => {
     setNgay('');
     setThang('');
+    if (nam === '') {
+      setNam(0);
+    }
     doanhThuTongNam();
   };
 
-  // Mặc định khi tải lại trang, hiển thị theo ngày và đánh dấu MenuItem "Theo ngày" là active
   useEffect(() => {
     handleDoanhThuTongNgay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,12 +124,16 @@ const EarningCard = ({ isLoading }) => {
     return formatter.format(number);
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setIsModalOpen(true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -163,6 +176,7 @@ const EarningCard = ({ isLoading }) => {
                   </Grid>
                   <Grid item>
                     <Avatar
+                      className="target-pointer"
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -175,7 +189,9 @@ const EarningCard = ({ isLoading }) => {
                       aria-haspopup="true"
                       onClick={handleClick}
                     >
-                      <MoreHorizIcon fontSize="inherit" />
+                      <div className={`close-icon ${isModalOpen ? 'open' : ''}`}>
+                        {isModalOpen ? <CloseIcon fontSize="inherit" /> : <MoreHorizIcon fontSize="inherit" />}
+                      </div>
                     </Avatar>
                     <Menu
                       id="menu-earning-card"
@@ -193,14 +209,14 @@ const EarningCard = ({ isLoading }) => {
                         horizontal: 'right'
                       }}
                     >
-                      <MenuItem onClick={handleDoanhThuTongNgay} selected={ngay !== ''}>
-                        Theo ngày
+                      <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNgay}>
+                        Hôm nay
                       </MenuItem>
-                      <MenuItem onClick={handleDoanhThuTongThang} selected={thang !== ''}>
-                        Theo tháng
+                      <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongThang}>
+                        Tháng này
                       </MenuItem>
-                      <MenuItem onClick={handleDoanhThuTongNam} selected={nam !== ''}>
-                        Theo năm
+                      <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNam}>
+                        Năm này
                       </MenuItem>
                     </Menu>
                   </Grid>

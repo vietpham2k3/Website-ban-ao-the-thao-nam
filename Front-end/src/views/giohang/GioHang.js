@@ -7,7 +7,6 @@ import { count } from 'services/GioHangService';
 
 function GioHang() {
   const [productCount, setProductCount] = useState(0);
-
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const idGH = localStorage.getItem('idGH') || '';
 
@@ -35,8 +34,10 @@ function GioHang() {
 
   return (
     <div>
-      <Header productCount={productCount} />
-      <Cart setProductCount={setProductCount} productCount={productCount} countSP={countSP} dataLogin={dataLogin} idGH={idGH} />
+      <Header />
+      <div className="content-container">
+        <Cart setProductCount={setProductCount} productCount={productCount} countSP={countSP} dataLogin={dataLogin} idGH={idGH} />
+      </div>
       <Footer />
     </div>
   );

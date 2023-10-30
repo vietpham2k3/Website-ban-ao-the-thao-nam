@@ -9,6 +9,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -20,6 +21,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
       setSuccessMessage('');
       return;
     }
+    setIsLoading(true); // Bắt đầu hiển thị tiến trình quay trở lại
 
     forgotPasswordKH(email)
       .then((response) => {
@@ -35,6 +37,9 @@ const ForgotPasswordModal = ({ show, onHide }) => {
         console.error('Lỗi khi gọi API:', error);
         setErrorMessage('Email không tồn tại trong hệ thống.');
         setSuccessMessage('');
+      })
+      .finally(() => {
+        setIsLoading(false); // Kết thúc hiển thị tiến trình quay trở lại
       });
   };
 
@@ -45,8 +50,8 @@ const ForgotPasswordModal = ({ show, onHide }) => {
   };
 
   return (
-    <div className="custom">
-      <Modal show={show}>
+    <div className="modal-shadow">
+      <Modal style={{ paddingTop: 250, position: '-moz-initial', zIndex: 99999 }} show={show} onHide={onHide}>
         <Modal.Header closeButton>
           <Modal.Title>Quên mật khẩu</Modal.Title>
         </Modal.Header>
@@ -86,7 +91,7 @@ const ForgotPasswordModal = ({ show, onHide }) => {
                 Đóng
               </Button>
               <Button className="submit-button" variant="primary" onClick={handleResetPassword}>
-                Gửi yêu cầu
+                {isLoading ? 'Đang gửi...' : 'Gửi yêu cầu'}
               </Button>
             </div>
           )}

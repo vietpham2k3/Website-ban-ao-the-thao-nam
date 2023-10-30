@@ -179,6 +179,22 @@ function UpdateKhachHang() {
   };
 
   const handleShow1 = (id) => {
+    const dcItem = dc.find((item) => item.id === id);
+
+    // Lấy các giá trị detail của địa chỉ
+    const selectedProvince = dcItem.tinhThanh;
+    const selectedDistrict = dcItem.quanHuyen;
+    const selectedWard = dcItem.phuongXa;
+
+    // Đặt giá trị cho các dropdown
+    setSelectedProvince(selectedProvince);
+    setSelectedDistrict(selectedDistrict);
+    setSelectedWard(selectedWard);
+
+    // Log ra các giá trị cần kiểm tra
+    console.log('Tỉnh:', dcItem.tinhThanh);
+    console.log('Huyện:', dcItem.quanHuyen);
+    console.log('Phường:', dcItem.phuongXa);
     setIdDc(id);
     setShow1(true);
   };

@@ -1,10 +1,16 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import '../../scss/Login.scss';
 import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
 
-export default function IndexLogin() {
+export default function IndexLogin(props) {
   const [type, setType] = useState('signIn');
+  const { openForgotPasswordModal, showForgotPasswordModal, closeForgotPasswordModal } = props;
+  const [state, setState] = React.useState({
+    email: '',
+    password: ''
+  });
   const handleOnClick = (text) => {
     if (text !== type) {
       setType(text);
@@ -15,9 +21,14 @@ export default function IndexLogin() {
   return (
     <div className="App">
       <div className={containerClass} id="container">
-        <SignUpForm />
-        <SignInForm />
-
+        <SignUpForm handleOnClick={handleOnClick} setStates={setState} />
+        <SignInForm
+          state={state}
+          setState={setState}
+          show={showForgotPasswordModal}
+          onHide={closeForgotPasswordModal}
+          openForgotPasswordModal={openForgotPasswordModal}
+        />
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">

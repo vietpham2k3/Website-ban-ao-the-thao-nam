@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,4 +37,11 @@ public interface KhachHangService {
     Page<KhachHang> searchKH(String key, Integer trangThai, Boolean gioiTinh, Pageable pageable);
 
    void sendResetPasswordEmail(String email,String tenKhachHang);
+
+    KhachHang dangKy(KhachHang khachHang);
+
+    boolean checkEmailExists(String email);
+
+
+     KhachHang updateKhinfo(KhachHang khachHang,UUID id);
 }

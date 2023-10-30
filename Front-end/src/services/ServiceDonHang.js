@@ -4,6 +4,10 @@ const getAllPageDH = (page) => {
   return axios.get(`/api/hoa-don/hien-thi-page?page=${page}`);
 };
 
+const searchByTrangThai = (id, values) => {
+  return axios.get(`/api/hoa-don/searchByTrangThai/${id}?trangThai=${values}`);
+};
+
 const findVIP = (key, tuNgay, denNgay, trangThai, loaiDon, page) => {
   return axios.get(`/api/hoa-don/hien-thi-page-find?key=${key}&tuNgay=${tuNgay}&denNgay=${denNgay}
   &trangThai=${trangThai}&loaiDon=${loaiDon}&page=${page}`);
@@ -53,20 +57,24 @@ const addKH2 = (id, values) => {
   return axios.post(`/api/hoa-don/addKHinBH/` + id, values);
 };
 
-const xacNhanDH = (id, values) => {
-  return axios.post(`/api/hoa-don/xac-nhan/` + id, values);
+const xacNhanDH = (id, values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/xac-nhan/${id}?nguoiTao=${nguoiTao}`, values);
 };
 
-const huyDonHang = (id, values) => {
-  return axios.post(`/api/hoa-don/huy-don/` + id, values);
+const huyDonHang = (id, values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/huy-don/${id}?nguoiTao=${nguoiTao}`, values);
 };
 
-const xacNhanListIds = (values) => {
-  return axios.post(`/api/hoa-don/xac-nhan`, values);
+const nhanHang = (id, values) => {
+  return axios.post(`/api/hoa-don/nhan-hang/` + id, values);
 };
 
-const huyDonListIds = (values) => {
-  return axios.post(`/api/hoa-don/huy-don`, values);
+const xacNhanListIds = (values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/xac-nhan?nguoiTao=${nguoiTao}`, values);
+};
+
+const huyDonListIds = (values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/huy-don?nguoiTao=${nguoiTao}`, values);
 };
 
 const xacNhanGiao = (id, values) => {
@@ -81,12 +89,36 @@ const giaoHangThatBai = (id, values) => {
   return axios.post(`/api/hoa-don/giao-hang-that-bai/` + id, values);
 };
 
+const giaoLaiLan1 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-1/` + id, values);
+};
+
+const giaoLaiLan2 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-2/` + id, values);
+};
+
+const giaoLaiLan3 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-lai-lan-3/` + id, values);
+};
+
+const giaoThatBaiLan1 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-1/` + id, values);
+};
+
+const giaoThatBaiLan2 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-2/` + id, values);
+};
+
+const giaoThatBaiLan3 = (id, values) => {
+  return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-3/` + id, values);
+};
+
 const xacNhanThanhToan = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
 
-const addHD = (values) => {
-  return axios.post('/api/hoa-don/add', values);
+const addHD = (values, nguoiTao) => {
+  return axios.post(`/api/hoa-don/add?nguoiTao=${nguoiTao}`, values);
 };
 
 const getById = (id) => {
@@ -121,8 +153,8 @@ const addKM = (values) => {
   return axios.post(`/api/hoa-don/addKM`, values);
 };
 
-const thanhToan = (id) => {
-  return axios.put(`/api/hoa-don/thanh-toan/${id}`);
+const thanhToan = (id, nguoiTao) => {
+  return axios.put(`/api/hoa-don/thanh-toan/${id}?nguoiTao=${nguoiTao}`);
 };
 
 // const searchMS = (key,trangThai, page) => {
@@ -131,6 +163,8 @@ const thanhToan = (id) => {
 
 export {
   getAllHD,
+  nhanHang,
+  searchByTrangThai,
   thanhToan,
   updateHD,
   addKM,
@@ -160,5 +194,11 @@ export {
   findAllAnhByIdMSAndIdSP,
   giaoHangThanhCong,
   giaoHangThatBai,
-  updateHoaDon
+  updateHoaDon,
+  giaoLaiLan1,
+  giaoLaiLan2,
+  giaoLaiLan3,
+  giaoThatBaiLan1,
+  giaoThatBaiLan2,
+  giaoThatBaiLan3
 };

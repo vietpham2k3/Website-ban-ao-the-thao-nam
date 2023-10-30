@@ -265,8 +265,8 @@ function Detail(props) {
   // };
 
   const handleTaoHoaDon = () => {
-    if (dataLogin) {
-      taoHoaDon(valuesHDCT);
+    if (dataLogin && dataLogin.role == 'KH') {
+      taoHoaDon('', valuesHDCT);
     } else {
       if (detailProduct === null) {
         toast.error('Vui lòng chọn màu sắc và kích cỡ');
@@ -276,12 +276,12 @@ function Detail(props) {
         toast.error('Không thể mua sản phẩm này');
         return;
       }
-      taoHoaDon(valuesHDCT);
+      taoHoaDon('', valuesHDCT);
     }
   };
 
-  const taoHoaDon = async (value) => {
-    const res = await postGH(value);
+  const taoHoaDon = async (nguoiTao, value) => {
+    const res = await postGH(nguoiTao, value);
     if (res) {
       navigate(`/checkoutquick/${res.data}`);
     }

@@ -42,6 +42,11 @@ public class HoaDon implements Serializable {
             referencedColumnName = "id")
     private NhanVien nhanVien;
 
+    @ManyToOne
+    @JoinColumn(name = "id_kh",
+            referencedColumnName = "id")
+    private KhachHang khachHang;
+
     @Column(name = "dia_chi")
     private String diaChi;
 
@@ -106,6 +111,9 @@ public class HoaDon implements Serializable {
 
     @Column(name = "ghi_chu")
     private String ghiChu;
+
+    @Column(name = "nguoi_tao")
+    private String nguoiTao;
 
     @Column(name = "loai_don")
     private Integer loaiDon;

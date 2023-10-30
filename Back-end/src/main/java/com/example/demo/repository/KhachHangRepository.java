@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,8 +61,6 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
 
     @Query("select kh from KhachHang kh where kh.email = :email")
     KhachHang findByEmail(@Param("email") String email);
-
-
 
 
     @Modifying

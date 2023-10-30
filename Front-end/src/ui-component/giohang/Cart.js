@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import '../../scss/Card.scss';
@@ -76,16 +77,17 @@ function Cart(props) {
       toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
       return;
     }
-    if (dataLogin) {
-      taoHoaDon(selectedProducts);
+    // eslint-disable-next-line react/prop-types
+    if (dataLogin && dataLogin.role == 'KH') {
+      taoHoaDon('', selectedProducts);
     } else {
-      taoHoaDon(hoaDonChiTietList);
+      taoHoaDon('', hoaDonChiTietList);
       localStorage.setItem('productAfter', JSON.stringify(temporaryProductAfter));
     }
   };
 
-  const taoHoaDon = async (value) => {
-    const res = await postGH(value);
+  const taoHoaDon = async (nguoiTao, value) => {
+    const res = await postGH(nguoiTao, value);
     if (res || value) {
       navigate(`/checkout/${res.data}`);
     }
@@ -123,7 +125,7 @@ function Cart(props) {
   };
 
   const handleUpdate = (e, id, soLuong, tongSoLuong, idCTSP) => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       setIdGHCT(id);
       setCheck(true);
       setValuesUpdateGH({
@@ -209,7 +211,7 @@ function Cart(props) {
   };
 
   const handleDelete = (id, soLuong, tongSoLuong) => {
-    if (dataLogin) {
+    if (dataLogin && dataLogin.role == 'KH') {
       deleteProductInCart(id);
     } else {
       putSl(id, tongSoLuong + soLuong);
@@ -241,7 +243,7 @@ function Cart(props) {
       setSelectedProducts([]);
       setTemporaryProductAfter([...productList]);
     } else {
-      if (dataLogin) {
+      if (dataLogin && dataLogin.role == 'KH') {
         setSelectedProducts([...listSP]);
       } else {
         setSelectedProducts([...productList]);

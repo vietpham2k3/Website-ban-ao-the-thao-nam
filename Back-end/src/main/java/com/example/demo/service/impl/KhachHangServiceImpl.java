@@ -3,8 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.service.KhachHangService;
-import com.google.firebase.auth.hash.Bcrypt;
-import org.bouncycastle.crypto.generators.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -123,9 +122,34 @@ public class KhachHangServiceImpl implements KhachHangService {
         );
     }
 
+    @Override
+    public KhachHang dangKy(KhachHang khachHang) {
+        khRepo.save(khachHang);
+        return khachHang;
+    }
+
+    @Override
+    public boolean checkEmailExists(String email) {
+        KhachHang khachHang = khRepo.findByEmail(email);
+        return khachHang != null;
+    }
+
     private String generateRandomPassword() {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
+
+
+    @Override
+    public KhachHang updateKhinfo(KhachHang khachHang, UUID id) {
+        Optional<KhachHang> op = khRepo.findById(id);
+        return op.map(o -> {
+            o.setTenKhachHang(khachHang.getTenKhachHang());
+            o.setEmail(khachHang.getEmail());
+            o.setNgaySinh(khachHang.getNgaySinh());
+            o.setGioiTinh(khachHang.getGioiTinh());
+            return khRepo.save(o);
+        }).orElse(null);
+    }
 
 }

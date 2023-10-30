@@ -8,7 +8,6 @@ import { count } from 'services/GioHangService';
 
 function DetailSanPham() {
   const [productCount, setProductCount] = useState(0);
-
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const idGH = localStorage.getItem('idGH') || '';
 
@@ -33,11 +32,12 @@ function DetailSanPham() {
       setProductCount(res.data);
     }
   };
-
   return (
     <div>
-      <Header productCount={productCount} dataLogin={dataLogin} />
-      <Detail setProductCount={setProductCount} productCount={productCount} countSP={countSP} idGH={idGH} />
+      <Header />
+      <div className="content-container">
+        <Detail setProductCount={setProductCount} productCount={productCount} countSP={countSP} idGH={idGH} />
+      </div>
       <Footer />
     </div>
   );
