@@ -8,6 +8,10 @@ const getAllKH = (id) => {
   return axios.get('/api/khach-hang/getAll' + id);
 };
 
+const getAll = (id) => {
+  return axios.get('/api/khach-hang/getAllKH/' + id);
+};
+
 const addKH = (values) => {
   return axios.post('/api/khach-hang/add', values);
 };
@@ -77,5 +81,6 @@ export {
   addDCKH,
   updateInfo,
   changePassword,
-  checkCurrentPassword
+  checkCurrentPassword,
+  
 };
