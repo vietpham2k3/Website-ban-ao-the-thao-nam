@@ -7,13 +7,6 @@ import com.example.demo.entity.SanPham;
 import com.example.demo.service.impl.AnhServiceImpl;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.SanPhamServiceImpl;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -118,7 +111,7 @@ public class ChiTietSanPhamController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) throws IOException, WriterException {
+    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) throws IOException {
         String ma = "CTSP" + new Random().nextInt(100000);
         String maSP = "SP" + new Random().nextInt(100000);
 
