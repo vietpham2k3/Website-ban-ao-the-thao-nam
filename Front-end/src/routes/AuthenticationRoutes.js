@@ -79,6 +79,10 @@ const AuthenticationRoutes = {
     {
       path: '/khachhang-info/:id',
       element: <UserAccount />
+    },
+    {
+      path: '/khachhang-doiMatKhau/:id',
+      element: <UserAccount />
     }
   ]
 };

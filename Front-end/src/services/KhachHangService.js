@@ -55,6 +55,9 @@ const updateInfo = (id, values) => {
   return axios.put('/api/khach-hang/updateinfo/' + id, values);
 };
 
+const changePassword = (id, values) => {
+  return axios.put('/api/khach-hang/change-password/' + id, values);
+};
 export {
   getAllKH,
   addKH,
@@ -69,5 +72,6 @@ export {
   updateDC,
   addDC,
   addDCKH,
-  updateInfo
+  updateInfo,
+  changePassword
 };

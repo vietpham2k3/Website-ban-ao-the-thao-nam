@@ -69,4 +69,5 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
     void updatePasswordByEmail(String newPassword, String email);
 
 
+
 }

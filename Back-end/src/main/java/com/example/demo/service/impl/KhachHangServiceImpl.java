@@ -152,4 +152,21 @@ public class KhachHangServiceImpl implements KhachHangService {
         }).orElse(null);
     }
 
+    @Override
+    public KhachHang changePassword(KhachHang khachHang) {
+        return khRepo.save(khachHang);
+//        Optional<KhachHang> op=khRepo.findById(id);
+//
+//        return op.map(o->{
+//            o.setMatKhau(khachHang.getMatKhau());
+//            return khRepo.save(o);
+//        }).orElse(null);
+    }
+
+    @Override
+    public KhachHang findEmail(String email) {
+        return khRepo.findEmail(email);
+    }
+
+
 }

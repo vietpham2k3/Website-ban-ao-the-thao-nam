@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
+import com.example.demo.dto.DoiMatKhau;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.KhachHangInfo;
 import com.example.demo.entity.DiaChi;
@@ -354,6 +355,40 @@ public class KhachHangController {
         KhachHang savedKhachHang = khService.updateKhinfo(khachHang, id);
         KhachHangInfo savedKhachHanginfo = convertToinfo(savedKhachHang);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHanginfo);
+    }
+
+//    private DoiMatKhau convertToPassword(KhachHang khachHang) {
+//        DoiMatKhau doiMatKhau = DoiMatKhau.builder().mauKhau(khachHang.getMatKhau()).build();
+//
+//        return doiMatKhau;
+//    }
+
+    @PutMapping("/change-password/{id}")
+    public String changePassword(
+            @PathVariable UUID id,
+            @RequestBody DoiMatKhau changePasswordRequest
+    ) {
+        KhachHang user = khService.getOne(id);
+
+        if (user == null) {
+            return "User not found";
+        }
+
+        // Thực hiện xác thực mật khẩu hiện tại ở đây
+        if (!user.getMatKhau().equals(changePasswordRequest.getCurrentPassword())) {
+            return "Incorrect current password";
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
+            return "New password and confirm password do not match";
+        }
+
+        // Thực hiện thay đổi mật khẩu
+        user.setMatKhau(changePasswordRequest.getNewPassword());
+        khService.changePassword(user);
+
+        return "Password changed successfully";
     }
 
 }
