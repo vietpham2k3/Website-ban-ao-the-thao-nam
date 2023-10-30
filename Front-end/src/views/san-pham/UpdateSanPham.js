@@ -38,7 +38,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import AddMauSac from './AddQuicklyMauSac';
 import { postMS } from 'services/ServiceMauSac';
-import QrCode from 'qrcode';
+import QRCode from 'qrcode.react';
 
 function UpdateSanPham() {
   const [listCL, setListCL] = useState([]);
@@ -375,23 +375,6 @@ function UpdateSanPham() {
     handleDelete(itemId);
   }
 
-  const [qrDataURL, setQRDataURL] = useState('');
-
-  useEffect(() => {
-    const generateQRDataURL = async () => {
-      if (values && values.id) {
-        try {
-          const dataURL = await QrCode.toDataURL(values.id);
-          setQRDataURL(dataURL);
-        } catch (error) {
-          console.error('Error generating QR code:', error);
-        }
-      }
-    };
-
-    generateQRDataURL();
-  }, [values]);
-
   return (
     <div>
       <MainCard>
@@ -414,9 +397,8 @@ function UpdateSanPham() {
             />
           </div>
           <div className="col-md-4" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {qrDataURL && <img src={qrDataURL} style={{ width: '70px', height: '70px' }} alt="QR Code" />}
+            {values && values.id && <QRCode style={{ width: 70, height: 70 }} value={values.id} />}
           </div>
-
           <div className="col-md-12">
             <label className="form-label" htmlFor="trang-thai1">
               Mô tả
