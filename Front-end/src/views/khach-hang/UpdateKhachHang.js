@@ -160,7 +160,7 @@ function UpdateKhachHang() {
 
   const handleShow1 = (id) => {
     const dcItem = dc.find((item) => item.id === id);
-
+  
     // Lấy các giá trị detail của địa chỉ
     const selectedProvince = dcItem.tinhThanh;
     const selectedDistrict = dcItem.quanHuyen;

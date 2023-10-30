@@ -44,6 +44,8 @@ public class KhachHangController {
     @Autowired
     private SendEmailServicecImpl emailService;
 
+
+
     @GetMapping("/getAll/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") UUID id) throws IOException, SQLException {
         KhachHang kh = khService.getOne(id);
@@ -67,6 +69,11 @@ public class KhachHangController {
             }
         }
         return null;
+    }
+
+    @GetMapping("/getAllKH/{id}")
+    public ResponseEntity<?> getAllKH(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(khService.getOne(id));
     }
 
     @GetMapping("/getAllPage")

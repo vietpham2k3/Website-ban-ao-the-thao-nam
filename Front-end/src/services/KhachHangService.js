@@ -8,6 +8,10 @@ const getAllKH = (id) => {
   return axios.get('/api/khach-hang/getAll' + id);
 };
 
+const getAll = (id) => {
+  return axios.get('/api/khach-hang/getAllKH/' + id);
+};
+
 const addKH = (values) => {
   return axios.post('/api/khach-hang/add', values);
 };
@@ -52,4 +56,4 @@ const addDCKH = (id, values) => {
   return axios.post('/api/dia-chi/add/' + id, values);
 };
 
-export { getAllKH, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh, getAllDcKh, deleteDC, detailDC, updateDC, addDC, addDCKH };
+export { getAllKH, getAll, addKH, deleteKH, detailKH, updateKH, getAllPageKH, searchKh, getAllDcKh, deleteDC, detailDC, updateDC, addDC, addDCKH };
