@@ -150,10 +150,12 @@ function ListDonHang(props) {
                   Nhận hàng
                 </ButtonMUI>
               )}
-              {d.hoaDon.trangThai === 0 && (
+              {d.hoaDon.trangThai === 0 || d.hoaDon.trangThai === 6 ? (
                 <ButtonMUI className="mt-2 me-3" variant="contained" color="error" onClick={() => handleOpenModal(d.hoaDon.id)}>
                   Huỷ đơn
                 </ButtonMUI>
+              ) : (
+                ''
               )}
             </div>
           </div>

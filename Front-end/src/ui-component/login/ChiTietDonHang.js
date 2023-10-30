@@ -37,12 +37,18 @@ function ChiTietDonHang() {
     getAllKM(id);
   }, [id]);
 
+  useEffect(() => {
+    dataDetailLSHD.reverse();
+  }, [dataDetailLSHD]);
+
   const getOneHD = async (id) => {
     const res = await detailHD(id);
     if (res) {
       setDataHD(res.data);
-      if (res.data.trangThai === 2) {
-        setSteps(['Đặt đơn', 'Huỷ đơn']);
+      if (res.data.trangThai === 2 && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
+        setSteps(['Yêu cầu huỷ đơn', 'Huỷ đơn']);
+      } else if (res.data.trangThai === 2 && res.data.hinhThucThanhToan.ten === 'VNPay') {
+        setSteps(['Yêu cầu huỷ đơn', 'Hoàn tiền', 'Huỷ đơn']);
       }
     }
   };
@@ -96,9 +102,6 @@ function ChiTietDonHang() {
     return formatter.format(number);
   }
 
-  console.log(dataDetailLSHD);
-  console.log(dataHD);
-  console.log(dataHDCT);
   return (
     <div>
       <Header />
@@ -136,7 +139,7 @@ function ChiTietDonHang() {
                 <Box sx={{ width: '100%' }}>
                   <Stepper
                     activeStep={
-                      dataHD.trangThai === 0
+                      dataHD.trangThai === 0 || dataHD.trangThai === 14
                         ? 0
                         : dataHD.trangThai === 1
                         ? 2

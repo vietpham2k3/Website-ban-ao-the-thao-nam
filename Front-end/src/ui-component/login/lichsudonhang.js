@@ -37,7 +37,7 @@ function History() {
   const [data, setData] = useState([]);
   const tabs = [
     { title: 'Tất cả', trangThai: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-    { title: 'Chờ xác nhận', trangThai: [0] },
+    { title: 'Chờ xác nhận', trangThai: [0, 6] },
     { title: 'Đang giao', trangThai: [1, 3, 4, 5, 8, 9, 10, 11, 12, 13] },
     { title: 'Hoàn thành', trangThai: [7] },
     { title: 'Huỷ đơn', trangThai: [2] },
