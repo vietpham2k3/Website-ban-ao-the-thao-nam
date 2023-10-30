@@ -58,6 +58,9 @@ const updateInfo = (id, values) => {
 const changePassword = (id, values) => {
   return axios.put('/api/khach-hang/change-password/' + id, values);
 };
+const checkCurrentPassword = (values) => {
+  return axios.post('/api/khach-hang/check-current-password', values);
+};
 export {
   getAllKH,
   addKH,
@@ -73,5 +76,6 @@ export {
   addDC,
   addDCKH,
   updateInfo,
-  changePassword
+  changePassword,
+  checkCurrentPassword
 };

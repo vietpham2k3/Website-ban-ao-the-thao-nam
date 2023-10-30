@@ -357,11 +357,7 @@ public class KhachHangController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHanginfo);
     }
 
-//    private DoiMatKhau convertToPassword(KhachHang khachHang) {
-//        DoiMatKhau doiMatKhau = DoiMatKhau.builder().mauKhau(khachHang.getMatKhau()).build();
-//
-//        return doiMatKhau;
-//    }
+
 
     @PutMapping("/change-password/{id}")
     public String changePassword(
@@ -390,5 +386,20 @@ public class KhachHangController {
 
         return "Password changed successfully";
     }
+    @PostMapping("/check-current-password")
+    public ResponseEntity<String> checkCurrentPassword(@RequestBody DoiMatKhau request) {
+        UUID userId = request.getId();
+        String currentPassword = request.getCurrentPassword();
 
+        // Kiểm tra tính hợp lệ của mật khẩu hiện tại
+        boolean isCurrentPasswordValid = khService.isCurrentPasswordValid(userId, currentPassword);
+
+        if (isCurrentPasswordValid) {
+            // Mật khẩu hiện tại hợp lệ
+            return ResponseEntity.ok("Mật khẩu hiện tại hợp lệ.");
+        } else {
+            // Mật khẩu hiện tại không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu hiện tại không hợp lệ.");
+        }
+    }
 }

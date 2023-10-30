@@ -46,6 +46,6 @@ public interface KhachHangService {
     KhachHang updateKhinfo(KhachHang khachHang, UUID id);
 
     KhachHang changePassword(KhachHang khachHang);
+    boolean isCurrentPasswordValid(UUID id, String currentPassword);
 
-    KhachHang findEmail(String email);
 }

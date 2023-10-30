@@ -5,27 +5,36 @@ import Footer from 'ui-component/trangchu/Footer';
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
-import { detailKH, updateInfo } from 'services/KhachHangService';
+import { changePassword, detailKH, updateInfo, checkCurrentPassword } from 'services/KhachHangService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 function UserAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const handleUpdate = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    navigate('/thong-tin_user');
+  };
+  const handleCloseModalmk = () => {
     setIsChangePasswordModalOpen(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
     navigate('/thong-tin_user');
   };
 
-  //đổi mật khẩu
   const handleCapNhat = () => {
     setIsChangePasswordModalOpen(true);
   };
+
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
   const navigate = useNavigate();
@@ -34,8 +43,10 @@ function UserAccount() {
     tenKhachHang: '',
     email: '',
     ngaySinh: '',
-    gioiTinh: null
+    gioiTinh: null,
+    matKhau: ''
   });
+
   const handleGenderChange = (newValue) => {
     setValues({ ...values, gioiTinh: newValue });
   };
@@ -61,9 +72,9 @@ function UserAccount() {
       });
     }
   };
+
   useEffect(() => {
     detail(dataLogin.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataLogin.id]);
 
   const put = async (id, value) => {
@@ -74,8 +85,51 @@ function UserAccount() {
     }
 
     setIsModalOpen(false);
-    setIsChangePasswordModalOpen(false);
   };
+  const handlePasswordUpdate = async () => {
+    if (newPassword !== confirmPassword) {
+      toast.error('Mật khẩu mới và xác nhận mật khẩu mới không khớp');
+      return;
+    }
+
+    try {
+      const userId = dataLogin.id;
+      const isCurrentPasswordValidResponse = await checkCurrentPassword({
+        id: userId,
+        currentPassword
+      });
+
+      if (isCurrentPasswordValidResponse.data === false) {
+        toast.error('Mật khẩu hiện tại không hợp lệ');
+        return;
+      }
+
+      if (newPassword === currentPassword) {
+        toast.error('Mật khẩu mới không được trùng với mật khẩu cũ');
+        return;
+      }
+
+      const passwordUpdateData = {
+        currentPassword,
+        newPassword,
+        confirmPassword: confirmPassword
+      };
+
+      const passwordUpdateResponse = await changePassword(userId, passwordUpdateData);
+
+      if (passwordUpdateResponse) {
+        toast.success('Mật khẩu đã được cập nhật thành công');
+        setIsChangePasswordModalOpen(false);
+        navigate('/thong-tin_user');
+        window.location.reload();
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error('Mật khẩu hiện tại không hợp lệ');
+      }
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     put(id, values);
@@ -203,14 +257,24 @@ function UserAccount() {
             <br></br>
             <div className="user-details">
               <h1>THÔNG TIN ĐĂNG NHẬP</h1>
-              <p>Email: {dataLogin.email}</p>
-              <label htmlFor="password">Mật khẩu:</label>
+              <p>Email: {values.email}</p>
+
+              <label htmlFor="password" className="password-label">
+                Mật khẩu:
+              </label>
               <div className="i">
-                <input type="password" id="password" value={dataLogin.matKhau} required />
+                <input type="password" id="password" value={values.matKhau} className="password-input" required />
               </div>
 
               <br></br>
-              <button onClick={handleCapNhat}>Cập nhật</button>
+              <button
+                onClick={() => {
+                  handleCapNhat();
+                  navigate(`/khachhang-doiMatKhau/${dataLogin.id}`);
+                }}
+              >
+                Cập nhật
+              </button>
               <Modal
                 isOpen={isChangePasswordModalOpen}
                 contentLabel="Update User Information"
@@ -219,14 +283,29 @@ function UserAccount() {
                 <div className="modal-content">
                   <h2>ĐỔI MẬT KHẨU</h2>
                   <form>
-                    <input type="password" placeholder="Mật Khẩu Cũ" />
-                    <input type="password" placeholder="Mật Khẩu Mới" />
-                    <input type="password" placeholder="Xác Nhận Mật Khẩu Mới" />
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="Mật Khẩu Cũ"
+                    />
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Mật Khẩu Mới"
+                    />
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Xác Nhận Mật Khẩu Mới"
+                    />
                   </form>
                   <br></br>
                   <div className="button1">
-                    <button onClick={handleCloseModal}>Đóng</button>
-                    <button onClick={handleCapNhat}>Cập nhật</button>
+                    <button onClick={handleCloseModalmk}>Đóng</button>
+                    <button onClick={handlePasswordUpdate}>Cập nhật</button>
                   </div>
                 </div>
               </Modal>
