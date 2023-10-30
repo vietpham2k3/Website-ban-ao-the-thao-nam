@@ -36,6 +36,8 @@ import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 
+import QrReader from 'react-qr-reader';
+
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAllHD } = props;
@@ -634,7 +636,13 @@ function DonHang(props) {
   const handleClose1 = () => {
     setShow1(false);
   };
-  const handleShow1 = () => setShow1(true);
+
+  // const [isCase1, setIsCase1] = useState(true);
+
+  const handleShow1 = () => {
+    // setIsCase1(true);
+    setShow1(true);
+  };
   const [show2, setShow2] = useState(false);
   const handleClose2 = () => {
     setShow2(false);
@@ -853,23 +861,103 @@ function DonHang(props) {
 
   console.log(urlPay);
 
+  //showScanQR
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [qrData, setQrData] = useState('');
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleScan = async (data) => {
+    if (data) {
+      setQrData(data);
+      console.log('QR Data:', data);
+  
+      try {
+        const response = await detailCTSP(data);
+        const scannedProductInfo = response.data;
+        console.log('Scanned Product Info:', scannedProductInfo);
+  
+        // Kiểm tra xem sản phẩm đã tồn tại trong bảng hay chưa
+        const existingProductIndex = valuesSanPham.findIndex(
+          (product) => product.chiTietSanPham.id === scannedProductInfo.id
+        );
+        console.log(existingProductIndex);
+  
+        if (existingProductIndex !== -1) {
+          const updatedValuesSanPham = [...valuesSanPham];
+          updatedValuesSanPham[existingProductIndex].soLuong += 1;
+          setValuesSanPham(updatedValuesSanPham);
+        } else {
+          const newProduct = {
+            chiTietSanPham: {
+              id: scannedProductInfo.id
+            },
+            hoaDon: {
+              id: id
+            },
+            soLuong: 1
+          };
+          setValuesSanPham([...valuesSanPham, newProduct]);
+        }
+        console.log('Updated Values San Pham:', valuesSanPham);
+      } catch (error) {
+        console.log('Lỗi khi lấy thông tin sản phẩm từ QR:', error);
+      }
+    }
+  };
+
+  const handleError = (error) => {
+    if (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <div className="row">
         <div className="col-8">
           <div className="col-5">
             <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
-              <button onClick={handleShow1} className="relative inline-block text-base group">
-                <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
-                  <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
-                  <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                  <span className="relative">Thêm sản phẩm</span>
-                </span>
-                <span
-                  className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
-                  data-rounded="rounded-lg"
-                ></span>
-              </button>
+              <div>
+                <button onClick={handleShow1} className="relative inline-block text-base group">
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative">Thêm sản phẩm</span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+              <div>
+                <button onClick={openModal} className="relative inline-block text-base group">
+                  <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                    <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                    <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                    <span className="relative">Quét QR</span>
+                  </span>
+                  <span
+                    className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                    data-rounded="rounded-lg"
+                  ></span>
+                </button>
+              </div>
+              <Modal centered show={isModalOpen} onHide={closeModal}>
+                <Modal.Body>
+                  <QrReader delay={1000} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
+                  <h6>QR Result: {qrData}</h6>
+                  <button onClick={closeModal}>Đóng</button>
+                </Modal.Body>
+              </Modal>
+
               <Modal
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
