@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -125,4 +126,19 @@ public class ThongKeController {
         return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNam());
     }
 
+    //
+    @GetMapping("san-pham-ban-chay-trong-ngay-search")
+    public ResponseEntity<?> sanPhamBanChayTrongNgayS(@RequestParam String key) {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNgaySearch(key));
+    }
+
+    @GetMapping("san-pham-ban-chay-trong-thang-search")
+    public ResponseEntity<?> sanPhamBanChayTrongThangS(@RequestParam String key) {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongThangSearch(key));
+    }
+
+    @GetMapping("san-pham-ban-chay-trong-nam-search")
+    public ResponseEntity<?> sanPhamBanChayTrongNamS(@RequestParam String key) {
+        return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNamSearch(key));
+    }
 }
