@@ -171,6 +171,8 @@ function DonHangCT() {
     }
   };
 
+  console.log(hoaDon);
+
   const handleUpdateHD = async (event) => {
     event.preventDefault();
     if (hoaDon.tenNguoiNhan === '') {
@@ -1084,13 +1086,22 @@ function DonHangCT() {
                                         {item.trangThai === 13 && (
                                           <i style={{ color: 'red' }} className="fa-solid fa-ban fa-beat-fade fa-lg"></i>
                                         )}
+                                        {item.trangThai === 14 && (
+                                          <i style={{ color: 'black' }} className="fa-solid fa-clipboard-question fa-beat-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 15 && (
+                                          <i style={{ color: 'black' }} className="fa-solid fa-clipboard-question fa-beat-fade fa-lg"></i>
+                                        )}
+                                        {item.trangThai === 16 && (
+                                          <i style={{ color: '#0000FF' }} className="fa-solid fa-clipboard-check fa-beat-fade fa-lg"></i>
+                                        )}
                                       </div>
                                     </td>
                                     <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
                                       {item.trangThai === 0 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1107,7 +1118,7 @@ function DonHangCT() {
                                       {item.trangThai === 1 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1124,7 +1135,7 @@ function DonHangCT() {
                                       {item.trangThai === 2 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1143,7 +1154,7 @@ function DonHangCT() {
                                       {item.trangThai === 3 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1160,7 +1171,7 @@ function DonHangCT() {
                                       {item.trangThai === 4 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1179,7 +1190,7 @@ function DonHangCT() {
                                       {item.trangThai === 5 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1198,7 +1209,7 @@ function DonHangCT() {
                                       {item.trangThai === 6 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1215,7 +1226,7 @@ function DonHangCT() {
                                       {item.trangThai === 7 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1234,7 +1245,7 @@ function DonHangCT() {
                                       {item.trangThai === 8 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1251,7 +1262,7 @@ function DonHangCT() {
                                       {item.trangThai === 9 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1268,7 +1279,7 @@ function DonHangCT() {
                                       {item.trangThai === 10 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1285,7 +1296,7 @@ function DonHangCT() {
                                       {item.trangThai === 11 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1304,7 +1315,7 @@ function DonHangCT() {
                                       {item.trangThai === 12 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1323,7 +1334,7 @@ function DonHangCT() {
                                       {item.trangThai === 13 && (
                                         <span
                                           style={{
-                                            width: '200px',
+                                            width: '240px',
                                             pointerEvents: 'none',
                                             height: '30px',
                                             borderRadius: '20px',
@@ -1337,6 +1348,63 @@ function DonHangCT() {
                                           className="btn btn-labeled shadow-button btn status-cancelled"
                                         >
                                           Giao hàng thất bại lần 3
+                                        </span>
+                                      )}
+                                      {item.trangThai === 14 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: '#FFFF00',
+                                            color: 'black'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Yêu cầu hủy đơn
+                                        </span>
+                                      )}
+                                      {item.trangThai === 15 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: '#FFFF00',
+                                            color: 'black'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Yêu cầu trả hàng
+                                        </span>
+                                      )}
+                                      {item.trangThai === 16 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'darkblue',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Trả hàng thành công
                                         </span>
                                       )}
                                     </td>
@@ -1553,6 +1621,65 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
+
+                          {lshd.trangThai === 13 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 13 ? { backgroundColor: 'orangered', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-ban fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+
+                          {lshd.trangThai === 14 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 14 ? { backgroundColor: '#FFFF00', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-question fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+
+                          {lshd.trangThai === 15 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 15 ? { backgroundColor: '#FFFF00', color: 'black' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-question fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                          {lshd.trangThai === 16 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 16 ? { backgroundColor: '#0000FF', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-check fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
                         </React.Fragment>
                       ))}
                     </ul>
@@ -1647,6 +1774,22 @@ function DonHangCT() {
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
                       <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
                       <span className="relative">Giao lại lần 3</span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+                {/* //xac nhan huy don  */}
+                {hoaDon.trangThai === 14 && hoaDon.loaiDon === 1 && (
+                  <button onClick={handleShow3} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative" style={{ color: 'red' }}>
+                        Xác nhận hủy
+                      </span>
                     </span>
                     <span
                       className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
@@ -2577,7 +2720,8 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : ''}
+                        {hoaDon.loaiDon == 0 && (hoaDon.nhanVien && hoaDon.nhanVien.ten ? hoaDon.nhanVien.ten : '')}
+                        {hoaDon.loaiDon == 1 && (hoaDon.khachHang && hoaDon.khachHang.tenKhachHang ? hoaDon.khachHang.tenKhachHang : '')}
                       </span>
                     </Col>
                   </Col>
@@ -2839,10 +2983,85 @@ function DonHangCT() {
                             Giao hàng thất bại
                           </span>
                         )}
+                        {hoaDon.trangThai === 13 && (
+                          <span
+                            style={{
+                              width: '240px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: 'red',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Giao hàng thất bại
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 14 && (
+                          <span
+                            style={{
+                              width: '240px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: '#FFFF00',
+                              color: 'black'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Yêu cầu hủy đơn
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 15 && (
+                          <span
+                            style={{
+                              width: '240px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: '#FFFF00',
+                              color: 'black'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Yêu cầu trả hàng
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 16 && (
+                          <span
+                            style={{
+                              width: '240px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: '#0000FF',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Trả hàng thành công
+                          </span>
+                        )}
                       </div>
                     </Col>
                   </Col>
-
                   <Col sm={6} className="row">
                     <Col sm={3}>
                       <span
@@ -2984,7 +3203,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : ''}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : (<p style={{ color: 'red' }}>Chưa chọn hình thức !</p>)}
                         {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt' && (
                           <img
                             style={{ display: 'inline-block' }}
@@ -3030,7 +3249,8 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.soDienThoai}
+                        {hoaDon.soDienThoai && hoaDon.soDienThoai}
+                        {!hoaDon.soDienThoai && <p style={{ color: 'red' }}>Không có số điện thoại !</p>}
                       </span>
                     </Col>
                   </Col>
@@ -3062,7 +3282,8 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.ghiChu}
+                        {hoaDon.ghiChu && hoaDon.ghiChu}
+                        {!hoaDon.ghiChu && <p style={{ color: 'red' }}>Không có ghi chú !</p>}
                       </span>
                     </Col>
                   </Col>
@@ -3088,7 +3309,13 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.diaChi}, {hoaDon.xa}, {hoaDon.huyen}, {hoaDon.tinh}
+                        {hoaDon.diaChi && (
+                          <p>
+                            {hoaDon.diaChi}, {hoaDon.xa}, {hoaDon.huyen}, {hoaDon.tinh}
+                          </p>
+                        )}
+
+                        {!hoaDon.diaChi && <p style={{ color: 'red' }}>Không có địa chỉ !</p>}
                       </span>
                     </Col>
                   </Col>
