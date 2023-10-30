@@ -18,7 +18,7 @@ public interface LichSuHoaDonRepository extends JpaRepository<LichSuHoaDon, UUID
             "LSHD.ngay_tao,LSHD.ghi_chu,LSHD.id_hd\n" +
             "  FROM LichSuHoaDon LSHD JOIN HoaDon HD ON LSHD.id_hd = HD.id\n" +
             "  WHERE HD.id = :id " +
-            "ORDER BY LSHD.ngay_tao ASC"
+            "ORDER BY LSHD.ngay_tao DESC"
             ,nativeQuery = true)
     List<LichSuHoaDon> findALLLichSuHoaDonByHoaDonId(UUID id);
 

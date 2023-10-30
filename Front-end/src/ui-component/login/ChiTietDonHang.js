@@ -1,4 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
 import SlideBar from 'layout/SlideBar';
+// import '../../scss/information.scss';
 import React from 'react';
 import Footer from 'ui-component/trangchu/Footer';
 import Header from 'ui-component/trangchu/Header';
@@ -13,24 +15,145 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent, { timelineOppositeContentClasses } from '@mui/lab/TimelineOppositeContent';
-// import '../../scss/information.scss';
+import Button from '@mui/material/Button';
+import { useNavigate, useParams } from 'react-router';
+import { detailLSHD, detailHD, getById, getKmById } from 'services/ServiceDonHang';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 function ChiTietDonHang() {
-  const steps = ['Đặt đơn', 'Thanh toán', 'Giao hàng', 'Hoàn thành'];
+  const [steps, setSteps] = useState(['Đặt đơn', 'Thanh toán', 'Giao hàng', 'Hoàn thành']);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [dataDetailLSHD, setDataDetailLSHD] = useState([]);
+  const [dataHDCT, setHDCT] = useState([]);
+  const [dataKM, setKM] = useState([]);
+  const [dataHD, setDataHD] = useState({});
+
+  useEffect(() => {
+    listLSHD(id);
+    getOneHD(id);
+    getAllHDCT(id);
+    getAllKM(id);
+  }, [id]);
+
+  const getOneHD = async (id) => {
+    const res = await detailHD(id);
+    if (res) {
+      setDataHD(res.data);
+      if (res.data.trangThai === 2) {
+        setSteps(['Đặt đơn', 'Huỷ đơn']);
+      }
+    }
+  };
+
+  const getAllKM = async (id) => {
+    const res = await getKmById(id);
+    if (res) {
+      setKM(res.data);
+    }
+  };
+
+  const getAllHDCT = async (id) => {
+    const res = await getById(id);
+    if (res) {
+      setHDCT(res.data);
+    }
+  };
+
+  const listLSHD = async (id) => {
+    const res = await detailLSHD(id);
+    if (res) {
+      setDataDetailLSHD(res.data);
+    }
+  };
+
+  function formatDate(dateString) {
+    const dateObject = new Date(dateString);
+
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
+    const year = dateObject.getFullYear();
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+
+    // Sử dụng padStart để đảm bảo phút luôn có 2 chữ số
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    // Sử dụng padStart để đảm bảo phút luôn có 2 chữ số
+    const formattedHours = hours.toString().padStart(2, '0');
+
+    const formattedDate = `${formattedHours}:${formattedMinutes} ${day}/${month}/${year}`;
+
+    return formattedDate;
+  }
+
+  function convertToCurrency(number) {
+    // Chuyển đổi số thành định dạng tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(number);
+  }
+
+  console.log(dataDetailLSHD);
+  console.log(dataHD);
+  console.log(dataHDCT);
   return (
     <div>
       <Header />
       <div className="container">
         <div className="row slide-bar">
-          <div className="col-2">
+          <div className="col-2 slide-bar-children">
             <SlideBar></SlideBar>
           </div>
           <div className="separator"></div>
           <div className="col-9">
-            <div className="user-details card-box row">
+            <div className="user-details row">
+              <div className="col-12 d-flex align-items-center justify-content-between">
+                <Button className="back-to-history" variant="text" onClick={() => navigate(`/history`)}>
+                  {'<'} Trở lại
+                </Button>
+                <h6 className="d-flex align-items-center" style={{ color: 'red' }}>
+                  {dataHD.trangThai === 0
+                    ? 'Chờ xác nhận'
+                    : dataHD.trangThai === 1
+                    ? 'Chờ giao hàng'
+                    : dataHD.trangThai === 2
+                    ? 'Huỷ đơn'
+                    : dataHD.trangThai === 3 || dataHD.trangThai === 8 || dataHD.trangThai === 9 || dataHD.trangThai === 10
+                    ? 'Đang giao hàng'
+                    : dataHD.trangThai === 5 || dataHD.trangThai === 1 || dataHD.trangThai === 12 || dataHD.trangThai === 13
+                    ? 'Đang giao hàng'
+                    : dataHD.trangThai === 4
+                    ? 'Giao hàng thành công'
+                    : dataHD.trangThai === 6
+                    ? 'Thanh toán thành công'
+                    : 'Hoàn thành'}
+                </h6>
+              </div>
               <div className="col-12 d-flex align-items-center" style={{ height: 170, borderBottom: '1px solid gray' }}>
                 <Box sx={{ width: '100%' }}>
-                  <Stepper activeStep={0} alternativeLabel>
+                  <Stepper
+                    activeStep={
+                      dataHD.trangThai === 0
+                        ? 0
+                        : dataHD.trangThai === 1
+                        ? 2
+                        : dataHD.trangThai === 2
+                        ? 2
+                        : dataHD.trangThai === 3 || dataHD.trangThai === 8 || dataHD.trangThai === 9 || dataHD.trangThai === 10
+                        ? 2
+                        : dataHD.trangThai === 5 || dataHD.trangThai === 1 || dataHD.trangThai === 12 || dataHD.trangThai === 13
+                        ? 2
+                        : dataHD.trangThai === 4
+                        ? 2
+                        : dataHD.trangThai === 6
+                        ? 1
+                        : 3
+                    }
+                    alternativeLabel
+                  >
                     {steps.map((label, i) => (
                       <Step key={i}>
                         <StepLabel>{label}</StepLabel>
@@ -42,10 +165,10 @@ function ChiTietDonHang() {
               <h4 style={{ padding: '20px 0 20px 30px' }}>Địa chỉ nhận hàng</h4>
               <div className="col-12 d-flex">
                 <div className="col-5">
-                  <h6 style={{ padding: '0 0 0 20px' }}>Con cặc</h6>
-                  <p style={{ padding: '0 0 0 20px' }}>
-                    0230975473 <br />
-                    Nhà đầu buồi, xã con cặc, tỉnh lồn
+                  <h6 style={{ padding: '0 0 0 20px' }}> {dataHD.tenNguoiNhan}</h6>
+                  <p style={{ padding: '0 20px 0 20px' }}>
+                    {dataHD.soDienThoai} <br />
+                    {dataHD.diaChi}, {dataHD.xa}, {dataHD.huyen}, {dataHD.tinh}
                   </p>
                 </div>
                 <div className="col-7" style={{ borderLeft: '1px solid gray' }}>
@@ -56,42 +179,89 @@ function ChiTietDonHang() {
                       }
                     }}
                   >
-                    <TimelineItem>
-                      <TimelineOppositeContent color="textSecondary">09:30 am</TimelineOppositeContent>
-                      <TimelineSeparator>
-                        <TimelineDot color="success" />
-                        <TimelineConnector />
-                      </TimelineSeparator>
-                      <TimelineContent>Eat</TimelineContent>
-                    </TimelineItem>
-                    <TimelineItem>
-                      <TimelineOppositeContent color="textSecondary">10:00 am</TimelineOppositeContent>
-                      <TimelineSeparator>
-                        <TimelineDot />
-                      </TimelineSeparator>
-                      <TimelineContent>Code</TimelineContent>
-                    </TimelineItem>
+                    {dataDetailLSHD.map((d, i) => (
+                      <TimelineItem key={i}>
+                        <TimelineOppositeContent color="textSecondary">{formatDate(d.ngayTao)}</TimelineOppositeContent>
+                        <TimelineSeparator>
+                          <TimelineDot color={d.trangThai === dataHD.trangThai ? 'success' : 'grey'} />
+                          {i < dataDetailLSHD.length - 1 && <TimelineConnector />}
+                        </TimelineSeparator>
+                        <TimelineContent>{d.trangThai === dataHD.trangThai ? <strong>{d.ten}</strong> : d.ten}</TimelineContent>
+                      </TimelineItem>
+                    ))}
                   </Timeline>
                 </div>
               </div>
-              <div className="col-12">
-                <table className="table">
-                  <tr>
-                    <td style={{ padding: '0 0 0 20px' }}>Mark</td>
-                    <td>Otto</td>
-                    <td className="d-flex justify-content-end me-3">@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>div</td>
-                  </tr>
-                  <tr>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td>div</td>
-                  </tr>
-                </table>
+              {dataHDCT.map((d, i) => (
+                <div key={i} className="col-12 row d-flex align-items-center">
+                  <div className="col-2">
+                    <img
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                      className="product-image"
+                      style={{ width: '120px', height: '130px' }}
+                    />
+                  </div>
+                  <div className="col-2">
+                    <h6>{d.chiTietSanPham.sanPham.ten}</h6>
+                    <span>
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span
+                        className="color-circle"
+                        style={{
+                          backgroundColor: d.chiTietSanPham.mauSac.ten,
+                          display: 'inline-block',
+                          verticalAlign: 'middle'
+                        }}
+                      ></span>
+                    </span>
+                  </div>
+                  <div className="col-2 d-flex justify-content-end">x{d.soLuong}</div>
+                  <div className="col-2"></div>
+                  <div className="col-2">
+                    {' '}
+                    <span>{convertToCurrency(d.donGia)}</span>
+                  </div>
+                  <div style={{ color: 'red' }} className="col-2 d-flex justify-content-end">
+                    {convertToCurrency(d.soLuong * d.donGia)}
+                  </div>
+                </div>
+              ))}
+              <div className="col-12 d-flex justify-content-end">
+                <div className="col-7">&nbsp;</div>
+                <div className="col-5 d-flex justify-content-between">
+                  <h6>Phương thức thanh toán:</h6>
+                  <h6>{dataHD.hinhThucThanhToan && dataHD.hinhThucThanhToan.ten}</h6>
+                </div>{' '}
+              </div>
+              <div className="col-12 d-flex justify-content-end">
+                <div className="col-7">&nbsp;</div>
+                <div className="col-5 d-flex justify-content-between">
+                  <h6>Tổng tiền:</h6>
+                  <h6>{convertToCurrency(dataHD.tongTien)}</h6>
+                </div>
+              </div>
+              <div className="col-12 d-flex justify-content-end">
+                <div className="col-7">&nbsp;</div>
+                <div className="col-5 d-flex justify-content-between">
+                  <h6>Tiền ship:</h6>
+                  <h6>{convertToCurrency(dataHD.tienShip)}</h6>
+                </div>
+              </div>
+              {dataKM.map((d, i) => (
+                <div key={i} className="col-12 d-flex justify-content-end">
+                  <div className="col-7">&nbsp;</div>
+                  <div className="col-5 d-flex justify-content-between">
+                    <h6>Tiền giảm:</h6>
+                    <h6>-{convertToCurrency(d.khuyenMai.mucGiam)}</h6>
+                  </div>
+                </div>
+              ))}
+              <div className="col-12 d-flex justify-content-end">
+                <div className="col-7">&nbsp;</div>
+                <div className="col-5 d-flex justify-content-between">
+                  <h5 style={{ color: 'red' }}>Thành tiền:</h5>
+                  <h5 style={{ color: 'red' }}>{convertToCurrency(dataHD.tongTienKhiGiam)}</h5>
+                </div>
               </div>
             </div>
           </div>
