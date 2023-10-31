@@ -69,6 +69,10 @@ const nhanHang = (id, values) => {
   return axios.post(`/api/hoa-don/nhan-hang/` + id, values);
 };
 
+const requestHuyDon = (id, values) => {
+  return axios.post(`/api/hoa-don/request-huy-don/` + id, values);
+};
+
 const xacNhanListIds = (values, nguoiTao) => {
   return axios.post(`/api/hoa-don/xac-nhan?nguoiTao=${nguoiTao}`, values);
 };
@@ -163,6 +167,7 @@ const thanhToan = (id, nguoiTao) => {
 
 export {
   getAllHD,
+  requestHuyDon,
   nhanHang,
   searchByTrangThai,
   thanhToan,

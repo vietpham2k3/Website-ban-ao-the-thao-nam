@@ -111,7 +111,6 @@ function Header() {
                       <hr />
                       <Dropdown.Item onClick={() => navigate('/thong-tin_user')}>Tài khoản của tôi</Dropdown.Item>
                       <Dropdown.Item onClick={() => navigate('/history')}>Đơn hàng</Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate('/thong-tin_user')}>Đổi mật khẩu</Dropdown.Item>
                       <Dropdown.Item onClick={() => navigate('/diachi')}>Địa chỉ</Dropdown.Item>
                       <hr />
                       <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
