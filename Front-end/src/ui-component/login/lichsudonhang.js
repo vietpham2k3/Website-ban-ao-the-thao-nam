@@ -36,12 +36,12 @@ function History() {
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const [data, setData] = useState([]);
   const tabs = [
-    { title: 'Tất cả', trangThai: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
+    { title: 'Tất cả', trangThai: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
     { title: 'Chờ xác nhận', trangThai: [0, 6] },
     { title: 'Đang giao', trangThai: [1, 3, 4, 5, 8, 9, 10, 11, 12, 13] },
     { title: 'Hoàn thành', trangThai: [7] },
-    { title: 'Huỷ đơn', trangThai: [2] },
-    { title: 'Trả hàng', trangThai: [14] }
+    { title: 'Huỷ đơn', trangThai: [2, 14] },
+    { title: 'Trả hàng', trangThai: [15] }
   ];
 
   const handleChange = (event, newValue) => {

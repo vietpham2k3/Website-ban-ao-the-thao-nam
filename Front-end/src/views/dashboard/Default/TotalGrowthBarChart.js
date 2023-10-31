@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 
 // project imports
@@ -26,9 +25,6 @@ const status = [
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const TotalGrowthBarChart = ({ isLoading }) => {
- 
-
-
   return (
     <>
       {isLoading ? (
@@ -49,7 +45,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <TextField id="standard-select-currency" select >
+                  <TextField id="standard-select-currency" select>
                     {status.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}

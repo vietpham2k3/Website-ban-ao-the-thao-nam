@@ -39,15 +39,15 @@ function ChiTietDonHang() {
 
   useEffect(() => {
     dataDetailLSHD.reverse();
-  }, [dataDetailLSHD]);
+  }, [dataDetailLSHD, id]);
 
   const getOneHD = async (id) => {
     const res = await detailHD(id);
     if (res) {
       setDataHD(res.data);
-      if (res.data.trangThai === 2 && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
+      if (res.data.trangThai === 2 || (res.data.trangThai === 14 && res.data.hinhThucThanhToan.ten === 'Tiền mặt')) {
         setSteps(['Yêu cầu huỷ đơn', 'Huỷ đơn']);
-      } else if (res.data.trangThai === 2 && res.data.hinhThucThanhToan.ten === 'VNPay') {
+      } else if (res.data.trangThai === 2 || (res.data.trangThai === 14 && res.data.hinhThucThanhToan.ten === 'VNPay')) {
         setSteps(['Yêu cầu huỷ đơn', 'Hoàn tiền', 'Huỷ đơn']);
       }
     }
@@ -130,6 +130,8 @@ function ChiTietDonHang() {
                     ? 'Đang giao hàng'
                     : dataHD.trangThai === 4
                     ? 'Giao hàng thành công'
+                    : dataHD.trangThai === 14
+                    ? 'Yêu cầu huỷ đơn'
                     : dataHD.trangThai === 6
                     ? 'Thanh toán thành công'
                     : 'Hoàn thành'}

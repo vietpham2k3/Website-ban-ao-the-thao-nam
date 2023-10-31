@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useEffect } from 'react';
-import { huyDonHang, nhanHang, searchByTrangThai } from 'services/ServiceDonHang';
+import { requestHuyDon, nhanHang, searchByTrangThai } from 'services/ServiceDonHang';
 import '../../scss/CheckOut.scss';
 import Button from 'react-bootstrap/Button';
 import ButtonMUI from '@mui/material/Button';
@@ -24,15 +24,32 @@ function ListDonHang(props) {
     searchByTT(dataLogin.id, data.trangThai);
   }, []);
 
+  useEffect(() => {
+    searchByTT(dataLogin.id, data.trangThai);
+  }, []);
+
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
     if (res) {
-      setValues(res.data.hoaDonList);
+      // Sắp xếp mảng values sao cho trạng thái 14 lên đầu
+      const sortedValues = res.data.hoaDonList.sort((a, b) => {
+        // Đặt ưu tiên cho các phần tử có trạng thái 14 lên đầu
+        if (a.hoaDon.trangThai === 14 && b.hoaDon.trangThai !== 14) {
+          return -1;
+        } else if (a.hoaDon.trangThai !== 14 && b.hoaDon.trangThai === 14) {
+          return 1;
+        } else {
+          // Sắp xếp theo trạng thái khác (nếu cần)
+          return a.hoaDon.trangThai - b.hoaDon.trangThai;
+        }
+      });
+
+      setValues(sortedValues);
     }
   };
 
   const huyDon = async (id, value) => {
-    const res = await huyDonHang(id, value);
+    const res = await requestHuyDon(id, value);
     if (res) {
       toast.success('Huỷ đơn thành công !');
       setShow(false);
@@ -75,7 +92,7 @@ function ListDonHang(props) {
     huyDon(id, ghiChu);
   };
 
-  console.log(ghiChu);
+  console.log(values);
 
   return (
     <div>
@@ -99,6 +116,8 @@ function ListDonHang(props) {
                   ? 'Đang giao hàng'
                   : d.hoaDon.trangThai === 4
                   ? 'Giao hàng thành công'
+                  : d.hoaDon.trangThai === 14
+                  ? 'Yêu cầu huỷ đơn'
                   : d.hoaDon.trangThai === 6
                   ? 'Thanh toán thành công'
                   : 'Hoàn thành'}

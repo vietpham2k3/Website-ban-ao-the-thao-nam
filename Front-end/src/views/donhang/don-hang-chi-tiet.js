@@ -3203,7 +3203,11 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? hoaDon.hinhThucThanhToan.ten : (<p style={{ color: 'red' }}>Chưa chọn hình thức !</p>)}
+                        {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten ? (
+                          hoaDon.hinhThucThanhToan.ten
+                        ) : (
+                          <p style={{ color: 'red' }}>Chưa chọn hình thức !</p>
+                        )}
                         {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt' && (
                           <img
                             style={{ display: 'inline-block' }}
