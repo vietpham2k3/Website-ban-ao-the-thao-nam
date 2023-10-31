@@ -76,6 +76,26 @@ const sanPhamBanChayNgay = () => {
   return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-ngay`);
 };
 
+const sanPhamBanChayThang = () => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-thang`);
+};
+
+const sanPhamBanChayNam = () => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-nam`);
+};
+
+const sanPhamBanChayNgaySearch = (key) => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-ngay-search?key=${key}`);
+};
+
+const sanPhamBanChayThangSearch = (key) => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-thang-search?key=${key}`);
+};
+
+const sanPhamBanChayNamSearch = (key) => {
+  return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-nam-search?key=${key}`);
+};
+
 export {
   doanhThuTongTheoNgay,
   doanhThuTongTheoThang,
@@ -95,5 +115,10 @@ export {
   soDonThanhCongNgay,
   soDonThanhCongThang,
   soDonThanhCongNam,
-  sanPhamBanChayNgay
+  sanPhamBanChayNgay,
+  sanPhamBanChayThang,
+  sanPhamBanChayNam,
+  sanPhamBanChayNamSearch,
+  sanPhamBanChayNgaySearch,
+  sanPhamBanChayThangSearch
 };
