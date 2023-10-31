@@ -32,7 +32,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "WHERE HD.trang_thai IN :trangThai \n" +
             "and hd.id_kh = :idKH \n" +
             "and loai_don = 1\n" +
-            "ORDER BY HD.ngay_tao DESC",
+            "ORDER BY HD.ngay_sua DESC",
             nativeQuery = true)
     List<HoaDon> searchByTrangThai(@Param("trangThai") Integer[] trangThai, @Param("idKH") UUID idKH);
 
