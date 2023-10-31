@@ -185,6 +185,11 @@ const PopularCard = ({ isLoading }) => {
     setTermSPNam(e.target.value);
   };
 
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+
   return (
     <>
       {isLoading ? (
@@ -196,7 +201,10 @@ const PopularCard = ({ isLoading }) => {
               <Grid item xs={12}>
                 <Grid container alignContent="center" justifyContent="space-between">
                   <Grid item>
-                    <Typography variant="h4">Sản Phẩm Bán Chạy</Typography>
+                    <Typography variant="h4">Sản Phẩm Bán Chạy </Typography>
+                    {selectedMenu === 'ngay' && "Hôm Nay"}
+                     {selectedMenu === 'nam' && `Trong Năm ${currentYear}`}
+                     {selectedMenu === 'thang' && `Trong Tháng ${currentMonth}/${currentYear}`} 
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -236,10 +244,10 @@ const PopularCard = ({ isLoading }) => {
                         Hôm nay
                       </MenuItem>
                       <MenuItem className={selectedMenu === 'thang' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCThang}>
-                        Tháng này
+                      Trong tháng
                       </MenuItem>
                       <MenuItem className={selectedMenu === 'nam' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCNam}>
-                        Năm này
+                      Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>

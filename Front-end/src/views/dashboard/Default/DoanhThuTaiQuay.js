@@ -139,6 +139,11 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
     setIsModalOpen(false);
   };
 
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+
   return (
     <>
       {isLoading ? (
@@ -166,14 +171,17 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                     <Grid item>
                       <Typography
                         sx={{
-                          fontSize: '1rem',
+                          fontSize: '15px',
                           fontWeight: 500,
                           color: theme.palette.secondary[900],
                           zIndex: 2,
                           position: 'relative'
                         }}
                       >
-                        DOANH THU BÁN TẠI QUẦY
+                        DOANH THU BÁN TRỰC TIẾP{' '}
+                        {ngay !== '' && 'HÔM NAY'}
+                        {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
+                        {nam !== '' && `TRONG NĂM ${currentYear}`}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -215,10 +223,10 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                         Hôm nay
                       </MenuItem>
                       <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuThang}>
-                        Tháng này
+                        Trong tháng
                       </MenuItem>
                       <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuNam}>
-                        Năm này
+                      Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>

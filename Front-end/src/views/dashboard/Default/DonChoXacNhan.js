@@ -202,10 +202,10 @@ const DonChoXacNhan = ({ isLoading }) => {
                   Hôm nay
                 </MenuItem>
                 <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
-                  Tháng này
+                Trong tháng
                 </MenuItem>
                 <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
-                  Năm này
+                Trong năm
                 </MenuItem>
               </Menu>
             </List>

@@ -141,7 +141,7 @@ const DonTra = ({ isLoading }) => {
   );
 };
 
-TotalIncomeLightCard.propTypes = {
+DonTra.propTypes = {
   isLoading: PropTypes.bool
 };
 
