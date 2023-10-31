@@ -881,36 +881,6 @@ function DonHang(props) {
     if (data) {
       setQrData(data);
       console.log('QR Data:', data);
-
-      try {
-        const response = await detailCTSP(data);
-        const scannedProductInfo = response.data;
-        console.log('Scanned Product Info:', scannedProductInfo);
-
-        // Kiểm tra xem sản phẩm đã tồn tại trong bảng hay chưa
-        const existingProductIndex = valuesSanPham.findIndex((product) => product.chiTietSanPham.id === scannedProductInfo.id);
-        console.log(existingProductIndex);
-
-        if (existingProductIndex !== -1) {
-          const updatedValuesSanPham = [...valuesSanPham];
-          updatedValuesSanPham[existingProductIndex].soLuong += 1;
-          setValuesSanPham(updatedValuesSanPham);
-        } else {
-          const newProduct = {
-            chiTietSanPham: {
-              id: scannedProductInfo.id
-            },
-            hoaDon: {
-              id: id
-            },
-            soLuong: 1
-          };
-          setValuesSanPham([...valuesSanPham, newProduct]);
-        }
-        console.log('Updated Values San Pham:', valuesSanPham);
-      } catch (error) {
-        console.log('Lỗi khi lấy thông tin sản phẩm từ QR:', error);
-      }
     }
   };
 
