@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.UploadFile.AnhKH;
+import com.example.demo.dto.DoiMatKhau;
 import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.KhachHangInfo;
 import com.example.demo.entity.DiaChi;
@@ -363,4 +364,49 @@ public class KhachHangController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHanginfo);
     }
 
+
+
+    @PutMapping("/change-password/{id}")
+    public String changePassword(
+            @PathVariable UUID id,
+            @RequestBody DoiMatKhau changePasswordRequest
+    ) {
+        KhachHang user = khService.getOne(id);
+
+        if (user == null) {
+            return "User not found";
+        }
+
+        // Thực hiện xác thực mật khẩu hiện tại ở đây
+        if (!user.getMatKhau().equals(changePasswordRequest.getCurrentPassword())) {
+            return "Incorrect current password";
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
+            return "New password and confirm password do not match";
+        }
+
+        // Thực hiện thay đổi mật khẩu
+        user.setMatKhau(changePasswordRequest.getNewPassword());
+        khService.changePassword(user);
+
+        return "Password changed successfully";
+    }
+    @PostMapping("/check-current-password")
+    public ResponseEntity<String> checkCurrentPassword(@RequestBody DoiMatKhau request) {
+        UUID userId = request.getId();
+        String currentPassword = request.getCurrentPassword();
+
+        // Kiểm tra tính hợp lệ của mật khẩu hiện tại
+        boolean isCurrentPasswordValid = khService.isCurrentPasswordValid(userId, currentPassword);
+
+        if (isCurrentPasswordValid) {
+            // Mật khẩu hiện tại hợp lệ
+            return ResponseEntity.ok("Mật khẩu hiện tại hợp lệ.");
+        } else {
+            // Mật khẩu hiện tại không hợp lệ
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu hiện tại không hợp lệ.");
+        }
+    }
 }

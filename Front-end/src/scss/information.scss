@@ -195,3 +195,10 @@ select {
 .button2 button:hover {
   background-color: #1fc66a;
 }
+.password-label {
+  display: inline; /* Để label và input nằm trên cùng một hàng */
+}
+
+.password-input {
+  display: inline; /* Để input nằm trên cùng một hàng */
+}
