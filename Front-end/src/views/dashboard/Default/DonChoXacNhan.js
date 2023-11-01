@@ -146,7 +146,7 @@ const DonChoXacNhan = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">ĐƠN CHỜ XÁC NHẬN</Typography>}
+                  primary={<Typography variant="h4">ĐƠN MUA CHỜ XÁC NHẬN</Typography>}
                   secondary={
                     <Typography
                       variant="subtitle2"

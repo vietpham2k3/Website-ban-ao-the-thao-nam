@@ -11,13 +11,13 @@ import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from 'assets/images/icons/earning.svg';
+// import EarningIcon from 'assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.dark,
-  color: '#fff',
+  backgroundColor: "white",
+  color: 'red',
   overflow: 'hidden',
   position: 'relative',
   '&:after': {
@@ -25,7 +25,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    // background: theme.palette.secondary[800],
     borderRadius: '50%',
     top: -85,
     right: -95,
@@ -39,7 +39,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    // background: theme.palette.secondary[800],
     borderRadius: '50%',
     top: -125,
     right: -15,
@@ -147,7 +147,7 @@ const EarningCard = ({ isLoading }) => {
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2.25 }}>
+          <Box height={157} sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
@@ -158,11 +158,12 @@ const EarningCard = ({ isLoading }) => {
                         sx={{
                           ...theme.typography.commonAvatar,
                           ...theme.typography.largeAvatar,
-                          backgroundColor: theme.palette.secondary[800],
+                          backgroundColor: '-moz-initial',
                           mt: 1
                         }}
                       >
-                        <img src={EarningIcon} alt="Notification" />
+                        {/* <img src={EarningIcon} alt="Notification" /> */}
+                        <i style={{color: "green"}} className="fa-solid fa-money-bill-1"></i>
                       </Avatar>
                     </Grid>
                     <Grid item>
@@ -170,7 +171,7 @@ const EarningCard = ({ isLoading }) => {
                         sx={{
                           fontSize: '15px',
                           fontWeight: 500,
-                          color: theme.palette.secondary[900],
+                          color: 'black',
                           zIndex: 2,
                           position: 'relative'
                         }}
@@ -189,8 +190,8 @@ const EarningCard = ({ isLoading }) => {
                       sx={{
                         ...theme.typography.commonAvatar,
                         ...theme.typography.mediumAvatar,
-                        backgroundColor: theme.palette.secondary.dark,
-                        color: theme.palette.secondary[200],
+                        backgroundColor: '-moz-initial',
+                        color: 'black',
                         zIndex: 1
                       }}
                       aria-controls="menu-earning-card"

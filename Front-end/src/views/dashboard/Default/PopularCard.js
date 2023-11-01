@@ -202,9 +202,9 @@ const PopularCard = ({ isLoading }) => {
                 <Grid container alignContent="center" justifyContent="space-between">
                   <Grid item>
                     <Typography variant="h4">Sản Phẩm Bán Chạy </Typography>
-                    {selectedMenu === 'ngay' && "Hôm Nay"}
-                     {selectedMenu === 'nam' && `Trong Năm ${currentYear}`}
-                     {selectedMenu === 'thang' && `Trong Tháng ${currentMonth}/${currentYear}`} 
+                    {selectedMenu === 'ngay' && 'Hôm Nay'}
+                    {selectedMenu === 'nam' && `Trong Năm ${currentYear}`}
+                    {selectedMenu === 'thang' && `Trong Tháng ${currentMonth}/${currentYear}`}
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -244,10 +244,10 @@ const PopularCard = ({ isLoading }) => {
                         Hôm nay
                       </MenuItem>
                       <MenuItem className={selectedMenu === 'thang' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCThang}>
-                      Trong tháng
+                        Trong tháng
                       </MenuItem>
                       <MenuItem className={selectedMenu === 'nam' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCNam}>
-                      Trong năm
+                        Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>
@@ -381,7 +381,17 @@ const PopularCard = ({ isLoading }) => {
           </CardActions>
           <Modal style={{ marginTop: 120, marginLeft: 150 }} show={show5} onHide={handleClose5}>
             <Modal.Header closeButton>
-              <Modal.Title style={{ marginLeft: 125 }}>Sản Phẩm Bán Chạy</Modal.Title>
+              <Modal.Title
+                style={{
+                  marginLeft: selectedMenu === 'ngay' ? 72 : selectedMenu === 'nam' ? 30 : selectedMenu === 'thang' ? 1 : 0,
+                  fontSize: 23
+                }}
+              >
+                Sản Phẩm Bán Chạy {''}
+                {selectedMenu === 'ngay' && 'Hôm Nay'}
+                {selectedMenu === 'nam' && `Trong Năm ${currentYear}`}
+                {selectedMenu === 'thang' && `Trong Tháng ${currentMonth}/${currentYear}`}
+              </Modal.Title>
             </Modal.Header>
             <div style={{ paddingLeft: 25 }} className="search">
               {selectedMenu === 'ngay' && (

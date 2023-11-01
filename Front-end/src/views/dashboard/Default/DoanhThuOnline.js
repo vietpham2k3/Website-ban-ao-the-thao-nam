@@ -118,7 +118,7 @@ const DoanhThuOnline = ({ isLoading }) => {
   };
 
   useEffect(() => {
-    handleDoanhThuThang();
+    handleDoanhThuNgay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

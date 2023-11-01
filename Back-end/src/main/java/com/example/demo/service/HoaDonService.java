@@ -26,6 +26,12 @@ public interface HoaDonService {
 
     public Double doanhThuTongNgayCurrent();
 
+    public String[] doanhThuAllNgay();
+
+    public String[] doanhThuAllThang();
+
+    public String[] doanhThuAllNam();
+
     public Double doanhThuTongThangCurrent();
 
     public Double doanhThuTongNamCurrent();
@@ -44,9 +50,15 @@ public interface HoaDonService {
 
     public Integer soDonHuyNgay();
 
+    public Integer soDonTraNgay();
+
     public Integer soDonHuyThang();
 
+    public Integer soDonTraThang();
+
     public Integer soDonHuyNam();
+
+    public Integer soDonTraNam();
 
     public Integer soDonChoXacNhanNgay();
 

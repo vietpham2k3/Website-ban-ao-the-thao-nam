@@ -15,7 +15,7 @@ import DonBan from './DonBan';
 import DonChoXacNhan from './DonChoXacNhan';
 import DonHuy from './DonHuy';
 import DonTra from './DonTra';
-
+import DoanhThuAll from './DoanhThuTongAll';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
@@ -54,7 +54,7 @@ const Dashboard = () => {
             <EarningCard isLoading={isLoading} />
           </Grid>
           <Grid item lg={6} md={6} sm={6} xs={12}>
-            <EarningCard isLoading={isLoading} />
+            <DoanhThuAll isLoading={isLoading} />
           </Grid>
           {/*  */}
         </Grid>

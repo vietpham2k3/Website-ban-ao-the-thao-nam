@@ -60,6 +60,21 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public String[] doanhThuAllNgay() {
+        return res.doanhThuAllNgay();
+    }
+
+    @Override
+    public String[] doanhThuAllThang() {
+        return res.doanhThuAllThang();
+    }
+
+    @Override
+    public String[] doanhThuAllNam() {
+        return res.doanhThuAllNam();
+    }
+
+    @Override
     public Double doanhThuTongThangCurrent() {
         return res.doanhThuTongThangCurrent();
     }
@@ -105,13 +120,28 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public Integer soDonTraNgay() {
+        return res.soDonTraNgay();
+    }
+
+    @Override
     public Integer soDonHuyThang() {
         return res.soDonHuyThang();
     }
 
     @Override
+    public Integer soDonTraThang() {
+        return res.soDonTraThang();
+    }
+
+    @Override
     public Integer soDonHuyNam() {
         return res.soDonHuyNam();
+    }
+
+    @Override
+    public Integer soDonTraNam() {
+        return res.soDonTraNam();
     }
 
     @Override

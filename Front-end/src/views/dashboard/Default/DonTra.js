@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
-
+import '../../../scss/ThongKe.scss';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from 'react';
+import '../../../scss/ThongKe.scss';
+// api
+import { soDonTraNam, soDonTraThang, soDonTraNgay } from 'services/ServiceThongKe';
 // material-ui
-import { useTheme, styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 
 // project imports
@@ -12,7 +17,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 // assets
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
-import { useState } from 'react';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -40,19 +44,79 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   }
 }));
 
-// ==============================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||============================== //
+// ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
 const DonTra = ({ isLoading }) => {
   const theme = useTheme();
-
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const [ngay, setNgay] = useState(0);
+  const [thang, setThang] = useState(0);
+  const [nam, setNam] = useState(0);
+
+  const SLNgay = async () => {
+    const res = await soDonTraNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  };
+
+  const SLThang = async () => {
+    const res = await soDonTraThang();
+    if (res && res.data) {
+      setThang(res.data);
+    }
+  };
+
+  const SLNam = async () => {
+    const res = await soDonTraNam();
+    if (res && res.data) {
+      setNam(res.data);
+    }
+  };
+
+  const handleSLNgay = () => {
+    setThang('');
+    setNam('');
+    if (ngay === '') {
+      setNgay(0);
+    }
+    SLNgay();
+  };
+
+  const handleSLThang = () => {
+    setNgay('');
+    setNam('');
+    if (thang === '') {
+      setThang(0);
+    }
+    SLThang();
+  };
+
+  const handleSLNam = () => {
+    setNgay('');
+    setThang('');
+    if (nam === '') {
+      setNam(0);
+    }
+    SLNam();
+  };
+
+  useEffect(() => {
+    handleSLThang();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setIsModalOpen(true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -61,7 +125,7 @@ const DonTra = ({ isLoading }) => {
         <TotalIncomeCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2 }}>
+          <Box height={112} sx={{ p: 2 }}>
             <List sx={{ py: 0, display: 'flex' }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>
@@ -83,7 +147,7 @@ const DonTra = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">ĐƠN ĐỔI TRẢ</Typography>}
+                  primary={<Typography variant="h4">ĐƠN TRẢ CHỜ XÁC NHẬN</Typography>}
                   secondary={
                     <Typography
                       variant="subtitle2"
@@ -93,7 +157,11 @@ const DonTra = ({ isLoading }) => {
                         fontSize: 20
                       }}
                     >
-                      5
+                      {ngay !== '' && ngay}
+
+                      {thang !== '' && thang}
+
+                      {nam !== '' && nam}
                     </Typography>
                   }
                 />
@@ -111,7 +179,9 @@ const DonTra = ({ isLoading }) => {
                 aria-haspopup="true"
                 onClick={handleClick}
               >
-                <MoreHorizIcon fontSize="inherit" />
+                <div className={`close-icon ${isModalOpen ? 'open' : ''}`}>
+                  {isModalOpen ? <CloseIcon fontSize="inherit" /> : <MoreHorizIcon fontSize="inherit" />}
+                </div>
               </Avatar>
               <Menu
                 id="menu-earning-card"
@@ -129,9 +199,15 @@ const DonTra = ({ isLoading }) => {
                   horizontal: 'right'
                 }}
               >
-                <MenuItem onClick={handleClose}>Theo ngày</MenuItem>
-                <MenuItem onClick={handleClose}>Theo tháng</MenuItem>
-                <MenuItem onClick={handleClose}>Theo Năm</MenuItem>
+                <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNgay}>
+                  Hôm nay
+                </MenuItem>
+                <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
+                Trong tháng
+                </MenuItem>
+                <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
+                Trong năm
+                </MenuItem>
               </Menu>
             </List>
           </Box>
