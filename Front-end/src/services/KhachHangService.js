@@ -67,6 +67,7 @@ const checkCurrentPassword = (values) => {
 };
 export {
   getAllKH,
+  getAll,
   addKH,
   deleteKH,
   detailKH,
@@ -81,6 +82,5 @@ export {
   addDCKH,
   updateInfo,
   changePassword,
-  checkCurrentPassword,
-  
+  checkCurrentPassword
 };

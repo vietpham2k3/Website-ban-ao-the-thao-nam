@@ -41,7 +41,7 @@ function Header() {
   };
 
   const handleLogout = () => {
-    window.location.reload();
+    navigate('/login');
     localStorage.removeItem('dataLogin');
     localStorage.removeItem('idGH');
   };
