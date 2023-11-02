@@ -235,36 +235,37 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "SELECT ctsp.*\n" +
             "FROM ChiTietSanPham ctsp\n" +
             "JOIN (\n" +
-            "  SELECT ctsp.id_sp, MAX(ctsp.id) AS max_id\n" +
-            "  FROM ChiTietSanPham ctsp\n" +
-            "  JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
-            "  WHERE ctsp.trang_thai = 1\n" +
-            "  GROUP BY ctsp.id_sp\n" +
+            "SELECT ctsp.id_sp, MAX(ctsp.id) AS max_id\n" +
+            "FROM ChiTietSanPham ctsp\n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "WHERE sp.trang_thai = 1\n" +
+            "GROUP BY ctsp.id_sp\n" +
             ") AS sp ON sp.max_id = ctsp.id\n" +
             "ORDER BY ctsp.ngay_tao DESC", nativeQuery = true)
     List<ChiTietSanPham> getAllSPNew();
 
     @Query(value = "SELECT \n" +
-            "  ctsp.id_sp,\n" +
-            "  MAX(ctsp.id_cl) AS id_cl,\n" +
-            "  MAX(ctsp.id_lsp) AS id_lsp,\n" +
-            "  MAX(ctsp.id_nsx) AS id_nsx,\n" +
-            "  MAX(ctsp.id_kc) AS id_kc,\n" +
-            "  MAX(ctsp.id_ms) AS id_ms,\n" +
-            "  MAX(ctsp.id_ca) AS id_ca,\n" +
-            "  MAX(ctsp.id) AS id,\n" +
-            "  MAX(ctsp.ma) AS ma,\n" +
-            "  SUM(hdct.so_luong) AS tong_so_luong,\n" +
-            "  MAX(ctsp.so_luong) AS so_luong,\n" +
-            "  MAX(ctsp.gia_ban) AS gia_ban,\n" +
-            "  MAX(ctsp.ngay_tao) AS ngay_tao,\n" +
-            "  MAX(ctsp.ngay_sua) AS ngay_sua,\n" +
-            "  MAX(ctsp.nguoi_tao) AS nguoi_tao,\n" +
-            "  MAX(ctsp.nguoi_sua) AS nguoi_sua,\n" +
-            "  MAX(ctsp.trang_thai) AS trang_thai\n" +
+            "ctsp.id_sp,\n" +
+            "MAX(ctsp.id_cl) AS id_cl,\n" +
+            "MAX(ctsp.id_lsp) AS id_lsp,\n" +
+            "MAX(ctsp.id_nsx) AS id_nsx,\n" +
+            "MAX(ctsp.id_kc) AS id_kc,\n" +
+            "MAX(ctsp.id_ms) AS id_ms,\n" +
+            "MAX(ctsp.id_ca) AS id_ca,\n" +
+            "MAX(ctsp.id) AS id,\n" +
+            "MAX(ctsp.ma) AS ma,\n" +
+            "SUM(hdct.so_luong) AS tong_so_luong,\n" +
+            "MAX(ctsp.so_luong) AS so_luong,\n" +
+            "MAX(ctsp.gia_ban) AS gia_ban,\n" +
+            "MAX(ctsp.ngay_tao) AS ngay_tao,\n" +
+            "MAX(ctsp.ngay_sua) AS ngay_sua,\n" +
+            "MAX(ctsp.nguoi_tao) AS nguoi_tao,\n" +
+            "MAX(ctsp.nguoi_sua) AS nguoi_sua,\n" +
+            "MAX(ctsp.trang_thai) AS trang_thai\n" +
             "FROM ChiTietSanPham ctsp\n" +
             "JOIN HoaDonChiTiet hdct ON hdct.id_ctsp = ctsp.id\n" +
-            "WHERE ctsp.trang_thai = 1\n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "WHERE sp.trang_thai = 1\n" +
             "GROUP BY ctsp.id_sp\n" +
             "ORDER BY tong_so_luong DESC", nativeQuery = true)
     List<ChiTietSanPham> getAllBestseller();
