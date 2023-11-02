@@ -82,5 +82,5 @@ export {
   updateInfo,
   changePassword,
   checkCurrentPassword,
-  
+  getAll
 };

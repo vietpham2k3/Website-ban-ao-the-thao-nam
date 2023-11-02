@@ -534,63 +534,6 @@ const PopularCard = ({ isLoading }) => {
                     </Grid>
                   );
                 })}
-              {/* {ngay.map((n, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      border: '2px solid skyblue',
-                      borderRadius: 10,
-                      height: 85,
-                      paddingTop: 8,
-                      marginTop: index > 0 ? 20 : 0 // Thêm khoảng cách 20px cho phần tử từ thứ 2 trở đi
-                    }}
-                  >
-                    <h7 style={{ paddingLeft: 15 }}>
-                      <strong style={{ fontSize: 16 }}>{k.tenKhachHang}</strong> |{' '}
-                      <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
-                        {' '}
-                        {k.sdt}
-                      </label>
-                    </h7>
-                    <br></br>
-                    <div className="row">
-                      <div className="col-6" style={{ paddingLeft: 27, marginTop: 15 }}>
-                        <p style={{ fontSize: 12, fontStyle: 'italic' }}>Mã: {k.maKhachHang}</p>
-                      </div>
-                      <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
-                        <button
-                          onClick={() => handleChooseKH(k.id,k.tenKhachHang, k.sdt)}
-                          className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
-                        >
-                          <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
-                          <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                            <svg
-                              className="w-5 h-5 text-green-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                          </span>
-                          <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                            <svg
-                              className="w-5 h-5 text-green-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                          </span>
-                          <span className="relative2 text-left group-hover:text-white">Chọn</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))} */}
             </Modal.Body>
           </Modal>
         </MainCard>
