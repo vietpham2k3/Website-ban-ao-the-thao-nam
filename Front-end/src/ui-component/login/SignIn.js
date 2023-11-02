@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useNavigate } from 'react-router';
@@ -7,18 +9,6 @@ import { login } from 'services/LoginService';
 
 // eslint-disable-next-line react/prop-types
 function SignInForm(props) {
-  const handleLogin = async (username, password) => {
-    const response = await login(username, password);
-
-    if (response.status === 200) {
-      const customerId = response.data.id;
-      localStorage.setItem('customerId', customerId);
-      navigate('/diachi');
-    } else {
-      // Xử lý lỗi đăng nhập
-    }
-  };
-
   const navigate = useNavigate();
   const { setState, state, openForgotPasswordModal } = props;
 
@@ -43,7 +33,7 @@ function SignInForm(props) {
       } else {
         navigate('/thong-ke');
         toast.success('Đăng nhập thành công');
-        localStorage.setItem('dataLogin', JSON.stringify(res.data));
+        localStorage.setItem('dataLoginNV', JSON.stringify(res.data));
       }
     }
   };
@@ -57,7 +47,6 @@ function SignInForm(props) {
 
   const handleOnSubmit = () => {
     dangNhap(state.email, state.password);
-    handleLogin(state.email, state.password);
   };
 
   return (
@@ -66,12 +55,9 @@ function SignInForm(props) {
         <h1 id="title">Đăng nhập</h1>
         <input className="ipt" type="email" placeholder="Email" name="email" value={state.email} onChange={handleChange} />
         <input className="ipt" type="password" name="password" placeholder="Password" value={state.password} onChange={handleChange} />
-
-        <div>
-          <button onClick={openForgotPasswordModal} className="text-forgot">
-            Quên mật khẩu?
-          </button>
-        </div>
+        <a onClick={openForgotPasswordModal} className="text-forgot">
+          Quên mật khẩu?
+        </a>
         <button className="button-login" onClick={handleOnSubmit}>
           Đăng nhập
         </button>
