@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 function DiaChi() {
 
   const customerId = localStorage.getItem('customerId');
+
   //Giỏ hàng:
   const [productCount, setProductCount] = useState(0);
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -45,15 +46,12 @@ function DiaChi() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
-
   const [selectedProvinceName, setSelectedProvinceName] = useState('');
   const [selectedDistrictName, setSelectedDistrictName] = useState('');
   const [selectedWardName, setSelectedWardName] = useState('');
-
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   useEffect(() => {
@@ -185,7 +183,6 @@ function DiaChi() {
     setIsUpdateModalOpen(true);
   };
 
-  // Trong useEffect kích hoạt khi modal được mở (show1), sử dụng ID địa chỉ đã chọn để tải chi tiết địa chỉ
   useEffect(() => {
     if (idDC) {
       detailDCKH(idDC);
@@ -221,19 +218,39 @@ function DiaChi() {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [addresses, setAddresses] = useState([]);
+  // const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState([
+    {
+      tinhThanh: '',
+      quanHuyen: '',
+      phuongXa: '',
+      diaChi: '',
+      isDefault: false, // Trường mặc định
+    },
+  ]);
+  const [defaultAddress, setDefaultAddress] = useState(null);
 
   useEffect(() => {
-    // Sử dụng customerId trong các yêu cầu API
     if (customerId) {
-      // Lấy địa chỉ của khách hàng
       getAllDcKh(customerId).then(response => {
-        setAddresses(response.data);
+        const addressesData = response.data;
+        setAddresses(addressesData);
+
+        // Tìm địa chỉ mặc định
+        const defaultAddress = addressesData.find(address => address.isDefault);
+
+        if (defaultAddress) {
+          setSelectedAddress(defaultAddress);
+        }
       }).catch(error => {
         console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
       });
     }
   }, [customerId]);
+
+  const handleSetDefaultAddress = (address) => {
+    setDefaultAddress(address);
+  };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -318,24 +335,55 @@ function DiaChi() {
                         </h7>
                         <div style={{ float: 'right', paddinxgRight: '15px' }}>
                           <button
-                            style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer',transition: 'color 0.3s',}}
+                            style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer', transition: 'color 0.3s', }}
                             onClick={() => {
                               handleShow1(address.id);
                             }}
                           >
-                            <span style={{ fontSize: '15px', color: 'blue' }}>Cập nhật</span>
+                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                           </button>
                           <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
                           <button
                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}
                             onClick={() => handleDeleteDC(address.id)}
                           >
-                            <span style={{ fontSize: '15px', color: 'red' , transition: 'color 0.3s',}}>Xóa</span>
+                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                           </button>
+                          <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
+
+                          <button
+                            style={{
+                              border: 'none',
+                              background: 'none',
+                              padding: '0',
+                              cursor: 'pointer',
+                              transition: 'color 0.3s',
+                            }}
+                            onClick={() => handleSetDefaultAddress(address)}
+                          >
+                            <i className="bi bi-star">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill={defaultAddress === address ? 'black' : 'currentColor'}
+                                className="bi bi-star"
+                                viewBox="0 0 16 16"
+                                color='gray'
+                                style={{ display: 'inline' }}
+                              >
+                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.830-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.950l3.523 3.356-.830 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
+                              </svg>
+                            </i>
+                            <span style={{ fontSize: '15px', color: defaultAddress === address ? 'black' : 'gray', transition: 'color 0.3s', marginLeft: '5px' }}>
+                              Mặc Định
+                            </span>
+                          </button>
+
                         </div>
                         <hr></hr>
                         <br></br>
-                        
+
                       </div>
                     ))}
                   </li>
