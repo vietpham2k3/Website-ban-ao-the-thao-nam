@@ -10,6 +10,8 @@ import Box from '@mui/material/Box';
 import ListDonHang from './ListDonHang';
 import { useState } from 'react';
 import SlideBar from 'layout/SlideBar';
+import { searchByTrangThai } from 'services/ServiceDonHang';
+import { useEffect } from 'react';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,14 +37,33 @@ function History() {
   const [value, setValue] = useState(0);
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const [data, setData] = useState([]);
-  const tabs = [
-    { title: 'Tất cả', trangThai: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] },
-    { title: 'Chờ xác nhận', trangThai: [0] },
-    { title: 'Đang giao', trangThai: [1, 3, 4, 5, 8, 9, 10, 11, 12, 13] },
-    { title: 'Hoàn thành', trangThai: [7] },
-    { title: 'Huỷ đơn', trangThai: [2] },
-    { title: 'Trả hàng', trangThai: [14] }
-  ];
+  const [tabs, setTabs] = useState([
+    { title: 'Tất cả', trangThai: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], size: 0 },
+    { title: 'Chờ xác nhận', trangThai: [0, 6], size: 0 },
+    { title: 'Đang giao', trangThai: [1, 3, 4, 5, 8, 9, 10, 11, 12, 13], size: 0 },
+    { title: 'Hoàn thành', trangThai: [7], size: 0 },
+    { title: 'Huỷ đơn', trangThai: [2, 14], size: 0 },
+    { title: 'Trả hàng', trangThai: [15], size: 0 }
+  ]);
+
+  useEffect(() => {
+    tabs.forEach((d) => {
+      searchByTT(dataLogin.id, d.trangThai);
+    });
+  }, []);
+
+  const searchByTT = async (id, values) => {
+    const res = await searchByTrangThai(id, values);
+    if (res) {
+      const updatedTabs = tabs.map((tab) => {
+        const tabTrangThai = tab.trangThai || [];
+        const tabSize = res.data.hoaDonList.filter((item) => tabTrangThai.includes(item.hoaDon.trangThai)).length;
+        return { ...tab, size: tabSize };
+      });
+
+      setTabs(updatedTabs);
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -52,8 +73,8 @@ function History() {
     <div>
       <Header />
       <div className="container">
-        <div className="row">
-          <div className="col-2">
+        <div className="row slide-bar">
+          <div className="col-2 slide-bar-children">
             <SlideBar></SlideBar>
           </div>
           <div className="col-9">
@@ -62,14 +83,21 @@ function History() {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={value} onChange={handleChange} aria-label="disabled tabs example" variant="fullWidth">
                     {tabs.map((d, i) => (
-                      <Tab key={i} label={d.title} />
+                      <Tab key={i} label={d.title + ` (${d.size})`} />
                     ))}
                   </Tabs>
                 </Box>
                 {tabs ? (
                   tabs.map((d, i) => (
                     <CustomTabPanel key={i} value={value} index={i}>
-                      <ListDonHang data={d} dataLogin={dataLogin} values={data} setValues={setData}></ListDonHang>
+                      <ListDonHang
+                        tabs={tabs}
+                        data={d}
+                        size={searchByTT}
+                        dataLogin={dataLogin}
+                        values={data}
+                        setValues={setData}
+                      ></ListDonHang>
                     </CustomTabPanel>
                   ))
                 ) : (
