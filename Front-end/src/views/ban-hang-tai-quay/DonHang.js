@@ -867,6 +867,7 @@ function DonHang(props) {
 
   //showScanQR
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checkAdd, setCheckAdd] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -878,12 +879,13 @@ function DonHang(props) {
 
   const handleScan = (data) => {
     if (data) {
+      setCheckAdd(true);
       setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: data }, soLuong: 1 });
     }
   };
 
   useEffect(() => {
-    if (valuesAdd.chiTietSanPham.id && valuesAdd.soLuong) {
+    if (valuesAdd.chiTietSanPham.id && valuesAdd.soLuong && checkAdd) {
       add(valuesAdd);
     }
   }, [valuesAdd]);
@@ -913,11 +915,11 @@ function DonHang(props) {
             </div>
             <div>
               <button onClick={openModal} className="relative inline-block text-base group">
-                <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
-                  <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                <span className="relative z-10 block px-9 py-2 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                  <span className="absolute inset-0 w-full h-full px-9 py-2 rounded-lg bg-gray-50"></span>
                   <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
                   <span className="relative">
-                    <QrCodeScannerIcon />
+                    <QrCodeScannerIcon fontSize="small" />
                     Quét QR
                   </span>
                 </span>
