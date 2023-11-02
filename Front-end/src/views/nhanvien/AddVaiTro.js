@@ -105,7 +105,7 @@ function MyVerticallyCenteredModal(props) {
             closeModal();
             getAll(0);
         }
-    };
+    };  
 
     const handleSubmitUpdate = (event) => {
         event.preventDefault();

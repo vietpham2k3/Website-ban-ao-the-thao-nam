@@ -1,20 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 function UpdateModal(props) {
   const { show, handleClose, values, setValues, handleUpdate } = props;
-
-  // Sử dụng useEffect để theo dõi sự thay đổi của giá trị show
-  useEffect(() => {
-    if (show) {
-      // Nếu modal được hiển thị, cập nhật lại giá trị tên và trạng thái
-      setValues({
-        ten: values.ten,
-        trangThai: values.trangThai,
-      });
-    }
-  }, [show, setValues, values.ten, values.trangThai]);
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -22,7 +11,9 @@ function UpdateModal(props) {
     <Modal.Title>Cập Nhật Vai Trò</Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    <form>
+    <div>
+      <h5 style={{textAlign: 'center'}}>Update Vai Trò</h5>
+    <form className="row g-3">
       <div className="col-md-6">
         <label htmlFor="ten" className="form-label">
           TÊN
@@ -35,7 +26,7 @@ function UpdateModal(props) {
           onChange={(e) => setValues({ ...values, ten: e.target.value })}
         />
       </div>
-      <div className="col-6">
+      <div className="col-4">
         <div className="form-inline">
           <label style={{ fontWeight: 'bold' }} className="form-label me-3" htmlFor="inlineRadio">
             Trạng thái:
@@ -72,6 +63,7 @@ function UpdateModal(props) {
         </div>
       </div>
     </form>
+    </div>
   </Modal.Body>
   <Modal.Footer>
     <Button variant="secondary" onClick={handleClose}>
