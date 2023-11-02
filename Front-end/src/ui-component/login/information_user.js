@@ -1,4 +1,5 @@
-import Anhuser from '../../assets/images/bieutuong.jpg';
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import '../../scss/information.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
@@ -8,6 +9,7 @@ import Modal from 'react-modal';
 import { changePassword, detailKH, updateInfo, checkCurrentPassword } from 'services/KhachHangService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import SlideBar from 'layout/SlideBar';
 
 function UserAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -141,39 +143,7 @@ function UserAccount() {
       <div className="container">
         <div className="row slide-bar">
           <div className="col-2 slide-bar-children">
-            <ul>
-              <li>
-                <div className="user-column">
-                  <div className="avatar">
-                    <div className="avatar-image">
-                      <img src={Anhuser} alt="Ảnh đại diện" />
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                <a href="thong-tin_user">
-                  <button className="no-border">Tài khoản của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="history">
-                  <button className="no-border">Đơn Hàng của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="diachi">
-                  <button className="no-border">Địa Chỉ</button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border">ĐĂNG XUẤT</button>
-                </a>
-              </li>
-            </ul>
+            <SlideBar></SlideBar>
           </div>
 
           <div className="separator"></div>

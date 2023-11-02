@@ -12,7 +12,7 @@ import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 
 function ListDonHang(props) {
-  const { data, dataLogin, values, setValues } = props;
+  const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
   const [id, setId] = useState();
   const navigate = useNavigate();
@@ -55,6 +55,9 @@ function ListDonHang(props) {
       setShow(false);
       searchByTT(dataLogin.id, data.trangThai);
       setGhiChu();
+      tabs.forEach((d) => {
+        size(dataLogin.id, d.trangThai);
+      });
     }
   };
 
@@ -65,6 +68,9 @@ function ListDonHang(props) {
       setShow(false);
       searchByTT(dataLogin.id, data.trangThai);
       setGhiChu();
+      tabs.forEach((d) => {
+        size(dataLogin.id, d.trangThai);
+      });
     }
   };
 
@@ -89,10 +95,12 @@ function ListDonHang(props) {
   };
 
   const handleHuyDon = () => {
+    if (!ghiChu.ghiChu) {
+      toast.error('Vui lòng nhập lý do huỷ đơn');
+      return;
+    }
     huyDon(id, ghiChu);
   };
-
-  console.log(values);
 
   return (
     <div>

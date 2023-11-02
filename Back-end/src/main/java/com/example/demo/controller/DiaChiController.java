@@ -43,6 +43,13 @@ public class DiaChiController {
 
     @PostMapping("/addDCKH/{id}")
     public ResponseEntity<?> addDCKH(@RequestBody DiaChi diaChi, @PathVariable UUID id) {
+        List<DiaChi> list = dcService.getAllIdKh(id);
+        if (diaChi.getTrangThai() == 1) {
+            for (DiaChi dc : list) {
+                dc.setTrangThai(0);
+                dcService.add(dc);
+            }
+        }
         return ResponseEntity.ok(dcService.addDCKH(diaChi, id));
     }
 

@@ -29,6 +29,7 @@ function ChiTietDonHang() {
   const [dataHDCT, setHDCT] = useState([]);
   const [dataKM, setKM] = useState([]);
   const [dataHD, setDataHD] = useState({});
+  const [lyDo, setLyDo] = useState('');
 
   useEffect(() => {
     listLSHD(id);
@@ -38,16 +39,21 @@ function ChiTietDonHang() {
   }, [id]);
 
   useEffect(() => {
-    dataDetailLSHD.reverse();
+    const lyDo = dataDetailLSHD.filter((d) => d.trangThai === 14);
+    if (lyDo[0] !== undefined) {
+      setLyDo(lyDo[0].ghiChu);
+      console.log(lyDo[0].ghiChu);
+    }
   }, [dataDetailLSHD, id]);
 
   const getOneHD = async (id) => {
     const res = await detailHD(id);
     if (res) {
       setDataHD(res.data);
-      if (res.data.trangThai === 2 || (res.data.trangThai === 14 && res.data.hinhThucThanhToan.ten === 'Tiền mặt')) {
+      console.log(res.data);
+      if ((res.data.trangThai === 2 || res.data.trangThai === 14) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
         setSteps(['Yêu cầu huỷ đơn', 'Huỷ đơn']);
-      } else if (res.data.trangThai === 2 || (res.data.trangThai === 14 && res.data.hinhThucThanhToan.ten === 'VNPay')) {
+      } else if ((res.data.trangThai === 2 || res.data.trangThai === 14) && res.data.hinhThucThanhToan.ten === 'VNPay') {
         setSteps(['Yêu cầu huỷ đơn', 'Hoàn tiền', 'Huỷ đơn']);
       }
     }
@@ -70,7 +76,7 @@ function ChiTietDonHang() {
   const listLSHD = async (id) => {
     const res = await detailLSHD(id);
     if (res) {
-      setDataDetailLSHD(res.data);
+      setDataDetailLSHD(res.data.reverse());
     }
   };
 
@@ -87,8 +93,12 @@ function ChiTietDonHang() {
     const formattedMinutes = minutes.toString().padStart(2, '0');
     // Sử dụng padStart để đảm bảo phút luôn có 2 chữ số
     const formattedHours = hours.toString().padStart(2, '0');
+    // Sử dụng padStart để đảm bảo phút luôn có 2 chữ số
+    const formattedDay = day.toString().padStart(2, '0');
+    // Sử dụng padStart để đảm bảo phút luôn có 2 chữ số
+    const formattedMonth = month.toString().padStart(2, '0');
 
-    const formattedDate = `${formattedHours}:${formattedMinutes} ${day}/${month}/${year}`;
+    const formattedDate = `${formattedHours}:${formattedMinutes} ${formattedDay}/${formattedMonth}/${year}`;
 
     return formattedDate;
   }
@@ -268,6 +278,13 @@ function ChiTietDonHang() {
                   <h5 style={{ color: 'red' }}>{convertToCurrency(dataHD.tongTienKhiGiam)}</h5>
                 </div>
               </div>
+              {lyDo ? (
+                <div className="col-12 d-flex justify-content-start">
+                  <p style={{ fontSize: 17 }}>Lý do: {lyDo}</p>
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>

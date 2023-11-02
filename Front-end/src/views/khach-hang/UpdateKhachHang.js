@@ -4,13 +4,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import { Card } from '@mui/material';
+import { Card, Button, Stack, Avatar } from '@mui/material';
 import { detailKH, getAllDcKh, deleteDC, updateDC, addDC, detailDC } from 'services/KhachHangService';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { getP, getQH, getTP } from 'services/ApiGHNService';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useRef } from 'react';
 
 function UpdateKhachHang() {
   // Lấy danh sách tỉnh thành từ API
@@ -26,6 +28,17 @@ function UpdateKhachHang() {
   const [selectedProvinceName, setSelectedProvinceName] = useState('');
   const [selectedDistrictName, setSelectedDistrictName] = useState('');
   const [selectedWardName, setSelectedWardName] = useState('');
+
+  const [valuesId, setValuesId] = useState({
+    province_id: ''
+  });
+  const [valuesIdWard, setValuesIdWard] = useState({
+    district_id: ''
+  });
+
+  const [anh, setAnh] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   const getThanhPho = async () => {
     try {
@@ -97,8 +110,11 @@ function UpdateKhachHang() {
     tinhThanh: '',
     quanHuyen: '',
     phuongXa: '',
-    diaChi: ''
+    diaChi: '',
+    trangThai: 1
   });
+
+  // console.log(valueDC);
 
   const [idDC, setIdDc] = useState();
 
@@ -108,8 +124,6 @@ function UpdateKhachHang() {
       setValueDC(res.data);
     }
   };
-
-  // console.log(valueDC);
 
   useEffect(() => {
     if (idDC) {
@@ -132,11 +146,17 @@ function UpdateKhachHang() {
       tinhThanh: selectedProvinceName,
       quanHuyen: selectedDistrictName,
       phuongXa: selectedWardName,
-      diaChi: valueDC.diaChi
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai // Đặt trạng thái là 1
     };
     try {
       const res = await updateDCKH(idDC, updatedValueDC);
       if (res) {
+        const updatedAddresses = dc.map((address) => ({
+          ...address,
+          trangThai: address.id === idDC ? 1 : 0
+        }));
+        await Promise.all(updatedAddresses.map((address) => updateDCKH(address.id, { ...address })));
         toast.success('Cập nhật thành công!');
       }
     } catch (error) {
@@ -179,6 +199,46 @@ function UpdateKhachHang() {
     setShow1(true);
   };
 
+  useEffect(() => {
+    if (idDC) {
+      provinces.forEach((province) => {
+        if (province.NameExtension[1] === valueDC.tinhThanh) {
+          setValuesId({
+            province_id: province.ProvinceID
+          });
+          // console.log(province.ProvinceID);
+        }
+        setSelectedProvince(province.ProvinceID);
+      });
+    }
+  }, [idDC, provinces, valueDC]);
+
+  // console.log(valuesId.province_id);
+
+  useEffect(() => {
+    if (valuesId.province_id) {
+      getQuanHuyen(valuesId);
+    }
+    setSelectedDistrict(valuesId);
+  }, [valuesId.province_id]);
+
+  useEffect(() => {
+    districts.forEach((district) => {
+      if (district.DistrictName === valueDC.quanHuyen) {
+        setValuesIdWard({
+          district_id: district.DistrictID
+        });
+      }
+    });
+  }, [districts, valuesId]);
+
+  useEffect(() => {
+    if (valuesIdWard.district_id) {
+      getPhuong(valuesIdWard);
+    }
+    setSelectedWard(valuesIdWard);
+  }, [valuesIdWard.district_id]);
+
   // Địa Chỉ
   const [dc, setDc] = useState([]);
 
@@ -210,8 +270,6 @@ function UpdateKhachHang() {
     gioiTinh: '',
     trangThai: ''
   });
-
-  const [anh, setAnh] = useState(null);
 
   const { id } = useParams();
 
@@ -257,10 +315,23 @@ function UpdateKhachHang() {
     }
   };
 
-  const handlePreviewAnh = (event) => {
-    const file = event.target.files[0];
-    file.preview = URL.createObjectURL(file);
+  const [selectedImageURL, setSelectedImageURL] = useState('');
+
+  useEffect(() => {
+    return () => {
+      selectedImageURL && URL.revokeObjectURL(selectedImageURL);
+    };
+  }, [selectedImageURL]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
     setAnh(file);
+    const imageURL = URL.createObjectURL(file);
+    setSelectedImageURL(imageURL);
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
   };
 
   const formatDate = (date) => {
@@ -288,7 +359,8 @@ function UpdateKhachHang() {
       tinhThanh: selectedProvinceName,
       quanHuyen: selectedDistrictName,
       phuongXa: selectedWardName,
-      diaChi: valueDC.diaChi
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai
     };
     await addDCKH(id, newAddress);
   };
@@ -305,8 +377,36 @@ function UpdateKhachHang() {
   return (
     <MainCard>
       <Card>
-        <div className="div">
-          <div className="body flex-grow-1 px-3">
+        <div className="row g-3">
+          <h1>Sửa Khách Hàng</h1>
+        </div>
+        <div className="div" style={{ display: 'flex', paddingTop: 30 }}>
+          <div className="col-md-4" style={{ border: '1px solid black', width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
+            <Stack direction="column" spacing={2} alignItems="center">
+              <Avatar
+                alt="Ảnh đại diện"
+                src={selectedImageURL || anh}
+                sx={{ width: 250, height: 250, cursor: 'pointer' }}
+                onClick={handleAvatarClick}
+              />
+              <label htmlFor="upload-input">
+                <input
+                  id="upload-input"
+                  type="file"
+                  accept="image/*"
+                  name="anh"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                />
+                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                  Tải lên
+                </Button>
+              </label>
+            </Stack>
+          </div>
+
+          <div className="col-md-8">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
                 <label htmlFor="a" className="form-label">
@@ -398,14 +498,7 @@ function UpdateKhachHang() {
                 </div>
               </div>
 
-              <div className="col-6">
-                <label htmlFor="a" className="form-label">
-                  Ảnh
-                </label>
-                <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
-                {anh && <img src={anh.preview} alt="" width="70%"></img>}
-              </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <label htmlFor="a" className="form-label me-3">
                   Trạng thái:{' '}
                 </label>
@@ -439,7 +532,7 @@ function UpdateKhachHang() {
                 </div>
               </div>
 
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div>
                   <label htmlFor="a" className="form-label">
                     Địa Chỉ
@@ -447,14 +540,14 @@ function UpdateKhachHang() {
                   <span className="fa-solid fa-plus mx-3" onClick={handleShow}></span>
                   <div>
                     <ul>
-                      <li style={{ width: 500 }}>
+                      <li style={{ width: 550 }}>
                         {dc.map((dc, index) => (
                           <div
                             key={dc.id}
                             style={{
                               border: '2px solid skyblue',
                               borderRadius: 10,
-                              height: 50,
+                              height: 70,
                               paddingTop: 8,
                               marginTop: index > 0 ? 20 : 0 // Thêm khoảng cách 20px cho phần tử từ thứ 2 trở đi
                             }}
@@ -462,6 +555,7 @@ function UpdateKhachHang() {
                             <h7 style={{ paddingLeft: 15, paddingRight: 10 }}>
                               <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="dc">
                                 {' '}
+                                {dc.trangThai === 1 ? <p style={{ color: 'red', marginBottom: 0.01 }}>Mặc định</p> : ''}
                                 {dc.diaChi}, {dc.phuongXa}, {dc.quanHuyen}, {dc.tinhThanh}
                               </label>
                             </h7>
@@ -512,10 +606,14 @@ function UpdateKhachHang() {
                               <label htmlFor="ward" className="form-label">
                                 Tỉnh/Thành Phố
                               </label>
-                              <select id="province" className="form-select fsl" value={selectedProvince} onChange={handleProvinceChange}>
+                              <select id="province" className="form-select fsl" onChange={handleProvinceChange}>
                                 <option value="">Chọn tỉnh thành</option>
                                 {provinces.map((province) => (
-                                  <option key={province.ProvinceID} value={province.ProvinceID}>
+                                  <option
+                                    key={province.ProvinceID}
+                                    selected={province.NameExtension[1] === valueDC.tinhThanh}
+                                    value={province.ProvinceID}
+                                  >
                                     {province.NameExtension[1]}
                                   </option>
                                 ))}
@@ -526,16 +624,14 @@ function UpdateKhachHang() {
                               <label htmlFor="ward" className="form-label">
                                 Quận Huyện
                               </label>
-                              <select
-                                id="district"
-                                className="form-select fsl"
-                                value={selectedDistrict || ''}
-                                onChange={(e) => handleDistrictChange(e)}
-                                disabled={!selectedProvince}
-                              >
+                              <select id="district" className="form-select fsl" onChange={(e) => handleDistrictChange(e)}>
                                 <option value="">Chọn quận huyện</option>
                                 {districts.map((district) => (
-                                  <option key={district.DistrictID} value={district.DistrictID}>
+                                  <option
+                                    key={district.DistrictID}
+                                    selected={district.DistrictName === valueDC.quanHuyen}
+                                    value={district.DistrictID}
+                                  >
                                     {district.DistrictName}
                                   </option>
                                 ))}
@@ -546,20 +642,29 @@ function UpdateKhachHang() {
                               <label htmlFor="ward" className="form-label">
                                 Phường xã
                               </label>
-                              <select
-                                id="ward"
-                                className="form-select fsl"
-                                value={selectedWard || ''}
-                                onChange={handleWardChange}
-                                disabled={!selectedDistrict || !selectedProvince}
-                              >
+                              <select id="ward" className="form-select fsl" onChange={handleWardChange}>
                                 <option value="">Chọn phường xã</option>
                                 {wards.map((ward) => (
-                                  <option key={ward.WardCode} value={ward.WardCode}>
+                                  <option key={ward.WardCode} selected={ward.WardName === valueDC.phuongXa} value={ward.WardCode}>
                                     {ward.WardName}
                                   </option>
                                 ))}
                               </select>
+                            </div>
+
+                            <div className="col-md-12">
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  id="flexCheckDefault"
+                                  checked={valueDC.trangThai === 1} // Kiểm tra nếu trạng thái là "1" thì được chọn
+                                  onChange={() => setValueDC({ ...valueDC, trangThai: 1 })}
+                                />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                  Đặt làm mặc định
+                                </label>
+                              </div>
                             </div>
 
                             <div className="col-6" style={{ display: 'flex' }}>
@@ -656,6 +761,15 @@ function UpdateKhachHang() {
                               </select>
                             </div>
 
+                            <div className="col-md-12">
+                              <div className="form-check">
+                                <input className="form-check-input" type="radio" id="flexCheckDefault" checked={valueDC.trangThai} />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                  Đặt làm mặc định
+                                </label>
+                              </div>
+                            </div>
+
                             <div className="text-start">
                               <button type="button" className="btn btn-primary" onClick={handleSubmitADD}>
                                 Thêm
@@ -670,7 +784,7 @@ function UpdateKhachHang() {
               </div>
 
               <div className="col-md-6">
-                <div className="text-start" style={{ display: 'flex', justifyContent: 'right' }}>
+                <div className="text-start">
                   <button type="submit" className="btn btn-primary">
                     Update
                   </button>

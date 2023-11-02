@@ -1,4 +1,3 @@
-import Anhuser from '../../assets/images/bieutuong.jpg';
 import '../../scss/diachi.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
@@ -8,6 +7,7 @@ import { count } from 'services/GioHangService';
 import { getAllDcKh, addDC, updateDC, detailDC, deleteDC } from 'services/KhachHangService';
 import { getTP, getQH, getP } from 'services/ApiGHNService'; // Import các hàm gọi API từ nguồn dữ liệu của bạn
 import { toast } from 'react-toastify';
+import SlideBar from 'layout/SlideBar';
 
 function DiaChi() {
   const customerId = localStorage.getItem('customerId');
@@ -253,39 +253,7 @@ function DiaChi() {
       <div className="container">
         <div className="row slide-bar">
           <div className="col-2">
-            <ul>
-              <li>
-                <div className="user-column">
-                  <div className="avatar">
-                    <div className="avatar-image">
-                      <img src={Anhuser} alt="Ảnh đại diện" />
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                <a href="thong-tin_user">
-                  <button className="no-border">Tài khoản của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="history">
-                  <button className="no-border">Đơn Hàng của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="diachi">
-                  <button className="no-border">Địa Chỉ</button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border">ĐĂNG XUẤT</button>
-                </a>
-              </li>
-            </ul>
+            <SlideBar></SlideBar>
           </div>
 
           <div className="separator"></div>

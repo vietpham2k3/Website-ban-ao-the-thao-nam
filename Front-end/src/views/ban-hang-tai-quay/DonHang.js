@@ -35,6 +35,8 @@ import Modal from 'react-bootstrap/Modal';
 import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import QrReader from 'react-qr-reader';
 
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
@@ -381,7 +383,7 @@ function DonHang(props) {
 
   useEffect(() => {
     if (dataDetailHD.tongTienKhiGiam === 0) {
-      toast.error('Mày mà spam là t cho m bay acc fb');
+      toast.error('Lỗi tiền khi giảm!');
     } else if (valuesAddKM.khuyenMai.id) {
       postKM(valuesAddKM);
     }
@@ -635,7 +637,13 @@ function DonHang(props) {
   const handleClose1 = () => {
     setShow1(false);
   };
-  const handleShow1 = () => setShow1(true);
+
+  // const [isCase1, setIsCase1] = useState(true);
+
+  const handleShow1 = () => {
+    // setIsCase1(true);
+    setShow1(true);
+  };
   const [show2, setShow2] = useState(false);
   const handleClose2 = () => {
     setShow2(false);
@@ -663,7 +671,7 @@ function DonHang(props) {
       return;
     }
     add(valuesAdd);
-    getAllById(id);
+    id;
   };
 
   const add = async (value) => {
@@ -855,12 +863,44 @@ function DonHang(props) {
     setShow4(false);
   };
 
+  console.log(urlPay);
+
+  //showScanQR
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checkAdd, setCheckAdd] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleScan = (data) => {
+    if (data) {
+      setCheckAdd(true);
+      setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: data }, soLuong: 1 });
+    }
+  };
+
+  useEffect(() => {
+    if (valuesAdd.chiTietSanPham.id && valuesAdd.soLuong && checkAdd) {
+      add(valuesAdd);
+    }
+  }, [valuesAdd]);
+
+  const handleError = (error) => {
+    if (error) {
+      console.error(error);
+    }
+  };
   return (
     <div>
       <div className="row">
         <div className="col-8">
-          <div className="col-5">
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
+          <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="export-form">
+            <div style={{ paddingRight: 25 }}>
               <button onClick={handleShow1} className="relative inline-block text-base group">
                 <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                   <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -872,127 +912,154 @@ function DonHang(props) {
                   data-rounded="rounded-lg"
                 ></span>
               </button>
-              <Modal
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                style={{ marginLeft: 150 }}
-                show={show1}
-                onHide={handleClose1}
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 300 }}>
-                    Thêm Sản Phẩm
-                  </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="box col-auto col-6">
-                    <div className="search">
-                      <input
-                        style={{ borderRadius: 15, width: 900, height: 35 }}
-                        type="text"
-                        className="input-search results-list"
-                        placeholder="Nhập mã hoặc tên sản phẩm cần tìm..."
-                        value={term}
-                        onChange={handleInputChange}
-                      />
+            </div>
+            <div>
+              <button onClick={openModal} className="relative inline-block text-base group">
+                <span className="relative z-10 block px-9 py-2 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                  <span className="absolute inset-0 w-full h-full px-9 py-2 rounded-lg bg-gray-50"></span>
+                  <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                  <span className="relative">
+                    <QrCodeScannerIcon fontSize="small" />
+                    Quét QR
+                  </span>
+                </span>
+                <span
+                  className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                  data-rounded="rounded-lg"
+                ></span>
+              </button>
+            </div>
+            <Modal centered show={isModalOpen} onHide={closeModal}>
+              <Modal.Body>
+                <QrReader delay={1000} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeModal}>
+                  Đóng
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+            <Modal
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              style={{ marginLeft: 150 }}
+              show={show1}
+              onHide={handleClose1}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter" style={{ marginLeft: 300 }}>
+                  Thêm Sản Phẩm
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="box col-auto col-6">
+                  <div className="search">
+                    <input
+                      style={{ borderRadius: 15, width: 900, height: 35 }}
+                      type="text"
+                      className="input-search results-list"
+                      placeholder="Nhập mã hoặc tên sản phẩm cần tìm..."
+                      value={term}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <section className="navbar-expand-lg navbar-light bg-light">
+                  <div>
+                    <div className="results-list">
+                      <Table hover>
+                        <tbody>
+                          {dataSP.length > 0 ? (
+                            dataSP.map((d, i) => (
+                              <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
+                                <td>
+                                  <img
+                                    src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                                    className="product-image"
+                                    style={{ width: '70px', height: '100px' }}
+                                    alt='"none"'
+                                  />
+                                </td>
+                                <td>{d.sanPham.ma}</td>
+                                <td>{d.sanPham.ten}</td>
+                                <td>{d.soLuong || 0}</td>
+                                <td>{convertToCurrency(d.giaBan)}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={5}>Không có dữ liệu</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </Table>
+
+                      <Modal
+                        show={show2}
+                        onHide={handleClose2}
+                        style={{ marginLeft: 150 }}
+                        backdrop="static"
+                        keyboard={false}
+                        size="md"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="body-add-new">
+                            <div className="mb-3">
+                              <label htmlFor="exampleFormControlInput1" className="form-label">
+                                Thuộc tính
+                              </label>
+                              {mauSacKC.map((d, i) => (
+                                <div className="form-check" key={i}>
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="flexRadioDefault"
+                                    id={d.id}
+                                    value={d.id}
+                                    checked={d.id === dataDetail.id}
+                                    onChange={() => handleDetail(d.id)}
+                                  />
+                                  <label className="form-check-label custom-label" htmlFor={d.id}>
+                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                    &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="mb-3">
+                              <label htmlFor="exampleFormControlTextarea1" className="form-label">
+                                Số lượng:{' '}
+                                <small>
+                                  Còn lại <strong>{dataDetail.soLuong}</strong>
+                                </small>
+                              </label>
+                              <input
+                                className="form-control"
+                                id="exampleFormControlTextarea1"
+                                type="number"
+                                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+                              ></input>
+                            </div>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="primary" onClick={() => handleAdd()}>
+                            Thêm
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </div>
                   </div>
-                  <section className="navbar-expand-lg navbar-light bg-light">
-                    <div>
-                      <div className="results-list">
-                        <Table hover>
-                          <tbody>
-                            {dataSP.length > 0 ? (
-                              dataSP.map((d, i) => (
-                                <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
-                                  <td>
-                                    <img
-                                      src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                                      className="product-image"
-                                      style={{ width: '70px', height: '100px' }}
-                                      alt='"none"'
-                                    />
-                                  </td>
-                                  <td>{d.sanPham.ma}</td>
-                                  <td>{d.sanPham.ten}</td>
-                                  <td>{d.soLuong || 0}</td>
-                                  <td>{convertToCurrency(d.giaBan)}</td>
-                                </tr>
-                              ))
-                            ) : (
-                              <tr>
-                                <td colSpan={5}>Không có dữ liệu</td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </Table>
-
-                        <Modal
-                          show={show2}
-                          onHide={handleClose2}
-                          style={{ marginLeft: 150 }}
-                          backdrop="static"
-                          keyboard={false}
-                          size="md"
-                          aria-labelledby="contained-modal-title-vcenter"
-                          centered
-                        >
-                          <Modal.Header closeButton>
-                            <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
-                          </Modal.Header>
-                          <Modal.Body>
-                            <div className="body-add-new">
-                              <div className="mb-3">
-                                <label htmlFor="exampleFormControlInput1" className="form-label">
-                                  Thuộc tính
-                                </label>
-                                {mauSacKC.map((d, i) => (
-                                  <div className="form-check" key={i}>
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      name="flexRadioDefault"
-                                      id={d.id}
-                                      value={d.id}
-                                      checked={d.id === dataDetail.id}
-                                      onChange={() => handleDetail(d.id)}
-                                    />
-                                    <label className="form-check-label custom-label" htmlFor={d.id}>
-                                      <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                                      &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
-                                    </label>
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="exampleFormControlTextarea1" className="form-label">
-                                  Số lượng:{' '}
-                                  <small>
-                                    Còn lại <strong>{dataDetail.soLuong}</strong>
-                                  </small>
-                                </label>
-                                <input
-                                  className="form-control"
-                                  id="exampleFormControlTextarea1"
-                                  type="number"
-                                  onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
-                                ></input>
-                              </div>
-                            </div>
-                          </Modal.Body>
-                          <Modal.Footer>
-                            <Button variant="primary" onClick={() => handleAdd()}>
-                              Thêm
-                            </Button>
-                          </Modal.Footer>
-                        </Modal>
-                      </div>
-                    </div>
-                  </section>
-                </Modal.Body>
-              </Modal>
-            </div>
+                </section>
+              </Modal.Body>
+            </Modal>
           </div>
 
           {values.length > 0 && (
@@ -1133,7 +1200,7 @@ function DonHang(props) {
                       </div>
                       <div className="col-3" style={{ paddingLeft: 120, width: 128 }}>
                         <button
-                          onClick={() => handleChooseKH(k.id,k.tenKhachHang, k.sdt)}
+                          onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
                           className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
                         >
                           <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>

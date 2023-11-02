@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
-import { Card } from '@mui/material';
+import { Card, Button, Stack, Avatar } from '@mui/material';
 
 import { toast } from 'react-toastify';
 import { addKH } from 'services/KhachHangService';
 import { getP, getQH, getTP } from 'services/ApiGHNService';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useRef } from 'react';
 
 function AddKhachHang() {
   const navigate = useNavigate();
 
   const [anh, setAnh] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   // Lấy danh sách tỉnh thành từ API
   const [provinces, setProvinces] = useState([]);
@@ -90,17 +94,23 @@ function AddKhachHang() {
     setSelectedWard(event.target.value);
     setSelectedWardName(event.target.options[event.target.selectedIndex].text);
   };
+  const [selectedImageURL, setSelectedImageURL] = useState('');
 
   useEffect(() => {
     return () => {
-      anh && URL.revokeObjectURL(anh.preview);
+      selectedImageURL && URL.revokeObjectURL(selectedImageURL);
     };
-  }, [anh]);
+  }, [selectedImageURL]);
 
-  const handlePreviewAnh = (event) => {
-    const file = event.target.files[0];
-    file.preview = URL.createObjectURL(file);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
     setAnh(file);
+    const imageURL = URL.createObjectURL(file);
+    setSelectedImageURL(imageURL);
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
   };
 
   const [values, setValues] = useState({
@@ -156,271 +166,292 @@ function AddKhachHang() {
   return (
     <MainCard>
       <Card>
-        <div className="div">
+        <div className="row g-3">
           <h1>Thêm Khách Hàng</h1>
-          <form className="row g-3">
-            <div className="col-md-6">
-              <label htmlFor="a" className="form-label">
-                Tên Khách Hàng
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                value={values.khachHang.tenKhachHang}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      tenKhachHang: e.target.value
-                    }
-                  })
-                }
+        </div>
+        <div className="div" style={{ display: 'flex', paddingTop: 30 }}>
+          <div className="col-md-4" style={{ border: '1px solid black', width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
+            <Stack direction="column" spacing={2} alignItems="center">
+              <Avatar
+                alt="Ảnh đại diện"
+                src={selectedImageURL || anh}
+                sx={{ width: 250, height: 250, cursor: 'pointer' }}
+                onClick={handleAvatarClick}
               />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="a" className="form-label">
-                Số Điện Thoại
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                value={values.khachHang.sdt}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      sdt: e.target.value
-                    }
-                  })
-                }
-              />
-            </div>
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                value={values.khachHang.email}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      email: e.target.value
-                    }
-                  })
-                }
-              />
-            </div>
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Ngày Sinh
-              </label>
-              <input
-                type="date"
-                className="form-control"
-                value={values.khachHang.ngaySinh}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    khachHang: {
-                      ...values.khachHang,
-                      ngaySinh: e.target.value
-                    }
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="a" className="form-label" style={{ paddingRight: 5 }}>
-                Giới tính:{' '}
-              </label>
-              <div className="form-check form-check-inline">
+              <label htmlFor="upload-input">
                 <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions2"
-                  id="inlineRadio3"
-                  value={true}
-                  checked={values.khachHang.gioiTinh === true}
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        gioiTinh: true
-                      }
-                    })
-                  }
+                  id="upload-input"
+                  type="file"
+                  accept="image/*"
+                  name="anh"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
                 />
-                <label htmlFor="a" className="form-check-label">
-                  Nam
-                </label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions2"
-                  id="inlineRadio4"
-                  value={false}
-                  checked={values.khachHang.gioiTinh === false}
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        gioiTinh: false
-                      }
-                    })
-                  }
-                />
-                <label htmlFor="a" className="form-check-label">
-                  Nữ
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="a" className="form-label me-3">
-                Trạng thái:{' '}
+                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                  Tải lên
+                </Button>
               </label>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio1"
-                  value="1"
-                  checked={true}
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        trangThai: 1
-                      }
-                    })
-                  }
-                />
-                <label htmlFor="a" className="form-check-label">
-                  Hoạt động
-                </label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio2"
-                  value="0"
-                  onChange={() =>
-                    setValues({
-                      ...values,
-                      khachHang: {
-                        ...values.khachHang,
-                        trangThai: 0
-                      }
-                    })
-                  }
-                />
-                <label htmlFor="a" className="form-check-label">
-                  Không hoạt động
-                </label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="col-md-12" style={{ paddingBottom: 10 }}>
-                <label htmlFor="address" className="text-black" style={{ paddingBottom: 5 }}>
-                  Địa Chỉ
+            </Stack>
+          </div>
+          <div className="col-md-8">
+            <form className="row g-3">
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label">
+                  Tên Khách Hàng
                 </label>
                 <input
                   type="text"
-                  className="form-control fct"
-                  id="address"
-                  value={values.diaChi}
+                  className="form-control"
+                  value={values.khachHang.tenKhachHang}
                   onChange={(e) =>
                     setValues({
                       ...values,
-                      diaChi: e.target.value
+                      khachHang: {
+                        ...values.khachHang,
+                        tenKhachHang: e.target.value
+                      }
                     })
                   }
-                  name="address"
-                  placeholder="Địa chỉ..."
                 />
               </div>
-              <div className="col-md-12" style={{ paddingBottom: 10 }}>
-                <label htmlFor="ward" className="form-label">
-                  Tỉnh/Thành Phố
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label">
+                  Số Điện Thoại
                 </label>
-                <select id="province" className="form-select fsl" value={selectedProvince} onChange={handleProvinceChange}>
-                  <option value="">Chọn tỉnh thành</option>
-                  {provinces.map((province) => (
-                    <option key={province.ProvinceID} value={province.ProvinceID}>
-                      {province.NameExtension[1]}
-                    </option>
-                  ))}
-                </select>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={values.khachHang.sdt}
+                  onChange={(e) =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        sdt: e.target.value
+                      }
+                    })
+                  }
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="a" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={values.khachHang.email}
+                  onChange={(e) =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        email: e.target.value
+                      }
+                    })
+                  }
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="a" className="form-label">
+                  Ngày Sinh
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={values.khachHang.ngaySinh}
+                  onChange={(e) =>
+                    setValues({
+                      ...values,
+                      khachHang: {
+                        ...values.khachHang,
+                        ngaySinh: e.target.value
+                      }
+                    })
+                  }
+                />
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label" style={{ paddingRight: 5 }}>
+                  Giới tính:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions2"
+                    id="inlineRadio3"
+                    value={true}
+                    checked={values.khachHang.gioiTinh === true}
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        khachHang: {
+                          ...values.khachHang,
+                          gioiTinh: true
+                        }
+                      })
+                    }
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nam
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions2"
+                    id="inlineRadio4"
+                    value={false}
+                    checked={values.khachHang.gioiTinh === false}
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        khachHang: {
+                          ...values.khachHang,
+                          gioiTinh: false
+                        }
+                      })
+                    }
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nữ
+                  </label>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label me-3">
+                  Trạng thái:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="inlineRadio1"
+                    value="1"
+                    checked={true}
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        khachHang: {
+                          ...values.khachHang,
+                          trangThai: 1
+                        }
+                      })
+                    }
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Hoạt động
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="inlineRadio2"
+                    value="0"
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        khachHang: {
+                          ...values.khachHang,
+                          trangThai: 0
+                        }
+                      })
+                    }
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Không hoạt động
+                  </label>
+                </div>
               </div>
 
-              <div className="col-md-12" style={{ paddingBottom: 10 }}>
-                <label htmlFor="ward" className="form-label">
-                  Quận Huyện
-                </label>
-                <select
-                  id="district"
-                  className="form-select fsl"
-                  value={selectedDistrict || ''}
-                  onChange={(e) => handleDistrictChange(e)}
-                  disabled={!selectedProvince}
-                >
-                  <option value="">Chọn quận huyện</option>
-                  {districts.map((district) => (
-                    <option key={district.DistrictID} value={district.DistrictID}>
-                      {district.DistrictName}
-                    </option>
-                  ))}
-                </select>
+              <div className="col-md-6">
+                <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                  <label htmlFor="address" className="text-black" style={{ paddingBottom: 5 }}>
+                    Địa Chỉ
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control fct"
+                    id="address"
+                    value={values.diaChi}
+                    onChange={(e) =>
+                      setValues({
+                        ...values,
+                        diaChi: e.target.value
+                      })
+                    }
+                    name="address"
+                    placeholder="Địa chỉ..."
+                  />
+                </div>
+                <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                  <label htmlFor="ward" className="form-label">
+                    Tỉnh/Thành Phố
+                  </label>
+                  <select id="province" className="form-select fsl" value={selectedProvince} onChange={handleProvinceChange}>
+                    <option value="">Chọn tỉnh thành</option>
+                    {provinces.map((province) => (
+                      <option key={province.ProvinceID} value={province.ProvinceID}>
+                        {province.NameExtension[1]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                  <label htmlFor="ward" className="form-label">
+                    Quận Huyện
+                  </label>
+                  <select
+                    id="district"
+                    className="form-select fsl"
+                    value={selectedDistrict || ''}
+                    onChange={(e) => handleDistrictChange(e)}
+                    disabled={!selectedProvince}
+                  >
+                    <option value="">Chọn quận huyện</option>
+                    {districts.map((district) => (
+                      <option key={district.DistrictID} value={district.DistrictID}>
+                        {district.DistrictName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-12" style={{ paddingBottom: 10 }}>
+                  <label htmlFor="ward" className="form-label">
+                    Phường xã
+                  </label>
+                  <select
+                    id="ward"
+                    className="form-select fsl"
+                    value={selectedWard || ''}
+                    onChange={handleWardChange}
+                    disabled={!selectedDistrict || !selectedProvince}
+                  >
+                    <option value="">Chọn phường xã</option>
+                    {wards.map((ward) => (
+                      <option key={ward.WardCode} value={ward.WardCode}>
+                        {ward.WardName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              <div className="col-md-12" style={{ paddingBottom: 10 }}>
-                <label htmlFor="ward" className="form-label">
-                  Phường xã
-                </label>
-                <select
-                  id="ward"
-                  className="form-select fsl"
-                  value={selectedWard || ''}
-                  onChange={handleWardChange}
-                  disabled={!selectedDistrict || !selectedProvince}
-                >
-                  <option value="">Chọn phường xã</option>
-                  {wards.map((ward) => (
-                    <option key={ward.WardCode} value={ward.WardCode}>
-                      {ward.WardName}
-                    </option>
-                  ))}
-                </select>
+              <div className="col-12">
+                <button type="submit" onClick={handleSubmit} className="btn btn-primary">
+                  Add
+                </button>
               </div>
-            </div>
-
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Ảnh
-              </label>
-              <input type="file" id="anh" className="form-control" accept="image/*" name="anh" onChange={handlePreviewAnh} />
-              {anh && <img src={anh.preview} alt="" width="70%"></img>}
-            </div>
-            <div className="col-12">
-              <button type="submit" onClick={handleSubmit} className="btn btn-primary">
-                Add
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </Card>
     </MainCard>
