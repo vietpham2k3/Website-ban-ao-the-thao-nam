@@ -13,6 +13,7 @@
     "@mui/material": "^5.14.11",
     "@mui/system": "^5.8.6",
     "@mui/utils": "^5.8.6",
+    "@mui/x-charts": "^6.0.0-alpha.17",
     "@react-pdf/renderer": "^3.1.13",
     "@tabler/icons": "^1.72.0",
     "apexcharts": "^3.35.3",

@@ -6,6 +6,8 @@ import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
+import { BarChart } from '@mui/x-charts/BarChart';
+import '../../../scss/Chart.scss';
 
 const status = [
   {
@@ -56,7 +58,22 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              lỏ
+              <BarChart
+                xAxis={[
+                  {
+                    id: 'barCategories',
+                    data: ['Cặc', 'Lồn', 'Đầu buồi'],
+                    scaleType: 'band'
+                  }
+                ]}
+                series={[
+                  {
+                    data: [2, 10, 3]
+                  }
+                ]}
+                width={1000}
+                height={470}
+              />
             </Grid>
           </Grid>
         </MainCard>
