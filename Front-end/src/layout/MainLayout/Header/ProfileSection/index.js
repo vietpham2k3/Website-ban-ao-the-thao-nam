@@ -39,7 +39,8 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -76,6 +77,8 @@ const ProfileSection = () => {
 
   const handleLogout = () => {
     navigate('/login');
+    localStorage.removeItem('dataLoginNV');
+    localStorage.removeItem('dataLoginAD');
     localStorage.removeItem('dataLogin');
     localStorage.removeItem('idGH');
   };
@@ -152,7 +155,7 @@ const ProfileSection = () => {
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          {dataLogin && dataLogin.ten}
+                          {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
                         </Typography>
                       </Stack>
                     </Stack>

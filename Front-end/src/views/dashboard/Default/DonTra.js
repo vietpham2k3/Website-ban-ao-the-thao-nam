@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import '../../../scss/ThongKe.scss';
 import CloseIcon from '@mui/icons-material/Close';
