@@ -43,6 +43,8 @@ function Header() {
   const handleLogout = () => {
     navigate('/login');
     localStorage.removeItem('dataLogin');
+    localStorage.removeItem('dataLoginNV');
+    localStorage.removeItem('dataLoginAD');
     localStorage.removeItem('idGH');
   };
 

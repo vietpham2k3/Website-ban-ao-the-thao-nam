@@ -31,7 +31,7 @@ public class LoginController {
     private KhachHangServiceImpl khService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("matKhau") String matKhau ) {
+    public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("matKhau") String matKhau) {
         KhachHang kh = khService.findKhachHangByEmailAndMatKhau(email, matKhau);
         NhanVien nv = nhanVienService.findKhachHangByEmailAndMatKhau(email, matKhau);
 
@@ -54,10 +54,10 @@ public class LoginController {
             nvDTO.setTen(nv.getTen());
             nvDTO.setEmail(nv.getEmail());
             nvDTO.setMatKhau(nv.getMatKhau());
-            if(nv.getVaiTro().getTen().startsWith("NV")){
-                nvDTO.setRole("NV"); // Đặt vai trò cho nhân viên
-            }else{
+            if (nv.getVaiTro().getMa().equalsIgnoreCase("AD")) {
                 nvDTO.setRole("AD"); // Đặt vai trò cho nhân viên
+            } else {
+                nvDTO.setRole("NV"); // Đặt vai trò cho nhân viên
             }
             return ResponseEntity.ok(nvDTO);
         } else {

@@ -30,10 +30,14 @@ function SignInForm(props) {
         toast.success('Đăng nhập thành công');
         localStorage.setItem('dataLogin', JSON.stringify(res.data));
         detail(res.data.id);
+      } else if (res.data.role === 'NV') {
+        navigate('/ban-hang-tai-quay');
+        toast.success('Đăng nhập thành công');
+        localStorage.setItem('dataLoginNV', JSON.stringify(res.data));
       } else {
         navigate('/thong-ke');
         toast.success('Đăng nhập thành công');
-        localStorage.setItem('dataLoginNV', JSON.stringify(res.data));
+        localStorage.setItem('dataLoginAD', JSON.stringify(res.data));
       }
     }
   };
