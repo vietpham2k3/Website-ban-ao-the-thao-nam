@@ -58,6 +58,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
+
               <BarChart
                 xAxis={[
                   {
@@ -74,6 +75,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 width={1000}
                 height={470}
               />
+              
             </Grid>
           </Grid>
         </MainCard>

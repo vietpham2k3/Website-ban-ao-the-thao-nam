@@ -112,6 +112,9 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
     doanhThuNam();
   };
 
+
+  
+
   useEffect(() => {
     handleDoanhThuNgay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
