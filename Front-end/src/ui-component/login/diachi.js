@@ -151,21 +151,28 @@ function DiaChi() {
     }
   };
 
-  const detailDCKH = async (idDC) => {
-    const res = await detailDC(idDC);
-    if (res) {
-      setValueDC(res.data);
-    }
-  };
+  // const detailDCKH = async (idDC) => {
+  //   const res = await detailDC(idDC);
+  //   if (res) {
+  //     setValueDC(res.data);
+  //   }
+  // };
 
   const [idDC, setIdDC] = useState(null);
 
   const handleSubmitDC = (event) => {
     event.preventDefault();
     if (idDC) {
-      updateDCKH(idDC, valueDC);
+      const updatedValueDC = {
+        ...valueDC,
+        tinhThanh: selectedProvinceName,
+        quanHuyen: selectedDistrictName,
+        phuongXa: selectedWardName,
+      };
+      updateDCKH(idDC, updatedValueDC);
     }
   };
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -179,9 +186,38 @@ function DiaChi() {
   };
 
   const handleShow1 = (id) => {
+    // Lấy thông tin địa chỉ từ cơ sở dữ liệu dựa trên id
+    detailDCKH(id);
     setIdDC(id);
     setIsUpdateModalOpen(true);
   };
+
+  const detailDCKH = async (idDC) => {
+    const res = await detailDC(idDC);
+    if (res) {
+      const addressData = res.data;
+      // console.log('Detail Address Data:', addressData);
+
+      // Cập nhật giá trị trong state valueDC
+      setValueDC({
+        tinhThanh: addressData.tinhThanh,
+        quanHuyen: addressData.quanHuyen,
+        phuongXa: addressData.phuongXa,
+        diaChi: addressData.diaChi,
+      });
+
+      // Cập nhật các giá trị trong state cho các dropdown
+      setSelectedProvince(addressData.tinhThanh);
+      setSelectedDistrict(addressData.quanHuyen);
+      setSelectedWard(addressData.phuongXa);
+
+
+    }
+  };
+
+  // console.log(selectedProvince)
+  // console.log(selectedDistrict)
+  // console.log(selectedWard)
 
   useEffect(() => {
     if (idDC) {
@@ -340,14 +376,14 @@ function DiaChi() {
                               handleShow1(address.id);
                             }}
                           >
-                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
+                            <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                           </button>
                           <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
                           <button
                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer' }}
                             onClick={() => handleDeleteDC(address.id)}
                           >
-                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
+                            <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                           </button>
                           <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
 
@@ -421,11 +457,18 @@ function DiaChi() {
                 />
               </div>
               <div>
+
+
                 <div className="col-md-12">
                   <label htmlFor="ward" className="form-label">
                     Tỉnh/Thành Phố
                   </label>
-                  <select id="province" className="form-select fsl" value={selectedProvince} onChange={handleProvinceChange}>
+                  <select
+                    id="province"
+                    className="form-select fsl"
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                  >
                     <option value="">Chọn tỉnh thành</option>
                     {provinces.map((province) => (
                       <option key={province.ProvinceID} value={province.ProvinceID}>
@@ -442,7 +485,7 @@ function DiaChi() {
                   <select
                     id="district"
                     className="form-select fsl"
-                    value={selectedDistrict || ''}
+                    value={selectedDistrict}
                     onChange={(e) => handleDistrictChange(e)}
                     disabled={!selectedProvince}
                   >
@@ -462,7 +505,7 @@ function DiaChi() {
                   <select
                     id="ward"
                     className="form-select fsl"
-                    value={selectedWard || ''}
+                    value={selectedWard}
                     onChange={handleWardChange}
                     disabled={!selectedDistrict || !selectedProvince}
                   >
@@ -474,6 +517,9 @@ function DiaChi() {
                     ))}
                   </select>
                 </div>
+
+
+
               </div>
               <div>
                 <div className="button3">
