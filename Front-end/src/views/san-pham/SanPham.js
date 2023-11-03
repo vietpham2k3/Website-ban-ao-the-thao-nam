@@ -36,7 +36,6 @@ function SanPham() {
   const [loaiSanPham, setLoaiSanPham] = useState('');
   const [nhaSanXuat, setNhaSanXuat] = useState('');
   const [coAo, setCoAo] = useState('');
-
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
   const [listLSP, setListLSP] = useState([]);
@@ -133,10 +132,8 @@ function SanPham() {
   const getAll = async (page) => {
     try {
       const res = await getAllCTSP(term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page);
-
       if (res) {
         setData(res.data.content);
-        setTotalPages(res.data.totalPages);
       }
     } catch (error) {
       // Xử lý lỗi nếu có
@@ -148,10 +145,6 @@ function SanPham() {
   //   updatedErrors[index] = true;
   //   setImageErrors(updatedErrors);
   // };
-
-  const handlePageClick = (event) => {
-    getAll(event.selected);
-  };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -175,10 +168,9 @@ function SanPham() {
     getAll(0);
   };
 
-  const handleSearchUsers = _.debounce(async () => {
+  const handleSearchUsers = _.debounce(async (page) => {
     try {
-      const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, '0');
-
+      const res = await searchCTSP(term, status, values[0], values[1], mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page);
       if (res && res.data) {
         setData(res.data.content);
         setTotalPages(res.data.totalPages);
@@ -191,8 +183,13 @@ function SanPham() {
   }, 100);
 
   useEffect(() => {
-    handleSearchUsers();
+    handleSearchUsers(0);
   }, [term, status, values, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo]);
+
+  const handlePageClick = (event) => {
+    getAll(event.selected);
+    handleSearchUsers(event.selected);
+  };
 
   const handleInputChange = (e) => {
     setTerm(e.target.value);
@@ -355,7 +352,7 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleChatLieuChange} value={chatLieu}>
                   <option value="" disabled={chatLieuDefaultSelected}>
-                    CHẤT LIỆU
+                    ---Chọn chất liệu---
                   </option>
                   {listCL.map((c) => (
                     <option key={c.ten} value={c.ten}>
@@ -367,7 +364,7 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleLoaiSanPhamChange} value={loaiSanPham}>
                   <option value="" disabled={loaiSanPhamDefaultSelected}>
-                    LOẠI SẢN PHẨM
+                    ---Chọn loại sản phẩm---
                   </option>
                   {listLSP.map((c) => (
                     <option key={c.ten} value={c.ten}>
@@ -379,7 +376,7 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleNhaSanXuatChange} value={nhaSanXuat}>
                   <option value="" disabled={nhaSanXuatDefaultSelected}>
-                    NHÀ SẢN XUẤT
+                    ---Chọn nhà sản xuất---
                   </option>
                   {listNSX.map((c) => (
                     <option key={c.ten} value={c.ten}>
@@ -391,7 +388,7 @@ function SanPham() {
               <Col>
                 <Form.Select className="custom-select" onChange={handleCoAoChange} value={coAo}>
                   <option value="" disabled={coAoDefaultSelected}>
-                    CỔ ÁO
+                    ---Chọn cổ áo---
                   </option>
                   {listCA.map((c) => (
                     <option key={c.ten} value={c.ten}>
@@ -408,7 +405,7 @@ function SanPham() {
                     </option>
                   ))}
                   <option value="" disabled={mauSacDefaultSelected}>
-                    MÀU SẮC
+                    ---Chọn màu sắc---
                   </option>
                 </Form.Select>
               </Col>
@@ -460,11 +457,11 @@ function SanPham() {
             </Table>
             <ReactPaginate
               breakLabel="..."
-              nextLabel="next"
+              nextLabel="Next >"
               onPageChange={handlePageClick}
               pageRangeDisplayed={3}
               pageCount={totalPages}
-              previousLabel="previous"
+              previousLabel="< Previous"
               pageClassName="page-item"
               pageLinkClassName="page-link"
               previousClassName="page-item"
