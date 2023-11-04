@@ -538,4 +538,38 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "       HD.loai_don = 1)\n" +
             "    )", nativeQuery = true)
     public String[] doanhThuAllNam();
+
+    @Query(value = "WITH Thang_Mac_Dinh AS (\n" +
+            "    SELECT 1 AS thang\n" +
+            "    UNION SELECT 2\n" +
+            "    UNION SELECT 3\n" +
+            "    UNION SELECT 4\n" +
+            "    UNION SELECT 5\n" +
+            "    UNION SELECT 6\n" +
+            "    UNION SELECT 7\n" +
+            "    UNION SELECT 8\n" +
+            "    UNION SELECT 9\n" +
+            "    UNION SELECT 10\n" +
+            "    UNION SELECT 11\n" +
+            "    UNION SELECT 12\n" +
+            ")\n" +
+            "\n" +
+            "SELECT\n" +
+            "    CONCAT('Tháng ', CAST(Thang_Mac_Dinh.thang AS NVARCHAR)) AS thang,\n" +
+            "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_thang\n" +
+            "FROM\n" +
+            "    Thang_Mac_Dinh\n" +
+            "LEFT JOIN\n" +
+            "    HoaDon HD ON Thang_Mac_Dinh.thang = MONTH(HD.ngay_thanh_toan)\n" +
+            "            AND YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "            AND (\n" +
+            "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
+            "                OR\n" +
+            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "            )\n" +
+            "GROUP BY\n" +
+            "    Thang_Mac_Dinh.thang\n" +
+            "ORDER BY\n" +
+            "    Thang_Mac_Dinh.thang", nativeQuery = true)
+    public List<String> bieuDoThang();
 }

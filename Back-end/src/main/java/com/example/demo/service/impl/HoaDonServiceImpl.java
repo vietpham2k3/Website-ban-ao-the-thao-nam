@@ -65,6 +65,11 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public List<String> bieuDoThang() {
+        return res.bieuDoThang();
+    }
+
+    @Override
     public String[] doanhThuAllThang() {
         return res.doanhThuAllThang();
     }

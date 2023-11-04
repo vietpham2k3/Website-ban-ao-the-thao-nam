@@ -174,4 +174,10 @@ public class ThongKeController {
     public ResponseEntity<?> sanPhamBanChayTrongNamS(@RequestParam String key) {
         return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNamSearch(key));
     }
+
+    //
+    @GetMapping("bieu-do-thang")
+    public ResponseEntity<?> bieuDoThang() {
+        return ResponseEntity.ok().body(hdSer.bieuDoThang());
+    }
 }
