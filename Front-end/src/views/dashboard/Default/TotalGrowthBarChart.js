@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { Grid, MenuItem,TextField, Typography } from '@mui/material';
+import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { bieuDoThang } from 'services/ServiceThongKe';
 import { useState, useEffect } from 'react';
 
@@ -14,10 +14,10 @@ import '../../../scss/Chart.scss';
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const TotalGrowthBarChart = ({ isLoading }) => {
-  const [selectedMenu, setSelectedMenu] = useState('thang');
-  // const [ngay, setNgay] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState('nam');
+  const [ngay, setNgay] = useState([]);
   const [thang, setThang] = useState(['']);
-  // const [nam, setNam] = useState([]);
+  const [nam, setNam] = useState([]);
 
   // const SPBCNgay = async () => {
   //   const res = await sanPhamBanChayNgay();
@@ -26,7 +26,6 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   //   }
   // };
 
-
   const SPBCThang = async () => {
     const res = await bieuDoThang();
     if (res && res.data) {
@@ -34,7 +33,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     }
     console.log(res.data);
   };
-  
+
   // const SPBCNam = async () => {
   //   const res = await sanPhamBanChayNam();
   //   if (res && res.data) {
@@ -49,7 +48,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   const handleSPBCThang = () => {
     SPBCThang();
-    setSelectedMenu('thang');
+    setSelectedMenu('nam');
   };
 
   // const handleSPBCNam = () => {
@@ -60,7 +59,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   useEffect(() => {
     handleSPBCThang();
   }, []);
-  
+
   return (
     <>
       {isLoading ? (
@@ -82,21 +81,21 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 </Grid>
                 <Grid item>
                   <TextField id="standard-select-currency" select>
-                    {/* <MenuItem className={selectedMenu === 'ngay' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCNgay}>
-                        Hôm nay
-                      </MenuItem> */}
-                    <MenuItem className={selectedMenu === 'thang' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCThang}>
+                    <MenuItem key={ngay} value={ngay}>
+                      Hôm nay
+                    </MenuItem>
+                    <MenuItem key={thang} value={thang}>
                       Trong tháng
                     </MenuItem>
-                    {/* <MenuItem className={selectedMenu === 'nam' ? 'menu-item selected' : 'menu-item'} onClick={handleSPBCNam}>
-                        Trong năm
-                      </MenuItem> */}
+                    <MenuItem key={nam} value={nam}>
+                      Trong năm
+                    </MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {selectedMenu === 'thang' && (
+            {selectedMenu === 'homnay' && (
                 <BarChart
                   xAxis={[
                     {
@@ -119,7 +118,55 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   width={855}
                   height={532}
                 />
-              )} 
+              )}
+               {selectedMenu === 'thang' && (
+                <BarChart
+                  xAxis={[
+                    {
+                      id: 'barCategories',
+                      data: thang.map((item) => {
+                        const parts = item.split(',');
+                        return parts[0];
+                      }),
+                      scaleType: 'band'
+                    }
+                  ]}
+                  series={[
+                    {
+                      data: thang.map((item) => {
+                        const parts = item.split(',');
+                        return parseFloat(parts[1]);
+                      })
+                    }
+                  ]}
+                  width={855}
+                  height={532}
+                />
+              )}
+              {selectedMenu === 'nam' && (
+                <BarChart
+                  xAxis={[
+                    {
+                      id: 'barCategories',
+                      data: thang.map((item) => {
+                        const parts = item.split(',');
+                        return parts[0];
+                      }),
+                      scaleType: 'band'
+                    }
+                  ]}
+                  series={[
+                    {
+                      data: thang.map((item) => {
+                        const parts = item.split(',');
+                        return parseFloat(parts[1]);
+                      })
+                    }
+                  ]}
+                  width={855}
+                  height={532}
+                />
+              )}
             </Grid>
           </Grid>
         </MainCard>
