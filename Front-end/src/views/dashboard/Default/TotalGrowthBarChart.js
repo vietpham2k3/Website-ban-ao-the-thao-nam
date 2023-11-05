@@ -14,6 +14,7 @@ import '../../../scss/Chart.scss';
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const TotalGrowthBarChart = ({ isLoading }) => {
+
   const [selectedMenu, setSelectedMenu] = useState('nam');
   const [ngay, setNgay] = useState(['']);
   const [thang, setThang] = useState(['']);
@@ -149,28 +150,43 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 />
               )}
               {selectedMenu === 'nam' && (
-                <BarChart
-                  xAxis={[
-                    {
-                      id: 'barCategories',
-                      data: nam.map((item) => {
-                        const parts = item.split(',');
-                        return parts[0];
-                      }),
-                      scaleType: 'band'
-                    }
-                  ]}
-                  series={[
-                    {
-                      data: nam.map((item) => {
-                        const parts = item.split(',');
-                        return parseFloat(parts[1]);
-                      })
-                    }
-                  ]}
-                  width={855}
-                  height={554}
-                />
+                <div style={{ position: 'relative', zIndex: 9 }}>
+                  <BarChart
+
+                    xAxis={[
+                      {
+                        id: 'barCategories',
+                        data: nam.map((item) => {
+                          const parts = item.split(',');
+                          return parts[0];
+                        }),
+                        scaleType: 'band'
+                      }
+                    ]}
+                    yAxis={[
+                      {
+                        labels: {
+                          formatter: (tien) => {
+                            return tien / 1000 + 'K'
+                          }
+                        }
+                      }
+                    ]}
+                    series={[
+                      {
+                        data: nam.map((item) => {
+                          const parts = item.split(',');
+                          const tien = parseFloat(parts[1]);
+                          return tien;
+                        })
+                      }
+                    ]}
+
+                    width={855}
+                    height={554}
+
+                  />
+                </div>
               )}
             </Grid>
           </Grid>
