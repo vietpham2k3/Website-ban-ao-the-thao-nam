@@ -342,8 +342,8 @@ function SanPham() {
           </div>
           <div className="col-6 d-none d-md-block">
             <div color="blue" className="float-end">
-              <Link className="btn btn-outline-primary" to={'/san-pham/chi-tiet-san-pham/add'}>
-                Add +
+              <Link className="btn btn-primary" to={'/san-pham/chi-tiet-san-pham/add'}>
+                Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
               </Link>
             </div>
           </div>
