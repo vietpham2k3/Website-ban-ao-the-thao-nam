@@ -176,8 +176,18 @@ public class ThongKeController {
     }
 
     //
+    @GetMapping("bieu-do-ngay")
+    public ResponseEntity<?> bieuDoNgay() {
+        return ResponseEntity.ok().body(hdSer.bieuDoNgay());
+    }
+
     @GetMapping("bieu-do-thang")
     public ResponseEntity<?> bieuDoThang() {
         return ResponseEntity.ok().body(hdSer.bieuDoThang());
+    }
+
+    @GetMapping("bieu-do-nam")
+    public ResponseEntity<?> bieuDoNam() {
+        return ResponseEntity.ok().body(hdSer.bieuDoNam());
     }
 }

@@ -28,6 +28,10 @@ public interface HoaDonService {
 
     public String[] doanhThuAllNgay();
 
+    public List<String> bieuDoNam();
+
+    public List<String> bieuDoNgay();
+
     public List<String> bieuDoThang();
 
     public String[] doanhThuAllThang();

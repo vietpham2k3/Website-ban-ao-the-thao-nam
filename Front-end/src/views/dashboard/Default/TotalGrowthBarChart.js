@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
-import { bieuDoThang } from 'services/ServiceThongKe';
+import { bieuDoNam, bieuDoNgay, bieuDoThang } from 'services/ServiceThongKe';
 import { useState, useEffect } from 'react';
 
 // project imports
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
+// import { gridSpacing } from 'store/constant';
 import { BarChart } from '@mui/x-charts/BarChart';
 import '../../../scss/Chart.scss';
 
@@ -15,16 +15,16 @@ import '../../../scss/Chart.scss';
 
 const TotalGrowthBarChart = ({ isLoading }) => {
   const [selectedMenu, setSelectedMenu] = useState('nam');
-  const [ngay, setNgay] = useState([]);
+  const [ngay, setNgay] = useState(['']);
   const [thang, setThang] = useState(['']);
-  const [nam, setNam] = useState([]);
+  const [nam, setNam] = useState(['']);
 
-  // const SPBCNgay = async () => {
-  //   const res = await sanPhamBanChayNgay();
-  //   if (res && res.data) {
-  //     setNgay(res.data);
-  //   }
-  // };
+  const SPBCNgay = async () => {
+    const res = await bieuDoNgay();
+    if (res && res.data) {
+      setNgay(res.data);
+    }
+  };
 
   const SPBCThang = async () => {
     const res = await bieuDoThang();
@@ -34,31 +34,36 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     console.log(res.data);
   };
 
-  // const SPBCNam = async () => {
-  //   const res = await sanPhamBanChayNam();
-  //   if (res && res.data) {
-  //     setNam(res.data);
-  //   }
-  // };
+  const SPBCNam = async () => {
+    const res = await bieuDoNam();
+    if (res && res.data) {
+      setNam(res.data);
+    }
+  };
 
-  // const handleSPBCNgay = () => {
-  //   SPBCNgay();
-  //   setSelectedMenu('ngay');
-  // };
+  const handleSPBCNgay = () => {
+    SPBCNgay();
+    setSelectedMenu('ngay');
+  };
 
   const handleSPBCThang = () => {
     SPBCThang();
+    setSelectedMenu('thang');
+  };
+
+  const handleSPBCNam = () => {
+    SPBCNam();
     setSelectedMenu('nam');
   };
 
-  // const handleSPBCNam = () => {
-  //   SPBCNam();
-  //   setSelectedMenu('nam');
-  // };
-
   useEffect(() => {
-    handleSPBCThang();
+    handleSPBCNam();
   }, []);
+
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
 
   return (
     <>
@@ -66,28 +71,28 @@ const TotalGrowthBarChart = ({ isLoading }) => {
         <SkeletonTotalGrowthBarChart />
       ) : (
         <MainCard>
-          <Grid container spacing={gridSpacing}>
+          <Grid container>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Biểu đồ doanh thu năm 2023</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h3">2,324.000</Typography>
+                      <Typography variant="h3">BIỂU ĐỒ DOANH THU</Typography>
+                      {selectedMenu === 'ngay' && 'Hôm Nay'}
+                      {selectedMenu === 'nam' && `Trong Năm ${currentYear}`}
+                      {selectedMenu === 'thang' && `Trong Tháng ${currentMonth}/${currentYear}`}
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <TextField id="standard-select-currency" select>
-                    <MenuItem key={ngay} value={ngay}>
+                  <TextField id="standard-select-currency" select value={selectedMenu} onChange={(e) => setSelectedMenu(e.target.value)}>
+                    <MenuItem value="ngay" onClick={handleSPBCNgay}>
                       Hôm nay
                     </MenuItem>
-                    <MenuItem key={thang} value={thang}>
+                    <MenuItem value="thang" onClick={handleSPBCThang}>
                       Trong tháng
                     </MenuItem>
-                    <MenuItem key={nam} value={nam}>
+                    <MenuItem value="nam" onClick={handleSPBCNam}>
                       Trong năm
                     </MenuItem>
                   </TextField>
@@ -95,12 +100,12 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-            {selectedMenu === 'homnay' && (
+              {selectedMenu === 'ngay' && (
                 <BarChart
                   xAxis={[
                     {
                       id: 'barCategories',
-                      data: thang.map((item) => {
+                      data: ngay.map((item) => {
                         const parts = item.split(',');
                         return parts[0];
                       }),
@@ -109,7 +114,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   ]}
                   series={[
                     {
-                      data: thang.map((item) => {
+                      data: ngay.map((item) => {
                         const parts = item.split(',');
                         return parseFloat(parts[1]);
                       })
@@ -119,7 +124,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   height={532}
                 />
               )}
-               {selectedMenu === 'thang' && (
+              {selectedMenu === 'thang' && (
                 <BarChart
                   xAxis={[
                     {
@@ -148,7 +153,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   xAxis={[
                     {
                       id: 'barCategories',
-                      data: thang.map((item) => {
+                      data: nam.map((item) => {
                         const parts = item.split(',');
                         return parts[0];
                       }),
@@ -157,14 +162,14 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   ]}
                   series={[
                     {
-                      data: thang.map((item) => {
+                      data: nam.map((item) => {
                         const parts = item.split(',');
                         return parseFloat(parts[1]);
                       })
                     }
                   ]}
                   width={855}
-                  height={532}
+                  height={554}
                 />
               )}
             </Grid>

@@ -120,8 +120,16 @@ const sanPhamBanChayNamSearch = (key) => {
   return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-nam-search?key=${key}`);
 };
 
+const bieuDoNgay = () => {
+  return axios.get(`/api/thong-ke/bieu-do-ngay`);
+};
+
 const bieuDoThang = () => {
   return axios.get(`/api/thong-ke/bieu-do-thang`);
+};
+
+const bieuDoNam = () => {
+  return axios.get(`/api/thong-ke/bieu-do-nam`);
 };
 
 export {
@@ -155,5 +163,7 @@ export {
   doanhThuAllNam,
   doanhThuAllNgay,
   doanhThuAllThang,
-  bieuDoThang
+  bieuDoNgay,
+  bieuDoThang,
+  bieuDoNam
 };
