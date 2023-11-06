@@ -10,13 +10,34 @@ import { toast } from 'react-toastify';
 import SlideBar from 'layout/SlideBar';
 
 function DiaChi() {
-  const customerId = localStorage.getItem('customerId');
   //Giỏ hàng:
   const [productCount, setProductCount] = useState(0);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const idGH = localStorage.getItem('idGH') || '';
+  //Địa chỉ
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedWard, setSelectedWard] = useState(null);
+  const [selectedProvinceName, setSelectedProvinceName] = useState('');
+  const [selectedDistrictName, setSelectedDistrictName] = useState('');
+  const [selectedWardName, setSelectedWardName] = useState('');
+  const [show1, setShow1] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [idDC, setIdDC] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [show, setShow] = useState(false);
 
+  const [valueDC, setValueDC] = useState({
+    tinhThanh: '',
+    quanHuyen: '',
+    phuongXa: '',
+    diaChi: ''
+  });
   useEffect(() => {
     if (!dataLogin) {
       const storedProductList = JSON.parse(localStorage.getItem('product'));
@@ -40,20 +61,6 @@ function DiaChi() {
   const toggleSearchInput = () => {
     setShowSearchInput(!showSearchInput);
   };
-  //Địa chỉ
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-
-  const [selectedProvince, setSelectedProvince] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [selectedWard, setSelectedWard] = useState(null);
-
-  const [selectedProvinceName, setSelectedProvinceName] = useState('');
-  const [selectedDistrictName, setSelectedDistrictName] = useState('');
-  const [selectedWardName, setSelectedWardName] = useState('');
-
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   useEffect(() => {
     getThanhPho();
@@ -124,13 +131,6 @@ function DiaChi() {
     setValueDC({ ...valueDC, phuongXa: event.target.options[event.target.selectedIndex].text });
   };
 
-  const [valueDC, setValueDC] = useState({
-    tinhThanh: '',
-    quanHuyen: '',
-    phuongXa: '',
-    diaChi: ''
-  });
-
   const handleSubmitADD = async (event) => {
     // Tạo đối tượng địa chỉ mới
     event.preventDefault();
@@ -140,7 +140,7 @@ function DiaChi() {
       phuongXa: selectedWardName,
       diaChi: valueDC.diaChi
     };
-    await addDCKH(customerId, newAddress);
+    await addDCKH(dataLogin.id, newAddress);
     setIsModalOpen(false);
   };
 
@@ -159,8 +159,6 @@ function DiaChi() {
     }
   };
 
-  const [idDC, setIdDC] = useState(null);
-
   const handleSubmitDC = (event) => {
     event.preventDefault();
     if (idDC) {
@@ -168,12 +166,9 @@ function DiaChi() {
     }
   };
 
-  const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
   };
-
-  const [show1, setShow1] = useState(false);
 
   const handleClose1 = () => {
     setShow1(false);
@@ -197,7 +192,7 @@ function DiaChi() {
       if (res) {
         toast.success('Cập nhật thành công !');
         setIsUpdateModalOpen(false); // Đóng Modal cập nhật
-        getAllDcKh(customerId)
+        getAllDcKh(dataLogin.id)
           .then((response) => {
             setAddresses(response.data);
           })
@@ -220,14 +215,11 @@ function DiaChi() {
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [addresses, setAddresses] = useState([]);
-
   useEffect(() => {
     // Sử dụng customerId trong các yêu cầu API
-    if (customerId) {
+    if (dataLogin.id) {
       // Lấy địa chỉ của khách hàng
-      getAllDcKh(customerId)
+      getAllDcKh(dataLogin.id)
         .then((response) => {
           setAddresses(response.data);
         })
@@ -235,7 +227,7 @@ function DiaChi() {
           console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
         });
     }
-  }, [customerId]);
+  }, [dataLogin.id]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);

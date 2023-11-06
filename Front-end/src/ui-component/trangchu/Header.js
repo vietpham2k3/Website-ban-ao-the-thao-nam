@@ -81,7 +81,6 @@ function Header() {
       const res = await searchCTSP(term, '', '', '', '', '', '', '', '', 0);
       if (res && res.data) {
         setData(res.data.content);
-        console.log(res);
       }
     } catch (error) {
       // Xử lý lỗi nếu có

@@ -65,6 +65,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
+  const width = 1050;
 
   const options = {
     scales: {
@@ -136,7 +137,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       label: 'Doanh thu'
                     }
                   ]}
-                  width={855}
+                  width={width}
                   height={532}
                 />
               )}
@@ -162,7 +163,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       label: 'Doanh thu'
                     }
                   ]}
-                  width={855}
+                  width={width}
                   height={532}
                 />
               )}
@@ -191,7 +192,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     options={options}
-                    width={855}
+                    width={width}
                     height={554}
                   />
                 </div>
