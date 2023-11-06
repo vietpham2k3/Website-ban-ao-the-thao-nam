@@ -183,8 +183,7 @@ const DoanhThuOnline = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU BÁN ONLINE{' '}
-                        {ngay !== '' && 'HÔM NAY'}
+                        DOANH THU BÁN ONLINE {ngay !== '' && 'HÔM NAY'}
                         {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
                         {nam !== '' && `TRONG NĂM ${currentYear}`}
                       </Typography>

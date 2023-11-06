@@ -16,7 +16,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: "white",
+  backgroundColor: 'white',
   color: 'black',
   overflow: 'hidden',
   position: 'relative',
@@ -101,7 +101,6 @@ const DoanhThuAll = ({ isLoading }) => {
     // }
     doanhThuTongThang();
     setSelectedMenu('thang');
-
   };
 
   const handleDoanhThuTongNam = () => {
@@ -112,7 +111,6 @@ const DoanhThuAll = ({ isLoading }) => {
     // }
     doanhThuTongNam();
     setSelectedMenu('nam');
-
   };
 
   useEffect(() => {
@@ -169,7 +167,7 @@ const DoanhThuAll = ({ isLoading }) => {
                         }}
                       >
                         {/* <img src={EarningIcon} alt="Notification" /> */}
-                        <i style={{color: "green"}} className="fa-solid fa-money-bill-1"></i>
+                        <i style={{ color: 'green' }} className="fa-solid fa-money-bill-1"></i>
                       </Avatar>
                     </Grid>
                     <Grid item>
@@ -182,10 +180,9 @@ const DoanhThuAll = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU{' '}
-                        {selectedMenu === 'ngay' && "HÔM NAY"}
-                     {selectedMenu === 'nam' && `TRONG NĂM ${currentYear}`}
-                     {selectedMenu === 'thang' && `TRONG THÁNG ${currentMonth}/${currentYear}`} 
+                        DOANH THU {selectedMenu === 'ngay' && 'HÔM NAY'}
+                        {selectedMenu === 'nam' && `TRONG NĂM ${currentYear}`}
+                        {selectedMenu === 'thang' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -241,73 +238,72 @@ const DoanhThuAll = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  
-                  {selectedMenu === 'ngay' &&
-                  ngay.map((n, index) => {
-                  const sizeData = n.split(',');
-                  const taiQuay = sizeData[0];
-                  const online = sizeData[1];
-                  const tong = sizeData[2];
+                    {selectedMenu === 'ngay' &&
+                      ngay.map((n, index) => {
+                        const sizeData = n.split(',');
+                        const taiQuay = sizeData[0];
+                        const online = sizeData[1];
+                        const tong = sizeData[2];
 
-                  return (
-                    <table key={index}>
-                      <tr style={{fontSize: 14}}>
-                        <th>Doanh thu đơn hàng trực tiếp: </th>
-                        <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
-                        <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
-                      </tr>
-                      <tr>
-                        <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
-                        <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
-                        <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
-                      </tr>
-                    </table>
-                  );
-                })}
-                   {selectedMenu === 'thang' &&
-                  thang.map((n, index) => {
-                  const sizeData = n.split(',');
-                  const taiQuay = sizeData[0];
-                  const online = sizeData[1];
-                  const tong = sizeData[2];
+                        return (
+                          <table key={index}>
+                            <tr style={{ fontSize: 14 }}>
+                              <th>Doanh thu đơn hàng trực tiếp: </th>
+                              <th style={{ paddingLeft: 30 }}> Doanh thu đơn hàng online: </th>
+                              <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
+                            </tr>
+                            <tr>
+                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                            </tr>
+                          </table>
+                        );
+                      })}
+                    {selectedMenu === 'thang' &&
+                      thang.map((n, index) => {
+                        const sizeData = n.split(',');
+                        const taiQuay = sizeData[0];
+                        const online = sizeData[1];
+                        const tong = sizeData[2];
 
-                  return (
-                    <table key={index}>
-                    <tr style={{fontSize: 14}}>
-                      <th>Doanh thu đơn hàng trực tiếp: </th>
-                      <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
-                      <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
-                    </tr>
-                    <tr>
-                      <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
-                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
-                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
-                    </tr>
-                  </table>
-                  );
-                })}
-                 {selectedMenu === 'nam' &&
-                  nam.map((n, index) => {
-                  const sizeData = n.split(',');
-                  const taiQuay = sizeData[0];
-                  const online = sizeData[1];
-                  const tong = sizeData[2];
+                        return (
+                          <table key={index}>
+                            <tr style={{ fontSize: 14 }}>
+                              <th>Doanh thu đơn hàng trực tiếp: </th>
+                              <th style={{ paddingLeft: 30 }}> Doanh thu đơn hàng online: </th>
+                              <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
+                            </tr>
+                            <tr>
+                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                            </tr>
+                          </table>
+                        );
+                      })}
+                    {selectedMenu === 'nam' &&
+                      nam.map((n, index) => {
+                        const sizeData = n.split(',');
+                        const taiQuay = sizeData[0];
+                        const online = sizeData[1];
+                        const tong = sizeData[2];
 
-                  return (
-                    <table key={index}>
-                    <tr style={{fontSize: 14}}>
-                      <th>Doanh thu đơn hàng trực tiếp: </th>
-                      <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
-                      <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
-                    </tr>
-                    <tr>
-                      <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
-                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
-                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
-                    </tr>
-                  </table>
-                  );
-                })}
+                        return (
+                          <table key={index}>
+                            <tr style={{ fontSize: 14 }}>
+                              <th>Doanh thu đơn hàng trực tiếp: </th>
+                              <th style={{ paddingLeft: 30 }}> Doanh thu đơn hàng online: </th>
+                              <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
+                            </tr>
+                            <tr>
+                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                            </tr>
+                          </table>
+                        );
+                      })}
                   </Grid>
                 </Grid>
               </Grid>

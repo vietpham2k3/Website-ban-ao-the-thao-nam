@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
@@ -14,7 +15,6 @@ import '../../../scss/Chart.scss';
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const TotalGrowthBarChart = ({ isLoading }) => {
-
   const [selectedMenu, setSelectedMenu] = useState('nam');
   const [ngay, setNgay] = useState(['']);
   const [thang, setThang] = useState(['']);
@@ -73,10 +73,10 @@ const TotalGrowthBarChart = ({ isLoading }) => {
         ticks: {
           callback: (value) => {
             return value / 1000000 + 'M';
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -115,7 +115,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
             </Grid>
             <Grid item xs={12}>
               {selectedMenu === 'ngay' && (
-                <BarChart margin={{left: 70 }}
+                <BarChart
+                  margin={{ left: 70 }}
                   xAxis={[
                     {
                       id: 'barCategories',
@@ -140,7 +141,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 />
               )}
               {selectedMenu === 'thang' && (
-                <BarChart margin={{left: 70 }}
+                <BarChart
+                  margin={{ left: 70 }}
                   xAxis={[
                     {
                       id: 'barCategories',
@@ -166,7 +168,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               )}
               {selectedMenu === 'nam' && (
                 <div>
-                  <BarChart margin={{left: 70 }}
+                  <BarChart
+                    margin={{ left: 70 }}
                     xAxis={[
                       {
                         id: 'barCategories',

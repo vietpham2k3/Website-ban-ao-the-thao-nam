@@ -351,7 +351,7 @@ function DonHang(props) {
     findAllKM(id);
     getAllById(id);
     detailHDById(id);
-    if (dataDetailHD.tongTienKhiGiam) {
+    if (dataDetailHD.tongTienKhiGiam || id) {
       VNP(id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -397,9 +397,13 @@ function DonHang(props) {
   };
 
   const VNP = async (id) => {
-    const res = await pay(id);
-    if (res) {
-      setUrlPay(res.data);
+    try {
+      const res = await pay(id);
+      if (res) {
+        setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -470,9 +474,13 @@ function DonHang(props) {
   };
 
   const updateTTHD = async (idHD, value) => {
-    const res = await updateHD(idHD, value);
-    if (res) {
-      detailHDById(id);
+    try {
+      const res = await updateHD(idHD, value);
+      if (res) {
+        detailHDById(id);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -490,6 +498,8 @@ function DonHang(props) {
       setValuesSanPham(res.data);
     }
   };
+
+  console.log(valuesSanPham);
 
   const getKM = async (tien) => {
     const res = await getAllKM(tien);
@@ -516,6 +526,8 @@ function DonHang(props) {
     const res = await updateSL(idHDCT, values);
     if (res) {
       getAllById(id);
+      handleCloseSPofDH();
+      getAll();
     }
   };
 
@@ -662,6 +674,9 @@ function DonHang(props) {
     setidSP(idSP);
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
+    if (idCTSP) {
+      detail2(idCTSP);
+    }
   };
 
   const handleAdd = () => {
@@ -671,15 +686,21 @@ function DonHang(props) {
       return;
     }
     add(valuesAdd);
-    id;
   };
 
   const add = async (value) => {
     const res = await addSP(value);
-    if (res) {
+    if (res.data === 'ok') {
+      window.location.reload();
+      toast.success('Thêm sản phẩm thành công');
+    } else if (res) {
       toast.success('Thêm sản phẩm thành công');
       getAllById(id);
       handleCloseSPofDH();
+      getAll();
+      if (idCTSP) {
+        detail2(idCTSP);
+      }
     }
   };
 
@@ -862,8 +883,6 @@ function DonHang(props) {
     toast.success('Chọn thành công !');
     setShow4(false);
   };
-
-  console.log(urlPay);
 
   //showScanQR
   const [isModalOpen, setIsModalOpen] = useState(false);
