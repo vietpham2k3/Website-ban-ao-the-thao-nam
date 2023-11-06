@@ -137,7 +137,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                     }
                   ]}
                   width={855}
-                  height={532}
+                  height={554}
                 />
               )}
               {selectedMenu === 'thang' && (
@@ -163,7 +163,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                     }
                   ]}
                   width={855}
-                  height={532}
+                  height={554}
                 />
               )}
               {selectedMenu === 'nam' && (
