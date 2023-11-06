@@ -46,7 +46,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 
 function DonHangCT() {
   const { id } = useParams();
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLogin = JSON.parse(localStorage.getItem('dataLoginNV'));
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
@@ -2688,20 +2688,18 @@ function DonHangCT() {
                               <span>Cập Nhật</span>
                             </button>
                           )}
-                          {(hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) ||
-                            (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0 && (
-                            <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                          {((hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) || (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0)) && (
+                            <OverlayTrigger placement="top" delay={{ show: 250,
+                             hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
                                 <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
                                   <Text style={styles.button}>
-                                    
                                       <i className="fa-solid fa-print fa-xl"></i>
-                                    
                                   </Text>
                                 </PDFDownloadLink>
                               </button>
                               </OverlayTrigger>
-                            ))}
+                            )}
                         </div>
                       </div>
                     </div>
