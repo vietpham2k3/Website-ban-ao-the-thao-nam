@@ -33,6 +33,10 @@ const AuthenticationRoutes = {
       element: <SanPham />
     },
     {
+      path: '/san-pham/web/:productName',
+      element: <SanPham />
+    },
+    {
       path: '/detail/:id/:idSP/:idMS',
       element: <Detail />
     },

@@ -36,12 +36,13 @@ CustomTabPanel.propTypes = {
 };
 
 export default function BanHangTaiQuay() {
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
 
   const [value, setValue] = useState(0);
   const [values, setValues] = useState([]);
   const nvID = {
-    nhanVien: { id: dataLogin && dataLogin.id }
+    nhanVien: { id: dataLoginNV && dataLoginNV.id }
   };
 
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function BanHangTaiQuay() {
 
   const add = async () => {
     try {
-      const res = await addHD(nvID, dataLogin && dataLogin.ten); // Sử dụng await để chờ kết quả trả về
+      const res = await addHD(nvID, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)); // Sử dụng await để chờ kết quả trả về
       if (res) {
         toast.success('Thêm đơn thành công');
         getAll();
