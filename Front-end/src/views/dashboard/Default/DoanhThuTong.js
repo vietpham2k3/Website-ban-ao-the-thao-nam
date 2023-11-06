@@ -16,7 +16,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: "white",
+  backgroundColor: 'white',
   color: 'red',
   overflow: 'hidden',
   position: 'relative',
@@ -163,7 +163,7 @@ const EarningCard = ({ isLoading }) => {
                         }}
                       >
                         {/* <img src={EarningIcon} alt="Notification" /> */}
-                        <i style={{color: "green"}} className="fa-solid fa-money-bill-1"></i>
+                        <i style={{ color: 'green' }} className="fa-solid fa-money-bill-1"></i>
                       </Avatar>
                     </Grid>
                     <Grid item>
@@ -176,8 +176,7 @@ const EarningCard = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU TỔNG{' '}
-                        {ngay !== '' && 'HÔM NAY'}
+                        DOANH THU TỔNG {ngay !== '' && 'HÔM NAY'}
                         {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
                         {nam !== '' && `TRONG NĂM ${currentYear}`}
                       </Typography>

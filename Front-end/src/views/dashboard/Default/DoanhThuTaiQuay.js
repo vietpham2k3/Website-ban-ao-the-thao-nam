@@ -112,9 +112,6 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
     doanhThuNam();
   };
 
-
-  
-
   useEffect(() => {
     handleDoanhThuNgay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,8 +178,7 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU BÁN TRỰC TIẾP{' '}
-                        {ngay !== '' && 'HÔM NAY'}
+                        DOANH THU BÁN TRỰC TIẾP {ngay !== '' && 'HÔM NAY'}
                         {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
                         {nam !== '' && `TRONG NĂM ${currentYear}`}
                       </Typography>
@@ -229,7 +225,7 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                         Trong tháng
                       </MenuItem>
                       <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuNam}>
-                      Trong năm
+                        Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>
