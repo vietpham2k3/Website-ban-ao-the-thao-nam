@@ -40,6 +40,7 @@ function SignInForm(props) {
         localStorage.setItem('dataLoginAD', JSON.stringify(res.data));
       }
     }
+    console.log(res);
   };
 
   const detail = async (id) => {

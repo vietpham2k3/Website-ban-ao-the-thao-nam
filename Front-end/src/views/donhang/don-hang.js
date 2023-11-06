@@ -43,6 +43,7 @@ function DonHang() {
     { value: '4', label: 'Giao hàng thành công' },
     { value: '5,11,12,13', label: 'Giao hàng thất bại' },
     { value: '6', label: 'Thanh toán thành công' },
+    { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
     { value: '15', label: 'Yêu cầu trả hàng' },
     { value: '16', label: 'Trả hàng thành công' }

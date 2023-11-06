@@ -14,6 +14,7 @@ const postCreate = (values) => {
 const putUpdateCL = (id, values) => {
   return axios.put('/api/chatlieu/update/' + id, values);
 };
+
 const detailCL = (id) => {
   return axios.get(`/api/chatlieu/detail/` + id);
 };

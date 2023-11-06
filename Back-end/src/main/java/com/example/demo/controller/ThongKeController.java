@@ -15,6 +15,7 @@ public class ThongKeController {
     @Autowired
     public HoaDonServiceImpl hdSer;
 
+    //
     @GetMapping("doanh-thu-tong-ngay-hien-tai")
     public ResponseEntity<?> doanhThuTongNgayCurrent() {
         return ResponseEntity.ok().body(hdSer.doanhThuTongNgayCurrent());
@@ -28,6 +29,22 @@ public class ThongKeController {
     @GetMapping("doanh-thu-tong-nam-hien-tai")
     public ResponseEntity<?> doanhThuTongNamCurrent() {
         return ResponseEntity.ok().body(hdSer.doanhThuTongNamCurrent());
+    }
+
+    //
+    @GetMapping("doanh-thu-all-ngay")
+    public ResponseEntity<?> doanhThuAllNgay() {
+        return ResponseEntity.ok().body(hdSer.doanhThuAllNgay());
+    }
+
+    @GetMapping("doanh-thu-all-thang")
+    public ResponseEntity<?> doanhThuAllThang() {
+        return ResponseEntity.ok().body(hdSer.doanhThuAllThang());
+    }
+
+    @GetMapping("doanh-thu-all-nam")
+    public ResponseEntity<?> doanhThuAllNam() {
+        return ResponseEntity.ok().body(hdSer.doanhThuAllNam());
     }
 
     //
@@ -111,6 +128,22 @@ public class ThongKeController {
     }
 
     //
+    @GetMapping("so-don-tra-ngay")
+    public ResponseEntity<?> soDonTraNgay() {
+        return ResponseEntity.ok().body(hdSer.soDonTraNgay());
+    }
+
+    @GetMapping("so-don-tra-thang")
+    public ResponseEntity<?> soDonTraThang() {
+        return ResponseEntity.ok().body(hdSer.soDonTraThang());
+    }
+
+    @GetMapping("so-don-tra-nam")
+    public ResponseEntity<?> soDonTraNam() {
+        return ResponseEntity.ok().body(hdSer.soDonTraNam());
+    }
+
+    //
     @GetMapping("san-pham-ban-chay-trong-ngay")
     public ResponseEntity<?> sanPhamBanChayTrongNgay() {
         return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNgay());
@@ -140,5 +173,21 @@ public class ThongKeController {
     @GetMapping("san-pham-ban-chay-trong-nam-search")
     public ResponseEntity<?> sanPhamBanChayTrongNamS(@RequestParam String key) {
         return ResponseEntity.ok().body(hdSer.sanPhamBanChayTrongNamSearch(key));
+    }
+
+    //
+    @GetMapping("bieu-do-ngay")
+    public ResponseEntity<?> bieuDoNgay() {
+        return ResponseEntity.ok().body(hdSer.bieuDoNgay());
+    }
+
+    @GetMapping("bieu-do-thang")
+    public ResponseEntity<?> bieuDoThang() {
+        return ResponseEntity.ok().body(hdSer.bieuDoThang());
+    }
+
+    @GetMapping("bieu-do-nam")
+    public ResponseEntity<?> bieuDoNam() {
+        return ResponseEntity.ok().body(hdSer.bieuDoNam());
     }
 }

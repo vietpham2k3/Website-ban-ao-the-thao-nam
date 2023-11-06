@@ -399,19 +399,18 @@ function SanPham() {
               </Col>
               <Col>
                 <Form.Select className="custom-select" onChange={handleMauSacChange} value={mauSac}>
+                  <option value="" disabled={mauSacDefaultSelected}>
+                    ---Chọn màu sắc---
+                  </option>
                   {uniqueColors.map((c) => (
                     <option key={c.ma} value={c.ma}>
                       &nbsp;{c.ma}
                     </option>
                   ))}
-                  <option value="" disabled={mauSacDefaultSelected}>
-                    ---Chọn màu sắc---
-                  </option>
                 </Form.Select>
               </Col>
             </Row>
           </Form>
-
           <div className="col-12">
             <Table striped hover className="my-4">
               <thead>
@@ -441,11 +440,6 @@ function SanPham() {
                     <td>{d.sanPham.ten}</td>
                     <td>{d.soLuong || 0}</td>
                     <td>{convertToCurrency(d.giaBan)}</td>
-                    {/* <td><div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>{d.mauSac.ten}</td>
-                    <td>{d.chatLieu.ten}</td>
-                    <td>{d.loaiSanPham.ten}</td>
-                    <td>{d.nhaSanXuat.ten}</td>
-                    <td>{d.coAo.ten}</td> */}
                     <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
                       <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>

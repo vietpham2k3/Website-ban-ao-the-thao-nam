@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Slider from 'react-slider';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 const MIN = 0;
 const MAX = 10000000;
@@ -18,7 +19,7 @@ const MAX = 10000000;
 function ContentSanPham() {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
-
+  const { productName } = useParams();
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -106,13 +107,18 @@ function ContentSanPham() {
       setTotalPages(res.data.totalPages);
     }
   };
+  console.log(productName);
 
   useEffect(() => {
-    filterProducts();
-  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials, selectedCollars, selectedManufacturers]);
+    if (productName === undefined) {
+      filterProducts('');
+    } else {
+      filterProducts(productName);
+    }
+  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials, selectedCollars, selectedManufacturers, productName]);
 
   // Hàm xử lý việc lọc sản phẩm
-  const filterProducts = () => {
+  const filterProducts = (productName) => {
     const filteredProducts = data.filter((product) => {
       // Lọc theo khoảng giá
       const price = product.giaBan;
@@ -122,6 +128,10 @@ function ContentSanPham() {
 
       // Lọc theo màu sắc
       if (selectedColors.length > 0 && !selectedColors.includes(product.mauSac.ten)) {
+        return false;
+      }
+
+      if (!product.sanPham.ten.toLowerCase().includes(productName.toLowerCase())) {
         return false;
       }
 
