@@ -220,6 +220,14 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 15", nativeQuery = true)
+    public Integer soDonTraNgay();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 0", nativeQuery = true)
     public Integer soDonChoXacNhanNgay();
 
@@ -254,6 +262,13 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 15", nativeQuery = true)
+    public Integer soDonTraThang();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 0", nativeQuery = true)
     public Integer soDonChoXacNhanThang();
 
@@ -280,6 +295,12 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
             "              AND HD.trang_thai = 2", nativeQuery = true)
     public Integer soDonHuyNam();
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
+            "            FROM HoaDon HD WHERE\n" +
+            "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "              AND HD.trang_thai = 15", nativeQuery = true)
+    public Integer soDonTraNam();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
@@ -454,4 +475,174 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "GROUP BY SP.ten\n" +
             "ORDER BY so_luong_sp_dh DESC\n" , nativeQuery = true)
     public List<String> sanPhamBanChayTrongNamSearchTenSP(@Param("key") String key);
+
+    @Query(value = "SELECT\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "FROM HoaDon HD\n" +
+            " WHERE\n" +
+            "    (\n" +
+            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 6 AND\n" +
+            "       HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
+            "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 7 AND\n" +
+            "       HD.loai_don = 1)\n" +
+            "    )", nativeQuery = true)
+    public String[] doanhThuAllNgay();
+
+    @Query(value = "SELECT\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "FROM HoaDon HD\n" +
+            " WHERE\n" +
+            "    (\n" +
+            "      (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 6 AND\n" +
+            "       HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "      (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
+            "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 7 AND\n" +
+            "       HD.loai_don = 1)\n" +
+            "    )", nativeQuery = true)
+    public String[] doanhThuAllThang();
+
+    @Query(value = "SELECT\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "FROM HoaDon HD\n" +
+            " WHERE\n" +
+            "    (\n" +
+            "      (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 6 AND\n" +
+            "       HD.loai_don = 0)\n" +
+            "    )\n" +
+            "    OR\n" +
+            "    (\n" +
+            "      (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
+            "       HD.trang_thai = 7 AND\n" +
+            "       HD.loai_don = 1)\n" +
+            "    )", nativeQuery = true)
+    public String[] doanhThuAllNam();
+
+    @Query(value = "WITH Thang_Mac_Dinh AS (\n" +
+            "    SELECT 1 AS thang\n" +
+            "    UNION SELECT 2\n" +
+            "    UNION SELECT 3\n" +
+            "    UNION SELECT 4\n" +
+            "    UNION SELECT 5\n" +
+            "    UNION SELECT 6\n" +
+            "    UNION SELECT 7\n" +
+            "    UNION SELECT 8\n" +
+            "    UNION SELECT 9\n" +
+            "    UNION SELECT 10\n" +
+            "    UNION SELECT 11\n" +
+            "    UNION SELECT 12\n" +
+            ")\n" +
+            "\n" +
+            "SELECT\n" +
+            "    CONCAT('Tháng ', CAST(Thang_Mac_Dinh.thang AS NVARCHAR)) AS thang,\n" +
+            "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_thang\n" +
+            "FROM\n" +
+            "    Thang_Mac_Dinh\n" +
+            "LEFT JOIN\n" +
+            "    HoaDon HD ON Thang_Mac_Dinh.thang = MONTH(HD.ngay_thanh_toan)\n" +
+            "            AND YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
+            "            AND (\n" +
+            "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
+            "                OR\n" +
+            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "            )\n" +
+            "GROUP BY\n" +
+            "    Thang_Mac_Dinh.thang\n" +
+            "ORDER BY\n" +
+            "    Thang_Mac_Dinh.thang", nativeQuery = true)
+    public List<String> bieuDoNam();
+
+    @Query(value = "\tWITH Gio_Mac_Dinh AS (\n" +
+            "    SELECT 0 AS gio\n" +
+            "    UNION SELECT 1\n" +
+            "    UNION SELECT 2\n" +
+            "    UNION SELECT 3\n" +
+            "    UNION SELECT 4\n" +
+            "    UNION SELECT 5\n" +
+            "    UNION SELECT 6\n" +
+            "    UNION SELECT 7\n" +
+            "    UNION SELECT 8\n" +
+            "    UNION SELECT 9\n" +
+            "    UNION SELECT 10\n" +
+            "    UNION SELECT 11\n" +
+            "    UNION SELECT 12\n" +
+            "    UNION SELECT 13\n" +
+            "    UNION SELECT 14\n" +
+            "    UNION SELECT 15\n" +
+            "    UNION SELECT 16\n" +
+            "    UNION SELECT 17\n" +
+            "    UNION SELECT 18\n" +
+            "    UNION SELECT 19\n" +
+            "    UNION SELECT 20\n" +
+            "    UNION SELECT 21\n" +
+            "    UNION SELECT 22\n" +
+            "    UNION SELECT 23\n" +
+            ")\n" +
+            "\n" +
+            "SELECT\n" +
+            "    CAST(Gio_Mac_Dinh.gio AS NVARCHAR) + 'H' AS gio,\n" +
+            "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_gio\n" +
+            "FROM\n" +
+            "    Gio_Mac_Dinh\n" +
+            "LEFT JOIN\n" +
+            "    HoaDon HD ON Gio_Mac_Dinh.gio = DATEPART(HOUR, HD.ngay_thanh_toan)\n" +
+            "            AND CAST(HD.ngay_thanh_toan AS DATE) = CAST(GETDATE() AS DATE)\n" +
+            "            AND (\n" +
+            "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
+            "                OR\n" +
+            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "            )\n" +
+            "GROUP BY\n" +
+            "    Gio_Mac_Dinh.gio\n" +
+            "ORDER BY\n" +
+            "    Gio_Mac_Dinh.gio;\n", nativeQuery = true)
+    public List<String> bieuDoNgay();
+
+    @Query(value = "DECLARE @StartDate DATE = DATEADD(DAY, 1, EOMONTH(GETDATE(), -1)); " +
+            "DECLARE @EndDate DATE = EOMONTH(GETDATE()); \n" +
+            "DECLARE @SoNgayTrongThang INT = DATEDIFF(DAY, @StartDate, @EndDate) + 1;\n" +
+            "WITH Ngay_Mac_Dinh AS (\n" +
+            "    SELECT DATEADD(DAY, number, @StartDate) AS ngay\n" +
+            "    FROM master.dbo.spt_values\n" +
+            "    WHERE type = 'P' AND number BETWEEN 0 AND @SoNgayTrongThang - 1\n" +
+            ")\n" +
+            "\n" +
+            "SELECT\n" +
+            "    'N' + CAST(ROW_NUMBER() OVER (ORDER BY Ngay_Mac_Dinh.ngay) AS NVARCHAR) AS ngay,\n" +
+            "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_ngay\n" +
+            "FROM\n" +
+            "    Ngay_Mac_Dinh\n" +
+            "LEFT JOIN\n" +
+            "    HoaDon HD ON CAST(HD.ngay_thanh_toan AS DATE) = CAST(Ngay_Mac_Dinh.ngay AS DATE)\n" +
+            "            AND (\n" +
+            "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
+            "                OR\n" +
+            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "            )\n" +
+            "GROUP BY\n" +
+            "    Ngay_Mac_Dinh.ngay\n" +
+            "ORDER BY\n" +
+            "    Ngay_Mac_Dinh.ngay;", nativeQuery = true)
+    public List<String> bieuDoThang();
 }

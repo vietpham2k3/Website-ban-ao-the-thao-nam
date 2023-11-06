@@ -118,7 +118,7 @@ const DoanhThuOnline = ({ isLoading }) => {
   };
 
   useEffect(() => {
-    handleDoanhThuThang();
+    handleDoanhThuNgay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,6 +143,11 @@ const DoanhThuOnline = ({ isLoading }) => {
     setAnchorEl(null);
     setIsModalOpen(false);
   };
+
+  const currentDate = new Date();
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
 
   return (
     <>
@@ -178,7 +183,10 @@ const DoanhThuOnline = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU BÁN ONLINE
+                        DOANH THU BÁN ONLINE{' '}
+                        {ngay !== '' && 'HÔM NAY'}
+                        {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
+                        {nam !== '' && `TRONG NĂM ${currentYear}`}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -220,10 +228,10 @@ const DoanhThuOnline = ({ isLoading }) => {
                         Hôm nay
                       </MenuItem>
                       <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuThang}>
-                        Tháng này
+                        Trong tháng
                       </MenuItem>
                       <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuNam}>
-                        Năm này
+                        Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>

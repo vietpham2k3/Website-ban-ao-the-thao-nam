@@ -5,7 +5,7 @@ import '../../../scss/ThongKe.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
 //service api
-import { doanhThuTongTheoNgay, doanhThuTongTheoThang, doanhThuTongTheoNam } from 'services/ServiceThongKe';
+import { doanhThuAllNam, doanhThuAllNgay, doanhThuAllThang } from 'services/ServiceThongKe';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -17,7 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: "white",
-  color: 'red',
+  color: 'black',
   overflow: 'hidden',
   position: 'relative',
   '&:after': {
@@ -53,64 +53,70 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const DoanhThuAll = ({ isLoading }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [ngay, setNgay] = useState(0);
-  const [thang, setThang] = useState(0);
-  const [nam, setNam] = useState(0);
+  const [selectedMenu, setSelectedMenu] = useState('thang');
+  const [ngay, setNgay] = useState([]);
+  const [thang, setThang] = useState([]);
+  const [nam, setNam] = useState([]);
 
   const doanhThuTongNgay = async () => {
-    const res = await doanhThuTongTheoNgay();
+    const res = await doanhThuAllNgay();
     if (res && res.data) {
       setNgay(res.data);
     }
   };
 
   const doanhThuTongThang = async () => {
-    const res = await doanhThuTongTheoThang();
+    const res = await doanhThuAllThang();
     if (res && res.data) {
       setThang(res.data);
     }
   };
 
   const doanhThuTongNam = async () => {
-    const res = await doanhThuTongTheoNam();
+    const res = await doanhThuAllNam();
     if (res && res.data) {
       setNam(res.data);
     }
   };
 
   const handleDoanhThuTongNgay = () => {
-    setThang('');
-    setNam('');
-    if (ngay === '') {
-      setNgay(0);
-    }
+    // setThang('');
+    // setNam('');
+    // if (ngay === '') {
+    //   setNgay(0);
+    // }
     doanhThuTongNgay();
+    setSelectedMenu('ngay');
   };
 
   const handleDoanhThuTongThang = () => {
-    setNgay('');
-    setNam('');
-    if (thang === '') {
-      setThang(0);
-    }
+    // setNgay('');
+    // setNam('');
+    // if (thang === '') {
+    //   setThang(0);
+    // }
     doanhThuTongThang();
+    setSelectedMenu('thang');
+
   };
 
   const handleDoanhThuTongNam = () => {
-    setNgay('');
-    setThang('');
-    if (nam === '') {
-      setNam(0);
-    }
+    // setNgay('');
+    // setThang('');
+    // if (nam === '') {
+    //   setNam(0);
+    // }
     doanhThuTongNam();
+    setSelectedMenu('nam');
+
   };
 
   useEffect(() => {
-    handleDoanhThuTongThang();
+    handleDoanhThuTongNam();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -147,7 +153,7 @@ const EarningCard = ({ isLoading }) => {
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box height={157} sx={{ p: 2.25 }}>
+          <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
@@ -176,10 +182,10 @@ const EarningCard = ({ isLoading }) => {
                           position: 'relative'
                         }}
                       >
-                        DOANH THU TỔNG{' '}
-                        {ngay !== '' && 'HÔM NAY'}
-                        {thang !== '' && `TRONG THÁNG ${currentMonth}/${currentYear}`}
-                        {nam !== '' && `TRONG NĂM ${currentYear}`}
+                        DOANH THU{' '}
+                        {selectedMenu === 'ngay' && "HÔM NAY"}
+                     {selectedMenu === 'nam' && `TRONG NĂM ${currentYear}`}
+                     {selectedMenu === 'thang' && `TRONG THÁNG ${currentMonth}/${currentYear}`} 
                       </Typography>
                     </Grid>
                   </Grid>
@@ -218,39 +224,90 @@ const EarningCard = ({ isLoading }) => {
                         horizontal: 'right'
                       }}
                     >
-                      <MenuItem className={ngay !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNgay}>
+                      <MenuItem className={selectedMenu === 'ngay' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNgay}>
                         Hôm nay
                       </MenuItem>
-                      <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongThang}>
+                      <MenuItem className={selectedMenu === 'thang' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongThang}>
                         Trong tháng
                       </MenuItem>
-                      <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNam}>
+                      <MenuItem className={selectedMenu === 'nam' ? 'menu-item selected' : 'menu-item'} onClick={handleDoanhThuTongNam}>
                         Trong năm
                       </MenuItem>
                     </Menu>
                   </Grid>
                 </Grid>
               </Grid>
+              <hr></hr>
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    {ngay !== '' && (
-                      <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(ngay)}
-                      </Typography>
-                    )}
+                  
+                  {selectedMenu === 'ngay' &&
+                  ngay.map((n, index) => {
+                  const sizeData = n.split(',');
+                  const taiQuay = sizeData[0];
+                  const online = sizeData[1];
+                  const tong = sizeData[2];
 
-                    {thang !== '' && (
-                      <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(thang)}
-                      </Typography>
-                    )}
+                  return (
+                    <table key={index}>
+                      <tr style={{fontSize: 14}}>
+                        <th>Doanh thu đơn hàng trực tiếp: </th>
+                        <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
+                        <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
+                      </tr>
+                      <tr>
+                        <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
+                        <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
+                        <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
+                      </tr>
+                    </table>
+                  );
+                })}
+                   {selectedMenu === 'thang' &&
+                  thang.map((n, index) => {
+                  const sizeData = n.split(',');
+                  const taiQuay = sizeData[0];
+                  const online = sizeData[1];
+                  const tong = sizeData[2];
 
-                    {nam !== '' && (
-                      <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(nam)}
-                      </Typography>
-                    )}
+                  return (
+                    <table key={index}>
+                    <tr style={{fontSize: 14}}>
+                      <th>Doanh thu đơn hàng trực tiếp: </th>
+                      <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
+                      <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
+                    </tr>
+                    <tr>
+                      <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
+                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
+                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
+                    </tr>
+                  </table>
+                  );
+                })}
+                 {selectedMenu === 'nam' &&
+                  nam.map((n, index) => {
+                  const sizeData = n.split(',');
+                  const taiQuay = sizeData[0];
+                  const online = sizeData[1];
+                  const tong = sizeData[2];
+
+                  return (
+                    <table key={index}>
+                    <tr style={{fontSize: 14}}>
+                      <th>Doanh thu đơn hàng trực tiếp: </th>
+                      <th style={{paddingLeft: 30}}> Doanh thu đơn hàng online: </th>
+                      <th style={{paddingLeft: 30}}> Tổng doanh thu: </th>
+                    </tr>
+                    <tr>
+                      <td style={{color: "red"}}>{convertToCurrency(taiQuay)}</td>
+                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(online)}</td>
+                      <td style={{paddingLeft: 30,color: "red"}}>{convertToCurrency(tong)}</td>
+                    </tr>
+                  </table>
+                  );
+                })}
                   </Grid>
                 </Grid>
               </Grid>
@@ -262,8 +319,8 @@ const EarningCard = ({ isLoading }) => {
   );
 };
 
-EarningCard.propTypes = {
+DoanhThuAll.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default DoanhThuAll;

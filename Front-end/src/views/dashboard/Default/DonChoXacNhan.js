@@ -146,7 +146,7 @@ const DonChoXacNhan = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">ĐƠN CHỜ XÁC NHẬN</Typography>}
+                  primary={<Typography variant="h4">ĐƠN MUA CHỜ XÁC NHẬN</Typography>}
                   secondary={
                     <Typography
                       variant="subtitle2"
@@ -202,10 +202,10 @@ const DonChoXacNhan = ({ isLoading }) => {
                   Hôm nay
                 </MenuItem>
                 <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
-                  Tháng này
+                Trong tháng
                 </MenuItem>
                 <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
-                  Năm này
+                Trong năm
                 </MenuItem>
               </Menu>
             </List>

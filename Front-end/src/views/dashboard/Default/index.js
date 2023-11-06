@@ -14,7 +14,8 @@ import DoanhThuOnline from './DoanhThuOnline';
 import DonBan from './DonBan';
 import DonChoXacNhan from './DonChoXacNhan';
 import DonHuy from './DonHuy';
-
+import DonTra from './DonTra';
+import DoanhThuAll from './DoanhThuTongAll';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
@@ -27,54 +28,43 @@ const Dashboard = () => {
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
-            <EarningCard isLoading={isLoading} />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
+          <Grid item lg={6} md={6} sm={6} xs={12}>
             <DoanhThuTaiQuay isLoading={isLoading} />
           </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={12}>
+          <Grid item lg={6} md={6} sm={6} xs={12}>
             <DoanhThuOnline isLoading={isLoading} />
           </Grid>
-          {/* <Grid item lg={4} md={6} sm={6} xs={12}>
-            <TotalOrderLineChartCard isLoading={isLoading} />
-          </Grid> */}
           <Grid item xs={12} style={{ display: 'flex' }}>
             <Grid container spacing={gridSpacing}>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
+              <Grid item lg={3} md={6} sm={6} xs={12}>
                 <DonChoXacNhan isLoading={isLoading} />
               </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
+              <Grid item lg={3} md={6} sm={6} xs={12}>
                 <DonBan isLoading={isLoading} />
               </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
+              <Grid item lg={3} md={6} sm={6} xs={12}>
                 <DonHuy isLoading={isLoading} />
+              </Grid>
+              <Grid item lg={3} md={6} sm={6} xs={12}>
+                <DonTra isLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>
-          {/* // */}
-          {/* <Grid item xs={12} style={{ display: 'flex' }}>
-            <Grid container spacing={gridSpacing}>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <DonChoXacNhan isLoading={isLoading} />
-              </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <DonBan isLoading={isLoading} />
-              </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <DonHuy isLoading={isLoading} />
-              </Grid>
-            </Grid>
-          </Grid> */}
+          <Grid item lg={6} md={6} sm={6} xs={12}>
+            <EarningCard isLoading={isLoading} />
+          </Grid>
+          <Grid item lg={6} md={6} sm={6} xs={12}>
+            <DoanhThuAll isLoading={isLoading} />
+          </Grid>
           {/*  */}
         </Grid>
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={8.6}>
             <TotalGrowthBarChart isLoading={isLoading} />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3.4}>
             <PopularCard isLoading={isLoading} />
           </Grid>
         </Grid>

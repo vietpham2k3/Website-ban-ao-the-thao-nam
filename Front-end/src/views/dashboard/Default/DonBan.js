@@ -125,7 +125,7 @@ const DonBan = ({ isLoading }) => {
         <TotalIncomeCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2 }}>
+          <Box height={112} sx={{ p: 2 }}>
             <List sx={{ py: 0, display: 'flex' }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>
@@ -203,10 +203,10 @@ const DonBan = ({ isLoading }) => {
                   Hôm nay
                 </MenuItem>
                 <MenuItem className={thang !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLThang}>
-                  Tháng này
+                Trong tháng
                 </MenuItem>
                 <MenuItem className={nam !== '' ? 'menu-item selected' : 'menu-item'} onClick={handleSLNam}>
-                  Năm này
+                Trong năm
                 </MenuItem>
               </Menu>
             </List>
