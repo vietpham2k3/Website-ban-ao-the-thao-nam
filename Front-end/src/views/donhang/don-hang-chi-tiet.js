@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import { detailCTSP, getAllByIdSPTT } from 'services/SanPhamService';
 import Modal from 'react-bootstrap/Modal';
+import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
+import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { getTP, getQH, getP, getFee, getServices } from 'services/ApiGHNService';
 import {
   detailHD,
@@ -39,6 +41,8 @@ import { Button } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/ErrorMessage.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function DonHangCT() {
   const { id } = useParams();
@@ -80,6 +84,7 @@ function DonHangCT() {
     width: 15
   });
   // cap nhat hoa don
+  Font.register({ family: 'Roboto', src: myFont });
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [tongTienKhiGiam, setTongTienKhiGiam] = useState(0);
@@ -974,6 +979,223 @@ function DonHangCT() {
 
     return formattedDate;
   }
+
+  //in hóa đơn
+
+  const styles = StyleSheet.create({
+    container: {
+      marginLeft: '40px'
+    },
+    title: {
+      paddingTop: '50px',
+      paddingBottom: '20px',
+      fontSize: '20px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold'
+    },
+    titleHD: {
+      paddingTop: '20px',
+      fontSize: '20px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      fontWeight: 'bold'
+    },
+    titleTB: {
+      fontSize: '15px',
+      textAlign: 'center',
+      fontFamily: 'Roboto',
+      fontWeight: 'bold',
+      paddingBottom: '10px'
+    },
+    text: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center'
+    },
+    textMaHD: {
+      fontSize: '13px',
+      fontFamily: 'Roboto',
+      textAlign: 'center',
+      paddingBottom: '20px'
+    },
+    textThuocTinh: {
+      fontSize: '10px',
+      fontFamily: 'Roboto',
+      marginBottom: '3px',
+      marginTop: '3px'
+    },
+    table: {
+      width: '100%',
+      marginLeft: '40px',
+      marginRight: '40px'
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      borderTop: '1px solid #EEE',
+      marginRight: '40px'
+    },
+    header: {
+      borderTop: 'none'
+    },
+    bold: {
+      fontWeight: 'bold'
+    },
+    // So Declarative and unDRY 👌
+    row1: {
+      width: '10%',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      fontSize: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row2: {
+      width: '25%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row3: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row4: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      borderLeft: '1px solid black',
+      borderTop: '1px solid black',
+      borderBottom: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    row5: {
+      width: '20%',
+      fontSize: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      border: '1px solid black',
+      paddingLeft: '5px',
+      fontFamily: 'Roboto'
+    },
+    colorBlock: {
+      width: 30,
+      height: 30,
+      borderRadius: 10
+    },
+    flexContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+    textLeft: {
+      fontFamily: 'Roboto',
+      fontSize: '13px',
+      marginLeft: '40px'
+    },
+    textRight: {
+      fontFamily: 'Roboto',
+      fontSize: '15px',
+      marginRight: '30px'
+    },
+    button: {
+      color: 'white',
+      textDecoration: 'none'
+    }
+  });
+
+  const InvoiceDocument = () => {
+    return (
+      <Document>
+        <Page>
+          <Text style={styles.title}>Sports Shop</Text>
+          <Text style={styles.text}>SDT: 0559044158</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
+          <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
+          <Text style={styles.textMaHD}>{hoaDon.ma}</Text>
+
+          <div style={styles.container}>
+            <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(hoaDon.ngayThanhToan)}</Text>
+            <Text style={styles.textThuocTinh}>Khách hàng: {hoaDon.tenNguoiNhan}</Text>
+            <Text style={styles.textThuocTinh}>Địa chỉ: {hoaDon.diaChi}</Text>
+            <Text style={styles.textThuocTinh}>Số điện thoại: {hoaDon.sdt}</Text>
+            <Text style={styles.textThuocTinh}>Nhân viên bán hàng: {hoaDon && hoaDon.taiKhoan && hoaDon.taiKhoan.ten}</Text>
+          </div>
+          <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
+          <View style={styles.table}>
+            <View style={[styles.row, styles.header]}>
+              <Text style={styles.row1}>STT</Text>
+              <Text style={styles.row2}>Sản phẩm</Text>
+              <Text style={styles.row3}>Số lượng</Text>
+              <Text style={styles.row4}>Đơn giá</Text>
+              <Text style={styles.row5}>Thành tiền</Text>
+            </View>
+            {valuesSanPham.map((d, i) => (
+              <View key={i} style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>{i + 1}</Text>
+                <Text style={styles.row2}>
+                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                </Text>
+                <Text style={styles.row3}>{d.soLuong}</Text>
+                <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+              </View>
+            ))}
+          </View>
+          <View>
+            <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+              <Text style={styles.textLeft}>Tổng tiền</Text>
+              <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+            </View>
+            {dataHDKM.map((d) => (
+              <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                <Text style={styles.textLeft}>Tiền giảm</Text>
+                <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+              </View>
+            ))}
+            <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
+            </View>
+            {/* <View style={styles.flexContainer}>
+              <Text style={styles.textLeft}>Tiền thừa</Text>
+              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
+            </View> */}
+          </View>
+          <View>
+            <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      In hóa đơn
+    </Tooltip>
+  );
 
   return (
     <>
@@ -2466,6 +2688,20 @@ function DonHangCT() {
                               <span>Cập Nhật</span>
                             </button>
                           )}
+                          {(hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) ||
+                            (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0 && (
+                            <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                              <button className="btn btn-dark" data-bs-placement="right">
+                                <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                                  <Text style={styles.button}>
+                                    
+                                      <i className="fa-solid fa-print fa-xl"></i>
+                                    
+                                  </Text>
+                                </PDFDownloadLink>
+                              </button>
+                              </OverlayTrigger>
+                            ))}
                         </div>
                       </div>
                     </div>
