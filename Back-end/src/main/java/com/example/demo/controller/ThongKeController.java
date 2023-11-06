@@ -15,7 +15,7 @@ public class ThongKeController {
     @Autowired
     public HoaDonServiceImpl hdSer;
 
-//
+    //
     @GetMapping("doanh-thu-tong-ngay-hien-tai")
     public ResponseEntity<?> doanhThuTongNgayCurrent() {
         return ResponseEntity.ok().body(hdSer.doanhThuTongNgayCurrent());

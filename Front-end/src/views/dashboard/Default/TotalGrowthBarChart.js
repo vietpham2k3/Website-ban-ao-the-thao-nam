@@ -66,6 +66,19 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => {
+            return value / 1000000 + 'M';
+          },
+        },
+      },
+    },
+  };
+
   return (
     <>
       {isLoading ? (
@@ -102,7 +115,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
             </Grid>
             <Grid item xs={12}>
               {selectedMenu === 'ngay' && (
-                <BarChart
+                <BarChart margin={{left: 70 }}
                   xAxis={[
                     {
                       id: 'barCategories',
@@ -118,7 +131,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       data: ngay.map((item) => {
                         const parts = item.split(',');
                         return parseFloat(parts[1]);
-                      })
+                      }),
+                      label: 'Doanh thu'
                     }
                   ]}
                   width={855}
@@ -126,7 +140,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 />
               )}
               {selectedMenu === 'thang' && (
-                <BarChart
+                <BarChart margin={{left: 70 }}
                   xAxis={[
                     {
                       id: 'barCategories',
@@ -142,7 +156,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       data: thang.map((item) => {
                         const parts = item.split(',');
                         return parseFloat(parts[1]);
-                      })
+                      }),
+                      label: 'Doanh thu'
                     }
                   ]}
                   width={855}
@@ -150,9 +165,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 />
               )}
               {selectedMenu === 'nam' && (
-                <div style={{ position: 'relative', zIndex: 9 }}>
-                  <BarChart
-
+                <div>
+                  <BarChart margin={{left: 70 }}
                     xAxis={[
                       {
                         id: 'barCategories',
@@ -163,28 +177,19 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                         scaleType: 'band'
                       }
                     ]}
-                    yAxis={[
-                      {
-                        labels: {
-                          formatter: (tien) => {
-                            return tien / 1000 + 'K'
-                          }
-                        }
-                      }
-                    ]}
                     series={[
                       {
                         data: nam.map((item) => {
                           const parts = item.split(',');
                           const tien = parseFloat(parts[1]);
                           return tien;
-                        })
+                        }),
+                        label: 'Doanh thu'
                       }
                     ]}
-
+                    options={options}
                     width={855}
                     height={554}
-
                   />
                 </div>
               )}
