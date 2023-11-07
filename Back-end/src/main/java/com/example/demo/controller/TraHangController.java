@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +27,20 @@ public class TraHangController {
     @Autowired
     private TraHangService traHangService;
 
-    @GetMapping("/tao-don-tra-hang")
+    @PostMapping("/tao-don-tra-hang")
     public ResponseEntity<?> getAll(@RequestBody TraHang traHang) {
         String ma = "LSTH" + new Random().nextInt(100000);
+        String maTH = "TH" + new Random().nextInt(100000);
+        traHang.setMa(maTH);
+        traHang.setNgayTao(new Date());
+        traHang = traHangService.add(traHang);
         LichSuTraHang lichSuTraHang = new LichSuTraHang().builder()
                 .ma(ma)
                 .ten("Trả hàng")
                 .ngayTao(new Date())
                 .trangThai(15)
+                .nguoiTao(traHang.getNguoiTao())
+                .ghiChu(traHang.getGhiChu())
                 .traHang(traHang)
                 .build();
         return ResponseEntity.ok(lichSuTraHangService.add(lichSuTraHang));

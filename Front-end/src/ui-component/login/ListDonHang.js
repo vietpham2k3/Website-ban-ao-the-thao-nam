@@ -19,7 +19,15 @@ function ListDonHang(props) {
   const [isShow, setIsshow] = useState(false);
   const [id, setId] = useState();
   const navigate = useNavigate();
+  const [counts, setCounts] = useState(dataHDCT.map(() => 0));
   const [ghiChu, setGhiChu] = useState({
+    ghiChu: ''
+  });
+  const [valuesTH, setValuesTH] = useState({
+    soHangTra: 0,
+    tienCanTra: 0,
+    tienTra: 0,
+    trangThai: 0,
     ghiChu: ''
   });
 
@@ -142,12 +150,16 @@ function ListDonHang(props) {
             {d.hoaDonChiTiet.map((h, i) => (
               <div key={i} className="card-box-center card-hdct mt-3 me-3">
                 <div className="d-flex">
-                  <img
-                    src={`http://localhost:8080/api/chi-tiet-san-pham/${h.chiTietSanPham.id}`}
-                    className="img-history rounded-start"
-                    alt="..."
-                  />
-                  <div className="mt-1">
+                  <div>
+                    <img
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${h.chiTietSanPham.id}`}
+                      className="img-history rounded-start"
+                      alt=""
+                      width={100}
+                      height={80}
+                    />
+                  </div>
+                  <div className="mt-2 ms-3">
                     <h5>{h.chiTietSanPham.sanPham.ten}</h5>
                     <span>
                       {h.chiTietSanPham.kichCo.ten} -{' '}
@@ -208,7 +220,16 @@ function ListDonHang(props) {
         </div>
       ))}
       <ModalHuyDon handleClose={handleClose} show={show} handleHuyDon={handleHuyDon} setGhiChu={setGhiChu}></ModalHuyDon>
-      <ModalTraHang handleClose={handleClose} show={isShow} dataHDCT={dataHDCT} convertToCurrency={convertToCurrency}></ModalTraHang>
+      <ModalTraHang
+        handleClose={handleClose}
+        show={isShow}
+        dataHDCT={dataHDCT}
+        convertToCurrency={convertToCurrency}
+        setValuesTH={setValuesTH}
+        valuesTH={valuesTH}
+        setCounts={setCounts}
+        counts={counts}
+      ></ModalTraHang>
     </div>
   );
 }
