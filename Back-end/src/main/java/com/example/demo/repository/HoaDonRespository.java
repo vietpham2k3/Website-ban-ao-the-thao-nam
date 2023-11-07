@@ -220,7 +220,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraNgay();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
@@ -262,7 +262,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraThang();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
@@ -299,7 +299,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraNam();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
