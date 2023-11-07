@@ -79,6 +79,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     }
   };
 
+  const width = 1100;
+
   return (
     <>
       {isLoading ? (
@@ -136,7 +138,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       label: 'Doanh thu'
                     }
                   ]}
-                  width={855}
+                  width={width}
                   height={554}
                 />
               )}
@@ -162,7 +164,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       label: 'Doanh thu'
                     }
                   ]}
-                  width={855}
+                  width={width}
                   height={554}
                 />
               )}
@@ -191,7 +193,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     options={options}
-                    width={855}
+                    width={width}
                     height={554}
                   />
                 </div>
