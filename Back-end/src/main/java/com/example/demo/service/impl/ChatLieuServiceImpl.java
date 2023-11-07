@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -74,5 +75,15 @@ public class ChatLieuServiceImpl implements ChatLieuService {
       chatLieu1.setNgayTao(chatLieu1.getNgayTao());
         chatLieu1.setTen(chatLieu1.getMa());
         return chatLieuRepository.save(chatLieu1);
+    }
+
+    @Override
+    public List<ChatLieu> findByChatLieuString(List<String> chatLieusString) {
+        List<ChatLieu> chatLieus = new ArrayList<>();
+        for (String clString: chatLieusString) {
+            ChatLieu chatLieu = chatLieuRepository.findByTen(clString);
+            chatLieus.add(chatLieu);
+        }
+        return chatLieus;
     }
 }

@@ -53,9 +53,12 @@ function DiaChi() {
   const [selectedWardName, setSelectedWardName] = useState('');
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
-  useEffect(() => {
-    getThanhPho();
-  }, []);
+  const [valuesId, setValuesId] = useState({
+    province_id: ''
+  });
+  const [valuesIdWard, setValuesIdWard] = useState({
+    district_id: ''
+  });
 
   const getThanhPho = async () => {
     try {
@@ -90,6 +93,10 @@ function DiaChi() {
     }
   };
 
+  useEffect(() => {
+    getThanhPho();
+  }, []);
+
   const handleProvinceChange = async (event) => {
     const provinceId = {
       province_id: event.target.value
@@ -101,7 +108,6 @@ function DiaChi() {
     setSelectedDistrictName('');
     setSelectedWardName('');
     getQuanHuyen(provinceId);
-    setValueDC({ ...valueDC, tinhThanh: event.target.options[event.target.selectedIndex].text });
   };
 
   const handleDistrictChange = async (event) => {
@@ -113,20 +119,19 @@ function DiaChi() {
     setSelectedWard(null);
     setSelectedWardName('');
     getPhuong(districtId);
-    setValueDC({ ...valueDC, quanHuyen: event.target.options[event.target.selectedIndex].text });
   };
 
   const handleWardChange = (event) => {
     setSelectedWard(event.target.value);
     setSelectedWardName(event.target.options[event.target.selectedIndex].text);
-    setValueDC({ ...valueDC, phuongXa: event.target.options[event.target.selectedIndex].text });
   };
 
   const [valueDC, setValueDC] = useState({
     tinhThanh: '',
     quanHuyen: '',
     phuongXa: '',
-    diaChi: ''
+    diaChi: '',
+    trangThai: 1
   });
 
   const handleSubmitADD = async (event) => {
@@ -136,7 +141,8 @@ function DiaChi() {
       tinhThanh: selectedProvinceName,
       quanHuyen: selectedDistrictName,
       phuongXa: selectedWardName,
-      diaChi: valueDC.diaChi
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai
     };
     await addDCKH(customerId, newAddress);
     setIsModalOpen(false);
@@ -147,31 +153,60 @@ function DiaChi() {
     if (res) {
       toast.success('Thêm thành công !');
       setAddresses([...addresses, res.data]); // Thêm địa chỉ mới vào danh sách hiện có
+      updateAddressesList(); // Cập nhật danh sách địa chỉ sau khi thêm thành công
+
     }
   };
 
-  // const detailDCKH = async (idDC) => {
-  //   const res = await detailDC(idDC);
-  //   if (res) {
-  //     setValueDC(res.data);
-  //   }
-  // };
-
+  const updateAddressesList = () => {
+    getAllDcKh(customerId)
+      .then((response) => {
+        setAddresses(response.data);
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
+      });
+  };
+  
   const [idDC, setIdDC] = useState(null);
 
-  const handleSubmitDC = (event) => {
+  const handleSubmitDC = async (event) => {
     event.preventDefault();
-    if (idDC) {
-      const updatedValueDC = {
-        ...valueDC,
-        tinhThanh: selectedProvinceName,
-        quanHuyen: selectedDistrictName,
-        phuongXa: selectedWardName,
-      };
-      updateDCKH(idDC, updatedValueDC);
+    const updatedValueDC = {
+      tinhThanh: selectedProvinceName,
+      quanHuyen: selectedDistrictName,
+      phuongXa: selectedWardName,
+      diaChi: valueDC.diaChi,
+      trangThai: valueDC.trangThai || 0 // Đặt trạng thái là 1
+    };
+    try {
+      const res = await updateDCKH(idDC, updatedValueDC);
+      if (res) {
+        const updatedAddresses = dc.map((address) => ({
+          ...address,
+          trangThai: address.id === idDC ? 1 : 0
+        }));
+        await Promise.all(updatedAddresses.map((address) => updateDCKH(address.id, { ...address })));
+        toast.success('Cập nhật thành công!');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Đã xảy ra lỗi khi cập nhật khách hàng');
     }
   };
 
+  // const handleSubmitDC = (event) => {
+  //   event.preventDefault();
+  //   if (idDC) {
+  //     const updatedValueDC = {
+  //       ...valueDC,
+  //       tinhThanh: selectedProvinceName,
+  //       quanHuyen: selectedDistrictName,
+  //       phuongXa: selectedWardName,
+  //     };
+  //     updateDCKH(idDC, updatedValueDC);
+  //   }
+  // };
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -195,7 +230,6 @@ function DiaChi() {
     const res = await detailDC(idDC);
     if (res) {
       const addressData = res.data;
-      // console.log('Detail Address Data:', addressData);
 
       // Cập nhật giá trị trong state valueDC
       setValueDC({
@@ -204,19 +238,12 @@ function DiaChi() {
         phuongXa: addressData.phuongXa,
         diaChi: addressData.diaChi,
       });
-
       // Cập nhật các giá trị trong state cho các dropdown
       setSelectedProvince(addressData.tinhThanh);
       setSelectedDistrict(addressData.quanHuyen);
       setSelectedWard(addressData.phuongXa);
-
-
     }
   };
-
-  // console.log(selectedProvince)
-  // console.log(selectedDistrict)
-  // console.log(selectedWard)
 
   useEffect(() => {
     if (idDC) {
@@ -237,6 +264,8 @@ function DiaChi() {
           .catch((error) => {
             console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
           });
+          // updateAddressesList(); // Cập nhật danh sách địa chỉ sau khi cập nhật thành công
+
       }
     }
   };
@@ -254,17 +283,17 @@ function DiaChi() {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [addresses, setAddresses] = useState([]);
   const [addresses, setAddresses] = useState([
     {
       tinhThanh: '',
       quanHuyen: '',
       phuongXa: '',
       diaChi: '',
+      trangThai: '',
       isDefault: false, // Trường mặc định
     },
   ]);
-  const [defaultAddress, setDefaultAddress] = useState(null);
+  // const [defaultAddress, setDefaultAddress] = useState(null);
 
   useEffect(() => {
     if (customerId) {
@@ -282,22 +311,66 @@ function DiaChi() {
       }).catch(error => {
         console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
       });
-
-//       // Lấy địa chỉ của khách hàng
-//       getAllDcKh(customerId)
-//         .then((response) => {
-//           setAddresses(response.data);
-//         })
-//         .catch((error) => {
-//           console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
-//         });
-// >>>>>>> e9e80a5ca66ed5e827967e7961db6d386789de02
     }
   }, [customerId]);
 
-  const handleSetDefaultAddress = (address) => {
-    setDefaultAddress(address);
+  useEffect(() => {
+    if (idDC) {
+      provinces.forEach((province) => {
+        if (province.NameExtension[1] === valueDC.tinhThanh) {
+          setValuesId({
+            province_id: province.ProvinceID
+          });
+        }
+        setSelectedProvince(province.ProvinceID);
+      });
+    }
+  }, [idDC, provinces, valueDC]);
+
+  useEffect(() => {
+    if (valuesId.province_id) {
+      getQuanHuyen(valuesId);
+    }
+    setSelectedDistrict(valuesId);
+  }, [valuesId.province_id]);
+
+  useEffect(() => {
+    districts.forEach((district) => {
+      if (district.DistrictName === valueDC.quanHuyen) {
+        setValuesIdWard({
+          district_id: district.DistrictID
+        });
+      }
+    });
+  }, [districts, valuesId]);
+
+  useEffect(() => {
+    if (valuesIdWard.district_id) {
+      getPhuong(valuesIdWard);
+    }
+    setSelectedWard(valuesIdWard);
+  }, [valuesIdWard.district_id]);
+
+  const handleSetDefaultAddress = (addressToSetAsDefault) => {
+    // Lặp qua danh sách địa chỉ và đặt trạng thái cho địa chỉ được chọn là 1, và cho tất cả các địa chỉ khác là 0
+    const updatedAddresses = addresses.map((address) => ({
+      ...address,
+      trangThai: address.id === addressToSetAsDefault.id ? 1 : 0,
+    }));
+
+    // Gọi hàm để cập nhật địa chỉ trong cơ sở dữ liệu của bạn
+    // Sau đó cập nhật danh sách địa chỉ với trạng thái mới
+    updateDCKH(addressToSetAsDefault.id, { ...addressToSetAsDefault, trangThai: 1 })
+      .then(() => {
+        // Loại bỏ biến response không sử dụng
+        setAddresses(updatedAddresses);
+      })
+      .catch((error) => {
+        console.error('Lỗi khi cập nhật địa chỉ:', error);
+      });
   };
+
+
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -330,7 +403,6 @@ function DiaChi() {
               <br></br>
               <hr></hr>
               <br></br>
-
               <div>
                 <h4>Sổ Địa Chỉ</h4>
                 <br></br>
@@ -348,9 +420,6 @@ function DiaChi() {
                         <div style={{ float: 'right', paddinxgRight: '15px' }}>
                           <button
                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer', transition: 'color 0.3s', }}
-// =======
-//                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer', transition: 'color 0.3s' }}
-// >>>>>>> e9e80a5ca66ed5e827967e7961db6d386789de02
                             onClick={() => {
                               handleShow1(address.id);
                             }}
@@ -374,6 +443,7 @@ function DiaChi() {
                               padding: '0',
                               cursor: 'pointer',
                               transition: 'color 0.3s',
+                              color: address.trangThai === 1 ? 'red' : 'aqua',
                             }}
                             onClick={() => handleSetDefaultAddress(address)}
                           >
@@ -382,20 +452,26 @@ function DiaChi() {
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
                                 height="16"
-                                fill={defaultAddress === address ? 'black' : 'currentColor'}
+                                fill={address.trangThai === 1 ? 'black' : 'gray'}
                                 className="bi bi-star"
                                 viewBox="0 0 16 16"
                                 color='gray'
-                                style={{ display: 'inline' }}
+                                style={{ display: 'inline', marginBottom: '4px' }}
                               >
                                 <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.830-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.950l3.523 3.356-.830 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
                               </svg>
                             </i>
-                            <span style={{ fontSize: '15px', color: defaultAddress === address ? 'black' : 'gray', transition: 'color 0.3s', marginLeft: '5px' }}>
+                            <span
+                              style={{
+                                fontSize: '15px',
+                                color: address.trangThai === 1 ? 'red' : 'gray',
+                                transition: 'color 0.3s',
+                                marginLeft: '5px',
+                              }}
+                            >
                               Mặc Định
                             </span>
                           </button>
-
                         </div>
                         <hr></hr>
                         <br></br>
@@ -408,7 +484,6 @@ function DiaChi() {
           </div>
         </div>
       </div>
-
       <Footer />
 
       <Modal
@@ -420,7 +495,8 @@ function DiaChi() {
         shouldCloseOnOverlayClick={true}
       >
         <div className="modal-content">
-          <h2>Sửa địa chỉ</h2>
+          <h2 style={{ textAlign: 'center' }}>Sửa địa chỉ</h2>
+          <hr></hr>
           <form onSubmit={handleSubmitDC}>
             <div className="input1">
               <div className="col-md-12">
@@ -443,21 +519,18 @@ function DiaChi() {
                 />
               </div>
               <div>
-
-
                 <div className="col-md-12">
                   <label htmlFor="ward" className="form-label">
                     Tỉnh/Thành Phố
                   </label>
-                  <select
-                    id="province"
-                    className="form-select fsl"
-                    value={selectedProvince}
-                    onChange={handleProvinceChange}
-                  >
+                  <select id="province" className="form-select fsl" onChange={handleProvinceChange}>
                     <option value="">Chọn tỉnh thành</option>
                     {provinces.map((province) => (
-                      <option key={province.ProvinceID} value={province.ProvinceID}>
+                      <option
+                        key={province.ProvinceID}
+                        selected={province.NameExtension[1] === valueDC.tinhThanh}
+                        value={province.ProvinceID}
+                      >
                         {province.NameExtension[1]}
                       </option>
                     ))}
@@ -468,16 +541,14 @@ function DiaChi() {
                   <label htmlFor="ward" className="form-label">
                     Quận Huyện
                   </label>
-                  <select
-                    id="district"
-                    className="form-select fsl"
-                    value={selectedDistrict}
-                    onChange={(e) => handleDistrictChange(e)}
-                    disabled={!selectedProvince}
-                  >
+                  <select id="district" className="form-select fsl" onChange={(e) => handleDistrictChange(e)}>
                     <option value="">Chọn quận huyện</option>
                     {districts.map((district) => (
-                      <option key={district.DistrictID} value={district.DistrictID}>
+                      <option
+                        key={district.DistrictID}
+                        selected={district.DistrictName === valueDC.quanHuyen}
+                        value={district.DistrictID}
+                      >
                         {district.DistrictName}
                       </option>
                     ))}
@@ -488,28 +559,34 @@ function DiaChi() {
                   <label htmlFor="ward" className="form-label">
                     Phường xã
                   </label>
-                  <select
-                    id="ward"
-                    className="form-select fsl"
-                    value={selectedWard}
-                    onChange={handleWardChange}
-                    disabled={!selectedDistrict || !selectedProvince}
-                  >
+                  <select id="ward" className="form-select fsl" onChange={handleWardChange}>
                     <option value="">Chọn phường xã</option>
                     {wards.map((ward) => (
-                      <option key={ward.WardCode} value={ward.WardCode}>
+                      <option key={ward.WardCode} selected={ward.WardName === valueDC.phuongXa} value={ward.WardCode}>
                         {ward.WardName}
                       </option>
                     ))}
                   </select>
                 </div>
-
-
-
+                <div className="col-md-12">
+                  <div className="form-check" style={{ marginTop: '10px', marginLeft: '5px' }}>
+                    <input
+                      style={{ width: '5px', height: '5px' }}
+                      className="form-check-input"
+                      type="radio"
+                      id="flexCheckDefault"
+                      checked={valueDC.trangThai === 1} // Kiểm tra nếu trạng thái là "1" thì được chọn
+                      onChange={() => setValueDC({ ...valueDC, trangThai: 1 })}
+                    />
+                    <label className="form-check-label" htmlFor="flexCheckDefault" style={{ marginTop: '6px' }}>
+                      Đặt làm mặc định
+                    </label>
+                  </div>
+                </div>
               </div>
               <div>
                 <div className="button3">
-                  <button type="submit">Lưu Địa Chỉ</button>
+                  <button type="submit" style={{ marginTop: '11px' }}>Lưu Địa Chỉ</button>
                   <div className="button4">
                     <button onClick={handleCloseModal1}>Đóng</button>
                   </div>
@@ -529,7 +606,8 @@ function DiaChi() {
         shouldCloseOnOverlayClick={true}
       >
         <div className="modal-content">
-          <h2>Thêm Địa Chỉ Mới</h2>
+          <h2 style={{ textAlign: 'center' }}>Thêm Địa Chỉ Mới</h2>
+          <hr></hr>
           <form onSubmit={handleSubmitADD}>
             <div className="input1">
               <div className="col-md-12">
@@ -605,10 +683,19 @@ function DiaChi() {
                     ))}
                   </select>
                 </div>
+                <div className="col-md-12">
+                  <div className="form-check" style={{ marginTop: '10px', marginLeft: '5px' }}>
+                    <input style={{ width: '5px', height: '5px' }}
+                      className="form-check-input" type="radio" id="flexCheckDefault1" checked={valueDC.trangThai} />
+                    <label className="form-check-label" htmlFor="flexCheckDefault1" style={{ marginTop: '6px' }}>
+                      Đặt làm mặc định
+                    </label>
+                  </div>
+                </div>
               </div>
               <div>
                 <div className="button3">
-                  <button type="submit">Lưu Địa Chỉ</button>
+                  <button type="submit" style={{ marginTop: '11px' }}>Lưu Địa Chỉ</button>
                   <div className="button4">
                     <button onClick={handleCloseModal}>Đóng</button>
                   </div>

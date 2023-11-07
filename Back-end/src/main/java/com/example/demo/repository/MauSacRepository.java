@@ -26,4 +26,6 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
 
     @Query(value = "select c from MauSac c where c.trangThai = 0")
     List<MauSac> getAll();
+
+    MauSac findByTen(String ten);
 }

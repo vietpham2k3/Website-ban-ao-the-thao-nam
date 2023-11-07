@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.CoAo;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.NhaSanXuat;
 import org.springframework.data.domain.Page;
@@ -21,4 +22,6 @@ public interface NhaSanXuatService {
     public NhaSanXuat detail(UUID id);
 
     public NhaSanXuat xoa(UUID id);
+
+    List<NhaSanXuat> findByNhaSanXuatString (List<String> nsxString) ;
 }

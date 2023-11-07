@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FilterProductClient;
+import com.example.demo.dto.response.ProductDetailClientRespose;
 import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.KichCo;
-import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface ChiTietSanPhamService {
 
     List<ChiTietSanPham> updateAll(List<ChiTietSanPham> chiTietSanPham);
 
-    List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP);
+    List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP);
 
     List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS);
 
@@ -62,4 +62,8 @@ public interface ChiTietSanPhamService {
     Page<ChiTietSanPham> pageWeb(Integer page);
 
     ChiTietSanPham findID(UUID id);
+
+//    List<ProductDetailClientRespose> findAllClient(FilterProductClient req);
+
+    Page<ChiTietSanPham> filter(FilterProductClient filterProductClient, int page);
 }

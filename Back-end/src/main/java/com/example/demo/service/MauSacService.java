@@ -22,4 +22,6 @@ public interface MauSacService {
     public MauSac detail(UUID id);
 
     public MauSac xoa(UUID id);
+
+    List<MauSac> findByListString (List<String> msacString) ;
 }

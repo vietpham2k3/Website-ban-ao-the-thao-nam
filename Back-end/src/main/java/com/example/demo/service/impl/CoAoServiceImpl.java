@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repository.CoAoRepository;
 import com.example.demo.service.CoAoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -77,5 +79,15 @@ public class CoAoServiceImpl implements CoAoService {
         coAo.setNgayTao(coAo.getNgayTao());
         coAo.setTen(coAo.getMa());
         return repository.save(coAo);
+    }
+
+    @Override
+    public List<CoAo> findByCoAoString(List<String> coAoString) {
+        List<CoAo> coAos = new ArrayList<>();
+        for (String coAo: coAoString) {
+            CoAo ca = repository.findByTen(coAo);
+            coAos.add(ca);
+        }
+        return coAos;
     }
 }

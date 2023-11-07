@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.LoaiSanPham;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.service.LoaiSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -53,5 +55,15 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     @Override
     public Page<LoaiSanPham> searchPage(String key, Integer trangThai, Pageable pageable) {
         return repository.searchPage(key, trangThai, pageable);
+    }
+
+    @Override
+    public List<LoaiSanPham> findByLoaiSanPhamString(List<String> lsphamString) {
+        List<LoaiSanPham> loaiSanPhams = new ArrayList<>();
+        for (String lsp: lsphamString) {
+            LoaiSanPham loaiSanPham = repository.findByTen(lsp);
+            loaiSanPhams.add(loaiSanPham);
+        }
+        return loaiSanPhams;
     }
 }

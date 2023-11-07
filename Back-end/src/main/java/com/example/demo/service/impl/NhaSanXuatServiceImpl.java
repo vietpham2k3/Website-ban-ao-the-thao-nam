@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.MauSac;
 import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.repository.NhaSanXuatRepository;
 import com.example.demo.service.NhaSanXuatService;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -52,5 +54,15 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
         nhaSanXuat.setNgaySua(new Date());
         nhaSanXuat.setTrangThai(1);
         return repository.save(nhaSanXuat);
+    }
+
+    @Override
+    public List<NhaSanXuat> findByNhaSanXuatString(List<String> nsxString) {
+        List<NhaSanXuat> nhaSanXuats = new ArrayList<>();
+        for (String nsx: nsxString) {
+            NhaSanXuat nhaSanXuat = repository.findByTen(nsx);
+            nhaSanXuats.add(nhaSanXuat);
+        }
+        return nhaSanXuats;
     }
 }

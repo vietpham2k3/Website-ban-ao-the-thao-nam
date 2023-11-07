@@ -98,6 +98,10 @@ const updateSL = (id, soLuong) => {
   return axios.put(`/api/chi-tiet-san-pham/update-sl-sp/${id}?soLuong=${soLuong}`);
 };
 
+const findAllProductClient = (values) => {
+  return axios.post(`/api/chi-tiet-san-pham/findAll`,values);
+};
+
 export {
   getAll,
   updateSL,
@@ -122,5 +126,6 @@ export {
   getAllSPNEW,
   getAllBestseller,
   getAllProduct,
-  getAllCTSPWeb
+  getAllCTSPWeb,
+  findAllProductClient
 };
