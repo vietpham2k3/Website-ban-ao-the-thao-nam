@@ -36,7 +36,8 @@ import {
   giaoThatBaiLan2,
   giaoThatBaiLan3,
   xacNhanTraHang,
-  huyDonTraHang
+  huyDonTraHang,
+  nhanHang
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -59,7 +60,7 @@ function DonHangCT() {
   const [selectedWard, setSelectedWard] = useState('');
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
-  const [inputDetail, setInputDetail] = useState(null);
+  // const [inputDetail, setInputDetail] = useState(null);
   const [dataSP, setDataSP] = useState([]);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
@@ -295,20 +296,27 @@ function DonHangCT() {
   };
 
   const handleAdd = () => {
+    // getAllById(id);
     if (parseInt(valuesAdd.soLuong) > parseInt(dataDetail.soLuong)) {
       toast.error('Đã vượt quá số lượng hiện có !');
       return;
     }
     add(valuesAdd);
-    getAllById(id);
   };
 
   const add = async (value) => {
     const res = await addSP(value);
-    if (res) {
+    if (res.data === 'ok') {
+      window.location.reload();
+      toast.success('Thêm sản phẩm thành công');
+    } else if (res) {
       toast.success('Thêm sản phẩm thành công');
       getAllById(id);
       handleCloseSPofDH();
+      getAll();
+      if (idCTSP) {
+        detail2(idCTSP);
+      }
     }
   };
 
@@ -317,8 +325,8 @@ function DonHangCT() {
     // chuachac dong
     setShow6(false);
     //
-    setInputDetail(null);
-    inputDetail(null);
+    // setInputDetail(null);
+    // inputDetail(null);
     getAllById(id);
     setValuesAdd({
       chiTietSanPham: {
@@ -332,7 +340,7 @@ function DonHangCT() {
   };
 
   const handleDetail = (id) => {
-    setInputDetail(id);
+    // setInputDetail(id);
     setidCTSP(id);
     setValuesAdd({ ...valuesAdd, chiTietSanPham: { id: id } });
   };
@@ -824,7 +832,7 @@ function DonHangCT() {
     await xacNhanTra(id, lshd20);
   };
 
-  // xac nhan tra hang
+  // xac nhan huy tra hang
   const [show21, setShow21] = useState(false);
 
   const [lshd21, setLshd21] = useState({
@@ -848,6 +856,29 @@ function DonHangCT() {
   const handleHuyTraHang = async (event) => {
     event.preventDefault();
     await huyTraHang(id, lshd21);
+  };
+
+  // xac nhan nhan hang
+  const [lshd25, setLshd25] = useState({
+    ghiChu: '',
+    nguoiTao: dataLogin && dataLogin.ten
+  });
+
+  const xacNhanNhanHang = async (id, value) => {
+    const res = await nhanHang(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleXacNhanNhanHang = async (event) => {
+    event.preventDefault();
+    setLshd25({
+      ...lshd25
+    });
+    await xacNhanNhanHang(id, lshd25);
   };
 
   // apiGHN
@@ -2114,9 +2145,21 @@ function DonHangCT() {
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
                       <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                      <span className="relative">
-                        Xác nhận trả hàng
-                      </span>
+                      <span className="relative">Xác nhận trả hàng</span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+                {/* //xac nhan tra hang  */}
+                {hoaDon.trangThai === 4 && (
+                  <button onClick={handleXacNhanNhanHang} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative">Nhận hàng</span>
                     </span>
                     <span
                       className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
@@ -2908,7 +2951,7 @@ function DonHangCT() {
                             </button>
                           )}
                           {((hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) ||
-                           (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
+                            (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
                             hoaDon.trangThai === 16) && (
                             <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
