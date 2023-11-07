@@ -117,6 +117,14 @@ const giaoThatBaiLan3 = (id, values) => {
   return axios.post(`/api/hoa-don/giao-hang-that-bai-lan-3/` + id, values);
 };
 
+const xacNhanTraHang = (id, values) => {
+  return axios.post(`/api/hoa-don/xac-nhan-tra-hang/` + id, values);
+};
+
+const huyDonTraHang = (id, values) => {
+  return axios.post(`/api/hoa-don/huy-don-tra-hang/` + id, values);
+};
+
 const xacNhanThanhToan = (id, values) => {
   return axios.post(`/api/hoa-don/xac-nhan-thanh-toan/` + id, values);
 };
@@ -205,5 +213,7 @@ export {
   giaoLaiLan3,
   giaoThatBaiLan1,
   giaoThatBaiLan2,
-  giaoThatBaiLan3
+  giaoThatBaiLan3,
+  xacNhanTraHang,
+  huyDonTraHang
 };

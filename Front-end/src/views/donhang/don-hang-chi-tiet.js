@@ -34,7 +34,9 @@ import {
   giaoLaiLan3,
   giaoThatBaiLan1,
   giaoThatBaiLan2,
-  giaoThatBaiLan3
+  giaoThatBaiLan3,
+  xacNhanTraHang,
+  huyDonTraHang
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -796,6 +798,58 @@ function DonHangCT() {
     await giaoLai3(id, lshd15);
   };
 
+  // xac nhan tra hang
+  const [show20, setShow20] = useState(false);
+
+  const [lshd20, setLshd20] = useState({
+    ghiChu: '',
+    nguoiTao: dataLogin && dataLogin.ten
+  });
+
+  const handleClose20 = () => setShow20(false);
+  const handleShow20 = () => setShow20(true);
+
+  const xacNhanTra = async (id, value) => {
+    const res = await xacNhanTraHang(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow20(false);
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleXacNhanTraHang = async (event) => {
+    event.preventDefault();
+    await xacNhanTra(id, lshd20);
+  };
+
+  // xac nhan tra hang
+  const [show21, setShow21] = useState(false);
+
+  const [lshd21, setLshd21] = useState({
+    ghiChu: '',
+    nguoiTao: dataLogin && dataLogin.ten
+  });
+
+  const handleClose21 = () => setShow21(false);
+  const handleShow21 = () => setShow21(true);
+
+  const huyTraHang = async (id, value) => {
+    const res = await huyDonTraHang(id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      setShow21(false);
+      detail(id);
+      detailListLSHD(id);
+    }
+  };
+
+  const handleHuyTraHang = async (event) => {
+    event.preventDefault();
+    await huyTraHang(id, lshd21);
+  };
+
   // apiGHN
 
   const getThanhPho = async () => {
@@ -1317,6 +1371,9 @@ function DonHangCT() {
                                         {item.trangThai === 16 && (
                                           <i style={{ color: '#0000FF' }} className="fa-solid fa-clipboard-check fa-beat-fade fa-lg"></i>
                                         )}
+                                        {item.trangThai === 17 && (
+                                          <i style={{ color: '#990000' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
+                                        )}
                                       </div>
                                     </td>
                                     <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
@@ -1629,6 +1686,25 @@ function DonHangCT() {
                                           Trả hàng thành công
                                         </span>
                                       )}
+                                      {item.trangThai === 17 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: '#990000',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Trả hàng thất bại
+                                        </span>
+                                      )}
                                     </td>
                                     <td>{formatDate(item.ngayTao)}</td>
                                     <td>{item.nguoiTao}</td>
@@ -1697,7 +1773,6 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
-
                           {lshd.trangThai === 3 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
@@ -1902,6 +1977,20 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
+                          {lshd.trangThai === 17 && (
+                            <li className="timeline-item mini">
+                              <div className="p-timeline-item">
+                                <span className="p-timeline-date">{lshd.ten}</span>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 17 ? { backgroundColor: '#990000', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
                         </React.Fragment>
                       ))}
                     </ul>
@@ -2011,6 +2100,22 @@ function DonHangCT() {
                       <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
                       <span className="relative" style={{ color: 'red' }}>
                         Xác nhận hủy
+                      </span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+                {/* //xac nhan tra hang  */}
+                {hoaDon.trangThai === 15 && (
+                  <button onClick={handleShow20} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative">
+                        Xác nhận trả hàng
                       </span>
                     </span>
                     <span
@@ -2290,6 +2395,55 @@ function DonHangCT() {
                     <div className="text-center">
                       <button
                         onClick={handleXacNhanGiaoLaiLan3}
+                        type="submit"
+                        className="btn btn-labeled shadow-button"
+                        style={{
+                          background: 'deepskyblue',
+                          borderRadius: '50px',
+                          border: '1px solid black',
+                          justifyItems: 'center'
+                        }}
+                      >
+                        <span
+                          style={{
+                            marginBottom: '3px',
+                            color: 'white',
+                            fontSize: '15px',
+                            fontWeight: 'bold'
+                          }}
+                          className="btn-text"
+                        >
+                          Ghi Chú
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </Modal.Body>
+              </Modal>
+              {/* //xac nhan tra hang*/}
+              <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show20} onHide={handleClose20}>
+                <Modal.Header closeButton>
+                  <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className="needs-validation" noValidate>
+                    <div className="form-group row">
+                      <div className="col-sm-12">
+                        <textarea
+                          className="form-control"
+                          rows="4"
+                          placeholder="Nhập ghi chú (nếu có)"
+                          value={lshd20.ghiChu}
+                          onChange={(e) => {
+                            setLshd20({ ...lshd20, ghiChu: e.target.value });
+                          }}
+                        ></textarea>
+                      </div>
+                    </div>
+                    <br></br>
+                    <div className="text-center">
+                      <button
+                        onClick={handleXacNhanTraHang}
                         type="submit"
                         className="btn btn-labeled shadow-button"
                         style={{
@@ -2648,6 +2802,71 @@ function DonHangCT() {
                     </form>
                   </Modal.Body>
                 </Modal>
+                {/* //huy tra hang*/}
+                {hoaDon.trangThai === 15 && (
+                  <button onClick={handleShow21} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative" style={{ color: 'red' }}>
+                        Hủy trả hàng
+                      </span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
+                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show21} onHide={handleClose21}>
+                  <Modal.Header closeButton>
+                    <Modal.Title style={{ marginLeft: 185 }}>Ghi Chú</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <form className="needs-validation" noValidate>
+                      <div className="form-group row">
+                        <div className="col-sm-12">
+                          <textarea
+                            className="form-control"
+                            rows="4"
+                            name="diaChi"
+                            placeholder="Nhập ghi chú (nếu có)"
+                            value={lshd21.ghiChu}
+                            onChange={(e) => {
+                              setLshd21({ ...lshd21, ghiChu: e.target.value });
+                            }}
+                          ></textarea>
+                        </div>
+                      </div>
+                      <br></br>
+                      <div className="text-center">
+                        <button
+                          onClick={handleHuyTraHang}
+                          type="submit"
+                          className="btn btn-labeled shadow-button"
+                          style={{
+                            background: 'deepskyblue',
+                            borderRadius: '50px',
+                            border: '1px solid black',
+                            justifyItems: 'center'
+                          }}
+                        >
+                          <span
+                            style={{
+                              marginBottom: '3px',
+                              color: 'white',
+                              fontSize: '15px',
+                              fontWeight: 'bold'
+                            }}
+                            className="btn-text"
+                          >
+                            Ghi Chú
+                          </span>
+                        </button>
+                      </div>
+                    </form>
+                  </Modal.Body>
+                </Modal>
               </div>
             </div>
           </div>
@@ -2688,18 +2907,19 @@ function DonHangCT() {
                               <span>Cập Nhật</span>
                             </button>
                           )}
-                          {((hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) || (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0)) && (
-                            <OverlayTrigger placement="top" delay={{ show: 250,
-                             hide: 400 }} overlay={renderTooltip}>
+                          {((hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) ||
+                           (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
+                            hoaDon.trangThai === 16) && (
+                            <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
                                 <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
                                   <Text style={styles.button}>
-                                      <i className="fa-solid fa-print fa-xl"></i>
+                                    <i className="fa-solid fa-print fa-xl"></i>
                                   </Text>
                                 </PDFDownloadLink>
                               </button>
-                              </OverlayTrigger>
-                            )}
+                            </OverlayTrigger>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -3291,6 +3511,25 @@ function DonHangCT() {
                             className="btn btn-labeled shadow-button btn status-cancelled"
                           >
                             Trả hàng thành công
+                          </span>
+                        )}
+                        {hoaDon.trangThai === 17 && (
+                          <span
+                            style={{
+                              width: '250px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#990000',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Trả hàng thất bại
                           </span>
                         )}
                       </div>
