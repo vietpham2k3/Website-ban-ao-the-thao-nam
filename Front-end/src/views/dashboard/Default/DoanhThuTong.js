@@ -110,7 +110,7 @@ const EarningCard = ({ isLoading }) => {
   };
 
   useEffect(() => {
-    handleDoanhThuTongNgay();
+    handleDoanhThuTongThang();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

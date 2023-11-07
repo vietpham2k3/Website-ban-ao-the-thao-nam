@@ -43,7 +43,9 @@ function DonHang() {
     { value: '4', label: 'Giao hàng thành công' },
     { value: '5,11,12,13', label: 'Giao hàng thất bại' },
     { value: '6', label: 'Thanh toán thành công' },
-    { value: '7', label: 'Đã nhận hàng' }
+    { value: '14', label: 'Yêu cầu hủy đơn' },
+    { value: '15', label: 'Yêu cầu trả hàng' },
+    { value: '16', label: 'Trả hàng thành công' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -81,10 +83,10 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
       search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
       search('', null, null, values, '', page);
     }
     if (data.length === 0) {
@@ -719,6 +721,63 @@ function DonHang() {
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
                           Giao hàng thất bại
+                        </span>
+                      )}
+                      {d.trang_thai === 14 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: '#FFFF00',
+                            color: 'black'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Yêu cầu hủy đơn
+                        </span>
+                      )}
+                      {d.trang_thai === 15 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: '#FFFF00',
+                            color: 'black'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Yêu cầu trả hàng
+                        </span>
+                      )}
+                      {d.trang_thai === 16 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: '#0000FF',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Trả hàng thành công
                         </span>
                       )}
                     </td>

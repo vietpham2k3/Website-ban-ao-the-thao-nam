@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -151,5 +153,27 @@ public class KhachHangServiceImpl implements KhachHangService {
             return khRepo.save(o);
         }).orElse(null);
     }
+
+    @Override
+    public KhachHang changePassword(KhachHang khachHang) {
+        return khRepo.save(khachHang);
+
+    }
+
+    @Override
+    public boolean isCurrentPasswordValid(UUID id, String currentPassword) {
+        KhachHang user = khRepo.findById(id).orElse(null);
+
+        if (user == null) {
+            return false;
+        }
+
+        boolean isPasswordValid = currentPassword.equals(user.getMatKhau());
+
+        return isPasswordValid;
+    }
+
+
+
 
 }

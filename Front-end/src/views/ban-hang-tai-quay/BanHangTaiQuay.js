@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -11,6 +13,7 @@ import { getAllHD, addHD } from 'services/ServiceDonHang';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { deleteByIdHD } from 'services/GioHangService';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,15 +81,43 @@ export default function BanHangTaiQuay() {
     setValue(newValue);
   };
 
+  const handleBackToCart = (id) => {
+    if (values.length <= 1) {
+      toast.warning('Bạn không thể xoá hết đơn');
+      return;
+    }
+    backToCart(id);
+  };
+
+  const backToCart = async (idHD) => {
+    try {
+      const res = await deleteByIdHD(idHD);
+      if (res) {
+        getAll();
+        toast.success('Xoá thành công');
+      }
+    } catch (error) {
+      toast.success('Lỗi');
+    }
+  };
+
   return (
     <MainCard>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             {values.map((d, i) => (
-              <Tab key={i} label={d.ma} />
+              <Tab
+                key={i}
+                label={
+                  <span>
+                    {d.ma} &nbsp;&nbsp; <i onClick={() => handleBackToCart(d.id)} className="fa-solid fa-xmark"></i>
+                  </span>
+                }
+              />
             ))}
           </Tabs>
+
           <Button variant="outline-primary" style={{ border: 'none' }} onClick={handleAdd}>
             <i className="fa-solid fa-plus"></i>
           </Button>

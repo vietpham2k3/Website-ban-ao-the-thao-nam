@@ -1,4 +1,3 @@
-import Anhuser from '../../assets/images/bieutuong.jpg';
 import '../../scss/diachi.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
@@ -8,9 +7,9 @@ import { count } from 'services/GioHangService';
 import { getAllDcKh, addDC, updateDC, detailDC, deleteDC } from 'services/KhachHangService';
 import { getTP, getQH, getP } from 'services/ApiGHNService'; // Import các hàm gọi API từ nguồn dữ liệu của bạn
 import { toast } from 'react-toastify';
+import SlideBar from 'layout/SlideBar';
 
 function DiaChi() {
-
   const customerId = localStorage.getItem('customerId');
 
   //Giỏ hàng:
@@ -231,11 +230,13 @@ function DiaChi() {
       if (res) {
         toast.success('Cập nhật thành công !');
         setIsUpdateModalOpen(false); // Đóng Modal cập nhật
-        getAllDcKh(customerId).then(response => {
-          setAddresses(response.data);
-        }).catch(error => {
-          console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
-        });
+        getAllDcKh(customerId)
+          .then((response) => {
+            setAddresses(response.data);
+          })
+          .catch((error) => {
+            console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
+          });
       }
     }
   };
@@ -249,7 +250,6 @@ function DiaChi() {
     if (res) {
       toast.success('Xóa thành công!');
       setAddresses(addresses.filter((address) => address.id !== customerId)); // Loại bỏ địa chỉ khỏi danh sách
-
     }
   };
 
@@ -268,6 +268,7 @@ function DiaChi() {
 
   useEffect(() => {
     if (customerId) {
+
       getAllDcKh(customerId).then(response => {
         const addressesData = response.data;
         setAddresses(addressesData);
@@ -281,6 +282,16 @@ function DiaChi() {
       }).catch(error => {
         console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
       });
+
+//       // Lấy địa chỉ của khách hàng
+//       getAllDcKh(customerId)
+//         .then((response) => {
+//           setAddresses(response.data);
+//         })
+//         .catch((error) => {
+//           console.error('Lỗi khi lấy địa chỉ của khách hàng:', error);
+//         });
+// >>>>>>> e9e80a5ca66ed5e827967e7961db6d386789de02
     }
   }, [customerId]);
 
@@ -299,46 +310,12 @@ function DiaChi() {
   };
 
   return (
-
     <div>
       <Header productCount={productCount} toggleSearchInput={toggleSearchInput} showSearchInput={showSearchInput} />
       <div className="container">
-        <div className="row">
-          <br></br>
+        <div className="row slide-bar">
           <div className="col-2">
-            <ul>
-              <li>
-                <div className="user-column">
-                  <div className="avatar">
-                    <div className="avatar-image">
-                      <img src={Anhuser} alt="Ảnh đại diện" />
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                <a href="thong-tin_user">
-                  <button className="no-border">Tài khoản của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="history">
-                  <button className="no-border">Đơn Hàng của tôi</button>
-                </a>
-              </li>
-              <li>
-                <a href="diachi">
-                  <button className="no-border">Địa Chỉ</button>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <button className="no-border">ĐĂNG XUẤT</button>
-                </a>
-              </li>
-            </ul>
+            <SlideBar></SlideBar>
           </div>
 
           <div className="separator"></div>
@@ -361,8 +338,7 @@ function DiaChi() {
                 <ul style={{ display: 'contents' }}>
                   <li style={{ width: '100%' }}>
                     {addresses.map((address) => (
-                      <div
-                        key={address.id}>
+                      <div key={address.id}>
                         <h7 style={{ paddingLeft: 15, paddingRight: 10 }}>
                           <label style={{ fontSize: 18 }} htmlFor="dc">
                             {' '}
@@ -372,6 +348,9 @@ function DiaChi() {
                         <div style={{ float: 'right', paddinxgRight: '15px' }}>
                           <button
                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer', transition: 'color 0.3s', }}
+// =======
+//                             style={{ border: 'none', background: 'none', padding: '0', cursor: 'pointer', transition: 'color 0.3s' }}
+// >>>>>>> e9e80a5ca66ed5e827967e7961db6d386789de02
                             onClick={() => {
                               handleShow1(address.id);
                             }}
@@ -384,6 +363,7 @@ function DiaChi() {
                             onClick={() => handleDeleteDC(address.id)}
                           >
                             <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
+
                           </button>
                           <span style={{ borderLeft: '1px solid #ccc', height: '15px', margin: '0px 10px' }}></span>
 
@@ -419,7 +399,6 @@ function DiaChi() {
                         </div>
                         <hr></hr>
                         <br></br>
-
                       </div>
                     ))}
                   </li>
@@ -432,7 +411,14 @@ function DiaChi() {
 
       <Footer />
 
-      <Modal isOpen={isUpdateModalOpen} contentLabel="Update User Information" show={show1} onHide={handleClose1} className="right-aligned-modal" shouldCloseOnOverlayClick={true}>
+      <Modal
+        isOpen={isUpdateModalOpen}
+        contentLabel="Update User Information"
+        show={show1}
+        onHide={handleClose1}
+        className="right-aligned-modal"
+        shouldCloseOnOverlayClick={true}
+      >
         <div className="modal-content">
           <h2>Sửa địa chỉ</h2>
           <form onSubmit={handleSubmitDC}>
@@ -534,7 +520,14 @@ function DiaChi() {
         </div>
       </Modal>
 
-      <Modal isOpen={isModalOpen} contentLabel="Update User Information" show={show} onHide={handleClose} className="right-aligned-modal" shouldCloseOnOverlayClick={true}>
+      <Modal
+        isOpen={isModalOpen}
+        contentLabel="Update User Information"
+        show={show}
+        onHide={handleClose}
+        className="right-aligned-modal"
+        shouldCloseOnOverlayClick={true}
+      >
         <div className="modal-content">
           <h2>Thêm Địa Chỉ Mới</h2>
           <form onSubmit={handleSubmitADD}>
@@ -615,7 +608,7 @@ function DiaChi() {
               </div>
               <div>
                 <div className="button3">
-                  <button type="submit" >Lưu Địa Chỉ</button>
+                  <button type="submit">Lưu Địa Chỉ</button>
                   <div className="button4">
                     <button onClick={handleCloseModal}>Đóng</button>
                   </div>

@@ -149,25 +149,35 @@ public class HoaDonController {
         Map<String, Object> map = new HashMap<>();
         List<HoaDon> list = serviceHD.searchByTrangThai(trangThai, id);
 
-        // Tạo danh sách chứa các thông tin hóa đơn và hóa đơn chi tiết
+        // Tạo danh sách chứa thông tin hóa đơn và hóa đơn chi tiết
         List<Map<String, Object>> hoaDonList = new ArrayList<>();
 
+        // Tạo một Set để theo dõi các hóa đơn đã được xử lý
+        Set<UUID> processedHoaDonIds = new HashSet<>();
+
         for (HoaDon hd : list) {
-            Map<String, Object> hoaDonData = new HashMap<>();
+            // Kiểm tra xem hóa đơn đã được xử lý chưa
+            if (!processedHoaDonIds.contains(hd.getId())) {
+                Map<String, Object> hoaDonData = new HashMap<>();
 
-            // Lấy thông tin hóa đơn
-            hoaDonData.put("hoaDon", hd);
+                // Lấy thông tin hóa đơn
+                hoaDonData.put("hoaDon", hd);
 
-            // Lấy danh sách hóa đơn chi tiết tương ứng với hóa đơn
-            List<HoaDonChiTiet> listHCDCT = hoaDonChiTietService.getAll(hd.getId());
-            hoaDonData.put("hoaDonChiTiet", listHCDCT);
+                // Lấy danh sách hóa đơn chi tiết tương ứng với hóa đơn
+                List<HoaDonChiTiet> listHCDCT = hoaDonChiTietService.getAll(hd.getId());
+                hoaDonData.put("hoaDonChiTiet", listHCDCT);
 
-            hoaDonList.add(hoaDonData);
+                hoaDonList.add(hoaDonData);
+
+                // Đánh dấu hóa đơn đã được xử lý
+                processedHoaDonIds.add(hd.getId());
+            }
         }
 
         map.put("hoaDonList", hoaDonList);
         return ResponseEntity.ok(map);
     }
+
 
 
     @PostMapping("add")
@@ -488,6 +498,23 @@ public class HoaDonController {
 
         serviceLSHD.createLichSuDonHangAll(lichSuHoaDonList);
         return ResponseEntity.ok("Hủy đơn thành công");
+    }
+
+    @PostMapping("request-huy-don/{id}")
+    public ResponseEntity<?> requestHuyDon(@PathVariable UUID id,
+                                      @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(14);
+        hoaDon.setTrangThai(14);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Yêu cầu huỷ đơn");
+
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
     @PostMapping("nhan-hang/{id}")

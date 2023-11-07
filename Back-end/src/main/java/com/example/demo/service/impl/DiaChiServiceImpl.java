@@ -21,6 +21,7 @@ public class DiaChiServiceImpl implements DiaChiService {
     @Autowired
     private KhachHangRepository khachHangRepository;
 
+
     @Override
     public List<DiaChi> getAllIdKh(UUID idKH) {
         return diaChiRepository.getAllIdKh(idKH);
@@ -39,9 +40,21 @@ public class DiaChiServiceImpl implements DiaChiService {
             o.setDiaChi(diaChi.getDiaChi());
             o.setQuanHuyen(diaChi.getQuanHuyen());
             o.setPhuongXa(diaChi.getPhuongXa());
+            o.setTrangThai(diaChi.getTrangThai());
+            if (diaChi.getTrangThai() == 1) {
+                o.setTrangThai(diaChi.getTrangThai());
+
+                // Cập nhật trạng thái của tất cả các địa chỉ khác về 0
+                List<DiaChi> allDiaChi = diaChiRepository.findAll();
+                for (DiaChi address : allDiaChi) {
+                    if (!address.getId().equals(o.getId())) {
+                        address.setTrangThai(0);
+                        diaChiRepository.save(address);
+                    }
+                }
+            }
             return diaChiRepository.save(o);
         }).orElse(null);
-
     }
 
     @Override
@@ -52,7 +65,6 @@ public class DiaChiServiceImpl implements DiaChiService {
         diaChi.setDiaChi(diaChi.getDiaChi());
         diaChi.setQuanHuyen(diaChi.getQuanHuyen());
         diaChi.setTinhThanh(diaChi.getTinhThanh());
-        diaChi.setTrangThai(1);
         return diaChiRepository.save(diaChi);
     }
 

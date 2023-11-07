@@ -26,14 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -114,7 +111,7 @@ public class ChiTietSanPhamController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) {
+    public ResponseEntity<?> add(@RequestBody ChiTietSanPham chiTietSanPham) throws IOException {
         String ma = "CTSP" + new Random().nextInt(100000);
         String maSP = "SP" + new Random().nextInt(100000);
 
