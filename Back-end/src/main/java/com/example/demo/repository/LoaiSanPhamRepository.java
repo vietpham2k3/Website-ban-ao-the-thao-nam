@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.LoaiSanPham;
+import com.example.demo.entity.MauSac;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +34,6 @@ public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, UUID> 
 
     @Query(value = "select c from LoaiSanPham c where c.trangThai = 0")
     List<LoaiSanPham> getAll();
+
+    LoaiSanPham findByTen(String ten);
 }

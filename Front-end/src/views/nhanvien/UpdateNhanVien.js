@@ -7,6 +7,7 @@ import { detailNV, vaitro } from 'services/NhanVienService';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import MyVerticallyCenteredModal from './AddVaiTro';
 
 function UpdateNhanVien() {
   const [vaiTroS, setVaiTroS] = useState([]);
@@ -22,6 +23,38 @@ function UpdateNhanVien() {
     vaiTro: '',
     trangThai: ''
   });
+
+  //Vai Trò:
+  const [modalShow, setModalShow] = useState(false);
+  const [valuesVT, setValuesVT] = useState({
+    ten: '',
+    trangThai: 1
+  });
+
+  const closeModal = () => {
+
+    setModalShow(false);
+    getAllVaiTro();
+    setValuesVT({
+      ten: '',
+      trangThai: 1
+    });
+  };
+
+  const handleSubmitVT = (event) => {
+    event.preventDefault();
+    post(valuesVT);
+  };
+
+  const post = async (value) => {
+    const res = await postCreate(value);
+    if (res) {
+      toast.success('Thêm thành công');
+      closeModal();
+      getAllVaiTro(0);
+    }
+  };
+  //
 
   const [anh, setAnh] = useState(null);
 
@@ -79,13 +112,15 @@ function UpdateNhanVien() {
   const detail = async (id) => {
     const res = await detailNV(id);
     if (res) {
-      const { ngaySinh, ...values } = res.data;
+      const { ngaySinh, vaiTro, ...values } = res.data;
       setValues({
         ...values,
+        vaiTro: vaiTro, // Gán giá trị của vaiTro từ API
         ngaySinh: formatDate(ngaySinh)
       });
     }
   };
+
 
   useEffect(() => {
     getAllVaiTro();
@@ -98,13 +133,6 @@ function UpdateNhanVien() {
     }
   };
 
-  // const update = async (id, value) => {
-  //   const res = await updateKH(id, value);
-  //   if (res) {
-  //     toast.success("Update succses!");
-  //     navigate("/khach-hang");
-  //   }
-  // };
   console.log(values);
 
   const formatDate = (date) => {
@@ -204,18 +232,34 @@ function UpdateNhanVien() {
                 />
               </div>
 
+
               <div className="col-6">
-                <label htmlFor="vaiTro">Vai Trò: </label>
+                <label className="form-label me-3" htmlFor="vaiTro">
+                  Vai Trò{' '}
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="fa-solid"
+                    onClick={() => setModalShow(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setModalShow(true);
+                      }
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <i className="fa-solid fa-plus"></i>
+                  </span>
+                </label>{' '}
                 <select
                   id="vaiTro"
                   className="form-select"
                   aria-label="Default select example"
-                  value={values.vaiTro.id}
+                  value={values.vaiTro} // Đặt giá trị của trường <select> thành giá trị đã chọn (values.vaiTro)
                   onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
                 >
-                  <option>Chọn mã khách hàng</option>
-                  {vaiTroS.map((d, i) => (
-                    <option key={i} value={d.id} selected={d.id === values.vaiTro.id}>
+                  {vaiTroS.map((d) => (
+                    <option key={d.id} value={d.id} selected={d.id === values.vaiTro.id}>
                       {d.ten}
                     </option>
                   ))}
@@ -229,15 +273,6 @@ function UpdateNhanVien() {
                 <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
                 {anh && <img src={anh.preview} alt="" width="70%"></img>}
               </div>
-
-              {/* <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Ảnh
-              </label>
-              <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
-              {anh && <img src={anh.preview} alt="" width="70%"></img>}
-            </div> */}
-
               <div className="col-12">
                 <label htmlFor="a" className="form-label me-3">
                   Trạng thái:{' '}
@@ -279,6 +314,13 @@ function UpdateNhanVien() {
             </form>
           </div>
         </div>
+        <MyVerticallyCenteredModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          handleSubmit={handleSubmitVT}
+          values={valuesVT}
+          setValues={setValuesVT}
+        />
       </Card>
     </MainCard>
   );
@@ -286,223 +328,3 @@ function UpdateNhanVien() {
 
 export default UpdateNhanVien;
 
-// import React, { useEffect, useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import axios from "axios";
-// import { useParams } from 'react-router-dom';
-
-// import Card from "@mui/material/Card";
-
-// // React components
-// import SoftBox from "components/SoftBox";
-
-// import { updateNV, detailNhanVien } from "service/ServiceNhanVien";
-// import { vaitro } from "service/ServiceNhanVien";
-// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-// import Footer from "examples/Footer";
-// import { Button } from "react-bootstrap";
-
-// function UpdateNhanVien() {
-
-//     const navigate = useNavigate();
-
-//     const [vaiTroS, setVaiTroS] = useState([]);
-
-//     const [values, setValues] = useState(
-//     {
-//       ma: "",
-//       ten: "",
-//       sdt: "",
-//       email: "",
-//       diaChi: "",
-//       ngaySinh: "",
-//       matKhau: "",
-//       vaiTro: "",
-//       trangThai: "",
-//       anh: "",
-//     }
-//   );
-
-//   const { id } = useParams();
-
-//   useEffect(() => {
-//     detail(id);
-//   }, [id]);
-
-//   const detail = async (id) => {
-//     const res = await detailNhanVien(id);
-//     if (res) {
-//       setValues(res.data);
-//     }
-//   };
-
-//   const put = async (id, value) => {
-//     const res = await updateNV(id, value);
-//     if (res) {
-//       toast.success("Cập nhật thành công !");
-//       navigate("/nhan-vien");
-//     }
-//   };
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     put(id,values);
-//   };
-
-//   useEffect(() => {
-//     getAllVaiTro()
-//   }, [])
-
-//   const getAllVaiTro = async () => {
-//     let res = await vaitro()
-//     if (res) {
-//       setVaiTroS(res.data);
-//     }
-//   }
-//   return (
-
-//     <div>
-//     <DashboardLayout>
-//           <DashboardNavbar />
-//           <SoftBox py={3}>
-//             <SoftBox mb={3}>
-//             <Card >
-
-//             <div className="body flex-grow-1 px-3">
-//                 <form className="row g-3" onSubmit={handleSubmit}>
-
-//                 <div className="mb-2">
-//             <label htmlFor="name">Mã: </label>
-//             <input
-//               type="text"
-//               name="name"
-//               className="form-control"
-//               placeholder="Enter Name"
-//               value={values.ma}
-//               onChange={(e) => setValues({ ...values, ma: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label htmlFor="name">Tên: </label>
-//             <input
-//               type="text"
-//               name="name"
-//               className="form-control"
-//               placeholder="Enter Name"
-//               value={values.ten}
-//               onChange={(e) => setValues({ ...values, ten: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label htmlFor="email">SDT: </label>
-//             <input
-//               type="text"
-//               name="email"
-//               className="form-control"
-//               placeholder="Enter Email"
-//               value={values.sdt}
-//               onChange={(e) => setValues({ ...values, sdt: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label htmlFor="email">Email: </label>
-//             <input
-//               type="text"
-//               name="email"
-//               className="form-control"
-//               placeholder="Enter Email"
-//               value={values.email}
-//               onChange={(e) => setValues({ ...values, email: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label htmlFor="email">Địa Chỉ: </label>
-//             <input
-//               type="text"
-//               name="email"
-//               className="form-control"
-//               placeholder="Enter Email"
-//               value={values.diaChi}
-//               onChange={(e) => setValues({ ...values, diaChi: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label htmlFor="email">Ngày Sinh: </label>
-//             <input
-//               type="date"
-//               name="email"
-//               className="form-control"
-//               placeholder="Enter Email"
-//               value={values.ngaySinh}
-//               onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
-//             />
-//           </div>
-
-//           <div className="mb-2">
-//             <label htmlFor="email">Mật Khẩu: </label>
-//             <input
-//               type="text"
-//               name="email"
-//               className="form-control"
-//               placeholder="Enter Email"
-//               value={values.matKhau}
-//               onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
-//             />
-//           </div>
-//           <div className="mb-2">
-//             <label>Vai Trò: </label>
-//             <select
-//               className="form-select"
-//               aria-label="Default select example"
-//               value={values.vaiTro.id}
-//               onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
-//             >
-//               <option>Chọn mã khách hàng</option>
-//               {vaiTroS.map((nv, i) => (
-//                 <option key={i} value={nv.id}>
-//                   {nv.ten}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//           <div className="mb-2">
-//             <label>Trạng Thái: </label>
-//             <div className="form-check">
-//               <input className="form-check-input" type="radio" onChange={() => {
-//                 setValues({ ...values, trangThai: 0 });
-//               }} checked={values.trangThai === 0} value={values.trangThai} />
-//               <label className="form-check-label" htmlFor="flexRadioDefault1">
-//               Đang kích hoạt
-//               </label>
-//             </div>
-//             <div className="form-check">
-//               <input className="form-check-input" type="radio" onChange={() => {
-//                 setValues({ ...values, trangThai: 1 });
-//               }} checked={values.trangThai === 1} value={values.trangThai} />
-//               <label className="form-check-label" htmlFor="flexRadioDefault2">
-//               Ngừng kích hoạt
-//               </label>
-//             </div>
-//           </div>
-//                   <div className="col-12">
-//                     <Button type="submit" className="btn btn-bg-info">
-//                       Update
-//                     </Button>
-//                     <Link to="/nhan-vien" className="btn btn-primary ms-3">
-//                     Back
-//                   </Link>
-//                   </div>
-//           </form>
-//           </div>
-//             </Card>
-//           </SoftBox>
-//           </SoftBox>
-//           <Footer />
-//         </DashboardLayout>
-//         </div>
-//   );
-// }
-
-// export default UpdateNhanVien;

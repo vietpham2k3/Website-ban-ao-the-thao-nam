@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +50,16 @@ public class MauSacServiceImpl implements MauSacService {
         mauSac.setNgayTao(mauSac.getNgayTao());
         mauSac.setTen(mauSac.getMa());
         return res.save(mauSac);
+    }
+
+    @Override
+    public List<MauSac> findByListString(List<String> msacString) {
+        List<MauSac> mauSacs = new ArrayList<>();
+        for (String msac: msacString) {
+            MauSac m = res.findByTen(msac);
+            mauSacs.add(m);
+        }
+        return mauSacs;
     }
 
 

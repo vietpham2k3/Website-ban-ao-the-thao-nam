@@ -7,7 +7,6 @@ import { putUpdateCL, detailCL } from 'services/ServiceChatLieu';
 
 // @mui material components
 import Card from '@mui/material/Card';
-
 import { Button } from 'react-bootstrap';
 
 function UpdateCL() {

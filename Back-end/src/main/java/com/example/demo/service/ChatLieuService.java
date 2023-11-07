@@ -23,4 +23,6 @@ public interface ChatLieuService {
     ChatLieu update(ChatLieu chatLieu);
 
     ChatLieu delete(UUID id);
+
+    List<ChatLieu> findByChatLieuString (List<String> chatLieus);
 }

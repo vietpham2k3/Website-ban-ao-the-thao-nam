@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.KichThuocDTO;
+import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
 import com.example.demo.entity.KichCo;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,6 @@ public interface KichCoService {
     KichCo update(KichCo kichCo);
 
     KichCo delete(UUID id);
+
+    List<KichCo> findByKichCoString (List<String> kichCos);
 }

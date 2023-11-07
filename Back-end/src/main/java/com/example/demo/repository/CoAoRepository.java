@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
+import com.example.demo.entity.MauSac;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,5 @@ public interface CoAoRepository extends JpaRepository<CoAo, UUID> {
     @Query(value = "select c from CoAo c where c.trangThai = 0")
     List<CoAo> getAll();
 
+    CoAo findByTen(String ten);
 }

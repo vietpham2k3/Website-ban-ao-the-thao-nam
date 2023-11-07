@@ -25,4 +25,6 @@ public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
 
     @Query(value = "select c from KichCo c where c.trangThai = 0")
     List<KichCo> getAll();
+
+    KichCo findByTen(String ten);
 }

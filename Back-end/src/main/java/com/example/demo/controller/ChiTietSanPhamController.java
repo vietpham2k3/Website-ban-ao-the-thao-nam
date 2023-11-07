@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AnhDTO;
+import com.example.demo.dto.FilterProductClient;
 import com.example.demo.entity.Anh;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.SanPham;
@@ -306,4 +307,13 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("ok");
     }
 
+//    @PostMapping("/findAll")
+//    public ResponseEntity<?> findAllClient(@RequestBody FilterProductClient req){
+//        return new ResponseEntity<>(chiTietSanPhamService.findAllClient(req), HttpStatus.OK);
+//    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<?> filter(@RequestBody FilterProductClient filterProductClient, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.status(HttpStatus.OK).body(chiTietSanPhamService.filter(filterProductClient,page));
+    }
 }
