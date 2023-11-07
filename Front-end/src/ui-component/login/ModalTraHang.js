@@ -9,22 +9,32 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function ModalTraHang(props) {
-  const { show, handleClose, dataHDCT, convertToCurrency, setCounts, counts, setValuesTH, valuesTH } = props;
+  const { show, handleClose, dataHDCT, convertToCurrency, setValuesTH, valuesTH, setDataHDCT, handleTraHang, setIsUpdate } = props;
 
-  // useEffect(() => {
-  //   // Tính tổng tiền khi valuesSanPham thay đổi
-  //   let sum = 0;
-  //   let count = 0;
-  //   dataHDCT.forEach((d) => {
-  //     sum += d.soLuong * d.donGia;
-  //     count += d.soLuong;
-  //   });
-  //   setValuesTH({ ...valuesTH,  });
-  // }, [show]);
+  const handleChange = (e, i) => {
+    // Cập nhật số lượng vào sản phẩm d
+    const updatedDataHDCT = [...dataHDCT];
+    updatedDataHDCT[i].soLuongHangTra = e;
+    setDataHDCT(updatedDataHDCT);
+    setIsUpdate(true);
+    let sum = 0;
+    let count = 0;
+    updatedDataHDCT.forEach((d) => {
+      sum += d.soLuongHangTra * d.donGia;
+      count += d.soLuongHangTra;
+    });
+    setValuesTH({
+      ...valuesTH,
+      trangThai: 15,
+      tienTra: sum,
+      tienCanTra: sum,
+      soHangTra: count
+    });
+  };
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose} centered size="lg">
+      <Modal show={show} onHide={handleClose} centered size="lg" keyboard={false} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Trả hàng/Hoàn tiền</Modal.Title>
         </Modal.Header>
@@ -34,7 +44,7 @@ function ModalTraHang(props) {
               <div>
                 <img src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`} alt="" style={{ width: 120 }} />
               </div>
-              <div className="mt-3" style={{ width: 230 }}>
+              <div className="mt-3" style={{ width: 200 }}>
                 <p>
                   {d.chiTietSanPham.sanPham.ten}
                   <br />
@@ -49,12 +59,8 @@ function ModalTraHang(props) {
                   max={d.soLuong}
                   min={0}
                   step={1}
-                  value={counts[i] || 0} // Sử dụng counts[i] thay vì count
-                  onChange={(e) => {
-                    const newCounts = [...counts]; // Tạo một bản sao của mảng counts
-                    newCounts[i] = e; // Cập nhật giá trị cho sản phẩm thứ i
-                    setCounts(newCounts); // Cập nhật mảng counts
-                  }}
+                  value={d.soLuongHangTra || 0} // Sử dụng counts[i] thay vì count
+                  onChange={(e) => handleChange(e, i)}
                   variant={'dark'}
                   size="sm"
                 />
@@ -63,7 +69,7 @@ function ModalTraHang(props) {
                 <p style={{ color: 'red' }}>{convertToCurrency(d.donGia)}</p>
               </div>
               <div className="d-flex align-items-center justify-content-center ms-5">
-                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * counts[i] || 0)}</p>
+                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongHangTra || 0)}</p>
               </div>
             </div>
           ))}
@@ -71,14 +77,16 @@ function ModalTraHang(props) {
             style={{ width: '100%' }}
             label="Lý do trả hàng đơn hàng"
             variant="outlined"
-            //   onChange={(e) => setGhiChu({ ghiChu: e.target.value })}
+            onChange={(e) => setValuesTH({ ...valuesTH, lichSuHoaDon: { ghiChu: e.target.value } })}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Huỷ
           </Button>
-          <Button variant="primary">Xác nhận</Button>
+          <Button variant="primary" onClick={handleTraHang}>
+            Xác nhận
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

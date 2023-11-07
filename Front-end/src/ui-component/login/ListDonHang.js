@@ -11,24 +11,27 @@ import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
+import { update, yeuCauTraHang } from 'services/TraHangService';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [dataHDCT, setDataHDCT] = useState([]);
   const [isShow, setIsshow] = useState(false);
   const [id, setId] = useState();
   const navigate = useNavigate();
-  const [counts, setCounts] = useState(dataHDCT.map(() => 0));
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
   });
   const [valuesTH, setValuesTH] = useState({
+    lichSuHoaDon: {
+      ghiChu: ''
+    },
     soHangTra: 0,
     tienCanTra: 0,
     tienTra: 0,
-    trangThai: 0,
-    ghiChu: ''
+    trangThai: 0
   });
 
   useEffect(() => {
@@ -36,8 +39,11 @@ function ListDonHang(props) {
   }, []);
 
   useEffect(() => {
-    searchByTT(dataLogin.id, data.trangThai);
-  }, []);
+    if (isUpdate) {
+      handleUpdateSL();
+      setIsUpdate(false);
+    }
+  }, [isUpdate]);
 
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
@@ -70,6 +76,29 @@ function ListDonHang(props) {
         size(dataLogin.id, d.trangThai);
       });
     }
+  };
+
+  const traHang = async (id, soHangTra, tienCanTra, tienTra, trangThai, values) => {
+    const res = await yeuCauTraHang(id, soHangTra, tienCanTra, tienTra, trangThai, values);
+    if (res) {
+      setIsshow(false);
+      window.location.reload();
+    }
+  };
+  const handleTraHang = () => {
+    if (valuesTH.soHangTra <= 0 || valuesTH.lichSuHoaDon.ghiChu === '') {
+      toast.warning('Vui lòng nhập số lượng sản phẩm muốn trả');
+      return;
+    }
+    traHang(dataHDCT[0].hoaDon.id, valuesTH);
+  };
+
+  const updateSL = async (value) => {
+    await update(value);
+  };
+
+  const handleUpdateSL = () => {
+    updateSL(dataHDCT);
   };
 
   const nhanDonHang = async (id, value) => {
@@ -140,6 +169,8 @@ function ListDonHang(props) {
                   ? 'Giao hàng thành công'
                   : d.hoaDon.trangThai === 14
                   ? 'Yêu cầu huỷ đơn'
+                  : d.hoaDon.trangThai === 15
+                  ? 'Yêu cầu trả hàng'
                   : d.hoaDon.trangThai === 6
                   ? 'Thanh toán thành công'
                   : 'Hoàn thành'}
@@ -227,8 +258,10 @@ function ListDonHang(props) {
         convertToCurrency={convertToCurrency}
         setValuesTH={setValuesTH}
         valuesTH={valuesTH}
-        setCounts={setCounts}
-        counts={counts}
+        setDataHDCT={setDataHDCT}
+        handleTraHang={handleTraHang}
+        setIsUpdate={setIsUpdate}
+        setGhiChu={setGhiChu}
       ></ModalTraHang>
     </div>
   );

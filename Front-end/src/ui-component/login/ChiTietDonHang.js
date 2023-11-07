@@ -50,11 +50,18 @@ function ChiTietDonHang() {
     const res = await detailHD(id);
     if (res) {
       setDataHD(res.data);
-      console.log(res.data);
       if ((res.data.trangThai === 2 || res.data.trangThai === 14) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
         setSteps(['Yêu cầu huỷ đơn', 'Huỷ đơn']);
       } else if ((res.data.trangThai === 2 || res.data.trangThai === 14) && res.data.hinhThucThanhToan.ten === 'VNPay') {
         setSteps(['Yêu cầu huỷ đơn', 'Hoàn tiền', 'Huỷ đơn']);
+      } else if ((res.data.trangThai === 2 || res.data.trangThai === 15) && res.data.hinhThucThanhToan.ten === 'VNPay') {
+        setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thành công']);
+      } else if ((res.data.trangThai === 2 || res.data.trangThai === 15) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
+        setSteps(['Yêu cầu Trả hàng', 'Trả hàng thành công']);
+      } else if ((res.data.trangThai === 2 || res.data.trangThai === 17) && res.data.hinhThucThanhToan.ten === 'VNPay') {
+        setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thất bại']);
+      } else if ((res.data.trangThai === 2 || res.data.trangThai === 17) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
+        setSteps(['Yêu cầu Trả hàng', 'Trả hàng thất bại']);
       }
     }
   };
@@ -142,6 +149,12 @@ function ChiTietDonHang() {
                     ? 'Giao hàng thành công'
                     : dataHD.trangThai === 14
                     ? 'Yêu cầu huỷ đơn'
+                    : dataHD.trangThai === 15
+                    ? 'Yêu cầu trả hàng'
+                    : dataHD.trangThai === 16
+                    ? 'Trả hàng thành công'
+                    : dataHD.trangThai === 17
+                    ? 'Trả hàng thất bại'
                     : dataHD.trangThai === 6
                     ? 'Thanh toán thành công'
                     : 'Hoàn thành'}
@@ -165,6 +178,10 @@ function ChiTietDonHang() {
                         ? 2
                         : dataHD.trangThai === 6
                         ? 1
+                        : dataHD.trangThai === 15
+                        ? 0
+                        : dataHD.trangThai === 16
+                        ? 3
                         : 3
                     }
                     alternativeLabel

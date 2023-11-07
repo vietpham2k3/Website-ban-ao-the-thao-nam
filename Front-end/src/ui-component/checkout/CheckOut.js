@@ -133,10 +133,6 @@ function CheckoutForm(props) {
 
   useEffect(() => {
     getThanhPho();
-    if (dataLogin) {
-      setValuesUpdateHD({ ...valuesUpdateHD, nguoiTao: dataLogin && dataLogin.ten, khachHang: { id: dataLogin && dataLogin.id } });
-      return;
-    }
   }, []);
 
   console.log(valuesUpdateHD);
@@ -229,7 +225,6 @@ function CheckoutForm(props) {
   useEffect(() => {
     quan.forEach((district) => {
       if (district.DistrictName === valuesDC.quanHuyen) {
-        console.log(1);
         setValuesIdWard({
           district_id: district.DistrictID
         });
@@ -741,6 +736,13 @@ function CheckoutForm(props) {
     setIsUpdatingDiaChi(true);
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
 
+    if (dataLogin) {
+      const newValues = {
+        ...valuesUpdateHD,
+        khachHang: { id: dataLogin.id }
+      };
+      setValuesUpdateHD(newValues);
+    }
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,
@@ -800,7 +802,13 @@ function CheckoutForm(props) {
     setIsUpdatingDiaChi(true);
 
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-
+    if (dataLogin) {
+      const newValues = {
+        ...valuesUpdateHD,
+        khachHang: { id: dataLogin.id }
+      };
+      setValuesUpdateHD(newValues);
+    }
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,

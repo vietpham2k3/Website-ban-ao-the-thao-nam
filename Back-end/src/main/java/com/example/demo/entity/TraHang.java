@@ -38,6 +38,9 @@ public class TraHang {
     @Column(name = "so_hang_tra")
     private Integer soHangTra;
 
+    @Column(name = "trang_thai")
+    private Integer trangThai;
+
     @Column(name = "tien_can_tra")
     private Double tienCanTra;
 
