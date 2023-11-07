@@ -23,7 +23,7 @@ const deleteVT = (id, ma) => {
 };
 
 const searchVT = (key, trangThai, page) => {
-    return axios.get(`/api/vai-tro/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
-  };
+  return axios.get(`/api/vai-tro/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
+};
 
 export { fetchAll, detailVT, fetchAllList, postCreate, putUpdateVT, deleteVT, searchVT };

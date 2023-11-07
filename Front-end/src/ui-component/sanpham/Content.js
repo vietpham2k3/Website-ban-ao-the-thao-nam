@@ -34,7 +34,6 @@ function ContentSanPham() {
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
   const [collars, setCollars] = useState([]); // Thêm dòng này
   const [manufacturers, setManufacturers] = useState([]);
-  
 
   //Max khoảng tiền:
   const findMaxPrice = (products) => {
@@ -114,7 +113,7 @@ function ContentSanPham() {
 
   // Hàm xử lý việc lọc sản phẩm
   const filterProducts = () => {
-    console.log(data)
+    console.log(data);
     const filteredProducts = data.filter((product) => {
       // Lọc theo khoảng giá
       const price = product.giaBan;
@@ -404,7 +403,8 @@ function ContentSanPham() {
 
 export default ContentSanPham;
 
- {/* <div className="col-md-3">
+{
+  /* <div className="col-md-3">
           <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>
 
           <div style={{}}>
@@ -510,4 +510,5 @@ export default ContentSanPham;
               </Accordion.Item>
             </Accordion>
           </div>
-        </div> */}
+        </div> */
+}

@@ -54,9 +54,15 @@ function ChiTietDonHang() {
         setSteps(['Yêu cầu huỷ đơn', 'Huỷ đơn']);
       } else if ((res.data.trangThai === 2 || res.data.trangThai === 14) && res.data.hinhThucThanhToan.ten === 'VNPay') {
         setSteps(['Yêu cầu huỷ đơn', 'Hoàn tiền', 'Huỷ đơn']);
-      } else if ((res.data.trangThai === 2 || res.data.trangThai === 15) && res.data.hinhThucThanhToan.ten === 'VNPay') {
+      } else if (
+        (res.data.trangThai === 2 || res.data.trangThai === 15 || res.data.trangThai === 16) &&
+        res.data.hinhThucThanhToan.ten === 'VNPay'
+      ) {
         setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thành công']);
-      } else if ((res.data.trangThai === 2 || res.data.trangThai === 15) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
+      } else if (
+        (res.data.trangThai === 2 || res.data.trangThai === 15 || res.data.trangThai === 16) &&
+        res.data.hinhThucThanhToan.ten === 'Tiền mặt'
+      ) {
         setSteps(['Yêu cầu Trả hàng', 'Trả hàng thành công']);
       } else if ((res.data.trangThai === 2 || res.data.trangThai === 17) && res.data.hinhThucThanhToan.ten === 'VNPay') {
         setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thất bại']);

@@ -171,6 +171,10 @@ function ListDonHang(props) {
                   ? 'Yêu cầu huỷ đơn'
                   : d.hoaDon.trangThai === 15
                   ? 'Yêu cầu trả hàng'
+                  : d.hoaDon.trangThai === 16
+                  ? 'Trả hàng thành công'
+                  : d.hoaDon.trangThai === 17
+                  ? 'Trả hàng thất bại'
                   : d.hoaDon.trangThai === 6
                   ? 'Thanh toán thành công'
                   : 'Hoàn thành'}

@@ -32,7 +32,6 @@ function UpdateNhanVien() {
   });
 
   const closeModal = () => {
-
     setModalShow(false);
     getAllVaiTro();
     setValuesVT({
@@ -120,7 +119,6 @@ function UpdateNhanVien() {
       });
     }
   };
-
 
   useEffect(() => {
     getAllVaiTro();
@@ -232,7 +230,6 @@ function UpdateNhanVien() {
                 />
               </div>
 
-
               <div className="col-6">
                 <label className="form-label me-3" htmlFor="vaiTro">
                   Vai Trò{' '}
@@ -327,4 +324,3 @@ function UpdateNhanVien() {
 }
 
 export default UpdateNhanVien;
-

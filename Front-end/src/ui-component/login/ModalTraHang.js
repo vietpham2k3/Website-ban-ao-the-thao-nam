@@ -41,8 +41,12 @@ function ModalTraHang(props) {
         <Modal.Body>
           {dataHDCT.map((d, i) => (
             <div key={i} className="d-flex">
-              <div>
-                <img src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`} alt="" style={{ width: 120 }} />
+              <div className="me-3 mb-3" style={{}}>
+                <img
+                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                  alt=""
+                  style={{ width: 120, borderRadius: 15 }}
+                />
               </div>
               <div className="mt-3" style={{ width: 200 }}>
                 <p>
