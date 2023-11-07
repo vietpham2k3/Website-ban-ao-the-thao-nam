@@ -179,7 +179,6 @@ public class HoaDonController {
     }
 
 
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody HoaDon hoaDon, @RequestParam String nguoiTao) {
         String ma = "HD" + new Random().nextInt(100000);

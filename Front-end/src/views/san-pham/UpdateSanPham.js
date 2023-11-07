@@ -695,6 +695,13 @@ function UpdateSanPham() {
                         <strong>Số lượng</strong>
                       </Button>
                     </OverlayTrigger>
+                  </th>{' '}
+                  <th>
+                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
+                      <Button variant="" style={{ border: 'none' }}>
+                        <strong>Trạng thái</strong>
+                      </Button>
+                    </OverlayTrigger>
                   </th>
                   <th>
                     <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>

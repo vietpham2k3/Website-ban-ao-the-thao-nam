@@ -135,7 +135,7 @@ const NhanVien = () => {
               </div>
               <div color="blue">
                 <button className="btn btn-primary" onClick={() => navigate('/nhan-vien/add')}>
-                  Add
+                  Thêm <i className="fa-solid fa-plus fa-beat fa-lg"></i>
                 </button>
               </div>
             </div>

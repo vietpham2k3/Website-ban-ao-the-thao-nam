@@ -10,10 +10,13 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
+import ModalTraHang from './ModalTraHang';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
+  const [dataHDCT, setDataHDCT] = useState([]);
+  const [isShow, setIsshow] = useState(false);
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
@@ -74,7 +77,10 @@ function ListDonHang(props) {
     }
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setIsshow(false);
+  };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -173,9 +179,22 @@ function ListDonHang(props) {
           <div className="col-md-12 card-box-center">
             <div className="d-flex justify-content-end mb-5" style={{ height: '100%', alignItems: 'center' }}>
               {d.hoaDon.trangThai === 4 && (
-                <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
-                  Nhận hàng
-                </ButtonMUI>
+                <>
+                  <ButtonMUI
+                    variant="outlined"
+                    className="mt-2 me-3 tra-hang"
+                    color="primary"
+                    onClick={() => {
+                      setIsshow(true);
+                      setDataHDCT(d.hoaDonChiTiet);
+                    }}
+                  >
+                    Trả hàng/Hoàn tiền
+                  </ButtonMUI>
+                  <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
+                    Nhận hàng
+                  </ButtonMUI>
+                </>
               )}
               {d.hoaDon.trangThai === 0 || d.hoaDon.trangThai === 6 ? (
                 <ButtonMUI className="mt-2 me-3" variant="contained" color="error" onClick={() => handleOpenModal(d.hoaDon.id)}>
@@ -189,6 +208,7 @@ function ListDonHang(props) {
         </div>
       ))}
       <ModalHuyDon handleClose={handleClose} show={show} handleHuyDon={handleHuyDon} setGhiChu={setGhiChu}></ModalHuyDon>
+      <ModalTraHang handleClose={handleClose} show={isShow} dataHDCT={dataHDCT} convertToCurrency={convertToCurrency}></ModalTraHang>
     </div>
   );
 }

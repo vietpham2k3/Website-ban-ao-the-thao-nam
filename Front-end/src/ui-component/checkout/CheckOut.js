@@ -43,7 +43,6 @@ function CheckoutForm(props) {
   const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
-
   const product = localStorage.getItem('productAfter');
   // const [isLoading, setIsLoading] = useState(false);
   const [valuesAddDC, setValuesAddDC] = useState({
@@ -108,13 +107,11 @@ function CheckoutForm(props) {
     ngayDuKienNhan: 0,
     ghiChu: '',
     tienShip: 0,
+    nguoiTao: '',
     hinhThucThanhToan: {
       tien: 0,
       ten: '',
       trangThai: 1
-    },
-    khachHang: {
-      id: dataLogin && dataLogin.id
     }
   });
   const [errors, setErrors] = useState({
@@ -136,7 +133,13 @@ function CheckoutForm(props) {
 
   useEffect(() => {
     getThanhPho();
+    if (dataLogin) {
+      setValuesUpdateHD({ ...valuesUpdateHD, nguoiTao: dataLogin && dataLogin.ten, khachHang: { id: dataLogin && dataLogin.id } });
+      return;
+    }
   }, []);
+
+  console.log(valuesUpdateHD);
 
   useEffect(() => {
     if (dataLogin && dataLogin.role == 'KH') {
@@ -870,7 +873,7 @@ function CheckoutForm(props) {
                     placeholder="Họ và Tên"
                     value={valuesUpdateHD.tenNguoiNhan}
                     onChange={(e) => {
-                      setValuesUpdateHD({ ...valuesUpdateHD, tenNguoiNhan: e.target.value });
+                      setValuesUpdateHD({ ...valuesUpdateHD, tenNguoiNhan: e.target.value, nguoiTao: e.target.value });
                       setErrors({
                         ...errors,
                         tenNguoiNhan: true

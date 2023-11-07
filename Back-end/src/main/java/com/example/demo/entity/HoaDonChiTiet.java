@@ -37,6 +37,11 @@ public class HoaDonChiTiet {
     private HoaDon hoaDon;
 
     @ManyToOne
+    @JoinColumn(name = "id_th", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private TraHang traHang;
+
+    @ManyToOne
     @JoinColumn(name = "id_ctsp", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private ChiTietSanPham chiTietSanPham;

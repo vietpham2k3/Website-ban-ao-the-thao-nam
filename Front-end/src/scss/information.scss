@@ -3,7 +3,7 @@
 .card-box {
   width: 100%;
   // border-radius: 15px;
-  box-shadow: 0px 0px 5px 0.2px black;
+  box-shadow: 0px 0px 5px 0.2px rgba(0, 0, 0, 0.8);
 }
 
 .back-to-history:hover {
@@ -116,11 +116,11 @@ button:hover {
   max-width: 80%;
 }
 
-.modal-content {
-  border: 1px solid #0d89d7;
-  padding: 20px;
-  background-color: #fff;
-}
+// .modal-content {
+//   border: 1px solid #0d89d7;
+//   padding: 20px;
+//   background-color: #fff;
+// }
 .input-group {
   position: relative;
   margin-bottom: 20px;

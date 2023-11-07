@@ -4,6 +4,18 @@ const doanhThuTongTheoNgay = () => {
   return axios.get(`/api/thong-ke/doanh-thu-tong-ngay-hien-tai`);
 };
 
+const doanhThuAllNgay = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-all-ngay`);
+};
+
+const doanhThuAllThang = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-all-thang`);
+};
+
+const doanhThuAllNam = () => {
+  return axios.get(`/api/thong-ke/doanh-thu-all-nam`);
+};
+
 const doanhThuTongTheoThang = () => {
   return axios.get(`/api/thong-ke/doanh-thu-tong-thang-hien-tai`);
 };
@@ -40,12 +52,24 @@ const soDonHuyNgay = () => {
   return axios.get(`/api/thong-ke/so-don-huy-ngay`);
 };
 
+const soDonTraNgay = () => {
+  return axios.get(`/api/thong-ke/so-don-tra-ngay`);
+};
+
 const soDonHuyThang = () => {
   return axios.get(`/api/thong-ke/so-don-huy-thang`);
 };
 
+const soDonTraThang = () => {
+  return axios.get(`/api/thong-ke/so-don-tra-thang`);
+};
+
 const soDonHuyNam = () => {
   return axios.get(`/api/thong-ke/so-don-huy-nam`);
+};
+
+const soDonTraNam = () => {
+  return axios.get(`/api/thong-ke/so-don-tra-nam`);
 };
 
 const soDonChoXacNhanNgay = () => {
@@ -96,6 +120,18 @@ const sanPhamBanChayNamSearch = (key) => {
   return axios.get(`/api/thong-ke/san-pham-ban-chay-trong-nam-search?key=${key}`);
 };
 
+const bieuDoNgay = () => {
+  return axios.get(`/api/thong-ke/bieu-do-ngay`);
+};
+
+const bieuDoThang = () => {
+  return axios.get(`/api/thong-ke/bieu-do-thang`);
+};
+
+const bieuDoNam = () => {
+  return axios.get(`/api/thong-ke/bieu-do-nam`);
+};
+
 export {
   doanhThuTongTheoNgay,
   doanhThuTongTheoThang,
@@ -120,5 +156,14 @@ export {
   sanPhamBanChayNam,
   sanPhamBanChayNamSearch,
   sanPhamBanChayNgaySearch,
-  sanPhamBanChayThangSearch
+  sanPhamBanChayThangSearch,
+  soDonTraNam,
+  soDonTraNgay,
+  soDonTraThang,
+  doanhThuAllNam,
+  doanhThuAllNgay,
+  doanhThuAllThang,
+  bieuDoNgay,
+  bieuDoThang,
+  bieuDoNam
 };
