@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
+import com.example.demo.entity.MauSac;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,4 +26,6 @@ public interface CoAoService {
     CoAo update(CoAo coAo);
 
     CoAo delete(UUID id);
+
+    List<CoAo> findByCoAoString (List<String> coAoString) ;
 }

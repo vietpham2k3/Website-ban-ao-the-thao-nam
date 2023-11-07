@@ -63,12 +63,12 @@ const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
 const KichCo = Loadable(lazy(() => import('views/kich-co/KichCo')));
 const UpdateKC = Loadable(lazy(() => import('views/kich-co/UpdateKichCo')));
 
-import { Navigate } from 'react-router';
-const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+// import { Navigate } from 'react-router';
+// const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
 const MainRoutes = {
   path: '/',
-  element: dataLogin ? <Navigate to={'/trang-chu'}></Navigate> : <MainLayout />,
+  element: <MainLayout />,
   children: [
     //đơn hàng
     {

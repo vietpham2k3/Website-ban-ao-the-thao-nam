@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.KichThuocDTO;
+import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.VaiTro;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -75,5 +77,15 @@ public class KichCoServiceImpl implements KichCoService {
         kichCo.setTrangThai(1);
         kichCo.setNgaySua(new Date());
         return repository.save(kichCo);
+    }
+
+    @Override
+    public List<KichCo> findByKichCoString(List<String> kichCosString) {
+        List<KichCo> kichCos = new ArrayList<>();
+        for (String kcString: kichCosString) {
+            KichCo kichCo = repository.findByTen(kcString);
+            kichCos.add(kichCo);
+        }
+        return kichCos;
     }
 }

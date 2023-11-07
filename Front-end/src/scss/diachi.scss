@@ -207,8 +207,6 @@ button:hover {
  background: #060606;
 }
 
-
-
 /* ... */
 .address-header {
   display: flex;
@@ -235,3 +233,86 @@ button:hover {
 }
 
 
+/* Chỉnh CSS cho modal tổng thể */
+.right-aligned-modal {
+  /* Đặt vị trí hiển thị modal tại giữa trang và căn giữa theo chiều ngang */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+
+  /* Tạo hiệu ứng transition cho modal */
+  transition: all 0.3s ease-in-out;
+
+  /* Tùy chỉnh kích thước và màu sắc của modal */
+  max-width: 400px;
+  width: 90%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    /* Căn lề nội dung bên trong modal */
+    text-align: left;
+  }
+
+  form {
+    /* Tăng khoảng cách giữa các thành phần trong form */
+    display: grid;
+    gap: 10px;
+
+    .input1 {
+      display: grid;
+      gap: 10px;
+    }
+  }
+
+  label {
+    /* Tùy chỉnh màu và font chữ cho nhãn */
+    color: #333;
+    font-weight: 500;
+  }
+
+  select,
+  input[type="text"] {
+    /* Tùy chỉnh màu sắc, border và padding cho input và select box */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .button3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      /* Tùy chỉnh màu nút và viền */
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+    }
+  }
+}
+
+/* Điều chỉnh CSS cho button đóng */
+.button4 {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    /* Tùy chỉnh màu nút đóng và viền */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+  }
+}

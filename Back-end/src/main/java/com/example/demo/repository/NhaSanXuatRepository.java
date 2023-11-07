@@ -25,4 +25,6 @@ public interface NhaSanXuatRepository extends JpaRepository<NhaSanXuat, UUID> {
 
     @Query(value = "select c from NhaSanXuat c where c.trangThai = 0")
     List<NhaSanXuat> getAll();
+
+    NhaSanXuat findByTen(String ten);
 }

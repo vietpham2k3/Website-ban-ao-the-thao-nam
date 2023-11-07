@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.CoAo;
 import com.example.demo.entity.LoaiSanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,6 @@ public interface LoaiSanPhamService {
     LoaiSanPham detail(UUID id);
 
     Page<LoaiSanPham> searchPage(String key, Integer trangThai, Pageable pageable);
+
+    List<LoaiSanPham> findByLoaiSanPhamString (List<String> lsphamString) ;
 }

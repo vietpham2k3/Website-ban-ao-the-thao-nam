@@ -25,6 +25,6 @@ public interface ChatLieuRepository extends JpaRepository<ChatLieu, UUID> {
                                 @Param("trangThai") Integer trangThai,
                                 Pageable pageable);
 
-
+    ChatLieu findByTen(String ten);
 
 }

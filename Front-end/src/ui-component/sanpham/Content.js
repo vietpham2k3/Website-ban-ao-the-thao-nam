@@ -11,7 +11,6 @@ import Form from 'react-bootstrap/Form';
 import Slider from 'react-slider';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
 
 const MIN = 0;
 const MAX = 10000000;
@@ -19,7 +18,7 @@ const MAX = 10000000;
 function ContentSanPham() {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState();
-  const { productName } = useParams();
+
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -35,6 +34,7 @@ function ContentSanPham() {
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
   const [collars, setCollars] = useState([]); // Thêm dòng này
   const [manufacturers, setManufacturers] = useState([]);
+  
 
   //Max khoảng tiền:
   const findMaxPrice = (products) => {
@@ -107,18 +107,14 @@ function ContentSanPham() {
       setTotalPages(res.data.totalPages);
     }
   };
-  console.log(productName);
 
   useEffect(() => {
-    if (productName === undefined) {
-      filterProducts('');
-    } else {
-      filterProducts(productName);
-    }
-  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials, selectedCollars, selectedManufacturers, productName]);
+    filterProducts();
+  }, [data, priceRange, selectedColors, selectedSizes, selectedMaterials, selectedCollars, selectedManufacturers]);
 
   // Hàm xử lý việc lọc sản phẩm
-  const filterProducts = (productName) => {
+  const filterProducts = () => {
+    console.log(data)
     const filteredProducts = data.filter((product) => {
       // Lọc theo khoảng giá
       const price = product.giaBan;
@@ -128,10 +124,6 @@ function ContentSanPham() {
 
       // Lọc theo màu sắc
       if (selectedColors.length > 0 && !selectedColors.includes(product.mauSac.ten)) {
-        return false;
-      }
-
-      if (!product.sanPham.ten.toLowerCase().includes(productName.toLowerCase())) {
         return false;
       }
 
@@ -235,113 +227,6 @@ function ContentSanPham() {
   return (
     <div style={{ paddingTop: 30 }} className="container">
       <div className="row">
-        {/* <div className="col-md-3">
-          <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>
-
-          <div style={{}}>
-            <Accordion defaultActiveKey={['0', '1', '3', '4', '5', '6']}>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Giá Tiền</Accordion.Header>
-                <Accordion.Body>
-                  <div className="box col-auto">
-                    <div className="values">
-                      <strong>Khoảng giá:</strong>{' '}
-                      {convertToCurrency(displayedPriceRange[0]) + ' - ' + convertToCurrency(displayedPriceRange[1])}
-                    </div>
-                    <Slider className="slider" onChange={handlePriceRangeChange} value={priceRange} min={MIN} max={maxPrice}></Slider>
-                  </div>
-                </Accordion.Body>
-              </Accordion.Item>
-
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>Màu Sắc</Accordion.Header>
-                <Accordion.Body>
-                  {colors.map((color, index) => (
-                    <Form.Group key={index} className="color-filter" controlId={`colorCheckbox${index}`}>
-                      <label className="round-checkbox-container">
-                        <input
-                          type="checkbox"
-                          className="round-checkbox"
-                          onChange={() => handleColorChange(color.ten)}
-                          checked={selectedColors.includes(color.ten)}
-                        />
-                        <span className="round-checkmark"></span>
-                      </label>
-                      <Form className="color-code" style={{ backgroundColor: color.ten }} />
-                    </Form.Group>
-                  ))}
-                </Accordion.Body>
-              </Accordion.Item>
-
-              <Accordion.Item eventKey="3">
-                <Accordion.Header>Kích Cỡ</Accordion.Header>
-                <Accordion.Body>
-                  <div className="button-container">
-                    {sizes.map((size, index) => (
-                      <Button
-                        key={index}
-                        variant="secondary"
-                        className="custom-button"
-                        onClick={() => handleSizeChange(size.ten)}
-                        active={selectedSizes.includes(size.ten)}
-                      >
-                        {size.ten}
-                      </Button>
-                    ))}
-                  </div>
-                </Accordion.Body>
-              </Accordion.Item>
-
-              <Accordion.Item eventKey="4">
-                <Accordion.Header>Chất Liệu</Accordion.Header>
-                <Accordion.Body>
-                  {materials.map((material, index) => (
-                    <Form.Group key={index} className="mb-3" controlId={`materialCheckbox${index}`}>
-                      <Form.Check
-                        type="checkbox"
-                        label={material.ten}
-                        onChange={() => handleMaterialChange(material.ten)}
-                        checked={selectedMaterials.includes(material.ten)}
-                      />
-                    </Form.Group>
-                  ))}
-                </Accordion.Body>
-              </Accordion.Item>
-
-              <Accordion.Item eventKey="5">
-                <Accordion.Header>Cổ Áo</Accordion.Header>
-                <Accordion.Body>
-                  {collars.map((collar, index) => (
-                    <Form.Group key={index} className="mb-3" controlId={`collarCheckbox${index}`}>
-                      <Form.Check
-                        type="checkbox"
-                        label={collar.ten}
-                        onChange={() => handleCollarChange(collar.ten)}
-                        checked={selectedCollars.includes(collar.ten)}
-                      />
-                    </Form.Group>
-                  ))}
-                </Accordion.Body>
-              </Accordion.Item>
-
-              <Accordion.Item eventKey="6">
-                <Accordion.Header>Nhà Sản Xuất</Accordion.Header>
-                <Accordion.Body>
-                  {manufacturers.map((manufacturer, index) => (
-                    <Form.Group key={index} className="mb-3" controlId={`manufacturerCheckbox${index}`}>
-                      <Form.Check
-                        type="checkbox"
-                        label={manufacturer.ten}
-                        onChange={() => handleManufacturerChange(manufacturer.ten)}
-                        checked={selectedManufacturers.includes(manufacturer.ten)}
-                      />
-                    </Form.Group>
-                  ))}
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </div>
-        </div> */}
         <div className="col-md-3">
           <h4 style={{ marginBottom: '33px' }}>Bộ Lọc</h4>
           {/* Phần bộ lọc sản phẩm */}
@@ -518,3 +403,111 @@ function ContentSanPham() {
 }
 
 export default ContentSanPham;
+
+ {/* <div className="col-md-3">
+          <h4 style={{ textAlign: 'center', marginBottom: '33px' }}>Bộ Lọc</h4>
+
+          <div style={{}}>
+            <Accordion defaultActiveKey={['0', '1', '3', '4', '5', '6']}>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Giá Tiền</Accordion.Header>
+                <Accordion.Body>
+                  <div className="box col-auto">
+                    <div className="values">
+                      <strong>Khoảng giá:</strong>{' '}
+                      {convertToCurrency(displayedPriceRange[0]) + ' - ' + convertToCurrency(displayedPriceRange[1])}
+                    </div>
+                    <Slider className="slider" onChange={handlePriceRangeChange} value={priceRange} min={MIN} max={maxPrice}></Slider>
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+
+              <Accordion.Item eventKey="1">
+                <Accordion.Header>Màu Sắc</Accordion.Header>
+                <Accordion.Body>
+                  {colors.map((color, index) => (
+                    <Form.Group key={index} className="color-filter" controlId={`colorCheckbox${index}`}>
+                      <label className="round-checkbox-container">
+                        <input
+                          type="checkbox"
+                          className="round-checkbox"
+                          onChange={() => handleColorChange(color.ten)}
+                          checked={selectedColors.includes(color.ten)}
+                        />
+                        <span className="round-checkmark"></span>
+                      </label>
+                      <Form className="color-code" style={{ backgroundColor: color.ten }} />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+
+              <Accordion.Item eventKey="3">
+                <Accordion.Header>Kích Cỡ</Accordion.Header>
+                <Accordion.Body>
+                  <div className="button-container">
+                    {sizes.map((size, index) => (
+                      <Button
+                        key={index}
+                        variant="secondary"
+                        className="custom-button"
+                        onClick={() => handleSizeChange(size.ten)}
+                        active={selectedSizes.includes(size.ten)}
+                      >
+                        {size.ten}
+                      </Button>
+                    ))}
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+
+              <Accordion.Item eventKey="4">
+                <Accordion.Header>Chất Liệu</Accordion.Header>
+                <Accordion.Body>
+                  {materials.map((material, index) => (
+                    <Form.Group key={index} className="mb-3" controlId={`materialCheckbox${index}`}>
+                      <Form.Check
+                        type="checkbox"
+                        label={material.ten}
+                        onChange={() => handleMaterialChange(material.ten)}
+                        checked={selectedMaterials.includes(material.ten)}
+                      />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+
+              <Accordion.Item eventKey="5">
+                <Accordion.Header>Cổ Áo</Accordion.Header>
+                <Accordion.Body>
+                  {collars.map((collar, index) => (
+                    <Form.Group key={index} className="mb-3" controlId={`collarCheckbox${index}`}>
+                      <Form.Check
+                        type="checkbox"
+                        label={collar.ten}
+                        onChange={() => handleCollarChange(collar.ten)}
+                        checked={selectedCollars.includes(collar.ten)}
+                      />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+
+              <Accordion.Item eventKey="6">
+                <Accordion.Header>Nhà Sản Xuất</Accordion.Header>
+                <Accordion.Body>
+                  {manufacturers.map((manufacturer, index) => (
+                    <Form.Group key={index} className="mb-3" controlId={`manufacturerCheckbox${index}`}>
+                      <Form.Check
+                        type="checkbox"
+                        label={manufacturer.ten}
+                        onChange={() => handleManufacturerChange(manufacturer.ten)}
+                        checked={selectedManufacturers.includes(manufacturer.ten)}
+                      />
+                    </Form.Group>
+                  ))}
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          </div>
+        </div> */}
