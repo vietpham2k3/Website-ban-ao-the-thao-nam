@@ -5,7 +5,7 @@ const taoDonTraHang = (values) => {
 };
 
 const update = (values) => {
-  return axios.put(`/api/tra-hang/update`, values);
+  return axios.put(`/api/doi-hang/update`, values);
 };
 
 const yeuCauTraHang = (id, values) => {

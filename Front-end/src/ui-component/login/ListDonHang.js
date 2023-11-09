@@ -101,6 +101,8 @@ function ListDonHang(props) {
     updateSL(dataHDCT);
   };
 
+  console.log(dataHDCT);
+
   // const nhanDonHang = async (id, value) => {
   //   const res = await nhanHang(id, value);
   //   if (res) {

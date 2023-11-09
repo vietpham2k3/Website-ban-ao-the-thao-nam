@@ -14,14 +14,14 @@ function ModalTraHang(props) {
   const handleChange = (e, i) => {
     // Cập nhật số lượng vào sản phẩm d
     const updatedDataHDCT = [...dataHDCT];
-    updatedDataHDCT[i].soLuongHangTra = e;
+    updatedDataHDCT[i].soLuongHangDoi = e;
     setDataHDCT(updatedDataHDCT);
     setIsUpdate(true);
     let sum = 0;
     let count = 0;
     updatedDataHDCT.forEach((d) => {
-      sum += d.soLuongHangTra * d.donGia;
-      count += d.soLuongHangTra;
+      sum += d.soLuongHangDoi * d.donGia;
+      count += d.soLuongHangDoi;
     });
     setValuesTH({
       ...valuesTH,
@@ -63,7 +63,7 @@ function ModalTraHang(props) {
                   max={d.soLuong}
                   min={0}
                   step={1}
-                  value={d.soLuongHangTra || 0} // Sử dụng counts[i] thay vì count
+                  value={d.soLuongHangDoi || 0} // Sử dụng counts[i] thay vì count
                   onChange={(e) => handleChange(e, i)}
                   variant={'dark'}
                   size="sm"
@@ -73,7 +73,7 @@ function ModalTraHang(props) {
                 <p style={{ color: 'red' }}>{convertToCurrency(d.donGia)}</p>
               </div>
               <div className="d-flex align-items-center justify-content-center ms-5">
-                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongHangTra || 0)}</p>
+                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongHangDoi || 0)}</p>
               </div>
             </div>
           ))}
