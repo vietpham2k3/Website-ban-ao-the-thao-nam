@@ -66,20 +66,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
-  const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (value) => {
-            return value / 1000000 + 'M';
-          }
-        }
-      }
-    }
-  };
-
-  const width = 1100;
+  const width = 855;
 
   return (
     <>
