@@ -2,7 +2,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { detailCTSP, getAllProduct, updateSL } from '../../services/SanPhamService';
+import { detailCTSP, getAllProduct } from '../../services/SanPhamService';
 // import { postGH } from 'services/GioHangService';
 import { Card, Image } from 'react-bootstrap';
 import '../../scss/Detail.scss';
@@ -22,8 +22,8 @@ function Detail(props) {
   const [listKC, setListKC] = useState([]);
   const [listMS, setListMS] = useState([]);
   const thumbnailContainerRef = useRef(null);
-  const [detailProduct, setDetailProduct] = useState(null);
-  const [check, setCheck] = useState(false);
+  // const [detailProduct, setDetailProduct] = useState(null);
+  // const [check, setCheck] = useState(false);
   // const [listSanPham, setListSanPham] = useState([]);
   const [selectedIdMSSP, setSelectedIdMSSP] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -32,7 +32,7 @@ function Detail(props) {
   // ms kc
   const [activeIdKCMaMau, setActiveIdKCMaMau] = useState('');
   // eslint-disable-next-line react/prop-types
-  const { setProductCount, productCount, countSP, idGH } = props;
+  const { countSP, idGH } = props;
   const [valuesHDCT, setValuesHDCT] = useState([]);
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
   const [valuesAddGH, setValuesAddGH] = useState({
@@ -56,11 +56,11 @@ function Detail(props) {
     ]);
   }, [idCTSP]);
 
-  useEffect(() => {
-    if (check) {
-      fetchProductDetail(idCTSP);
-    }
-  }, [check]);
+  // useEffect(() => {
+  //   if (check) {
+  //     fetchProductDetail(idCTSP);
+  //   }
+  // }, [check]);
 
   useEffect(() => {
     getAllCTSP();
@@ -124,7 +124,7 @@ function Detail(props) {
   const handleClick2 = (idCTSP, idKCMS) => {
     setActiveIdKCMaMau(idKCMS);
     setIdCTSP(idCTSP);
-    setDetailProduct(product);
+    // setDetailProduct(product);
 
     setValuesAddGH({ ...valuesAddGH, chiTietSanPham: { id: idCTSP } });
   };
@@ -140,13 +140,13 @@ function Detail(props) {
     }
   };
 
-  const putSl = async (idCTSP, soLuong) => {
-    try {
-      await updateSL(idCTSP, soLuong);
-    } catch (error) {
-      // Xử lý lỗi nếu cần
-    }
-  };
+  // const putSl = async (idCTSP, soLuong) => {
+  //   try {
+  //     await updateSL(idCTSP, soLuong);
+  //   } catch (error) {
+  //     // Xử lý lỗi nếu cần
+  //   }
+  // };
 
   const getAllMS = async (id) => {
     const res = await getAllMSByIdSP(id);
@@ -164,7 +164,7 @@ function Detail(props) {
       // localStorage.setItem("idMS",idMS);
       getAllAnh(idMS, idSP);
       setVal(0);
-      setDetailProduct(null);
+      // setDetailProduct(null);
       setActiveIdKCMaMau('');
       // console.log(id);
     }
@@ -212,46 +212,46 @@ function Detail(props) {
     localStorage.setItem('idMS', idMS);
   };
 
-  const handleAddToCart = () => {
-    // Lấy danh sách sản phẩm từ localStorage
-    const storedProducts = JSON.parse(localStorage.getItem('product')) || [];
+  // const handleAddToCart = () => {
+  //   // Lấy danh sách sản phẩm từ localStorage
+  //   const storedProducts = JSON.parse(localStorage.getItem('product')) || [];
 
-    // Tìm sản phẩm có cùng id
-    const existingProduct = storedProducts.find((item) => item.id === product.id);
-    if (detailProduct === null) {
-      toast.error('Vui lòng chọn màu sắc và kích cỡ');
-      return;
-    }
-    if (product.soLuong <= 0) {
-      toast.error('Không thể mua sản phẩm này');
-      return;
-    }
-    if (existingProduct) {
-      // Nếu sản phẩm đã tồn tại, cộng dồn số lượng
-      existingProduct.soLuong += quantity;
-      existingProduct.tongSoLuong = product.soLuong;
-    } else {
-      // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
-      storedProducts.push({
-        id: product.id,
-        kichCo: product.kichCo,
-        sanPham: product.sanPham,
-        mauSac: product.mauSac,
-        donGia: product.giaBan,
-        soLuong: quantity,
-        tongSoLuong: product.soLuong - quantity
-      });
-    }
-    putSl(product.id, product.soLuong - quantity);
-    setCheck(true);
-    fetchProductDetail(idCTSP);
+  //   // Tìm sản phẩm có cùng id
+  //   const existingProduct = storedProducts.find((item) => item.id === product.id);
+  //   if (detailProduct === null) {
+  //     toast.error('Vui lòng chọn màu sắc và kích cỡ');
+  //     return;
+  //   }
+  //   if (product.soLuong <= 0) {
+  //     toast.error('Không thể mua sản phẩm này');
+  //     return;
+  //   }
+  //   if (existingProduct) {
+  //     // Nếu sản phẩm đã tồn tại, cộng dồn số lượng
+  //     existingProduct.soLuong += quantity;
+  //     existingProduct.tongSoLuong = product.soLuong;
+  //   } else {
+  //     // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+  //     storedProducts.push({
+  //       id: product.id,
+  //       kichCo: product.kichCo,
+  //       sanPham: product.sanPham,
+  //       mauSac: product.mauSac,
+  //       donGia: product.giaBan,
+  //       soLuong: quantity,
+  //       tongSoLuong: product.soLuong - quantity
+  //     });
+  //   }
+  //   putSl(product.id, product.soLuong - quantity);
+  //   setCheck(true);
+  //   fetchProductDetail(idCTSP);
 
-    // Lưu danh sách sản phẩm mới vào localStorage
-    localStorage.setItem('product', JSON.stringify(storedProducts));
+  //   // Lưu danh sách sản phẩm mới vào localStorage
+  //   localStorage.setItem('product', JSON.stringify(storedProducts));
 
-    // Cập nhật số lượng sản phẩm trong giỏ hàng
-    setProductCount(productCount + quantity);
-  };
+  //   // Cập nhật số lượng sản phẩm trong giỏ hàng
+  //   setProductCount(productCount + quantity);
+  // };
 
   // const getAll = async (id) => {
   //   try {
@@ -265,19 +265,11 @@ function Detail(props) {
   // };
 
   const handleTaoHoaDon = () => {
-    if (dataLogin && dataLogin.role == 'KH') {
-      taoHoaDon('', valuesHDCT);
-    } else {
-      if (detailProduct === null) {
-        toast.error('Vui lòng chọn màu sắc và kích cỡ');
-        return;
-      }
-      if (product.soLuong <= 0) {
-        toast.error('Không thể mua sản phẩm này');
-        return;
-      }
-      taoHoaDon('', valuesHDCT);
+    if (!dataLogin) {
+      navigate('/login');
+      return;
     }
+    taoHoaDon('', valuesHDCT);
   };
 
   const taoHoaDon = async (nguoiTao, value) => {
@@ -301,6 +293,10 @@ function Detail(props) {
   };
 
   const handleAddToCartGH = () => {
+    if (!dataLogin) {
+      navigate('/login');
+      return;
+    }
     addSPToGH(dataLogin.id, valuesAddGH);
   };
 
@@ -490,7 +486,7 @@ function Detail(props) {
                 </div>
               </div>
               <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={!dataLogin ? handleAddToCart : handleAddToCartGH}>
+                <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCartGH}>
                   Thêm vào giỏ hàng
                 </button>
                 <button className="add-to-cart1 btn btn-default" type="button" onClick={handleTaoHoaDon}>

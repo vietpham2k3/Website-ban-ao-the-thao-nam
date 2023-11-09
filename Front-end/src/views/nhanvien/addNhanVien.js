@@ -20,7 +20,6 @@ function AddNhanVien() {
   });
 
   const closeModal = () => {
-
     setModalShow(false);
     getAllVaiTro();
     setValuesVT({
@@ -267,7 +266,6 @@ function AddNhanVien() {
         />
       </Card>
     </MainCard>
-
   );
 }
 

@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TraHang;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.repository.TraHangRepository;
 import com.example.demo.service.TraHangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class TraHangServiceImpl implements TraHangService {
     private TraHangRepository repository;
 
     @Override
-    public TraHang add(TraHang traHang) {
+    public DoiHang add(DoiHang traHang) {
         return repository.save(traHang);
     }
 }

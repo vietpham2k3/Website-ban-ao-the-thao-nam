@@ -24,8 +24,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@Table(name = "TraHang")
-public class TraHang {
+@Table(name = "DoiHang")
+public class DoiHang {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,14 +35,14 @@ public class TraHang {
     @Column(name = "ma")
     private String ma;
 
-    @Column(name = "so_hang_tra")
-    private Integer soHangTra;
+    @Column(name = "so_hang_doi")
+    private Integer soHangDoi;
 
-    @Column(name = "tien_can_tra")
-    private Double tienCanTra;
+    @Column(name = "trang_thai")
+    private Integer trangThai;
 
-    @Column(name = "tien_tra")
-    private Double tienTra;
+    @Column(name = "tong_tien_hang_doi")
+    private Double tongTienHangDoi;
 
     @Column(name = "ghi_chu")
     private String ghiChu;
@@ -50,12 +50,7 @@ public class TraHang {
     @Column(name = "ngay_tao")
     private Date ngayTao;
 
-    @Column(name = "ngay_sua")
-    private Date ngaySua;
-
     @Column(name = "nguoi_tao")
     private String nguoiTao;
 
-    @Column(name = "nguoi_sua")
-    private String nguoiSua;
 }
