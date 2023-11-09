@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useEffect } from 'react';
-import { requestHuyDon, nhanHang, searchByTrangThai } from 'services/ServiceDonHang';
+import { requestHuyDon, searchByTrangThai } from 'services/ServiceDonHang';
 import '../../scss/CheckOut.scss';
 import Button from 'react-bootstrap/Button';
 import ButtonMUI from '@mui/material/Button';
@@ -101,18 +101,18 @@ function ListDonHang(props) {
     updateSL(dataHDCT);
   };
 
-  const nhanDonHang = async (id, value) => {
-    const res = await nhanHang(id, value);
-    if (res) {
-      toast.success('Nhận đơn hàng thành công !');
-      setShow(false);
-      searchByTT(dataLogin.id, data.trangThai);
-      setGhiChu();
-      tabs.forEach((d) => {
-        size(dataLogin.id, d.trangThai);
-      });
-    }
-  };
+  // const nhanDonHang = async (id, value) => {
+  //   const res = await nhanHang(id, value);
+  //   if (res) {
+  //     toast.success('Nhận đơn hàng thành công !');
+  //     setShow(false);
+  //     searchByTT(dataLogin.id, data.trangThai);
+  //     setGhiChu();
+  //     tabs.forEach((d) => {
+  //       size(dataLogin.id, d.trangThai);
+  //     });
+  //   }
+  // };
 
   const handleClose = () => {
     setShow(false);
@@ -133,9 +133,9 @@ function ListDonHang(props) {
     setId(id);
   };
 
-  const handleNhanDonHang = (id) => {
-    nhanDonHang(id, ghiChu);
-  };
+  // const handleNhanDonHang = (id) => {
+  //   nhanDonHang(id, ghiChu);
+  // };
 
   const handleHuyDon = () => {
     if (!ghiChu.ghiChu) {
@@ -236,11 +236,11 @@ function ListDonHang(props) {
                       setDataHDCT(d.hoaDonChiTiet);
                     }}
                   >
-                    Trả hàng/Hoàn tiền
+                    Đổi hàng
                   </ButtonMUI>
-                  <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
+                  {/* <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
                     Nhận hàng
-                  </ButtonMUI>
+                  </ButtonMUI> */}
                 </>
               )}
               {d.hoaDon.trangThai === 0 || d.hoaDon.trangThai === 6 ? (

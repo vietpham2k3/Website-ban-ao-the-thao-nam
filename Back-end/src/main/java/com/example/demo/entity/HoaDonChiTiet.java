@@ -39,7 +39,7 @@ public class HoaDonChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_th", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private TraHang traHang;
+    private DoiHang doiHang;
 
     @ManyToOne
     @JoinColumn(name = "id_ctsp", referencedColumnName = "id")
@@ -52,7 +52,7 @@ public class HoaDonChiTiet {
     @Column(name = "so_luong")
     private Integer soLuong;
 
-    @Column(name = "so_luong_hang_tra")
-    private Integer soLuongHangTra;
+    @Column(name = "so_luong_hang_doi")
+    private Integer soLuongHangDoi;
 
 }

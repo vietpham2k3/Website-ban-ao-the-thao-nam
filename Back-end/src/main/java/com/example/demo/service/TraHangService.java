@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.TraHang;
+import com.example.demo.entity.DoiHang;
 
 public interface TraHangService {
 
-    TraHang add(TraHang traHang);
+    DoiHang add(DoiHang traHang);
 }

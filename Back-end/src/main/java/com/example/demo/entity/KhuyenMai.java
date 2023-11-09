@@ -83,4 +83,7 @@ public class KhuyenMai {
 
     @Column(name = "nguoi_sua")
     private String nguoiSua;
+
+    @Column(name = "loai_giam")
+    private String loaiGiam;
 }
