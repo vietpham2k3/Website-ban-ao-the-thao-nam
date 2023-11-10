@@ -30,12 +30,6 @@ public class DoiHangController {
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
-        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
-            if (hoaDonChiTiet.getSoLuongHangDoi() == 0) {
-                hoaDonChiTiet.setDoiHang(null);
-            }
-        }
-
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
         return ResponseEntity.ok("ok");
     }

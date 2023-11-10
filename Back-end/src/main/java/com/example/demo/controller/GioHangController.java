@@ -169,17 +169,29 @@ public class GioHangController {
         boolean isValid = false;
         List<HoaDon_KhuyenMai> listHD = hoaDon_khuyenMaiService.getAll(khuyenMai.getHoaDon().getId());
         for (HoaDon_KhuyenMai h : listHD) {
-            if (khuyenMai.getKhuyenMai().getMa().equals(h.getKhuyenMai().getMa())) {
+            if (khuyenMai.getKhuyenMai().getMa().equalsIgnoreCase(h.getKhuyenMai().getMa())) {
                 return ResponseEntity.ok("ff");
             }
+        }
+        double sum = 0;
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAll(khuyenMai.getHoaDon().getId());
+        for (HoaDonChiTiet hoaDonChiTiet : listHDCT) {
+            sum += hoaDonChiTiet.getSoLuong() * hoaDonChiTiet.getDonGia();
         }
 
         for (KhuyenMai k : list) {
             if (khuyenMai.getKhuyenMai().getMa().equalsIgnoreCase(k.getMa())) {
-                khuyenMai.setTienGiam(k.getMucGiam());
-                khuyenMai.setKhuyenMai(k);
-                isValid = true;
-                break;
+                if (k.getLoaiGiam() == true) {
+                    khuyenMai.setTienGiam(k.getMucGiam());
+                    khuyenMai.setKhuyenMai(k);
+                    isValid = true;
+                    break;
+                } else {
+                    khuyenMai.setTienGiam((k.getMucGiam() * sum) / 100);
+                    khuyenMai.setKhuyenMai(k);
+                    isValid = true;
+                    break;
+                }
             }
         }
 
@@ -187,8 +199,8 @@ public class GioHangController {
             return ResponseEntity.ok("error");
         }
 
-        hoaDon_khuyenMaiService.add(khuyenMai);
-        return ResponseEntity.ok("Thành công");
+
+        return ResponseEntity.ok(hoaDon_khuyenMaiService.add(khuyenMai));
     }
 
 

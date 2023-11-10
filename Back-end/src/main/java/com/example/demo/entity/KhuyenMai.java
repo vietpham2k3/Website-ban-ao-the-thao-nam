@@ -86,5 +86,5 @@ public class KhuyenMai {
     private String nguoiSua;
 
     @Column(name = "loai_giam")
-    private String loaiGiam;
+    private Boolean loaiGiam;
 }

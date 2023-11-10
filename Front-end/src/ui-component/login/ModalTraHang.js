@@ -10,15 +10,28 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
+import ButtonMUI from '@mui/material/Button';
 
 function ModalTraHang(props) {
-  const { show, handleClose, dataHDCT, convertToCurrency, setValuesTH, valuesTH, setDataHDCT, handleTraHang, setIsUpdate, listLyDo } =
-    props;
+  const {
+    show,
+    handleClose,
+    dataHDCT,
+    convertToCurrency,
+    setValuesTH,
+    valuesTH,
+    setDataHDCT,
+    handleTraHang,
+    setIsUpdate,
+    listLyDo,
+    dataSPDoi,
+    handleOpen
+  } = props;
   const [value, setValue] = useState('');
 
   const handleChange = (e, i) => {
     // Cập nhật số lượng vào sản phẩm d
-    const updatedDataHDCT = [...dataHDCT];
+    let updatedDataHDCT = [...dataHDCT];
     updatedDataHDCT[i].soLuongHangDoi = e;
     setDataHDCT(updatedDataHDCT);
     setIsUpdate(true);
@@ -27,6 +40,27 @@ function ModalTraHang(props) {
     updatedDataHDCT.forEach((d) => {
       sum += d.soLuongHangDoi * d.donGia;
       count += d.soLuongHangDoi;
+    });
+    setValuesTH({
+      ...valuesTH,
+      trangThai: 15,
+      tienTra: sum,
+      tienCanTra: sum,
+      soHangTra: count
+    });
+  };
+
+  const handleChangeHD = (e, i) => {
+    // Cập nhật số lượng vào sản phẩm d
+    let updatedDataHDCT = [...dataHDCT];
+    updatedDataHDCT[i].soLuongYeuCauDoi = e;
+    setDataHDCT(updatedDataHDCT);
+    setIsUpdate(true);
+    let sum = 0;
+    let count = 0;
+    updatedDataHDCT.forEach((d) => {
+      sum += d.soLuongYeuCauDoi * d.donGia;
+      count += d.soLuongYeuCauDoi;
     });
     setValuesTH({
       ...valuesTH,
@@ -73,7 +107,49 @@ function ModalTraHang(props) {
                   max={d.soLuong}
                   min={0}
                   step={1}
-                  value={d.soLuongHangDoi || 0} // Sử dụng counts[i] thay vì count
+                  value={d.soLuongYeuCauDoi || 0} // Sử dụng counts[i] thay vì count
+                  onChange={(e) => handleChangeHD(e, i)}
+                  variant={'dark'}
+                  size="sm"
+                />
+              </div>
+              <div className="d-flex align-items-center justify-content-center ms-5">
+                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia)}</p>
+              </div>
+              <div className="d-flex align-items-center justify-content-center ms-5">
+                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongYeuCauDoi || 0)}</p>
+              </div>
+            </div>
+          ))}
+          <hr />
+          <ButtonMUI variant="contained" onClick={handleOpen}>
+            Chọn sản phẩm
+          </ButtonMUI>
+          {dataSPDoi.map((d, i) => (
+            <div key={i} className="d-flex">
+              <div className="me-3 mb-3" style={{}}>
+                <img
+                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                  alt=""
+                  style={{ width: 120, borderRadius: 15 }}
+                />
+              </div>
+              <div className="mt-3" style={{ width: 200 }}>
+                <p>
+                  {d.chiTietSanPham.sanPham.ten}
+                  <br />
+                  {d.chiTietSanPham.kichCo.ten} -{' '}
+                  <span style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, borderRadius: '50%' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </p>
+              </div>
+              <div style={{ width: 130 }} className="d-flex align-items-center justify-content-center ms-5">
+                <InputSpinner
+                  key={d.id}
+                  type={'real'}
+                  max={d.chiTietSanPham.soLuong}
+                  min={0}
+                  step={1}
+                  value={d.soLuongHangDoi || 0}
                   onChange={(e) => handleChange(e, i)}
                   variant={'dark'}
                   size="sm"
@@ -87,8 +163,7 @@ function ModalTraHang(props) {
               </div>
             </div>
           ))}
-          <hr />
-          <FormControl required sx={{ mb: 1, width: '100%' }}>
+          <FormControl required sx={{ mb: 1, mt: 3, width: '100%' }}>
             <InputLabel id="demo-simple-select-required-label">Lý do trả hàng đơn hàng</InputLabel>
             <Select
               labelId="demo-simple-select-required-label"

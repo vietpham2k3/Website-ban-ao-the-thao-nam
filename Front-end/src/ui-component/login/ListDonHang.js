@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
 import { getAll, update, yeuCauTraHang } from 'services/DoiHangService';
 import _ from 'lodash';
+import ModalAddHangDoi from './ModalAddHangDoi';
+import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
+import { getAllByIdSPTT } from 'services/SanPhamService';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
@@ -21,20 +24,36 @@ function ListDonHang(props) {
   const [dataHDCT, setDataHDCT] = useState([]);
   const [dataSPDoi, setDataSPDoi] = useState([]);
   const [dataSP, setDataSP] = useState([]);
+  const [mauSacKC, setMauSacKC] = useState([]);
   const [isShow, setIsshow] = useState(false);
+  const [idCTSP, setIdCTSP] = useState({});
+  const [isShowDH, setIsshowDH] = useState(false);
+  const [isShowMSKC, setIsshowMSKC] = useState(false);
   const [term, setTerm] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
   });
+
   const [valuesTH, setValuesTH] = useState({
     ghiChu: '',
     soHangTra: 0,
-    tienCanTra: 0,
-    tienTra: 0,
-    trangThai: 0
+    tongTienHangDoi: 0,
+    trangThai: 0,
+    nguoiTao: ''
   });
+
+  const [valuesAdd, setValuesAdd] = useState({
+    chiTietSanPham: {
+      id: ''
+    },
+    hoaDon: {
+      id: ''
+    },
+    soLuongHangDoi: ''
+  });
+
   const listLyDo = [
     {
       label: 'Hàng lỗi',
@@ -61,6 +80,12 @@ function ListDonHang(props) {
   useEffect(() => {
     searchByTT(dataLogin.id, data.trangThai);
   }, []);
+
+  useEffect(() => {
+    if (dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id) {
+      findAll(dataHDCT[0].hoaDon.id);
+    }
+  }, [dataHDCT]);
 
   useEffect(() => {
     if (isUpdate) {
@@ -131,6 +156,7 @@ function ListDonHang(props) {
       window.location.reload();
     }
   };
+
   const handleTraHang = () => {
     if (valuesTH.soHangTra <= 0 || valuesTH.lichSuHoaDon.ghiChu === '') {
       toast.warning('Vui lòng nhập số lượng sản phẩm muốn trả');
@@ -140,14 +166,15 @@ function ListDonHang(props) {
   };
 
   const updateSL = async (value) => {
-    await update(value);
+    const res = await update(value);
+    if (res) {
+      findAll(dataHDCT[0].hoaDon.id);
+    }
   };
 
   const handleUpdateSL = () => {
     updateSL(dataHDCT);
   };
-
-  console.log(valuesTH);
 
   // const nhanDonHang = async (id, value) => {
   //   const res = await nhanHang(id, value);
@@ -179,6 +206,24 @@ function ListDonHang(props) {
   const handleOpenModal = (id) => {
     setShow(true);
     setId(id);
+  };
+
+  const handleDetail = (id) => {
+    getAllMSKC(id);
+    setIsshowMSKC(true);
+    setIsshowDH(false);
+  };
+
+  const handleDetailSL = (id) => {
+    setIdCTSP(id);
+    console.log(idCTSP);
+  };
+
+  const getAllMSKC = async (id) => {
+    let res = await getAllByIdSPTT(id);
+    if (res) {
+      setMauSacKC(res.data);
+    }
   };
 
   // const handleNhanDonHang = (id) => {
@@ -316,10 +361,35 @@ function ListDonHang(props) {
         setGhiChu={setGhiChu}
         ghiChu={ghiChu}
         listLyDo={listLyDo}
+        dataSPDoi={dataSPDoi}
+        handleOpen={() => {
+          setIsshow(false);
+          setIsshowDH(true);
+        }}
+      ></ModalTraHang>
+      <ModalAddHangDoi
+        handleClose={() => {
+          setIsshow(true);
+          setIsshowDH(false);
+        }}
+        show={isShowDH}
         setTerm={setTerm}
         term={term}
         dataSP={dataSP}
-      ></ModalTraHang>
+        convertToCurrency={convertToCurrency}
+        handleDetail={handleDetail}
+      ></ModalAddHangDoi>
+      <TableKCMS
+        handleClose={() => {
+          setIsshowMSKC(false);
+          setIsshowDH(true);
+        }}
+        show={isShowMSKC}
+        values={mauSacKC}
+        handleDetail={handleDetailSL}
+        setValuesAdd={setValuesAdd}
+        valuesAdd={valuesAdd}
+      ></TableKCMS>
     </div>
   );
 }

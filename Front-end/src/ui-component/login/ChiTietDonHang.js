@@ -290,7 +290,7 @@ function ChiTietDonHang() {
                   <div className="col-7">&nbsp;</div>
                   <div className="col-5 d-flex justify-content-between">
                     <h6>Tiền giảm:</h6>
-                    <h6>-{convertToCurrency(d.khuyenMai.mucGiam)}</h6>
+                    <h6>-{convertToCurrency(d.tienGiam)}</h6>
                   </div>
                 </div>
               ))}
