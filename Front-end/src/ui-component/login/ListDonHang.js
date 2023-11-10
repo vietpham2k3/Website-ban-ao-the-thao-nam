@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useEffect } from 'react';
-import { requestHuyDon, searchByTrangThai } from 'services/ServiceDonHang';
+import { requestHuyDon, searchByTrangThai, searchCTSPofDH } from 'services/ServiceDonHang';
 import '../../scss/CheckOut.scss';
 import Button from 'react-bootstrap/Button';
 import ButtonMUI from '@mui/material/Button';
@@ -11,28 +11,52 @@ import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
-import { update, yeuCauTraHang } from 'services/TraHangService';
+import { getAll, update, yeuCauTraHang } from 'services/DoiHangService';
+import _ from 'lodash';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [dataHDCT, setDataHDCT] = useState([]);
+  const [dataSPDoi, setDataSPDoi] = useState([]);
+  const [dataSP, setDataSP] = useState([]);
   const [isShow, setIsshow] = useState(false);
+  const [term, setTerm] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
   });
   const [valuesTH, setValuesTH] = useState({
-    lichSuHoaDon: {
-      ghiChu: ''
-    },
+    ghiChu: '',
     soHangTra: 0,
     tienCanTra: 0,
     tienTra: 0,
     trangThai: 0
   });
+  const listLyDo = [
+    {
+      label: 'Hàng lỗi',
+      value: 'Hàng lỗi'
+    },
+    {
+      label: 'Thiếu hàng',
+      value: 'Thiếu hàng'
+    },
+    {
+      label: 'Người bán gửi sai hàng',
+      value: 'Người bán gửi sai hàng'
+    },
+    {
+      label: 'Khác',
+      value: ''
+    }
+  ];
+
+  useEffect(() => {
+    handleSearchSPofDH();
+  }, [term]);
 
   useEffect(() => {
     searchByTT(dataLogin.id, data.trangThai);
@@ -44,6 +68,28 @@ function ListDonHang(props) {
       setIsUpdate(false);
     }
   }, [isUpdate]);
+
+  const searchSPofDH = async (term) => {
+    const res = await searchCTSPofDH(term);
+    if (res) {
+      setDataSP(res.data);
+    }
+  };
+
+  const findAll = async (id) => {
+    const res = await getAll(id);
+    if (res) {
+      setDataSPDoi(res.data);
+    }
+  };
+
+  const handleSearchSPofDH = _.debounce(async () => {
+    if (term) {
+      searchSPofDH(term);
+    } else {
+      searchSPofDH('');
+    }
+  }, []);
 
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
@@ -101,7 +147,7 @@ function ListDonHang(props) {
     updateSL(dataHDCT);
   };
 
-  console.log(dataHDCT);
+  console.log(valuesTH);
 
   // const nhanDonHang = async (id, value) => {
   //   const res = await nhanHang(id, value);
@@ -268,6 +314,11 @@ function ListDonHang(props) {
         handleTraHang={handleTraHang}
         setIsUpdate={setIsUpdate}
         setGhiChu={setGhiChu}
+        ghiChu={ghiChu}
+        listLyDo={listLyDo}
+        setTerm={setTerm}
+        term={term}
+        dataSP={dataSP}
       ></ModalTraHang>
     </div>
   );
