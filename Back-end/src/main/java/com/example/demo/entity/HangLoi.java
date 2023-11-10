@@ -41,4 +41,7 @@ public class HangLoi {
 
     @Column(name = "nguoi_tao")
     private String nguoiTao;
+
+    @Column(name = "ghi_chu")
+    private String ghiChu;
 }

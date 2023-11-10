@@ -17,6 +17,10 @@ const getAllHD = () => {
   return axios.get('/api/hoa-don/hien-thi');
 };
 
+const getAllSPDoiHang = (id) => {
+  return axios.get('/api/hoa-don/hien-thi-sp-doi/' + id);
+};
+
 const getAllSP = () => {
   return axios.get('/api/hoa-don/hien-thi-san-pham');
 };
@@ -169,6 +173,26 @@ const thanhToan = (id, nguoiTao) => {
   return axios.put(`/api/hoa-don/thanh-toan/${id}?nguoiTao=${nguoiTao}`);
 };
 
+const hienThiDoiHang = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-doi-hang/` + id);
+};
+
+const hienThiSPYCDoiHang = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-sp-yeu-cau-doi/` + id);
+};
+
+const hienThiYCDoiHang = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-don-yeu-cau-doi/` + id);
+};
+
+const hienThiHangLoi = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-hang-loi/` + id);
+};
+
+const getAllSPLoi = (id) => {
+  return axios.get('/api/hoa-don/hien-thi-sp-loi/' + id);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
@@ -215,5 +239,11 @@ export {
   giaoThatBaiLan2,
   giaoThatBaiLan3,
   xacNhanTraHang,
-  huyDonTraHang
+  huyDonTraHang,
+  hienThiDoiHang,
+  getAllSPDoiHang,
+  hienThiHangLoi,
+  getAllSPLoi,
+  hienThiSPYCDoiHang,
+  hienThiYCDoiHang
 };

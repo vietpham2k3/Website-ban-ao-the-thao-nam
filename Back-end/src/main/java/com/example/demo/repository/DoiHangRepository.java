@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface DoiHangRepository extends JpaRepository<DoiHang, UUID> {
 
+
 }
