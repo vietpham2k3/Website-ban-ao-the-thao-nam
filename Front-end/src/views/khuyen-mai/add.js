@@ -21,12 +21,41 @@ function AddKhuyenMai() {
     thoiGianBatDau: '',
     thoiGianKetThuc: '',
     moTa: '',
-    trangThai: 0
+    trangThai: 0,
+    loaiGiam: ''
   });
 
-  const handleSubmit = (event) => {
+  const [error, setError] = useState(false);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    post(values);
+
+    if (!values.loaiGiam) {
+      setError(true); // Hiển thị lỗi nếu loại giảm chưa được chọn
+      return;
+    }
+
+    if (values.loaiGiam === '0' && (values.mucGiam < 0 || values.mucGiam > 100)) {
+      setError(true); // Hiển thị lỗi nếu giá trị > 100 khi chọn "%"
+      return;
+    }
+
+    const isValid = !error;
+    if (isValid) {
+      await post(values); // Gọi hàm post nếu dữ liệu hợp lệ
+    }
+  };
+
+  const handleLoaiGiamChange = (event) => {
+    const loaiGiam = event.target.value;
+    setValues({ ...values, loaiGiam });
+    setError(false); // Reset lỗi khi loại giảm được chọn
+  };
+
+  const handleMucGiamChange = (event) => {
+    const mucGiam = event.target.value;
+    setValues({ ...values, mucGiam });
+    setError(false); // Reset lỗi khi giá trị thay đổi
   };
 
   const post = async (value) => {
@@ -71,81 +100,96 @@ function AddKhuyenMai() {
                   onChange={(event) => setValues({ ...values, ten: event.target.value })}
                 />
               </div>
-            </div>
 
-            <div className="row">
-              <div className="col-12">
-                <label htmlFor="a" className="form-label">
+              <div className="col-md-6" style={{ paddingTop: 10 }}>
+                <label htmlFor="a" className="form-label" style={{ display: 'flex' }}>
                   Mức giảm:
+                  <div className="form-check" style={{ marginLeft: 15, marginRight: 15 }}>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="1"
+                      checked={values.loaiGiam === '1'}
+                      onChange={handleLoaiGiamChange}
+                    />
+                    <label htmlFor="a" className="form-check-label">
+                      Tiền giảm
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value="0"
+                      checked={values.loaiGiam === '0'}
+                      onChange={handleLoaiGiamChange}
+                    />
+                    <label htmlFor="a" className="form-check-label">
+                      % giảm
+                    </label>
+                  </div>
                 </label>
                 <input
                   className="form-control"
                   type="number"
                   value={values.mucGiam}
-                  onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
+                  onChange={handleMucGiamChange}
+                  disabled={!values.loaiGiam} // Disable nếu loại giảm không được chọn
+                />
+                {error && (
+                  <div className="alert alert-danger">
+                    {values.loaiGiam === '0' ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
+                  </div>
+                )}
+              </div>
+
+              <div className="col-md-6" style={{ paddingTop: 10 }}>
+                <label htmlFor="a" className="form-label">
+                  Tối thiểu:
+                </label>
+                <input
+                  className="form-control"
+                  type="number"
+                  value={values.tien}
+                  onChange={(event) => setValues({ ...values, tien: event.target.value })}
+                />
+              </div>
+
+              <div className="col-md-6" style={{ paddingTop: 10 }}>
+                <label htmlFor="a" className="form-label">
+                  Thời gian bắt đầu:
+                </label>
+                <input
+                  className="form-control"
+                  type="datetime-local"
+                  value={values.thoiGianBatDau}
+                  onChange={(event) => setValues({ ...values, thoiGianBatDau: event.target.value })}
+                />
+              </div>
+
+              <div className="col-md-6" style={{ paddingTop: 10 }}>
+                <label htmlFor="a" className="form-label">
+                  Thời gian kết thúc:
+                </label>
+                <input
+                  className="form-control"
+                  type="datetime-local"
+                  value={values.thoiGianKetThuc}
+                  onChange={(event) => setValues({ ...values, thoiGianKetThuc: event.target.value })}
+                />
+              </div>
+
+              <div className="col-md-6" style={{ paddingTop: 10 }}>
+                <label htmlFor="a" className="form-label">
+                  Mô tả:
+                </label>
+                <textarea
+                  className="form-control"
+                  value={values.moTa}
+                  onChange={(event) => setValues({ ...values, moTa: event.target.value })}
                 />
               </div>
             </div>
-
-            <div className="col-md-12">
-              <label htmlFor="a" className="form-label">
-                Tối thiểu:
-              </label>
-              <input
-                className="form-control"
-                type="number"
-                value={values.tien}
-                onChange={(event) => setValues({ ...values, tien: event.target.value })}
-              />
-            </div>
-
-            <div className="col-md-12">
-              <label htmlFor="a" className="form-label">
-                Thời gian bắt đầu:
-              </label>
-              <input
-                className="form-control"
-                type="datetime-local"
-                value={values.thoiGianBatDau}
-                onChange={(event) => setValues({ ...values, thoiGianBatDau: event.target.value })}
-              />
-            </div>
-
-            <div className="col-md-12">
-              <label htmlFor="a" className="form-label">
-                Thời gian kết thúc:
-              </label>
-              <input
-                className="form-control"
-                type="datetime-local"
-                value={values.thoiGianKetThuc}
-                onChange={(event) => setValues({ ...values, thoiGianKetThuc: event.target.value })}
-              />
-            </div>
-
-            <div className="col-md-12">
-              <label htmlFor="a" className="form-label">
-                Mô tả:
-              </label>
-              <textarea
-                className="form-control"
-                value={values.moTa}
-                onChange={(event) => setValues({ ...values, moTa: event.target.value })}
-              />
-            </div>
-
-            {/* <div className="col-md-6">
-                  <label>
-                    Trạng thái:
-                    <select
-                      value={trangThai}
-                      onChange={(event) => setTrangThai(event.target.value)}
-                    >
-                      <option value="0">Hoạt động</option>
-                      <option value="1">Không hoạt động</option>
-                    </select>
-                  </label>
-                </div> */}
             <br></br>
             <div className="col-12">
               <Button type="submit" variant="primary">
