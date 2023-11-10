@@ -57,8 +57,6 @@ function ListDonHang(props) {
     }
   });
 
-  console.log(valuesAdd);
-
   const listLyDo = [
     {
       label: 'Hàng lỗi',
@@ -122,6 +120,9 @@ function ListDonHang(props) {
 
       // Cập nhật state với dữ liệu đã lọc
       setDataSP(filteredData);
+      if (!term) {
+        setDataSP([]);
+      }
     }
   };
 
@@ -133,10 +134,8 @@ function ListDonHang(props) {
   };
 
   const handleSearchSPofDH = _.debounce(async () => {
-    if (term) {
-      searchSPofDH(term, totalAmount); // Truyền giá trị totalAmount vào hàm searchSPofDH
-    }
-  }, [totalAmount, term]);
+    searchSPofDH(term, totalAmount); // Truyền giá trị totalAmount vào hàm searchSPofDH
+  }, []);
 
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
