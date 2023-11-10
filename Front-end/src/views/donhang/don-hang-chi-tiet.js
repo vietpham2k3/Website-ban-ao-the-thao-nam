@@ -2,17 +2,30 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
 import { toast } from 'react-toastify';
 import '../../scss/TimeLine.scss';
 import '../../scss/TableMSKC.scss';
 import '../../scss/SearchResult.scss';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+// import Paper from '@mui/material/Paper';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 import { detailCTSP, getAllByIdSPTT } from 'services/SanPhamService';
 import Modal from 'react-bootstrap/Modal';
 import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
-import { getTP, getQH, getP, getFee, getServices } from 'services/ApiGHNService';
+import { getTP, getQH, getP } from 'services/ApiGHNService';
 import {
   detailHD,
   detailLSHD,
@@ -37,7 +50,7 @@ import {
   giaoThatBaiLan3,
   xacNhanTraHang,
   huyDonTraHang,
-  nhanHang
+  hienThiDoiHang
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -357,17 +370,17 @@ function DonHangCT() {
     }
   }, [idCTSP]);
 
-  useEffect(() => {
-    if (valuesServices.to_district !== 0) {
-      getService(valuesServices);
-    }
-  }, [valuesServices]);
+  // useEffect(() => {
+  //   if (valuesServices.to_district !== 0) {
+  //     getService(valuesServices);
+  //   }
+  // }, [valuesServices]);
 
-  useEffect(() => {
-    if (valuesFee.service_id !== 0) {
-      fee(valuesFee);
-    }
-  }, [valuesFee.to_ward_code]);
+  // useEffect(() => {
+  //   if (valuesFee.service_id !== 0) {
+  //     fee(valuesFee);
+  //   }
+  // }, [valuesFee.to_ward_code]);
 
   const detail2 = async (idCTSP) => {
     const res = await detailCTSP(idCTSP);
@@ -859,27 +872,27 @@ function DonHangCT() {
   };
 
   // xac nhan nhan hang
-  const [lshd25, setLshd25] = useState({
-    ghiChu: '',
-    nguoiTao: dataLogin && dataLogin.ten
-  });
+  // const [lshd25, setLshd25] = useState({
+  //   ghiChu: '',
+  //   nguoiTao: dataLogin && dataLogin.ten
+  // });
 
-  const xacNhanNhanHang = async (id, value) => {
-    const res = await nhanHang(id, value);
-    if (res) {
-      toast.success('Cập nhật thành công !');
-      detail(id);
-      detailListLSHD(id);
-    }
-  };
+  // const xacNhanNhanHang = async (id, value) => {
+  //   const res = await nhanHang(id, value);
+  //   if (res) {
+  //     toast.success('Cập nhật thành công !');
+  //     detail(id);
+  //     detailListLSHD(id);
+  //   }
+  // };
 
-  const handleXacNhanNhanHang = async (event) => {
-    event.preventDefault();
-    setLshd25({
-      ...lshd25
-    });
-    await xacNhanNhanHang(id, lshd25);
-  };
+  // const handleXacNhanNhanHang = async (event) => {
+  //   event.preventDefault();
+  //   setLshd25({
+  //     ...lshd25
+  //   });
+  //   await xacNhanNhanHang(id, lshd25);
+  // };
 
   // apiGHN
 
@@ -950,10 +963,10 @@ function DonHangCT() {
     //   to_district_id: parseInt(event.target.value, 10)
     // });
     getPhuong(districtId);
-    setValuesFee({
-      ...valuesFee,
-      to_district_id: parseInt(event.target.value, 10)
-    });
+    // setValuesFee({
+    //   ...valuesFee,
+    //   to_district_id: parseInt(event.target.value, 10)
+    // });
     const selectedProvinceId = event.target.value;
     const selectedProvince = quan.find((province) => province.DistrictID === parseInt(selectedProvinceId, 10));
 
@@ -968,18 +981,18 @@ function DonHangCT() {
   };
 
   const handleWardChange = (event) => {
-    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+    // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
     setSelectedWard(event.target.value);
-    setValuesFee({
-      ...valuesFee,
-      insurance_value: totalAmount,
-      to_ward_code: event.target.value
-    });
+    // setValuesFee({
+    //   ...valuesFee,
+    //   insurance_value: totalAmount,
+    //   to_ward_code: event.target.value
+    // });
     // setTgDuKien({
     //   ...tgDuKien,
     //   to_ward_code: event.target.value
     // });
-    setTongTienKhiGiam(totalAmount - totalGiam + hoaDon.tienShip);
+    // setTongTienKhiGiam(totalAmount - totalGiam + hoaDon.tienShip);
     const selectedProvinceId = event.target.value;
     const selectedProvince = phuong.find((province) => province.WardCode === selectedProvinceId);
 
@@ -993,38 +1006,38 @@ function DonHangCT() {
     }
   };
 
-  const getService = async (value) => {
-    try {
-      const res = await getServices(value);
-      if (res) {
-        setValuesFee({
-          ...valuesFee,
-          service_id: res.data.data[0].service_id
-        });
-        // setTgDuKien({
-        //   ...tgDuKien,
-        //   service_id: res.data.data[0].service_id
-        // });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getService = async (value) => {
+  //   try {
+  //     const res = await getServices(value);
+  //     if (res) {
+  //       setValuesFee({
+  //         ...valuesFee,
+  //         service_id: res.data.data[0].service_id
+  //       });
+  //       // setTgDuKien({
+  //       //   ...tgDuKien,
+  //       //   service_id: res.data.data[0].service_id
+  //       // });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const fee = async (value) => {
-    try {
-      const res = await getFee(value);
-      if (res) {
-        const total = res.data.data.total;
-        setHoaDon({
-          ...hoaDon,
-          tienShip: total
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const fee = async (value) => {
+  //   try {
+  //     const res = await getFee(value);
+  //     if (res) {
+  //       const total = res.data.data.total;
+  //       setHoaDon({
+  //         ...hoaDon,
+  //         tienShip: total
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   function convertToCurrency(number) {
     // Chuyển đổi số thành định dạng tiền Việt Nam
@@ -1281,6 +1294,43 @@ function DonHangCT() {
       In hóa đơn
     </Tooltip>
   );
+
+  const handleTienShipChange = async (e) => {
+    if (e) {
+      const value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        if (value < 0) {
+          // Nếu nhỏ hơn 0, đặt giá trị thành 0
+          setHoaDon({ ...hoaDon, tienShip: value });
+          updateHD(id, { ...hoaDon, tienShip: value });
+        } else {
+          // Nếu không, cập nhật giá trị trong state
+          setHoaDon({ ...hoaDon, tienShip: value });
+          updateHD(id, { ...hoaDon, tienShip: value });
+        }
+      }
+    }
+  };
+
+  console.log(hoaDon.tienShip);
+
+  ///hàng doi
+  const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    hienThiDonDoi(id);
+  }, [id]);
+
+  const [donDoi,setDonDoi] = useState([]);
+
+  const hienThiDonDoi = async (id) => {
+    const res = await hienThiDoiHang(id);
+    if (res && res.data) {
+      setDonDoi(res.data);
+    }
+  };
+
+  console.log(donDoi);
 
   return (
     <>
@@ -2154,7 +2204,7 @@ function DonHangCT() {
                   </button>
                 )}
                 {/* //xac nhan tra hang  */}
-                {hoaDon.trangThai === 4 && (
+                {/* {hoaDon.trangThai === 4 && (
                   <button onClick={handleXacNhanNhanHang} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -2166,7 +2216,7 @@ function DonHangCT() {
                       data-rounded="rounded-lg"
                     ></span>
                   </button>
-                )}
+                )} */}
               </div>
               {/* //modal*/}
               {/* //xac nhan don hang */}
@@ -3844,7 +3894,187 @@ function DonHangCT() {
             </div>
           </div>
         </Card>
+        <br></br>
+        <br></br>
+        <Card>
+          <div className="w-auto rounded bg-white border shadow p-4">
+            <div className="row">
+              <div className="col-12">
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }} className="card-box">
+                  <div style={{ display: 'flex', justifyContent: 'start' }} className="col-7">
+                    <h3 className="col-6" style={{ fontWeight: 'bold', color: 'brown' }}>
+                      Thông Tin Đổi Hàng
+                    </h3>
+                    <div className="col-1">
+                      <div className=" justify-content-end">
+                        <button
+                          onClick={() => navigate('/don-hang')}
+                          className="btn fa-khenh "
+                          data-bs-placement="right"
+                          data-bs-title="Trở về đơn hàng"
+                        >
+                          <i style={{ color: 'darkblue' }} className="fa-solid fa-person-walking-arrow-loop-left fa-xl"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div className="col-5">
+                    <div style={{ display: 'flex', justifyContent: 'end' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            {/* //table */}
+
+<div>
+<TableContainer style={{ width: '100%' }}>
+  <Table>
+  <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Mã: </TableCell>
+            <TableCell >Tiền Hàng: </TableCell>
+            <TableCell >Số Hàng Đổi: </TableCell>
+            <TableCell >Trạng Thái: </TableCell>
+            <TableCell >Ngày Tạo: </TableCell>
+            <TableCell >Người Tạo: </TableCell>
+            <TableCell >Ghi Chú: </TableCell>
+          </TableRow>
+        </TableHead>
+    <TableBody>
+      {donDoi.map((n, index) => {
+        const sizeData = n.split(',');
+        const ma = sizeData[0];
+        const tien = sizeData[1];
+        const soHangDoi = sizeData[2];
+        const trangThai = sizeData[3];
+        const ngayTao = sizeData[4];
+        const nguoiTao = sizeData[5];
+        const ghiChu = sizeData[6];
+
+        return (
+          <React.Fragment key={index}>
+            <TableRow>
+            <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+              <TableCell component="th" scope="row">
+               {ma}
+              </TableCell>
+              <TableCell >{tien}</TableCell>
+              <TableCell >{soHangDoi}</TableCell>
+              <TableCell >{trangThai}</TableCell>
+              <TableCell >{formatDate(ngayTao)}</TableCell>
+              <TableCell >{nguoiTao}</TableCell>
+              <TableCell >{ghiChu}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                  <Box sx={{ margin: 1 }}>
+                    <Typography variant="h6" gutterBottom component="div">
+                      Hàng Đổi
+                    </Typography>
+                    <Table size="small" aria-label="purchases">
+                    <tr>
+                  <th style={{ paddingLeft: 5 }}>#</th>
+                  <th style={{ paddingLeft: 5 }}>Mã</th>
+                  <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                  <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                  <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                  <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                  <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
+                </tr>
+                <tbody>
+                  {valuesSanPham.map((d, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{d.chiTietSanPham.sanPham.ma}</td>
+                      <td>
+                        <img
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                          className="product-image"
+                          style={{ width: '70px', height: '100px' }}
+                          alt="vai"
+                        />
+                      </td>
+                      <td>
+                        <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                        <br />
+                        <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                        <span
+                          className="color-circle"
+                          style={{
+                            backgroundColor: d.chiTietSanPham.mauSac.ten,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            height: '15px',
+                            width: '15px'
+                          }}
+                        ></span>
+                      </td>
+                      <td>
+                        <div className="input-spinner" style={{ width: 120 }}>
+                          {(hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && hoaDon.loaiDon === 1 ? (
+                            <InputSpinner
+                              type={'real'}
+                              max={d.chiTietSanPham.soLuong + d.soLuong}
+                              min={1}
+                              key={d.id}
+                              step={1}
+                              value={d.soLuong}
+                              onChange={(e) => {
+                                handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e);
+                              }}
+                              variant={'dark'}
+                              size="sm"
+                            />
+                          ) : (
+                            <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>{d.soLuong}</span>
+                          )}
+                        </div>
+                        {d.chiTietSanPham.soLuong < 10 && hoaDon.trangThai === 0 ? (
+                          <span style={{ color: 'red' }}>
+                            Số sản phẩm còn lại: <strong>{d.chiTietSanPham.soLuong}</strong>
+                          </span>
+                        ) : (
+                          ''
+                        )}
+                      </td>
+                      <td>{convertToCurrency(d.donGia)}</td>
+                      <td>{convertToCurrency(d.soLuong * d.donGia)}</td>
+                      <td>
+                        {hoaDon.loaiDon === 1 && (hoaDon.trangThai === 0 || hoaDon.trangThai === 1) && (
+                          <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                    </Table>
+                  </Box>
+                </Collapse>
+              </TableCell>
+            </TableRow>
+          </React.Fragment>
+        );
+      })}
+    </TableBody>
+  </Table>
+</TableContainer>
+
+</div>
+           
+          </div>
+        </Card>
         <br></br>
         <br></br>
         <Card>
@@ -4111,37 +4341,56 @@ function DonHangCT() {
 
               <br></br>
 
-              {hoaDon && hoaDon.tienShip !== 0 && (
-                <Container style={{ display: 'flex', justifyContent: 'end' }}>
-                  <Row style={{ marginBottom: 10 }}>
-                    <Col sm={12} className="row">
-                      <Col sm={6}>
-                        <span
+              {/* {hoaDon && hoaDon.tienShip !== 0 && ( */}
+              <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                <Row style={{ marginBottom: 10 }}>
+                  <Col sm={12} className="row">
+                    <Col sm={6}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: '100px',
+                          fontSize: '15px',
+                          fontWeight: 'bold',
+                          paddingTop: 20
+                        }}
+                      >
+                        Phí ship:
+                      </span>
+                    </Col>
+                    <Col sm={6}>
+                      {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ? (
+                        <TextField
+                          id="standard-basic"
+                          label="Tiền ship"
+                          variant="standard"
                           style={{
                             display: 'inline-block',
                             width: '100px',
                             fontSize: '15px',
                             fontWeight: 'bold'
                           }}
-                        >
-                          Phí ship:
-                        </span>
-                      </Col>
-                      <Col sm={6}>
+                          type="number"
+                          value={hoaDon.tienShip}
+                          onChange={handleTienShipChange}
+                        />
+                      ) : (
                         <span
                           style={{
                             display: 'inline-block',
                             width: '100px',
-                            fontSize: '15px'
+                            fontSize: '15px',
+                            paddingTop: 20
                           }}
                         >
                           {convertToCurrency(hoaDon.tienShip)}
                         </span>
-                      </Col>
+                      )}
                     </Col>
-                  </Row>
-                </Container>
-              )}
+                  </Col>
+                </Row>
+              </Container>
+              {/* )} */}
               <br></br>
 
               {dataHDKM && dataHDKM.length > 0 && (

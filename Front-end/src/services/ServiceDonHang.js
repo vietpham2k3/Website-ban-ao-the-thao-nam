@@ -169,6 +169,10 @@ const thanhToan = (id, nguoiTao) => {
   return axios.put(`/api/hoa-don/thanh-toan/${id}?nguoiTao=${nguoiTao}`);
 };
 
+const hienThiDoiHang = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-doi-hang/` + id);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
@@ -215,5 +219,6 @@ export {
   giaoThatBaiLan2,
   giaoThatBaiLan3,
   xacNhanTraHang,
-  huyDonTraHang
+  huyDonTraHang,
+  hienThiDoiHang
 };

@@ -62,6 +62,16 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceHD.listHD());
     }
 
+    @GetMapping("hien-thi-doi-hang/{id}")
+    public ResponseEntity<?> getAll2(@PathVariable UUID id) {
+        return ResponseEntity.ok(serviceHD.listDoiHang(id));
+    }
+
+    @GetMapping("hien-thi-sp-doi/{id}")
+    public ResponseEntity<?> getAllSPDoiById(@PathVariable UUID id) {
+        return ResponseEntity.ok(serviceHD.getAllSPDoiHang(id));
+    }
+
     @GetMapping("hien-thi-san-pham")
     public ResponseEntity<?> getAllSP() {
         return ResponseEntity.ok(serviceHD.getAllSP());

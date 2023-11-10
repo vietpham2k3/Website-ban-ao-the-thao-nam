@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.repository.ChiTietSanPhamRepository;
 import com.example.demo.repository.HoaDonRespository;
 import com.example.demo.response.HoaDonCustom;
@@ -25,6 +27,16 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public List<HoaDon> listHD() {
         return res.getAllHD();
+    }
+
+    @Override
+    public List<String> listDoiHang(UUID idHD) {
+        return res.doiHang(idHD);
+    }
+
+    @Override
+    public List<HoaDonChiTiet> getAllSPDoiHang(UUID idHD) {
+        return res.getAllSPDoiHang(idHD);
     }
 
     @Override
