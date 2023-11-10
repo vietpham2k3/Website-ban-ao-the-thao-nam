@@ -20,7 +20,7 @@ const TableKCMS = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ width: '150%' }}>
+        <Modal.Body style={{ width: '100%' }}>
           <div className="body-add-new">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -51,7 +51,7 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
-                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuongHangDoi: e.target.value })}
               />
             </div>
           </div>

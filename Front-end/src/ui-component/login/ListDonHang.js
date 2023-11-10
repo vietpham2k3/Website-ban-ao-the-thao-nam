@@ -26,7 +26,7 @@ function ListDonHang(props) {
   const [dataSP, setDataSP] = useState([]);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [isShow, setIsshow] = useState(false);
-  const [idCTSP, setIdCTSP] = useState({});
+  // const [idCTSP, setIdCTSP] = useState({});
   const [isShowDH, setIsshowDH] = useState(false);
   const [isShowMSKC, setIsshowMSKC] = useState(false);
   const [term, setTerm] = useState('');
@@ -54,6 +54,8 @@ function ListDonHang(props) {
     soLuongHangDoi: ''
   });
 
+  console.log(valuesAdd);
+
   const listLyDo = [
     {
       label: 'Hàng lỗi',
@@ -76,6 +78,15 @@ function ListDonHang(props) {
   useEffect(() => {
     handleSearchSPofDH();
   }, [term]);
+
+  useEffect(() => {
+    setValuesAdd({
+      ...valuesAdd,
+      hoaDon: {
+        id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+      }
+    });
+  }, [isShowDH]);
 
   useEffect(() => {
     searchByTT(dataLogin.id, data.trangThai);
@@ -215,8 +226,13 @@ function ListDonHang(props) {
   };
 
   const handleDetailSL = (id) => {
-    setIdCTSP(id);
-    console.log(idCTSP);
+    // setIdCTSP(id);
+    setValuesAdd({
+      ...valuesAdd,
+      chiTietSanPham: {
+        id: id
+      }
+    });
   };
 
   const getAllMSKC = async (id) => {
