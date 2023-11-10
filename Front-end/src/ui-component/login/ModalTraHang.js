@@ -18,14 +18,15 @@ function ModalTraHang(props) {
     handleClose,
     dataHDCT,
     convertToCurrency,
-    setValuesTH,
-    valuesTH,
     setDataHDCT,
-    handleTraHang,
     setIsUpdate,
     listLyDo,
     dataSPDoi,
-    handleOpen
+    handleOpen,
+    valuesAdd,
+    setValuesAdd,
+    dataLogin,
+    setTotalAmount
   } = props;
   const [value, setValue] = useState('');
 
@@ -41,12 +42,16 @@ function ModalTraHang(props) {
       sum += d.soLuongHangDoi * d.donGia;
       count += d.soLuongHangDoi;
     });
-    setValuesTH({
-      ...valuesTH,
-      trangThai: 15,
-      tienTra: sum,
-      tienCanTra: sum,
-      soHangTra: count
+    setTotalAmount(sum);
+    setValuesAdd({
+      ...valuesAdd,
+      doiHang: {
+        ...valuesAdd.doiHang,
+        trangThai: 15,
+        tongTienHangDoi: sum,
+        soHangDoi: count,
+        nguoiTao: dataLogin.ten
+      }
     });
   };
 
@@ -62,12 +67,16 @@ function ModalTraHang(props) {
       sum += d.soLuongYeuCauDoi * d.donGia;
       count += d.soLuongYeuCauDoi;
     });
-    setValuesTH({
-      ...valuesTH,
-      trangThai: 15,
-      tienTra: sum,
-      tienCanTra: sum,
-      soHangTra: count
+    setTotalAmount(sum);
+    setValuesAdd({
+      ...valuesAdd,
+      doiHang: {
+        ...valuesAdd.doiHang,
+        trangThai: 15,
+        tongTienHangDoi: sum,
+        soHangDoi: count,
+        nguoiTao: dataLogin.tenKhachHang
+      }
     });
   };
 
@@ -171,7 +180,7 @@ function ModalTraHang(props) {
               value={value || 'Khác'} // Nếu ghiChu không có giá trị hoặc không khớp với bất kỳ label nào, sử dụng 'Khác'
               label="Lý do trả hàng đơn hàng *"
               onChange={(e) => {
-                setValuesTH({ ...valuesTH, ghiChu: e.target.value });
+                setValuesAdd({ ...valuesAdd, doiHang: { ...valuesAdd.doiHang, ghiChu: e.target.value } });
                 setValue(e.target.value);
               }}
             >
@@ -182,12 +191,12 @@ function ModalTraHang(props) {
               ))}
             </Select>
           </FormControl>
-          {(value === 'Khác' || valuesTH.ghiChu === '') && (
+          {(value === 'Khác' || valuesAdd.doiHang.ghiChu === '') && (
             <TextField
               style={{ width: '100%' }}
               label="Lý do trả hàng đơn hàng"
               variant="outlined"
-              onChange={(e) => setValuesTH({ ...valuesTH, ghiChu: e.target.value })}
+              onChange={(e) => setValuesAdd({ ...valuesAdd, doiHang: { ...valuesAdd.doiHang, ghiChu: e.target.value } })}
             />
           )}
         </Modal.Body>
@@ -195,9 +204,7 @@ function ModalTraHang(props) {
           <Button variant="secondary" onClick={handleClose}>
             Huỷ
           </Button>
-          <Button variant="primary" onClick={handleTraHang}>
-            Xác nhận
-          </Button>
+          <Button variant="primary">Xác nhận</Button>
         </Modal.Footer>
       </Modal>
     </div>

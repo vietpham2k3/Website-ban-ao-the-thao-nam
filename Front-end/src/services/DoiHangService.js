@@ -16,4 +16,8 @@ const yeuCauTraHang = (id, values) => {
   return axios.post(`/api/tra-hang/yeu-cau-tra-hang/${id}`, values);
 };
 
-export { taoDonTraHang, update, yeuCauTraHang, getAll };
+const addSPToDH = (values) => {
+  return axios.post(`/api/doi-hang/add-sp`, values);
+};
+
+export { taoDonTraHang, update, yeuCauTraHang, getAll, addSPToDH };

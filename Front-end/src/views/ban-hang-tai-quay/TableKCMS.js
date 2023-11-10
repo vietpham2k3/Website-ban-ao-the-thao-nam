@@ -35,7 +35,7 @@ const TableKCMS = (props) => {
                     id={d.id}
                     value={d.id}
                     // checked={d.id === dataDetail.id}
-                    onChange={() => handleDetail(d.id)}
+                    onChange={() => handleDetail(d.id, d.giaBan)}
                   />
                   <label className="form-check-label custom-label" htmlFor={d.id}>
                     <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>&nbsp;- {d.kichCo.ten} -{' '}
@@ -51,7 +51,9 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
-                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuongHangDoi: e.target.value })}
+                onChange={(e) =>
+                  setValuesAdd({ ...valuesAdd, hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: e.target.value } })
+                }
               />
             </div>
           </div>

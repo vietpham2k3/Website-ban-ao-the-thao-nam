@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
-import { getAll, update, yeuCauTraHang } from 'services/DoiHangService';
+import { getAll, update } from 'services/DoiHangService';
 import _ from 'lodash';
 import ModalAddHangDoi from './ModalAddHangDoi';
 import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
@@ -24,6 +24,7 @@ function ListDonHang(props) {
   const [dataHDCT, setDataHDCT] = useState([]);
   const [dataSPDoi, setDataSPDoi] = useState([]);
   const [dataSP, setDataSP] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [isShow, setIsshow] = useState(false);
   // const [idCTSP, setIdCTSP] = useState({});
@@ -36,22 +37,24 @@ function ListDonHang(props) {
     ghiChu: ''
   });
 
-  const [valuesTH, setValuesTH] = useState({
-    ghiChu: '',
-    soHangTra: 0,
-    tongTienHangDoi: 0,
-    trangThai: 0,
-    nguoiTao: ''
-  });
-
   const [valuesAdd, setValuesAdd] = useState({
-    chiTietSanPham: {
-      id: ''
+    hoaDonChiTiet: {
+      chiTietSanPham: {
+        id: ''
+      },
+      hoaDon: {
+        id: ''
+      },
+      soLuongHangDoi: 0,
+      donGia: 0
     },
-    hoaDon: {
-      id: ''
-    },
-    soLuongHangDoi: ''
+    doiHang: {
+      soHangDoi: 0,
+      trangThai: 0,
+      ghiChu: '',
+      nguoiTao: '',
+      tongTienHangDoi: 0
+    }
   });
 
   console.log(valuesAdd);
@@ -82,8 +85,11 @@ function ListDonHang(props) {
   useEffect(() => {
     setValuesAdd({
       ...valuesAdd,
-      hoaDon: {
-        id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+      hoaDonChiTiet: {
+        ...valuesAdd.hoaDonChiTiet,
+        hoaDon: {
+          id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+        }
       }
     });
   }, [isShowDH]);
@@ -105,10 +111,17 @@ function ListDonHang(props) {
     }
   }, [isUpdate]);
 
-  const searchSPofDH = async (term) => {
+  const searchSPofDH = async (term, maxSum) => {
     const res = await searchCTSPofDH(term);
     if (res) {
-      setDataSP(res.data);
+      // Lọc dữ liệu nếu cần
+      const filteredData = res.data.filter((item) => {
+        // Điều kiện lọc, ví dụ: chỉ lấy các item có giá trị nhỏ hơn maxSum
+        return item.giaBan < maxSum;
+      });
+
+      // Cập nhật state với dữ liệu đã lọc
+      setDataSP(filteredData);
     }
   };
 
@@ -121,11 +134,9 @@ function ListDonHang(props) {
 
   const handleSearchSPofDH = _.debounce(async () => {
     if (term) {
-      searchSPofDH(term);
-    } else {
-      searchSPofDH('');
+      searchSPofDH(term, totalAmount); // Truyền giá trị totalAmount vào hàm searchSPofDH
     }
-  }, []);
+  }, [totalAmount, term]);
 
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
@@ -158,22 +169,6 @@ function ListDonHang(props) {
         size(dataLogin.id, d.trangThai);
       });
     }
-  };
-
-  const traHang = async (id, soHangTra, tienCanTra, tienTra, trangThai, values) => {
-    const res = await yeuCauTraHang(id, soHangTra, tienCanTra, tienTra, trangThai, values);
-    if (res) {
-      setIsshow(false);
-      window.location.reload();
-    }
-  };
-
-  const handleTraHang = () => {
-    if (valuesTH.soHangTra <= 0 || valuesTH.lichSuHoaDon.ghiChu === '') {
-      toast.warning('Vui lòng nhập số lượng sản phẩm muốn trả');
-      return;
-    }
-    traHang(dataHDCT[0].hoaDon.id, valuesTH);
   };
 
   const updateSL = async (value) => {
@@ -225,12 +220,16 @@ function ListDonHang(props) {
     setIsshowDH(false);
   };
 
-  const handleDetailSL = (id) => {
+  const handleDetailSL = (id, donGia) => {
     // setIdCTSP(id);
     setValuesAdd({
       ...valuesAdd,
-      chiTietSanPham: {
-        id: id
+      hoaDonChiTiet: {
+        ...valuesAdd.hoaDonChiTiet,
+        chiTietSanPham: {
+          id: id
+        },
+        donGia: donGia
       }
     });
   };
@@ -367,12 +366,13 @@ function ListDonHang(props) {
       <ModalTraHang
         handleClose={handleClose}
         show={isShow}
+        setValuesAdd={setValuesAdd}
+        setTotalAmount={setTotalAmount}
+        dataLogin={dataLogin}
+        valuesAdd={valuesAdd}
         dataHDCT={dataHDCT}
         convertToCurrency={convertToCurrency}
-        setValuesTH={setValuesTH}
-        valuesTH={valuesTH}
         setDataHDCT={setDataHDCT}
-        handleTraHang={handleTraHang}
         setIsUpdate={setIsUpdate}
         setGhiChu={setGhiChu}
         ghiChu={ghiChu}
