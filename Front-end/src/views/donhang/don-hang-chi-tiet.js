@@ -3953,343 +3953,349 @@ function DonHangCT() {
             </div>
           </div>
         </Card>
-        <br></br>
-        <br></br>
-        <Card>
-          <div className="w-auto rounded bg-white border shadow p-4">
-            <div className="row">
-              <div className="col-12">
-                <Box sx={{ width: '100%' }}>
-                  <Tabs onChange={handleChange} value={value} aria-label="Tabs where selection follows focus" selectionFollowsFocus>
-                    <Tab label="Hàng Yêu Cầu Đổi" />
-                    <Tab label="Hàng Đổi" />
-                    <Tab label="Hàng Lỗi" />
-                  </Tabs>
-                </Box>
-              </div>
-            </div>
-            <hr />
-            {/* //table */}
-            {value === 0 && (
-              <TableContainer style={{ width: '100%' }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell />
-                      <TableCell>Mã: </TableCell>
-                      <TableCell>Số Hàng Đổi: </TableCell>
-                      <TableCell>Tiền Hàng: </TableCell>
-                      <TableCell>Trạng Thái: </TableCell>
-                      <TableCell>Ngày Tạo: </TableCell>
-                      <TableCell>Người Tạo: </TableCell>
-                      <TableCell>Ghi Chú: </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {donYCDoi.slice(0, 1).map((n, index) => {
-                      const sizeData = n.split(',');
-                      const ma = sizeData[0];
-                      const tien = sizeData[1];
-                      const soHangDoi = sizeData[2];
-                      const trangThai = sizeData[3];
-                      const ngayTao = sizeData[4];
-                      const nguoiTao = sizeData[5];
-                      const ghiChu = sizeData[6];
 
-                      return (
-                        <React.Fragment key={index}>
-                          <TableRow>
-                            <TableCell>
-                              <IconButton aria-label="expand row" size="small" onClick={() => setOpen3(!open3)}>
-                                {open3 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                              </IconButton>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {ma}
-                            </TableCell>
-                            <TableCell>{soHangDoi}</TableCell>
-                            <TableCell>{convertToCurrency(tien)}</TableCell>
-                            <TableCell>{trangThai === '0' ? 'Đang đổi hàng' : 'Đổi hàng thành công'}</TableCell>
-                            <TableCell>{formatDate(ngayTao)}</TableCell>
-                            <TableCell>{nguoiTao}</TableCell>
-                            <TableCell>{ghiChu}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-                              <Collapse in={open3} timeout="auto" unmountOnExit>
-                                <Box sx={{ margin: 1 }}>
-                                  <Typography variant="h6" gutterBottom component="div">
-                                    Hàng Yêu Cầu Đổi
-                                  </Typography>
-                                  <Table size="small" aria-label="purchases">
-                                    <tr>
-                                      <th style={{ paddingLeft: 5 }}>#</th>
-                                      <th style={{ paddingLeft: 5 }}>Mã</th>
-                                      <th style={{ paddingLeft: 10 }}>Ảnh</th>
-                                      <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
-                                      <th style={{ paddingLeft: 10 }}>Số lượng</th>
-                                      <th style={{ paddingLeft: 5 }}>Đơn giá</th>
-                                      <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
-                                    </tr>
-                                    <tbody>
-                                      {spYCDoi.map((d, i) => (
-                                        <tr key={i}>
-                                          <td>{i + 1}</td>
-                                          <td>{d.chiTietSanPham.sanPham.ma}</td>
-                                          <td>
-                                            <img
-                                              src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                              className="product-image"
-                                              style={{ width: '70px', height: '100px' }}
-                                              alt="vai"
-                                            />
-                                          </td>
-                                          <td>
-                                            <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
-                                            <br />
-                                            <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
-                                            <span
-                                              className="color-circle"
-                                              style={{
-                                                backgroundColor: d.chiTietSanPham.mauSac.ten,
-                                                display: 'inline-block',
-                                                verticalAlign: 'middle',
-                                                height: '15px',
-                                                width: '15px'
-                                              }}
-                                            ></span>
-                                          </td>
-                                          <td>
-                                            <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                              {d.soLuongYeuCauDoi}
-                                            </span>
-                                          </td>
-                                          <td>{convertToCurrency(d.donGia)}</td>
-                                          <td>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </Table>
-                                </Box>
-                              </Collapse>
-                            </TableCell>
-                          </TableRow>
-                        </React.Fragment>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-            {value === 1 && (
-              <TableContainer style={{ width: '100%' }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell />
-                      <TableCell>Mã: </TableCell>
-                      <TableCell>Số Hàng Đổi: </TableCell>
-                      <TableCell>Tiền Hàng: </TableCell>
-                      <TableCell>Trạng Thái: </TableCell>
-                      <TableCell>Ngày Tạo: </TableCell>
-                      <TableCell>Người Tạo: </TableCell>
-                      <TableCell>Ghi Chú: </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {donDoi.slice(0, 1).map((n, index) => {
-                      const sizeData = n.split(',');
-                      const ma = sizeData[0];
-                      const tien = sizeData[1];
-                      const soHangDoi = sizeData[2];
-                      const trangThai = sizeData[3];
-                      const ngayTao = sizeData[4];
-                      const nguoiTao = sizeData[5];
-                      const ghiChu = sizeData[6];
-
-                      return (
-                        <React.Fragment key={index}>
-                          <TableRow>
-                            <TableCell>
-                              <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                              </IconButton>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {ma}
-                            </TableCell>
-                            <TableCell>{soHangDoi}</TableCell>
-                            <TableCell>{convertToCurrency(tien)}</TableCell>
-                            <TableCell>{trangThai === '0' ? 'Đang đổi hàng' : 'Đổi hàng thành công'}</TableCell>
-                            <TableCell>{formatDate(ngayTao)}</TableCell>
-                            <TableCell>{nguoiTao}</TableCell>
-                            <TableCell>{ghiChu}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-                              <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Box sx={{ margin: 1 }}>
-                                  <Typography variant="h6" gutterBottom component="div">
-                                    Hàng Đổi
-                                  </Typography>
-                                  <Table size="small" aria-label="purchases">
-                                    <tr>
-                                      <th style={{ paddingLeft: 5 }}>#</th>
-                                      <th style={{ paddingLeft: 5 }}>Mã</th>
-                                      <th style={{ paddingLeft: 10 }}>Ảnh</th>
-                                      <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
-                                      <th style={{ paddingLeft: 10 }}>Số lượng</th>
-                                      <th style={{ paddingLeft: 5 }}>Đơn giá</th>
-                                      <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
-                                    </tr>
-                                    <tbody>
-                                      {spDoiHang.map((d, i) => (
-                                        <tr key={i}>
-                                          <td>{i + 1}</td>
-                                          <td>{d.chiTietSanPham.sanPham.ma}</td>
-                                          <td>
-                                            <img
-                                              src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                              className="product-image"
-                                              style={{ width: '70px', height: '100px' }}
-                                              alt="vai"
-                                            />
-                                          </td>
-                                          <td>
-                                            <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
-                                            <br />
-                                            <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
-                                            <span
-                                              className="color-circle"
-                                              style={{
-                                                backgroundColor: d.chiTietSanPham.mauSac.ten,
-                                                display: 'inline-block',
-                                                verticalAlign: 'middle',
-                                                height: '15px',
-                                                width: '15px'
-                                              }}
-                                            ></span>
-                                          </td>
-                                          <td>
-                                            <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                              {d.soLuongHangDoi}
-                                            </span>
-                                          </td>
-                                          <td>{convertToCurrency(d.donGia)}</td>
-                                          <td>{convertToCurrency(d.soLuongHangDoi * d.donGia)}</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </Table>
-                                </Box>
-                              </Collapse>
-                            </TableCell>
-                          </TableRow>
-                        </React.Fragment>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-            {value === 2 && (
-              <TableContainer style={{ width: '100%' }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell />
-                      <TableCell>Mã: </TableCell>
-                      <TableCell>Số Hàng Lỗi: </TableCell>
-                      <TableCell>Ngày Tạo: </TableCell>
-                      <TableCell>Người Tạo: </TableCell>
-                      <TableCell>Ghi Chú: </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {donLoi.slice(0, 1).map((l, index) => (
-                      <React.Fragment key={index}>
+        {hoaDon.trangThai === 15 && (
+          <>
+            <br></br>
+            <br></br>
+            <Card>
+              <div className="w-auto rounded bg-white border shadow p-4">
+                <div className="row">
+                  <div className="col-12">
+                    <Box sx={{ width: '100%' }}>
+                      <Tabs onChange={handleChange} value={value} aria-label="Tabs where selection follows focus" selectionFollowsFocus>
+                        <Tab label="Hàng Yêu Cầu Đổi" />
+                        <Tab label="Hàng Đổi" />
+                        <Tab label="Hàng Lỗi" />
+                      </Tabs>
+                    </Box>
+                  </div>
+                </div>
+                <hr />
+                {/* //table */}
+                {value === 0 && (
+                  <TableContainer style={{ width: '100%' }}>
+                    <Table>
+                      <TableHead>
                         <TableRow>
-                          <TableCell>
-                            <IconButton aria-label="expand row" size="small" onClick={() => setOpen2(!open2)}>
-                              {open2 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                            </IconButton>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {l.ma}
-                          </TableCell>
-                          <TableCell>{l.soHangLoi}</TableCell>
-                          <TableCell>{formatDate(l.ngayTao)}</TableCell>
-                          <TableCell>{l.nguoiTao}</TableCell>
-                          <TableCell>{l.ghiChu}</TableCell>
+                          <TableCell />
+                          <TableCell>Mã: </TableCell>
+                          <TableCell>Số Hàng Đổi: </TableCell>
+                          <TableCell>Tiền Hàng: </TableCell>
+                          <TableCell>Trạng Thái: </TableCell>
+                          <TableCell>Ngày Tạo: </TableCell>
+                          <TableCell>Người Tạo: </TableCell>
+                          <TableCell>Ghi Chú: </TableCell>
                         </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {donYCDoi.slice(0, 1).map((n, index) => {
+                          const sizeData = n.split(',');
+                          const ma = sizeData[0];
+                          const tien = sizeData[1];
+                          const soHangDoi = sizeData[2];
+                          const trangThai = sizeData[3];
+                          const ngayTao = sizeData[4];
+                          const nguoiTao = sizeData[5];
+                          const ghiChu = sizeData[6];
+
+                          return (
+                            <React.Fragment key={index}>
+                              <TableRow>
+                                <TableCell>
+                                  <IconButton aria-label="expand row" size="small" onClick={() => setOpen3(!open3)}>
+                                    {open3 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                  {ma}
+                                </TableCell>
+                                <TableCell>{soHangDoi}</TableCell>
+                                <TableCell>{convertToCurrency(tien)}</TableCell>
+                                <TableCell>{trangThai === '0' ? 'Đang đổi hàng' : 'Đổi hàng thành công'}</TableCell>
+                                <TableCell>{formatDate(ngayTao)}</TableCell>
+                                <TableCell>{nguoiTao}</TableCell>
+                                <TableCell>{ghiChu}</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+                                  <Collapse in={open3} timeout="auto" unmountOnExit>
+                                    <Box sx={{ margin: 1 }}>
+                                      <Typography variant="h6" gutterBottom component="div">
+                                        Hàng Yêu Cầu Đổi
+                                      </Typography>
+                                      <Table size="small" aria-label="purchases">
+                                        <tr>
+                                          <th style={{ paddingLeft: 5 }}>#</th>
+                                          <th style={{ paddingLeft: 5 }}>Mã</th>
+                                          <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                                          <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                                          <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                                          <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                                          <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
+                                        </tr>
+                                        <tbody>
+                                          {spYCDoi.map((d, i) => (
+                                            <tr key={i}>
+                                              <td>{i + 1}</td>
+                                              <td>{d.chiTietSanPham.sanPham.ma}</td>
+                                              <td>
+                                                <img
+                                                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                                                  className="product-image"
+                                                  style={{ width: '70px', height: '100px' }}
+                                                  alt="vai"
+                                                />
+                                              </td>
+                                              <td>
+                                                <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                                                <br />
+                                                <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                                                <span
+                                                  className="color-circle"
+                                                  style={{
+                                                    backgroundColor: d.chiTietSanPham.mauSac.ten,
+                                                    display: 'inline-block',
+                                                    verticalAlign: 'middle',
+                                                    height: '15px',
+                                                    width: '15px'
+                                                  }}
+                                                ></span>
+                                              </td>
+                                              <td>
+                                                <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
+                                                  {d.soLuongYeuCauDoi}
+                                                </span>
+                                              </td>
+                                              <td>{convertToCurrency(d.donGia)}</td>
+                                              <td>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </Table>
+                                    </Box>
+                                  </Collapse>
+                                </TableCell>
+                              </TableRow>
+                            </React.Fragment>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+                {value === 1 && (
+                  <TableContainer style={{ width: '100%' }}>
+                    <Table>
+                      <TableHead>
                         <TableRow>
-                          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-                            <Collapse in={open2} timeout="auto" unmountOnExit>
-                              <Box sx={{ margin: 1 }}>
-                                <Typography variant="h6" gutterBottom component="div">
-                                  Hàng Lỗi
-                                </Typography>
-                                <Table size="small" aria-label="purchases">
-                                  <tr>
-                                    <th style={{ paddingLeft: 5 }}>#</th>
-                                    <th style={{ paddingLeft: 5 }}>Mã</th>
-                                    <th style={{ paddingLeft: 10 }}>Ảnh</th>
-                                    <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
-                                    <th style={{ paddingLeft: 10 }}>Số lượng</th>
-                                    <th style={{ paddingLeft: 5 }}>Đơn giá</th>
-                                    <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
-                                  </tr>
-                                  <tbody>
-                                    {spLoi.map((d, i) => (
-                                      <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{d.chiTietSanPham.sanPham.ma}</td>
-                                        <td>
-                                          <img
-                                            src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                            className="product-image"
-                                            style={{ width: '70px', height: '100px' }}
-                                            alt="vai"
-                                          />
-                                        </td>
-                                        <td>
-                                          <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
-                                          <br />
-                                          <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
-                                          <span
-                                            className="color-circle"
-                                            style={{
-                                              backgroundColor: d.chiTietSanPham.mauSac.ten,
-                                              display: 'inline-block',
-                                              verticalAlign: 'middle',
-                                              height: '15px',
-                                              width: '15px'
-                                            }}
-                                          ></span>
-                                        </td>
-                                        <td>
-                                          <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                            {d.soLuongHangLoi}
-                                          </span>
-                                        </td>
-                                        <td>{convertToCurrency(d.donGia)}</td>
-                                        <td>{convertToCurrency(d.soLuongHangLoi * d.donGia)}</td>
+                          <TableCell />
+                          <TableCell>Mã: </TableCell>
+                          <TableCell>Số Hàng Đổi: </TableCell>
+                          <TableCell>Tiền Hàng: </TableCell>
+                          <TableCell>Trạng Thái: </TableCell>
+                          <TableCell>Ngày Tạo: </TableCell>
+                          <TableCell>Người Tạo: </TableCell>
+                          <TableCell>Ghi Chú: </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {donDoi.slice(0, 1).map((n, index) => {
+                          const sizeData = n.split(',');
+                          const ma = sizeData[0];
+                          const tien = sizeData[1];
+                          const soHangDoi = sizeData[2];
+                          const trangThai = sizeData[3];
+                          const ngayTao = sizeData[4];
+                          const nguoiTao = sizeData[5];
+                          const ghiChu = sizeData[6];
+
+                          return (
+                            <React.Fragment key={index}>
+                              <TableRow>
+                                <TableCell>
+                                  <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                  {ma}
+                                </TableCell>
+                                <TableCell>{soHangDoi}</TableCell>
+                                <TableCell>{convertToCurrency(tien)}</TableCell>
+                                <TableCell>{trangThai === '0' ? 'Đang đổi hàng' : 'Đổi hàng thành công'}</TableCell>
+                                <TableCell>{formatDate(ngayTao)}</TableCell>
+                                <TableCell>{nguoiTao}</TableCell>
+                                <TableCell>{ghiChu}</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+                                  <Collapse in={open} timeout="auto" unmountOnExit>
+                                    <Box sx={{ margin: 1 }}>
+                                      <Typography variant="h6" gutterBottom component="div">
+                                        Hàng Đổi
+                                      </Typography>
+                                      <Table size="small" aria-label="purchases">
+                                        <tr>
+                                          <th style={{ paddingLeft: 5 }}>#</th>
+                                          <th style={{ paddingLeft: 5 }}>Mã</th>
+                                          <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                                          <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                                          <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                                          <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                                          <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
+                                        </tr>
+                                        <tbody>
+                                          {spDoiHang.map((d, i) => (
+                                            <tr key={i}>
+                                              <td>{i + 1}</td>
+                                              <td>{d.chiTietSanPham.sanPham.ma}</td>
+                                              <td>
+                                                <img
+                                                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                                                  className="product-image"
+                                                  style={{ width: '70px', height: '100px' }}
+                                                  alt="vai"
+                                                />
+                                              </td>
+                                              <td>
+                                                <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                                                <br />
+                                                <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                                                <span
+                                                  className="color-circle"
+                                                  style={{
+                                                    backgroundColor: d.chiTietSanPham.mauSac.ten,
+                                                    display: 'inline-block',
+                                                    verticalAlign: 'middle',
+                                                    height: '15px',
+                                                    width: '15px'
+                                                  }}
+                                                ></span>
+                                              </td>
+                                              <td>
+                                                <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
+                                                  {d.soLuongHangDoi}
+                                                </span>
+                                              </td>
+                                              <td>{convertToCurrency(d.donGia)}</td>
+                                              <td>{convertToCurrency(d.soLuongHangDoi * d.donGia)}</td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </Table>
+                                    </Box>
+                                  </Collapse>
+                                </TableCell>
+                              </TableRow>
+                            </React.Fragment>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+                {value === 2 && (
+                  <TableContainer style={{ width: '100%' }}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell />
+                          <TableCell>Mã: </TableCell>
+                          <TableCell>Số Hàng Lỗi: </TableCell>
+                          <TableCell>Ngày Tạo: </TableCell>
+                          <TableCell>Người Tạo: </TableCell>
+                          <TableCell>Ghi Chú: </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {donLoi.slice(0, 1).map((l, index) => (
+                          <React.Fragment key={index}>
+                            <TableRow>
+                              <TableCell>
+                                <IconButton aria-label="expand row" size="small" onClick={() => setOpen2(!open2)}>
+                                  {open2 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                {l.ma}
+                              </TableCell>
+                              <TableCell>{l.soHangLoi}</TableCell>
+                              <TableCell>{formatDate(l.ngayTao)}</TableCell>
+                              <TableCell>{l.nguoiTao}</TableCell>
+                              <TableCell>{l.ghiChu}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+                                <Collapse in={open2} timeout="auto" unmountOnExit>
+                                  <Box sx={{ margin: 1 }}>
+                                    <Typography variant="h6" gutterBottom component="div">
+                                      Hàng Lỗi
+                                    </Typography>
+                                    <Table size="small" aria-label="purchases">
+                                      <tr>
+                                        <th style={{ paddingLeft: 5 }}>#</th>
+                                        <th style={{ paddingLeft: 5 }}>Mã</th>
+                                        <th style={{ paddingLeft: 10 }}>Ảnh</th>
+                                        <th style={{ paddingLeft: 6 }}>Sản phẩm</th>
+                                        <th style={{ paddingLeft: 10 }}>Số lượng</th>
+                                        <th style={{ paddingLeft: 5 }}>Đơn giá</th>
+                                        <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
                                       </tr>
-                                    ))}
-                                  </tbody>
-                                </Table>
-                              </Box>
-                            </Collapse>
-                          </TableCell>
-                        </TableRow>
-                      </React.Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-          </div>
-        </Card>
+                                      <tbody>
+                                        {spLoi.map((d, i) => (
+                                          <tr key={i}>
+                                            <td>{i + 1}</td>
+                                            <td>{d.chiTietSanPham.sanPham.ma}</td>
+                                            <td>
+                                              <img
+                                                src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                                                className="product-image"
+                                                style={{ width: '70px', height: '100px' }}
+                                                alt="vai"
+                                              />
+                                            </td>
+                                            <td>
+                                              <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
+                                              <br />
+                                              <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
+                                              <span
+                                                className="color-circle"
+                                                style={{
+                                                  backgroundColor: d.chiTietSanPham.mauSac.ten,
+                                                  display: 'inline-block',
+                                                  verticalAlign: 'middle',
+                                                  height: '15px',
+                                                  width: '15px'
+                                                }}
+                                              ></span>
+                                            </td>
+                                            <td>
+                                              <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
+                                                {d.soLuongHangLoi}
+                                              </span>
+                                            </td>
+                                            <td>{convertToCurrency(d.donGia)}</td>
+                                            <td>{convertToCurrency(d.soLuongHangLoi * d.donGia)}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </Table>
+                                  </Box>
+                                </Collapse>
+                              </TableCell>
+                            </TableRow>
+                          </React.Fragment>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </div>
+            </Card>
+          </>
+        )}
+
         <br></br>
         <br></br>
         <Card>
