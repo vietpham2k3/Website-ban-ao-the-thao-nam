@@ -15,7 +15,9 @@ public interface HoaDonService {
 
     List<String> listDoiHang(UUID idHD);
 
-    List<HoaDonChiTiet> getAllSPDoiHang(UUID idHD);
+    List<HoaDonChiTiet> listYCDoiHang(UUID idHD);
+
+    List<String> YCDoiHang(UUID idHD);
 
     List<HoaDon> searchByTrangThai(Integer[] trangThai, UUID idKH);
 

@@ -100,13 +100,21 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     List<String> doiHang(@Param("idHD") UUID idHD);
 
     @Query(value = "SELECT\n" +
-            "  * \n" +
+            "  DH.ma,\n" +
+            "  ISNULL(DH.tong_tien_hang_doi, '') as tong_tien_hang_doi,\n" +
+            "  ISNULL(DH.so_hang_doi, '') as so_hang_doi,\n" +
+            "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
+            "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
+            "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
             "FROM\n" +
-            "  HoaDonChiTiet HDCT " +
-            "WHERE\n" +
-            "  id_hd = :id AND \n" +
-            "  id_th IS NOT NULL\n", nativeQuery = true)
-    List<HoaDonChiTiet> getAllSPDoiHang(UUID id);
+            "  DoiHang DH\n" +
+            "JOIN\n" +
+            "  HoaDonChiTiet HDCT ON DH.id = HDCT.id_th\n" +
+            "WHERE id_hd = :idHD \n" +
+            "AND id_th IS NOT NULL\n" +
+            "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL", nativeQuery = true)
+    List<String> doiHangYC(@Param("idHD") UUID idHD);
 
     @Query(value = "SELECT\n" +
             "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_ngay_hien_tai\n" +

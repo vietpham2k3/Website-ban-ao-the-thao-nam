@@ -55,4 +55,9 @@ public class HoaDonChiTiet {
     @Column(name = "so_luong_hang_doi")
     private Integer soLuongHangDoi;
 
+    @Column(name = "so_luong_hang_loi")
+    private Integer soLuongHangLoi;
+
+    @Column(name = "so_luong_yeu_cau_doi")
+    private Integer soLuongYeuCauDoi;
 }

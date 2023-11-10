@@ -56,6 +56,10 @@ public class HoaDonController {
     private KhachHangServiceImpl khService;
     @Autowired
     private NhanVienServiceImpl nvService;
+    @Autowired
+    public DoiHangServiceImpl doiHangService;
+    @Autowired
+    public HangLoiServiceImpl hangLoiService;
 
     @GetMapping("hien-thi")
     public ResponseEntity<?> getAll() {
@@ -67,9 +71,29 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceHD.listDoiHang(id));
     }
 
+    @GetMapping("hien-thi-don-yeu-cau-doi/{id}")
+    public ResponseEntity<?> getAll3(@PathVariable UUID id) {
+        return ResponseEntity.ok(serviceHD.YCDoiHang(id));
+    }
+
+    @GetMapping("hien-thi-sp-yeu-cau-doi/{id}")
+    public ResponseEntity<?> getAllHangYCDoiById(@PathVariable UUID id) {
+        return ResponseEntity.ok(serviceHD.listYCDoiHang(id));
+    }
+
     @GetMapping("hien-thi-sp-doi/{id}")
     public ResponseEntity<?> getAllSPDoiById(@PathVariable UUID id) {
-        return ResponseEntity.ok(serviceHD.getAllSPDoiHang(id));
+        return ResponseEntity.ok(doiHangService.getAll(id));
+    }
+
+    @GetMapping("hien-thi-hang-loi/{id}")
+    public ResponseEntity<?> getAllHangLoiById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hangLoiService.thongTinHangLoi(id));
+    }
+
+    @GetMapping("hien-thi-sp-loi/{id}")
+    public ResponseEntity<?> getAllSPLoiById(@PathVariable UUID id) {
+        return ResponseEntity.ok(hangLoiService.spLoi(id));
     }
 
     @GetMapping("hien-thi-san-pham")
@@ -397,7 +421,7 @@ public class HoaDonController {
 
     @PostMapping("xac-nhan-tra-hang/{id}")
     public ResponseEntity<?> xacNhanTra(@PathVariable UUID id,
-                                         @RequestBody LichSuHoaDon lichSuHoaDon) {
+                                        @RequestBody LichSuHoaDon lichSuHoaDon) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
@@ -414,7 +438,7 @@ public class HoaDonController {
 
     @PostMapping("huy-don-tra-hang/{id}")
     public ResponseEntity<?> huyDonTra(@PathVariable UUID id,
-                                        @RequestBody LichSuHoaDon lichSuHoaDon) {
+                                       @RequestBody LichSuHoaDon lichSuHoaDon) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
@@ -458,7 +482,7 @@ public class HoaDonController {
 
 
     @PostMapping("xac-nhan")
-    public ResponseEntity<?> xacNhan(@RequestBody List<UUID> ids,@RequestParam String nguoiTao) {
+    public ResponseEntity<?> xacNhan(@RequestBody List<UUID> ids, @RequestParam String nguoiTao) {
         List<LichSuHoaDon> lichSuHoaDonList = new ArrayList<>();
 
         for (UUID id : ids) {
@@ -500,7 +524,7 @@ public class HoaDonController {
 
 
     @PostMapping("huy-don")
-    public ResponseEntity<?> huyDon(@RequestBody List<UUID> ids,@RequestParam String nguoiTao) {
+    public ResponseEntity<?> huyDon(@RequestBody List<UUID> ids, @RequestParam String nguoiTao) {
         List<LichSuHoaDon> lichSuHoaDonList = new ArrayList<>();
 
         for (UUID id : ids) {
@@ -529,7 +553,6 @@ public class HoaDonController {
                 lichSuHoaDon.setTen("Đã hủy đơn hàng");
 
 
-
                 lichSuHoaDonList.add(lichSuHoaDon);
             }
         }
@@ -544,7 +567,7 @@ public class HoaDonController {
 
     @PostMapping("request-huy-don/{id}")
     public ResponseEntity<?> requestHuyDon(@PathVariable UUID id,
-                                      @RequestBody LichSuHoaDon lichSuHoaDon) {
+                                           @RequestBody LichSuHoaDon lichSuHoaDon) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
@@ -561,7 +584,7 @@ public class HoaDonController {
 
     @PostMapping("nhan-hang/{id}")
     public ResponseEntity<?> nhanHang(@PathVariable UUID id,
-                                    @RequestBody LichSuHoaDon lichSuHoaDon) {
+                                      @RequestBody LichSuHoaDon lichSuHoaDon) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
