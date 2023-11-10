@@ -498,8 +498,6 @@ function DonHang(props) {
     }
   };
 
-  console.log(valuesSanPham);
-
   const getKM = async (tien) => {
     const res = await getAllKM(tien);
     if (res) {

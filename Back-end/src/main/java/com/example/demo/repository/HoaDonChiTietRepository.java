@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 
     @Query(value = "select h from HoaDonChiTiet h where h.hoaDon.id = :id")
     List<HoaDonChiTiet> getAll(UUID id);
+
+
+    @Query(value = "SELECT *\n" +
+            "FROM HoaDonChiTiet\n" +
+            "WHERE id_hd = :id\n" +
+            "  AND id_th IS NOT NULL;", nativeQuery = true)
+    List<HoaDonChiTiet> getAllByIdHDAndIdTH(UUID id);
 
     @Query(value = "select h from HoaDonChiTiet h where h.chiTietSanPham = :chiTietSanPham and h.hoaDon = :hoaDon ")
     List<HoaDonChiTiet> existsById(ChiTietSanPham chiTietSanPham, HoaDon hoaDon);

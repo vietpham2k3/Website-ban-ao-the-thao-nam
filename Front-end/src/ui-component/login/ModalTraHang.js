@@ -1,15 +1,20 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { TextField } from '@mui/material';
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
 import InputSpinner from 'react-bootstrap-input-spinner';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Tooltip from '@mui/material/Tooltip';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { useState } from 'react';
 
 function ModalTraHang(props) {
-  const { show, handleClose, dataHDCT, convertToCurrency, setValuesTH, valuesTH, setDataHDCT, handleTraHang, setIsUpdate } = props;
+  const { show, handleClose, dataHDCT, convertToCurrency, setValuesTH, valuesTH, setDataHDCT, handleTraHang, setIsUpdate, listLyDo } =
+    props;
+  const [value, setValue] = useState('');
 
   const handleChange = (e, i) => {
     // Cập nhật số lượng vào sản phẩm d
@@ -36,9 +41,14 @@ function ModalTraHang(props) {
     <div>
       <Modal show={show} onHide={handleClose} centered size="lg" keyboard={false} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Trả hàng/Hoàn tiền</Modal.Title>
+          <Modal.Title>
+            Đổi hàng{'   '}
+            <Tooltip title="Bạn chỉ có thể đổi hàng trong vòng 15 ngày" placement="right">
+              <i style={{ fontSize: 16 }} className="fa-regular fa-circle-question"></i>
+            </Tooltip>
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ height: '100%' }}>
           {dataHDCT.map((d, i) => (
             <div key={i} className="d-flex">
               <div className="me-3 mb-3" style={{}}>
@@ -77,12 +87,34 @@ function ModalTraHang(props) {
               </div>
             </div>
           ))}
-          <TextField
-            style={{ width: '100%' }}
-            label="Lý do trả hàng đơn hàng"
-            variant="outlined"
-            onChange={(e) => setValuesTH({ ...valuesTH, lichSuHoaDon: { ghiChu: e.target.value } })}
-          />
+          <hr />
+          <FormControl required sx={{ mb: 1, width: '100%' }}>
+            <InputLabel id="demo-simple-select-required-label">Lý do trả hàng đơn hàng</InputLabel>
+            <Select
+              labelId="demo-simple-select-required-label"
+              id="demo-simple-select-required"
+              value={value || 'Khác'} // Nếu ghiChu không có giá trị hoặc không khớp với bất kỳ label nào, sử dụng 'Khác'
+              label="Lý do trả hàng đơn hàng *"
+              onChange={(e) => {
+                setValuesTH({ ...valuesTH, ghiChu: e.target.value });
+                setValue(e.target.value);
+              }}
+            >
+              {listLyDo.map((d, i) => (
+                <MenuItem key={i} value={d.label}>
+                  {d.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {(value === 'Khác' || valuesTH.ghiChu === '') && (
+            <TextField
+              style={{ width: '100%' }}
+              label="Lý do trả hàng đơn hàng"
+              variant="outlined"
+              onChange={(e) => setValuesTH({ ...valuesTH, ghiChu: e.target.value })}
+            />
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
