@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import '../../scss/SearchResult.scss';

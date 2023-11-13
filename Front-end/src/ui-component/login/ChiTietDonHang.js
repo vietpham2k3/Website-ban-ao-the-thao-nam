@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import SlideBar from 'layout/SlideBar';
 // import '../../scss/information.scss';
 import React from 'react';

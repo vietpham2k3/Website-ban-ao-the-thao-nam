@@ -1,8 +1,5 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import '../../scss/DonHang.scss';
 import { Button, Table } from 'react-bootstrap';

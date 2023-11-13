@@ -99,7 +99,7 @@ const updateSL = (id, soLuong) => {
 };
 
 const findAllProductClient = (values) => {
-  return axios.post(`/api/chi-tiet-san-pham/findAll`,values);
+  return axios.post(`/api/chi-tiet-san-pham/findAll`, values);
 };
 
 export {
