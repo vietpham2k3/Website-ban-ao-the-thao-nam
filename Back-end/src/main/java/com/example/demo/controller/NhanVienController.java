@@ -143,6 +143,7 @@ public class NhanVienController {
         nhanVienRequest.setNguoiSua(nhanVien.getNguoiSua());
         nhanVienRequest.setMatKhau(nhanVien.getMatKhau());
         nhanVienRequest.setVaiTro(VaiTro.builder().id(nhanVien.getId()).build());
+        nhanVienRequest.setGioiTinh(nhanVien.getGioiTinh());
         nhanVienRequest.setTrangThai(nhanVien.getTrangThai());
         nhanVienRequest.setAnh(anhBase64);
 
@@ -152,13 +153,13 @@ public class NhanVienController {
     @PostMapping("/add")
     public ResponseEntity<?> add(
             @RequestParam("anh") MultipartFile anh,
-//                                 @RequestParam("maKhachHang") String maKhachHang,
             @RequestParam("ten") String ten,
             @RequestParam("sdt") String sdt,
             @RequestParam("email") String email,
             @RequestParam("diaChi") String diaChi,
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
             @RequestParam("vaiTro") String vaiTro,
+            @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         NhanVien nv = new NhanVien();
@@ -170,6 +171,7 @@ public class NhanVienController {
         nv.setDiaChi(diaChi);
         nv.setNgaySinh(ngaySinh);
         nv.setVaiTro(VaiTro.builder().id(UUID.fromString(vaiTro)).build());
+        nv.setGioiTinh(gioiTinh);
         nv.setTrangThai(trangThai);
 
         String matKhauMoi = generateRandomPassword(8);
@@ -230,6 +232,7 @@ public class NhanVienController {
                 .nguoiSua(nhanVien.getNguoiSua())
                 .matKhau(nhanVien.getMatKhau())
                 .vaiTro(VaiTro.builder().id(nhanVien.getId()).build())
+                .gioiTinh(nhanVien.getGioiTinh())
                 .trangThai(nhanVien.getTrangThai())
                 .build();
 
@@ -251,7 +254,6 @@ public class NhanVienController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestParam(value = "anh", required = false) MultipartFile anh,
-//                                    @RequestParam("maKhachHang") String maKhachHang,
                                     @RequestParam("ten") String ten,
                                     @RequestParam("sdt") String sdt,
                                     @RequestParam("email") String email,
@@ -259,6 +261,7 @@ public class NhanVienController {
                                     @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                     @RequestParam("matKhau") String matKhau,
                                     @RequestParam("vaiTro") String vaiTro,
+                                    @RequestParam("gioiTinh") Boolean gioiTinh,
                                     @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         NhanVien nv = service.getOne(id);
@@ -270,6 +273,7 @@ public class NhanVienController {
         nv.setNgaySinh(ngaySinh);
         nv.setMatKhau(matKhau);
         nv.setVaiTro(VaiTro.builder().id(UUID.fromString(vaiTro)).build());
+        nv.setGioiTinh(gioiTinh);
         nv.setTrangThai(trangThai);
 
         // Check if a file is provided

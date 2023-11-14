@@ -20,10 +20,12 @@ import com.example.demo.service.MauSacService;
 import com.example.demo.service.NhaSanXuatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,13 +79,13 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
     }
 
     @Override
-    public List<String> getKCByIdMSAndIdSP(UUID idMS,UUID idSP) {
-        return repository.getKCByIdMSAndIdSP(idMS,idSP);
+    public List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP) {
+        return repository.getKCByIdMSAndIdSP(idMS, idSP);
     }
 
     @Override
     public List<Anh> findAnhByIdMSAndIdSP(UUID idSP, UUID idMS) {
-        return repository.findAnhByIdMSAndIdSP(idSP,idMS);
+        return repository.findAnhByIdMSAndIdSP(idSP, idMS);
     }
 
     @Override
@@ -158,7 +160,7 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
 
     @Override
     public Page<ChiTietSanPham> pageWeb(Integer page) {
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 15);
         return repository.getAll(pageable);
     }
 
@@ -172,76 +174,38 @@ public class ChiTietSanPhamServiceImpl implements ChiTietSanPhamService {
         if (filterProductClient == null) {
             return null;
         }
-        List<String> msacString = filterProductClient.getListMau();
-        List<MauSac> mauSacs = mauSacService.findByListString(msacString);
-        List<String> chatLieusString = filterProductClient.getListChatLieu();
-        List<ChatLieu> chatLieus = chatLieuService.findByChatLieuString(chatLieusString);
-        List<String> kichCos = filterProductClient.getListSize();
-        List<KichCo> tenKichCo = kichCoService.findByKichCoString(kichCos);
-        List<String> coAoString = filterProductClient.getListCoAo();
-        List<CoAo> coAos = coAoService.findByCoAoString(coAoString);
-        List<String> lsphamString = filterProductClient.getListLoaiSanPham();
-        List<LoaiSanPham> loaiSanPhams = loaiSanPhamService.findByLoaiSanPhamString(lsphamString);
-        List<String> nsxString = filterProductClient.getListNhaSanXuat();
-        List<NhaSanXuat> nhaSanXuats = nhaSanXuatService.findByNhaSanXuatString(nsxString);
-        double greater = filterProductClient.getGiaBanMin();
-        double less = filterProductClient.getGiaBanMax();
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 15);
 
-        Page<ChiTietSanPham> chiTietSanPhams = repository.findAll(pageable);
+        List<ProductDetailClientRespose> chiTietSanPhams = repository.filter(filterProductClient);
+        List<ChiTietSanPham> ctsps = new ArrayList<>();
 
-        if (!mauSacs.isEmpty() && !tenKichCo.isEmpty() && !chatLieus.isEmpty() && !coAos.isEmpty() && !loaiSanPhams.isEmpty() && !nhaSanXuats.isEmpty()) {
-            chiTietSanPhams = repository.findByMauSacInAndChatLieuInAndKichCoInAndCoAoInAndLoaiSanPhamInAndNhaSanXuatInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    mauSacs, chatLieus, tenKichCo, coAos, loaiSanPhams, nhaSanXuats,pageable, greater, less);
-        } else if (!mauSacs.isEmpty() && !tenKichCo.isEmpty()) {
-            chiTietSanPhams = repository.findByMauSacInAndKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    mauSacs, tenKichCo, greater, less, pageable);
-        } else if (!mauSacs.isEmpty() && !coAos.isEmpty()) {
-            chiTietSanPhams = repository.findByMauSacInAndCoAoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    mauSacs, coAos, greater, less, pageable);
-        } else if (!mauSacs.isEmpty() && !chatLieus.isEmpty()) {
-            chiTietSanPhams = repository.findByMauSacInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    mauSacs, chatLieus, greater, less, pageable);
-        } else if (!tenKichCo.isEmpty() && !chatLieus.isEmpty()) {
-            chiTietSanPhams = repository.findByKichCoInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    tenKichCo, chatLieus, greater, less, pageable);
-        } else if (!mauSacs.isEmpty()) {
-            chiTietSanPhams = repository.findByMauSacInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    mauSacs, greater, less, pageable);
-        } else if (!tenKichCo.isEmpty()) {
-            chiTietSanPhams = repository.findByKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    tenKichCo, greater, less, pageable);
-        } else if (!chatLieus.isEmpty()) {
-            chiTietSanPhams = repository.findByChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    chatLieus, greater, less, pageable);
-        } else if (!coAos.isEmpty()) {
-            chiTietSanPhams = repository.findByCoAoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    coAos, greater, less, pageable);
-        } else if (!loaiSanPhams.isEmpty()) {
-            chiTietSanPhams = repository.findByLoaiSanPhamInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    loaiSanPhams, greater, less, pageable);
-        } else if (!nhaSanXuats.isEmpty()) {
-            chiTietSanPhams = repository.findByNhaSanXuatInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(
-                    nhaSanXuats, greater, less, pageable);
-        } else{
-            chiTietSanPhams = repository.findByGiaBanIsGreaterThanAndGiaBanLessThan(greater, less, pageable);
-        }
+        chiTietSanPhams.forEach((ctsp) -> {
+            ctsps.add(findID(ctsp.getId()));
+        });
 
-        return chiTietSanPhams;
+        List<ChiTietSanPham> filteredCtsps = new ArrayList<>();
+        ctsps.forEach((ctsp -> {
+            if (!checkExist(ctsp, filteredCtsps)) {
+                filteredCtsps.add(ctsp);
+            }
+        }));
 
+        Page<ChiTietSanPham> pageSp = new PageImpl<>(filteredCtsps, pageable, filteredCtsps.size());
+        return pageSp;
     }
 
-}
-//    @Override
-//    public List<ProductDetailClientRespose> findAllClient(FilterProductClient req) {
-//        System.out.println(req.getListMau().size());
-//        return repository.findAllClient(req);
-//    }
+    @Override
+    public Page<ChiTietSanPham> searchMaAndTen(String key, Integer page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return repository.searchMaAndTen(key, pageable);
+    }
 
-//       if(!mauSacs.isEmpty()) {
-//           chiTietSanPhams = repository.findByMauSacIn(mauSacs, pageable);
-//       }
-//
-//       if (!chatLieus.isEmpty()) {
-//           chiTietSanPhams = repository.
-//       }
+    private boolean checkExist(ChiTietSanPham chiTietSanPham, List<ChiTietSanPham> list) {
+        for (ChiTietSanPham ctsp : list) {
+            if (chiTietSanPham.getSanPham().getId().equals(ctsp.getSanPham().getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

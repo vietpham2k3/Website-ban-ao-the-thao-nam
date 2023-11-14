@@ -63,7 +63,10 @@ public interface ChiTietSanPhamService {
 
     ChiTietSanPham findID(UUID id);
 
-//    List<ProductDetailClientRespose> findAllClient(FilterProductClient req);
-
     Page<ChiTietSanPham> filter(FilterProductClient filterProductClient, int page);
+
+    Page<ChiTietSanPham> searchMaAndTen(
+            String key,
+            Integer page
+    );
 }

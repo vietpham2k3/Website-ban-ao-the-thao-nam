@@ -14,7 +14,15 @@ import { getP, getQH, getTP } from 'services/ApiGHNService';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useRef } from 'react';
 
+import { useLocation } from 'react-router-dom';
+
 function UpdateKhachHang() {
+
+  //Detail ảnh
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const imageURL = searchParams.get('imageURL');
+
   // Lấy danh sách tỉnh thành từ API
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -315,7 +323,7 @@ function UpdateKhachHang() {
     }
   };
 
-  const [selectedImageURL, setSelectedImageURL] = useState('');
+  const [selectedImageURL, setSelectedImageURL] = useState(imageURL || '');
 
   useEffect(() => {
     return () => {

@@ -14,6 +14,7 @@ const getAllSPNEW = () => {
 };
 
 const getAllCTSPWeb = (page) => {
+  console.log(page);
   return axios.get(`/api/chi-tiet-san-pham/getAllWeb?page=${page}`);
 };
 
@@ -44,6 +45,12 @@ const deleteMSKC = (id) => {
 const searchCTSP = (key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nhaSanXuat, coAo, page) => {
   return axios.get(
     `/api/chi-tiet-san-pham/search?key=${key}&trangThai=${trangThai}&min=${min}&max=${max}&mauSac=${mauSac}&chatLieu=${chatLieu}&loaiSanPham=${loaiSanPham}&nhaSanXuat=${nhaSanXuat}&coAo=${coAo}&page=${page}`
+  );
+};
+
+const searchSP = (key, page) => {
+  return axios.get(
+    `/api/chi-tiet-san-pham/searchMT?key=${key}&page=${page}`
   );
 };
 
@@ -102,6 +109,10 @@ const findAllProductClient = (values) => {
   return axios.post(`/api/chi-tiet-san-pham/findAll`,values);
 };
 
+const filterProduct = (values) => {
+  return axios.post('/api/chi-tiet-san-pham/filter', values);
+}
+
 export {
   getAll,
   updateSL,
@@ -127,5 +138,7 @@ export {
   getAllBestseller,
   getAllProduct,
   getAllCTSPWeb,
-  findAllProductClient
+  findAllProductClient,
+  filterProduct,
+  searchSP
 };

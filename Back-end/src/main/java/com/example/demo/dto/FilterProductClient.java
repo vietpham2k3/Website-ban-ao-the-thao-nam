@@ -26,4 +26,6 @@ public class FilterProductClient {
     private List<String> listCoAo;
 
     private List<String> listNhaSanXuat;
+
+
 }
