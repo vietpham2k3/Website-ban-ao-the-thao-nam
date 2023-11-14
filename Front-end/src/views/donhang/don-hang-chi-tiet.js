@@ -3986,6 +3986,7 @@ function DonHangCT() {
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
                           <TableCell>Ghi Chú: </TableCell>
+                          <TableCell>Hành Động: </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -4562,7 +4563,7 @@ function DonHangCT() {
 
               <br></br>
 
-              {/* {hoaDon && hoaDon.tienShip !== 0 && ( */}
+              {hoaDon && hoaDon.loaiDon === 1 && (
               <Container style={{ display: 'flex', justifyContent: 'end' }}>
                 <Row style={{ marginBottom: 10 }}>
                   <Col sm={12} className="row">
@@ -4580,7 +4581,7 @@ function DonHangCT() {
                       </span>
                     </Col>
                     <Col sm={6}>
-                      {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ? (
+                      {((hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ) ? (
                         <TextField
                           id="standard-basic"
                           label="Tiền ship"
@@ -4611,7 +4612,7 @@ function DonHangCT() {
                   </Col>
                 </Row>
               </Container>
-              {/* )} */}
+              )}
               <br></br>
 
               {dataHDKM && dataHDKM.length > 0 && (
