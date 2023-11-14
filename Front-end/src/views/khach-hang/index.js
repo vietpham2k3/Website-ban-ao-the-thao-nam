@@ -227,7 +227,7 @@ const KhachHang = () => {
                     </td>
                     <td>{d.trangThai === 0 ? 'Không hoạt động' : 'Hoạt động'}</td>
                     <td>
-                      <button className="mx-2" onClick={() => navigate(`/khach-hang/detail/${d.id}`)}>
+                      <button className="mx-2" onClick={() => navigate(`/khach-hang/detail/${d.id}?imageURL=${encodeURIComponent(`http://localhost:8080/api/khach-hang/getAll/${d.id}`)}`)}>
                         <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                       </button>
                       <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>

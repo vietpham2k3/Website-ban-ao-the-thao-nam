@@ -150,7 +150,9 @@ const NhanVien = () => {
                   <th>Địa Chỉ</th>
                   <th>Ngày Sinh</th>
                   <th>Vai Trò</th>
+                  <th>Giới Tính</th>
                   <th>Trạng Thái</th>
+                  <th>Ảnh</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -165,15 +167,17 @@ const NhanVien = () => {
                     <td>{d.diaChi}</td>
                     <td>{formatDate(d.ngaySinh)}</td>
                     <td>{d.vaiTro.ten}</td>
+                    <td>{d.gioiTinh === true ? 'Nam' : 'Nữ'}</td>
                     <td>{d.trangThai === 0 ? 'Hoạt động' : 'Không hoạt động'}</td>
                     <td>
                       <img src={`http://localhost:8080/api/nhanvien/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
                     </td>
 
                     <td>
-                      <Link className="mx-2" to={`/nhan-vien/detail/${d.id}`}>
+                      <Link className="mx-2" to={`/nhan-vien/detail/${d.id}?imageURL=${encodeURIComponent(`http://localhost:8080/api/nhanvien/getAll/${d.id}`)}`}>
                         <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                       </Link>
+
                       <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>
                         <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                       </button>

@@ -1,7 +1,12 @@
+// import React, { useEffect, useState } from 'react';
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
 import { Card } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Stack, Avatar } from '@mui/material';
+import { useRef } from 'react';
 
 import { toast } from 'react-toastify';
 import { addNV, vaitro } from 'services/NhanVienService';
@@ -12,6 +17,28 @@ function AddNhanVien() {
   const navigate = useNavigate();
   const [vaiTroS, setVaiTroS] = useState([]);
   const [anh, setAnh] = useState(null);
+
+  // Anh
+  const [selectedImageURL, setSelectedImageURL] = useState('');
+  const fileInputRef = useRef(null);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  useEffect(() => {
+    return () => {
+      selectedImageURL && URL.revokeObjectURL(selectedImageURL);
+    };
+  }, [selectedImageURL]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setAnh(file);
+    const imageURL = URL.createObjectURL(file);
+    setSelectedImageURL(imageURL);
+  };
+
   //Vai Trò
   const [modalShow, setModalShow] = useState(false);
   const [valuesVT, setValuesVT] = useState({
@@ -51,11 +78,7 @@ function AddNhanVien() {
     };
   }, [anh]);
 
-  const handlePreviewAnh = (event) => {
-    const file = event.target.files[0];
-    file.preview = URL.createObjectURL(file);
-    setAnh(file);
-  };
+
 
   const [values, setValues] = useState({
     ma: '',
@@ -65,6 +88,7 @@ function AddNhanVien() {
     diaChi: '',
     ngaySinh: '',
     vaiTro: '',
+    gioiTinh: true,
     trangThai: 0
   });
 
@@ -83,6 +107,7 @@ function AddNhanVien() {
     formData.append('diaChi', values.diaChi);
     formData.append('ngaySinh', values.ngaySinh);
     formData.append('vaiTro', values.vaiTro);
+    formData.append('gioiTinh', values.gioiTinh);
     formData.append('trangThai', values.trangThai);
     formData.append('anh', anh);
 
@@ -112,7 +137,208 @@ function AddNhanVien() {
   return (
     <MainCard>
       <Card>
-        <div className="div">
+        <div className="row g-3">
+          <h1>Thêm Nhân Viên</h1>
+        </div>
+        <div className="div" style={{ display: 'flex', paddingTop: 30 }}>
+          <div className="col-md-4" style={{ border: '1px solid black', width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
+            <Stack direction="column" spacing={2} alignItems="center">
+              <Avatar
+                alt="Ảnh đại diện"
+                src={selectedImageURL || anh}
+                sx={{ width: 250, height: 250, cursor: 'pointer' }}
+                onClick={handleAvatarClick}
+              />
+              <label htmlFor="upload-input">
+                <input
+                  id="upload-input"
+                  type="file"
+                  accept="image/*"
+                  name="anh"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                />
+                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                  Tải lên
+                </Button>
+              </label>
+            </Stack>
+          </div>
+
+          <div className="col-md-8">
+            <form className="row g-3" onSubmit={handleSubmit}>
+              <div className="col-md-6">
+                <label htmlFor="tenNhanVien" className="form-label">
+                  Tên Nhân Viên
+                </label>
+                <input
+                  id="tenNhanVien"
+                  type="text"
+                  className="form-control"
+                  value={values.ten}
+                  onChange={(e) => setValues({ ...values, ten: e.target.value })}
+                />
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="sdt" className="form-label">
+                  Số Điện Thoại
+                </label>
+                <input
+                  id="sdt"
+                  type="text"
+                  className="form-control"
+                  value={values.sdt}
+                  onChange={(e) => setValues({ ...values, sdt: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  className="form-control"
+                  value={values.email}
+                  onChange={(e) => setValues({ ...values, email: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="diaChi" className="form-label">
+                  Địa Chỉ
+                </label>
+                <input
+                  id="diaChi"
+                  type="text"
+                  className="form-control"
+                  value={values.diaChi}
+                  onChange={(e) => setValues({ ...values, diaChi: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="ngaySinh" className="form-label">
+                  Ngày Sinh
+                </label>
+                <input
+                  id="ngaySinh"
+                  type="date"
+                  className="form-control"
+                  value={values.ngaySinh}
+                  onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
+                />
+              </div>
+              <div className="col-6">
+                <label className="form-label me-3" htmlFor="vaiTro">
+                  Vai Trò{' '}
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className="fa-solid"
+                    onClick={() => setModalShow(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setModalShow(true);
+                      }
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <i className="fa-solid fa-plus"></i>
+                  </span>
+                </label>{' '}
+                <select
+                  id="vaiTro"
+                  className="form-select"
+                  aria-label="Default select example"
+                  value={values.vaiTro}
+                  onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
+                >
+                  <option>Chọn vai trò</option>
+                  {vaiTroS
+                    .filter((vaiTro) => vaiTro.trangThai === 1) // Lọc ra các vai trò có trạng thái là 1
+                    .map((d, i) => (
+                      <option key={i} value={d.id}>
+                        {d.ten}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label" style={{ paddingRight: 5 }}>
+                  Giới tính:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions1"
+                    id="inlineRadio3"
+                    value={true}
+                    checked={values.gioiTinh === true}
+                    onChange={() => setValues({ ...values, gioiTinh: true })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                   Nam
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions1"
+                    id="inlineRadio4"
+                    value={false} 
+                    checked={values.gioiTinh === false}
+                    onChange={() => setValues({ ...values, gioiTinh: false })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nữ
+                  </label>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label me-3">
+                  Trạng thái:{' '}
+                </label>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="inlineRadio1"
+                    value={values.trangThai}
+                    checked={true}
+                    onChange={() => setValues({ ...values, trangThai: 0 })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Hoạt động
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions"
+                    id="inlineRadio2"
+                    value={values.trangThai}
+                    onChange={() => setValues({ ...values, trangThai: 1 })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Không hoạt động
+                  </label>
+                </div>
+              </div>
+
+              <div className="col-12">
+                <button type="submit" className="btn btn-primary">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* <div className="div">
           <h1>Thêm Nhân Viên</h1>
           <form className="row g-3" onSubmit={handleSubmit}>
             <div className="col-md-6">
@@ -212,13 +438,8 @@ function AddNhanVien() {
               </select>
             </div>
 
-            <div className="col-6">
-              <label htmlFor="a" className="form-label">
-                Ảnh
-              </label>
-              <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
-              {anh && <img src={anh.preview} alt="" width="70%"></img>}
-            </div>
+
+
             <div className="col-12">
               <label htmlFor="a" className="form-label me-3">
                 Trạng thái:{' '}
@@ -257,7 +478,7 @@ function AddNhanVien() {
               </button>
             </div>
           </form>
-        </div>
+        </div> */}
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}

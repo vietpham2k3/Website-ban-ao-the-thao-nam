@@ -46,6 +46,8 @@ public class NhanVienRequest {
 
     private Integer trangThai;
 
+    private Boolean gioiTinh;
+
     private String anh;
 
 }

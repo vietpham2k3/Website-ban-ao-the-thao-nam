@@ -3,13 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.dto.FilterProductClient;
 import com.example.demo.dto.response.ProductDetailClientRespose;
 import com.example.demo.entity.Anh;
-import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.CoAo;
-import com.example.demo.entity.KichCo;
-import com.example.demo.entity.LoaiSanPham;
-import com.example.demo.entity.MauSac;
-import com.example.demo.entity.NhaSanXuat;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -292,111 +286,65 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "WHERE ctsp.trang_thai = 1", nativeQuery = true)
     List<ChiTietSanPham> getAllProduct();
 
+    @Query(value = """
+            SElECT
+            	ctsp.id,
+            	ctsp.ma,
+            	sp.id as idSanPham,
+            	cl.ten AS tenChatLieu,
+            	nsx.ten AS tenNhaSanXuat,
+            	size.ten AS tenSize,
+            	color.ten AS tenMau,
+            	lsp.ten as tenLoaiSanPham,
+            	ca.ten as tenCoAo
+            FROM ChiTietSanPham ctsp
+            LEFT JOIN SanPham sp ON ctsp.id_sp = sp.id
+            LEFT JOIN ChatLieu cl ON cl.id = ctsp.id_cl
+            LEFT JOIN NhaSanXuat nsx ON nsx.id = ctsp.id_nsx
+            LEFT JOIN KichCo size ON size.id = ctsp.id_kc
+            LEFT JOIN MauSac color ON color.id = ctsp.id_ms
+            LEFT JOIN LoaiSanPham lsp ON lsp.id = ctsp.id_lsp
+            LEFT JOIN CoAo ca ON ca.id = ctsp.id_ca
+            WHERE
+                  (((:#{#req.listMau.size()}) = 0 OR color.ten LIKE '')  OR color.ten IN (:#{#req.listMau}))
+              AND (((:#{#req.listChatLieu.size()}) = 0 OR cl.ten LIKE '')  OR cl.ten IN (:#{#req.listChatLieu}))
+              AND (((:#{#req.listSize.size()}) = 0 OR size.ten LIKE '')  OR size.ten IN (:#{#req.listSize}))
+              AND (((:#{#req.listCoAo.size()}) = 0 OR ca.ten LIKE '')  OR ca.ten IN (:#{#req.listCoAo}))
+              AND (((:#{#req.listLoaiSanPham.size()}) = 0 OR lsp.ten LIKE '')  OR lsp.ten IN (:#{#req.listLoaiSanPham}))
+              AND (((:#{#req.listNhaSanXuat.size()}) = 0 OR nsx.ten LIKE '')  OR nsx.ten IN (:#{#req.listNhaSanXuat}))
+              AND (ctsp.gia_ban between :#{#req.giaBanMin} and :#{#req.giaBanMax})
+              AND ctsp.trang_thai = 1
+            """
+            , nativeQuery = true)
+    List<ProductDetailClientRespose> filter(@Param("req") FilterProductClient req);
 
-//    @Query(value = """
-//            SElECT
-//            	ctsp.id,
-//            	ctsp.ma,
-//            	cl.ten AS tenChatLieu,
-//            	nsx.ten AS tenNhaSanXuat,
-//            	size.ten AS tenSize,
-//            	color.ten AS tenMau
-//            FROM ChiTietSanPham ctsp
-//            LEFT JOIN ChatLieu cl ON cl.id = ctsp.id_cl
-//            LEFT JOIN NhaSanXuat nsx ON nsx.id = ctsp.id_nsx
-//            LEFT JOIN KichCo size ON size.id = ctsp.id_kc
-//            LEFT JOIN MauSac color ON color.id = ctsp.id_ms
-//            WHERE (((:#{#req.listChatLieu.size()}) = 0 OR cl.ten LIKE '')  OR cl.ten IN (:#{#req.listChatLieu}))
-//            AND  (((:#{#req.listMau.size()}) = 0 OR color.ten LIKE '')  OR color.ten IN (:#{#req.listMau}))
-//            """, nativeQuery = true)
-//    List<ProductDetailClientRespose> findAllClient(@Param("req") FilterProductClient req );
+    @Query(value = "SELECT C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, c.id_ca, c.ma, " +
+            "T.so_luong, c.gia_ban, c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
+            "FROM ChiTietSanPham C\n" +
+            "JOIN (\n" +
+            "    SELECT id_sp, SUM(so_luong) AS so_luong\n" +
+            "    FROM ChiTietSanPham\n" +
+            "    WHERE ChiTietSanPham.trang_thai = 1\n" +
+            "    GROUP BY id_sp\n" +
+            ") AS T ON C.id_sp = T.id_sp\n" +
+            "JOIN (\n" +
+            "    SELECT id_sp, MIN(id) AS min_id\n" +
+            "    FROM ChiTietSanPham\n" +
+            "    GROUP BY id_sp\n" +
+            ") AS MinIDs ON C.id_sp = MinIDs.id_sp AND C.id = MinIDs.min_id\n" +
+            "JOIN SanPham S ON S.id = C.id_sp\n" +
+            "WHERE\n" +
+            "    (\n" +
+            "        :key IS NULL OR\n" +
+            "        LOWER(S.ma) LIKE CONCAT('%', LOWER(:key), '%') OR\n" +
+            "        LOWER(S.ten) LIKE CONCAT('%', LOWER(:key), '%')  -- Thêm điều kiện tìm kiếm theo tên sản phẩm\n" +
+            "    )\n" +
+            "ORDER BY c.ngay_tao DESC;\n",
+            nativeQuery = true)
+    Page<ChiTietSanPham> searchMaAndTen(
+            @Param("key") String key,
+            Pageable pageable
+    );
 
-//    Page<ChiTietSanPham> findByMauSacIn(List<MauSac> mauSacs, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByChatLieuIn (List<ChatLieu> chatLieus , Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByKichCoIn (List<KichCo> tenKichCo, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByCoAoIn(List<CoAo> coAos, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByLoaiSanPhamIn (List<LoaiSanPham> loaiSanPhams , Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByNhaSanXuatIn (List<NhaSanXuat> nhaSanXuats, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndChatLieuIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, Pageable pageable);
-//
-//    @Query(value = "select * from ChiTietSanPham where gia_ban <= (:less) and gia_ban >= (:greater)", nativeQuery = true)
-//    Page<ChiTietSanPham> findByGiaBanIsGreaterThanAndGiaBanLessThan(@Param("greater") double greater, @Param("less") double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, Pageable pageable, double greater, double less);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<KichCo> tenKichCo, double greater, double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByKichCoInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<KichCo> tenKichCo, List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByMauSacInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac>mauSacs, double greater, double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<KichCo> tenKichCo, double greater, double less, Pageable pageable);
-//
-//    Page<ChiTietSanPham> findByChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacIn(List<MauSac> mauSacs, Pageable pageable);
-
-    Page<ChiTietSanPham> findByChatLieuIn (List<ChatLieu> chatLieus , Pageable pageable);
-
-    Page<ChiTietSanPham> findByKichCoIn (List<KichCo> tenKichCo, Pageable pageable);
-
-    Page<ChiTietSanPham> findByCoAoIn(List<CoAo> coAos, Pageable pageable);
-
-    Page<ChiTietSanPham> findByLoaiSanPhamIn (List<LoaiSanPham> loaiSanPhams , Pageable pageable);
-
-    Page<ChiTietSanPham> findByNhaSanXuatIn (List<NhaSanXuat> nhaSanXuats, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoInAndCoAoIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, List<CoAo> coAos, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoInAndCoAoInAndLoaiSanPhamIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, List<CoAo> coAos, List<LoaiSanPham> loaiSanPhams,Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoInAndCoAoInAndLoaiSanPhamInAndNhaSanXuatIn(List<MauSac> mauSacs, List<ChatLieu> chatLieus, List<KichCo> tenKichCo, List<CoAo> coAos, List<LoaiSanPham> loaiSanPhams, List<NhaSanXuat> nhaSanXuats,Pageable pageable);
-
-    @Query(value = "select * from ChiTietSanPham where gia_ban <= (:less) and gia_ban >= (:greater)", nativeQuery = true)
-    Page<ChiTietSanPham> findByGiaBanIsGreaterThanAndGiaBanLessThan(@Param("greater") double greater, @Param("less") double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndKichCoInAndCoAoInAndLoaiSanPhamInAndNhaSanXuatInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs,
-                                                                                                                                                           List<ChatLieu> chatLieus,
-                                                                                                                                                           List<KichCo> tenKichCo,
-                                                                                                                                                           List<CoAo> coAos,
-                                                                                                                                                           List<LoaiSanPham> loaiSanPhams,
-                                                                                                                                                           List<NhaSanXuat> nhaSanXuats,
-                                                                                                                                                           Pageable pageable, double greater, double less);
-
-    Page<ChiTietSanPham> findByMauSacInAndKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<KichCo> tenKichCo, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByKichCoInAndChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<KichCo> tenKichCo, List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByMauSacInAndCoAoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac> mauSacs, List<CoAo> coAos, double greater, double less, Pageable pageable);
-
-
-
-    Page<ChiTietSanPham> findByMauSacInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<MauSac>mauSacs, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByKichCoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<KichCo> tenKichCo, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByChatLieuInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<ChatLieu> chatLieus, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByCoAoInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<CoAo> coAos, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByLoaiSanPhamInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<LoaiSanPham> loaiSanPhams, double greater, double less, Pageable pageable);
-
-    Page<ChiTietSanPham> findByNhaSanXuatInAndGiaBanIsGreaterThanEqualAndGiaBanIsLessThanEqual(List<NhaSanXuat> nhaSanXuats, double greater, double less, Pageable pageable);
 
 }
