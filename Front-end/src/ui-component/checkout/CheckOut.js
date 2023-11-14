@@ -133,10 +133,6 @@ function CheckoutForm(props) {
 
   useEffect(() => {
     getThanhPho();
-    if (dataLogin) {
-      setValuesUpdateHD({ ...valuesUpdateHD, nguoiTao: dataLogin && dataLogin.ten, khachHang: { id: dataLogin && dataLogin.id } });
-      return;
-    }
   }, []);
 
   console.log(valuesUpdateHD);
@@ -229,7 +225,6 @@ function CheckoutForm(props) {
   useEffect(() => {
     quan.forEach((district) => {
       if (district.DistrictName === valuesDC.quanHuyen) {
-        console.log(1);
         setValuesIdWard({
           district_id: district.DistrictID
         });
@@ -272,12 +267,12 @@ function CheckoutForm(props) {
 
   useEffect(() => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+    setTongTienKhiGiam(totalAmount - totalGiam);
 
     setValuesUpdateHD({
       ...valuesUpdateHD,
-      tongTien: totalAmount + valuesUpdateHD.tienShip,
-      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount - totalGiam
     });
   }, [valuesUpdateHD.tienShip]);
 
@@ -309,7 +304,7 @@ function CheckoutForm(props) {
     });
     // Cập nhật giá trị tổng tiền
     setTotalAmount(sum);
-    setTongTienKhiGiam(sum - totalGiam + valuesUpdateHD.tienShip);
+    setTongTienKhiGiam(sum - totalGiam);
   }, [dataHDCT, dataHDKM]);
 
   useEffect(() => {
@@ -363,7 +358,7 @@ function CheckoutForm(props) {
 
   const handleChange = (value) => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+    setTongTienKhiGiam(totalAmount - totalGiam);
     setValuesKhuyenMai({
       ...valuesKhuyenMai,
       khuyenMai: {
@@ -475,7 +470,7 @@ function CheckoutForm(props) {
         ...tgDuKien,
         to_ward_code: event.target.value
       });
-      setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+      setTongTienKhiGiam(totalAmount - totalGiam);
 
       if (selectedProvince) {
         // Lấy thông tin tỉnh/thành phố được chọn
@@ -545,7 +540,7 @@ function CheckoutForm(props) {
       } else {
         findAllKM(id);
         const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-        setTongTienKhiGiam(totalAmount - totalGiam + valuesUpdateHD.tienShip);
+        setTongTienKhiGiam(totalAmount - totalGiam);
         toast.success('Thêm mã thành công');
       }
     } catch (error) {
@@ -587,8 +582,8 @@ function CheckoutForm(props) {
       const res = await getFee(value);
       if (res) {
         setValuesUpdateHD({
-          ...valuesUpdateHD,
-          tienShip: res.data.data.total
+          ...valuesUpdateHD
+          // tienShip: res.data.data.total
         });
       }
     } catch (error) {
@@ -741,6 +736,13 @@ function CheckoutForm(props) {
     setIsUpdatingDiaChi(true);
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
 
+    if (dataLogin) {
+      const newValues = {
+        ...valuesUpdateHD,
+        khachHang: { id: dataLogin.id }
+      };
+      setValuesUpdateHD(newValues);
+    }
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,
@@ -749,8 +751,8 @@ function CheckoutForm(props) {
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
       ngayDuKienNhan: ngayDuKienNhan,
-      tongTien: totalAmount + valuesUpdateHD.tienShip,
-      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount - totalGiam
     }));
   };
 
@@ -800,7 +802,13 @@ function CheckoutForm(props) {
     setIsUpdatingDiaChi(true);
 
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-
+    if (dataLogin) {
+      const newValues = {
+        ...valuesUpdateHD,
+        khachHang: { id: dataLogin.id }
+      };
+      setValuesUpdateHD(newValues);
+    }
     // Cập nhật giá trị diaChi
     setValuesUpdateHD((valuesUpdateHD) => ({
       ...valuesUpdateHD,
@@ -809,27 +817,11 @@ function CheckoutForm(props) {
       huyen: valuesUpdateHD.huyen,
       xa: valuesUpdateHD.xa,
       ngayDuKienNhan: ngayDuKienNhan,
-      tongTien: totalAmount + valuesUpdateHD.tienShip,
-      tongTienKhiGiam: totalAmount - totalGiam + valuesUpdateHD.tienShip
+      tongTien: totalAmount,
+      tongTienKhiGiam: totalAmount - totalGiam
     }));
     window.location.href = urlPay;
   };
-
-  function formatDate(dateString) {
-    if (dateString === null) {
-      return '';
-    }
-
-    const dateObject = new Date(dateString * 1000); // * 1000 để chuyển từ giây thành mili giây
-
-    const day = dateObject.getDate();
-    const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0
-    const year = dateObject.getFullYear(); // Lấy năm
-
-    const formattedDate = `${day}/${month}/${year}`;
-
-    return formattedDate;
-  }
 
   return (
     <div className="site-section">
@@ -1105,12 +1097,6 @@ function CheckoutForm(props) {
                         <td>-{convertToCurrency(d.tienGiam)}</td>
                       </tr>
                     ))}
-                    <tr>
-                      <td className="text-black font-weight-bold" colSpan="3">
-                        Tiền ship
-                      </td>
-                      <td className="text-black font-weight-bold">{convertToCurrency(valuesUpdateHD.tienShip)}</td>
-                    </tr>
                     <tr style={{ fontSize: 18 }}>
                       <td className="text-black font-weight-bold" colSpan="3">
                         Tổng Cộng
@@ -1119,16 +1105,6 @@ function CheckoutForm(props) {
                         {convertToCurrency(tongTienKhiGiam)}
                       </td>
                     </tr>
-                    {ngayDuKienNhan ? (
-                      <tr>
-                        <td className="text-black font-weight-bold" colSpan="3">
-                          Nhận hàng vào
-                        </td>
-                        <td className="text-black font-weight-bold">{formatDate(ngayDuKienNhan)}</td>
-                      </tr>
-                    ) : (
-                      ''
-                    )}
                     <tr>
                       <td className="text-black font-weight-bold" colSpan="3">
                         Thanh Toán

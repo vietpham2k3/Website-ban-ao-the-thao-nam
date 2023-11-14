@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
+import com.example.demo.dto.DoiHangDTO;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.HoaDon_KhuyenMai;
 import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
@@ -82,6 +85,38 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     List<HoaDon> getAllHD();
 
     @Query(value = "SELECT\n" +
+            "  DH.ma,\n" +
+            "  ISNULL(DH.tong_tien_hang_doi, '') as tong_tien_hang_doi,\n" +
+            "  ISNULL(DH.so_hang_doi, '') as so_hang_doi,\n" +
+            "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
+            "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
+            "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
+            "FROM\n" +
+            "  DoiHang DH\n" +
+            "JOIN\n" +
+            "  HoaDonChiTiet HDCT ON DH.id = HDCT.id_th\n" +
+            "WHERE id_hd = :idHD", nativeQuery = true)
+    List<String> doiHang(@Param("idHD") UUID idHD);
+
+    @Query(value = "SELECT\n" +
+            "  DH.ma,\n" +
+            "  ISNULL(DH.tong_tien_hang_doi, '') as tong_tien_hang_doi,\n" +
+            "  ISNULL(DH.so_hang_doi, '') as so_hang_doi,\n" +
+            "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
+            "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
+            "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
+            "FROM\n" +
+            "  DoiHang DH\n" +
+            "JOIN\n" +
+            "  HoaDonChiTiet HDCT ON DH.id = HDCT.id_th\n" +
+            "WHERE id_hd = :idHD \n" +
+            "AND id_th IS NOT NULL\n" +
+            "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL", nativeQuery = true)
+    List<String> doiHangYC(@Param("idHD") UUID idHD);
+
+    @Query(value = "SELECT\n" +
             "    COALESCE(SUM(HD.tong_tien_sau_khi_giam), 0) AS doanh_thu_ngay_hien_tai\n" +
             "FROM\n" +
             "    HoaDon HD\n" +
@@ -98,7 +133,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
             "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )" , nativeQuery = true)
     public Double doanhThuTongNgayCurrent();
@@ -123,7 +158,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "\t MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "\t YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "    AND HD.trang_thai = 7\n" +
+            "    AND HD.trang_thai = 4\n" +
             "\tAND HD.loai_don = 1", nativeQuery = true)
     public Double doanhThuOnlineNgayCurrent();
 
@@ -142,7 +177,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    (\n" +
             "      (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )" , nativeQuery = true)
     public Double doanhThuTongThangCurrent();
@@ -165,7 +200,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "WHERE\n" +
             "    MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "\t YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "\tAND HD.trang_thai = 7\n" +
+            "\tAND HD.trang_thai = 4\n" +
             "\tAND HD.loai_don = 1", nativeQuery = true)
     public Double doanhThuOnlineThangCurrent();
 
@@ -182,7 +217,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    OR\n" +
             "    (\n" +
             "      (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )" , nativeQuery = true)
     public Double doanhThuTongNamCurrent();
@@ -203,7 +238,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    HoaDon HD\n" +
             "WHERE\n" +
             "    YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "\t\tAND HD.trang_thai = 7\n" +
+            "\t\tAND HD.trang_thai = 4\n" +
             "\t\tAND HD.loai_don = 1", nativeQuery = true)
     public Double doanhThuOnlineNamCurrent();
 
@@ -220,7 +255,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraNgay();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
@@ -246,7 +281,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "        (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
             "         MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 7 AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );", nativeQuery = true)
     public Integer soDonThanhCongNgay();
@@ -262,7 +297,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraThang();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
@@ -285,7 +320,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    (\n" +
             "        (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "         YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 7 AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );", nativeQuery = true)
     public Integer soDonThanhCongThang();
@@ -299,7 +334,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 15", nativeQuery = true)
+            "              AND HD.trang_thai = 16", nativeQuery = true)
     public Integer soDonTraNam();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
@@ -319,7 +354,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    OR\n" +
             "    (\n" +
             "        (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "         HD.trang_thai = 7 AND\n" +
+            "         HD.trang_thai = 4 AND\n" +
             "         HD.loai_don = 1)\n" +
             "    );", nativeQuery = true)
     public Integer soDonThanhCongNam();
@@ -337,7 +372,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "               (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
             "                MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "                HD.trang_thai = 7 AND\n" +
+            "                HD.trang_thai = 4 AND\n" +
             "                HD.loai_don = 1)\n" +
             "             ) THEN HDCT.so_luong\n" +
             "             ELSE 0\n" +
@@ -361,7 +396,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "             WHEN (\n" +
             "               (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "                YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "                HD.trang_thai = 7 AND\n" +
+            "                HD.trang_thai = 4 AND\n" +
             "                HD.loai_don = 1)\n" +
             "             ) THEN HDCT.so_luong\n" +
             "             ELSE 0\n" +
@@ -383,7 +418,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "             ) THEN HDCT.so_luong\n" +
             "             WHEN (\n" +
             "               (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "                HD.trang_thai = 7 AND\n" +
+            "                HD.trang_thai = 4 AND\n" +
             "                HD.loai_don = 1)\n" +
             "             ) THEN HDCT.so_luong\n" +
             "             ELSE 0\n" +
@@ -411,7 +446,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())\n" +
             "                AND MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE())\n" +
             "                AND YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "                AND HD.trang_thai = 7\n" +
+            "                AND HD.trang_thai = 4\n" +
             "                AND HD.loai_don = 1\n" +
             "            ) THEN HDCT.so_luong\n" +
             "            ELSE 0\n" +
@@ -437,7 +472,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            ) THEN HDCT.so_luong\n" +
             "            WHEN (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE())\n" +
             "                AND YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "                AND HD.trang_thai = 7\n" +
+            "                AND HD.trang_thai = 4\n" +
             "                AND HD.loai_don = 1\n" +
             "            ) THEN HDCT.so_luong\n" +
             "            ELSE 0\n" +
@@ -461,7 +496,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                AND HD.loai_don = 0\n" +
             "            ) THEN HDCT.so_luong\n" +
             "            WHEN (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "                AND HD.trang_thai = 7\n" +
+            "                AND HD.trang_thai = 4\n" +
             "                AND HD.loai_don = 1\n" +
             "            ) THEN HDCT.so_luong\n" +
             "            ELSE 0\n" +
@@ -478,8 +513,8 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
 
     @Query(value = "SELECT\n" +
             "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
-            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
-            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 4 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 4 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
             "FROM HoaDon HD\n" +
             " WHERE\n" +
             "    (\n" +
@@ -494,15 +529,15 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "      (DAY(HD.ngay_thanh_toan) = DAY(GETDATE()) AND\n" +
             "       MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )", nativeQuery = true)
     public String[] doanhThuAllNgay();
 
     @Query(value = "SELECT\n" +
             "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
-            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
-            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 4 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 4 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
             "FROM HoaDon HD\n" +
             " WHERE\n" +
             "    (\n" +
@@ -515,15 +550,15 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    (\n" +
             "      (MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "       YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )", nativeQuery = true)
     public String[] doanhThuAllThang();
 
     @Query(value = "SELECT\n" +
             "    COALESCE(SUM(CASE WHEN HD.trang_thai = 6 AND HD.loai_don = 0 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_tai_quay,\n" +
-            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 7 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
-            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 7 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
+            "    COALESCE(SUM(CASE WHEN HD.trang_thai = 4 AND HD.loai_don = 1 THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_online,\n" +
+            "    COALESCE(SUM(CASE WHEN (HD.trang_thai = 6 AND HD.loai_don = 0) OR (HD.trang_thai = 4 AND HD.loai_don = 1) THEN HD.tong_tien_sau_khi_giam ELSE 0 END), 0) AS tong_doanh_thu_ngay\n" +
             "FROM HoaDon HD\n" +
             " WHERE\n" +
             "    (\n" +
@@ -534,7 +569,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "    OR\n" +
             "    (\n" +
             "      (YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE()) AND\n" +
-            "       HD.trang_thai = 7 AND\n" +
+            "       HD.trang_thai = 4 AND\n" +
             "       HD.loai_don = 1)\n" +
             "    )", nativeQuery = true)
     public String[] doanhThuAllNam();
@@ -565,7 +600,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            AND (\n" +
             "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
             "                OR\n" +
-            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "                (HD.trang_thai = 4 AND HD.loai_don = 1)\n" +
             "            )\n" +
             "GROUP BY\n" +
             "    Thang_Mac_Dinh.thang\n" +
@@ -611,7 +646,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            AND (\n" +
             "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
             "                OR\n" +
-            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "                (HD.trang_thai = 4 AND HD.loai_don = 1)\n" +
             "            )\n" +
             "GROUP BY\n" +
             "    Gio_Mac_Dinh.gio\n" +
@@ -638,7 +673,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            AND (\n" +
             "                (HD.trang_thai = 6 AND HD.loai_don = 0)\n" +
             "                OR\n" +
-            "                (HD.trang_thai = 7 AND HD.loai_don = 1)\n" +
+            "                (HD.trang_thai = 4 AND HD.loai_don = 1)\n" +
             "            )\n" +
             "GROUP BY\n" +
             "    Ngay_Mac_Dinh.ngay\n" +

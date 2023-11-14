@@ -111,6 +111,7 @@ function ContentSanPham() {
     }
   };
 
+
   const [filterCretia, setFilterCretia] = useState({
     giaBanMin: 0,
     giaBanMax: 10000000,
@@ -121,6 +122,7 @@ function ContentSanPham() {
     listCoAo: [],
     listNhaSanXuat: []
   })
+
 
   // Hàm xử lý khi khoảng giá thay đổi
   const handlePriceRangeChange = (newValues) => {
@@ -454,4 +456,3 @@ function ContentSanPham() {
 }
 
 export default ContentSanPham;
-

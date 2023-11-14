@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useEffect } from 'react';
-import { requestHuyDon, nhanHang, searchByTrangThai } from 'services/ServiceDonHang';
+import { requestHuyDon, searchByTrangThai, searchCTSPofDH } from 'services/ServiceDonHang';
 import '../../scss/CheckOut.scss';
 import Button from 'react-bootstrap/Button';
 import ButtonMUI from '@mui/material/Button';
@@ -11,24 +11,84 @@ import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
+import { getAll, update, yeuCauTraHang } from 'services/DoiHangService';
+import _ from 'lodash';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [dataHDCT, setDataHDCT] = useState([]);
+  const [dataSPDoi, setDataSPDoi] = useState([]);
+  const [dataSP, setDataSP] = useState([]);
   const [isShow, setIsshow] = useState(false);
+  const [term, setTerm] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
   });
+  const [valuesTH, setValuesTH] = useState({
+    ghiChu: '',
+    soHangTra: 0,
+    tienCanTra: 0,
+    tienTra: 0,
+    trangThai: 0
+  });
+  const listLyDo = [
+    {
+      label: 'Hàng lỗi',
+      value: 'Hàng lỗi'
+    },
+    {
+      label: 'Thiếu hàng',
+      value: 'Thiếu hàng'
+    },
+    {
+      label: 'Người bán gửi sai hàng',
+      value: 'Người bán gửi sai hàng'
+    },
+    {
+      label: 'Khác',
+      value: ''
+    }
+  ];
+
+  useEffect(() => {
+    handleSearchSPofDH();
+  }, [term]);
 
   useEffect(() => {
     searchByTT(dataLogin.id, data.trangThai);
   }, []);
 
   useEffect(() => {
-    searchByTT(dataLogin.id, data.trangThai);
+    if (isUpdate) {
+      handleUpdateSL();
+      setIsUpdate(false);
+    }
+  }, [isUpdate]);
+
+  const searchSPofDH = async (term) => {
+    const res = await searchCTSPofDH(term);
+    if (res) {
+      setDataSP(res.data);
+    }
+  };
+
+  const findAll = async (id) => {
+    const res = await getAll(id);
+    if (res) {
+      setDataSPDoi(res.data);
+    }
+  };
+
+  const handleSearchSPofDH = _.debounce(async () => {
+    if (term) {
+      searchSPofDH(term);
+    } else {
+      searchSPofDH('');
+    }
   }, []);
 
   const searchByTT = async (id, values) => {
@@ -64,18 +124,43 @@ function ListDonHang(props) {
     }
   };
 
-  const nhanDonHang = async (id, value) => {
-    const res = await nhanHang(id, value);
+  const traHang = async (id, soHangTra, tienCanTra, tienTra, trangThai, values) => {
+    const res = await yeuCauTraHang(id, soHangTra, tienCanTra, tienTra, trangThai, values);
     if (res) {
-      toast.success('Nhận đơn hàng thành công !');
-      setShow(false);
-      searchByTT(dataLogin.id, data.trangThai);
-      setGhiChu();
-      tabs.forEach((d) => {
-        size(dataLogin.id, d.trangThai);
-      });
+      setIsshow(false);
+      window.location.reload();
     }
   };
+  const handleTraHang = () => {
+    if (valuesTH.soHangTra <= 0 || valuesTH.lichSuHoaDon.ghiChu === '') {
+      toast.warning('Vui lòng nhập số lượng sản phẩm muốn trả');
+      return;
+    }
+    traHang(dataHDCT[0].hoaDon.id, valuesTH);
+  };
+
+  const updateSL = async (value) => {
+    await update(value);
+  };
+
+  const handleUpdateSL = () => {
+    updateSL(dataHDCT);
+  };
+
+  console.log(valuesTH);
+
+  // const nhanDonHang = async (id, value) => {
+  //   const res = await nhanHang(id, value);
+  //   if (res) {
+  //     toast.success('Nhận đơn hàng thành công !');
+  //     setShow(false);
+  //     searchByTT(dataLogin.id, data.trangThai);
+  //     setGhiChu();
+  //     tabs.forEach((d) => {
+  //       size(dataLogin.id, d.trangThai);
+  //     });
+  //   }
+  // };
 
   const handleClose = () => {
     setShow(false);
@@ -96,9 +181,9 @@ function ListDonHang(props) {
     setId(id);
   };
 
-  const handleNhanDonHang = (id) => {
-    nhanDonHang(id, ghiChu);
-  };
+  // const handleNhanDonHang = (id) => {
+  //   nhanDonHang(id, ghiChu);
+  // };
 
   const handleHuyDon = () => {
     if (!ghiChu.ghiChu) {
@@ -132,6 +217,12 @@ function ListDonHang(props) {
                   ? 'Giao hàng thành công'
                   : d.hoaDon.trangThai === 14
                   ? 'Yêu cầu huỷ đơn'
+                  : d.hoaDon.trangThai === 15
+                  ? 'Yêu cầu trả hàng'
+                  : d.hoaDon.trangThai === 16
+                  ? 'Trả hàng thành công'
+                  : d.hoaDon.trangThai === 17
+                  ? 'Trả hàng thất bại'
                   : d.hoaDon.trangThai === 6
                   ? 'Thanh toán thành công'
                   : 'Hoàn thành'}
@@ -142,12 +233,16 @@ function ListDonHang(props) {
             {d.hoaDonChiTiet.map((h, i) => (
               <div key={i} className="card-box-center card-hdct mt-3 me-3">
                 <div className="d-flex">
-                  <img
-                    src={`http://localhost:8080/api/chi-tiet-san-pham/${h.chiTietSanPham.id}`}
-                    className="img-history rounded-start"
-                    alt="..."
-                  />
-                  <div className="mt-1">
+                  <div>
+                    <img
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${h.chiTietSanPham.id}`}
+                      className="img-history rounded-start"
+                      alt=""
+                      width={100}
+                      height={80}
+                    />
+                  </div>
+                  <div className="mt-2 ms-3">
                     <h5>{h.chiTietSanPham.sanPham.ten}</h5>
                     <span>
                       {h.chiTietSanPham.kichCo.ten} -{' '}
@@ -189,11 +284,11 @@ function ListDonHang(props) {
                       setDataHDCT(d.hoaDonChiTiet);
                     }}
                   >
-                    Trả hàng/Hoàn tiền
+                    Đổi hàng
                   </ButtonMUI>
-                  <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
+                  {/* <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
                     Nhận hàng
-                  </ButtonMUI>
+                  </ButtonMUI> */}
                 </>
               )}
               {d.hoaDon.trangThai === 0 || d.hoaDon.trangThai === 6 ? (
@@ -208,7 +303,23 @@ function ListDonHang(props) {
         </div>
       ))}
       <ModalHuyDon handleClose={handleClose} show={show} handleHuyDon={handleHuyDon} setGhiChu={setGhiChu}></ModalHuyDon>
-      <ModalTraHang handleClose={handleClose} show={isShow} dataHDCT={dataHDCT} convertToCurrency={convertToCurrency}></ModalTraHang>
+      <ModalTraHang
+        handleClose={handleClose}
+        show={isShow}
+        dataHDCT={dataHDCT}
+        convertToCurrency={convertToCurrency}
+        setValuesTH={setValuesTH}
+        valuesTH={valuesTH}
+        setDataHDCT={setDataHDCT}
+        handleTraHang={handleTraHang}
+        setIsUpdate={setIsUpdate}
+        setGhiChu={setGhiChu}
+        ghiChu={ghiChu}
+        listLyDo={listLyDo}
+        setTerm={setTerm}
+        term={term}
+        dataSP={dataSP}
+      ></ModalTraHang>
     </div>
   );
 }

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.ChiTietSanPham;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.response.HoaDonCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,12 @@ import java.util.*;
 public interface HoaDonService {
 
     List<HoaDon> listHD();
+
+    List<String> listDoiHang(UUID idHD);
+
+    List<HoaDonChiTiet> listYCDoiHang(UUID idHD);
+
+    List<String> YCDoiHang(UUID idHD);
 
     List<HoaDon> searchByTrangThai(Integer[] trangThai, UUID idKH);
 

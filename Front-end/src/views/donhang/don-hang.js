@@ -46,7 +46,8 @@ function DonHang() {
     { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
     { value: '15', label: 'Yêu cầu trả hàng' },
-    { value: '16', label: 'Trả hàng thành công' }
+    { value: '16', label: 'Trả hàng thành công' },
+    { value: '17', label: 'Trả hàng thất bại' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -84,10 +85,10 @@ function DonHang() {
   const handleSearchDH = _.debounce(async (page = 0) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     if (term || selectedValues !== 0) {
-      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+      const values = selectedValues.length > 0 ? selectedValues : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
       search(term, tuNgay, denNgay, values, loaiDon, page);
     } else {
-      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
       search('', null, null, values, '', page);
     }
     if (data.length === 0) {
@@ -779,6 +780,25 @@ function DonHang() {
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
                           Trả hàng thành công
+                        </span>
+                      )}
+                      {d.trang_thai === 17 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: '#990000',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Đã hủy đơn
                         </span>
                       )}
                     </td>

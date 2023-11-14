@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
 // import { gridSpacing } from 'store/constant';
-import  {BarChart}  from '@mui/x-charts/BarChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 import '../../../scss/Chart.scss';
 
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
@@ -65,20 +65,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
-  const width = 1050;
 
-  const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (value) => {
-            return value / 1000000 + 'M';
-          }
-        }
-      }
-    }
-  };
+  const width = 855;
 
   return (
     <>
@@ -115,60 +103,99 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {selectedMenu === 'ngay' && (
-                <BarChart
-                  margin={{ left: 70 }}
-                  xAxis={[
-                    {
-                      id: 'barCategories',
-                      data: ngay.map((item) => {
-                        const parts = item.split(',');
-                        return parts[0];
-                      }),
-                      scaleType: 'band'
-                    }
-                  ]}
-                  series={[
-                    {
-                      data: ngay.map((item) => {
-                        const parts = item.split(',');
-                        return parseFloat(parts[1]);
-                      }),
-                      label: 'Doanh thu'
-                    }
-                  ]}
-                  width={width}
-                  height={532}
-                />
-              )}
-              {selectedMenu === 'thang' && (
-                <BarChart
-                  margin={{ left: 70 }}
-                  xAxis={[
-                    {
-                      id: 'barCategories',
-                      data: thang.map((item) => {
-                        const parts = item.split(',');
-                        return parts[0];
-                      }),
-                      scaleType: 'band'
-                    }
-                  ]}
-                  series={[
-                    {
-                      data: thang.map((item) => {
-                        const parts = item.split(',');
-                        return parseFloat(parts[1]);
-                      }),
-                      label: 'Doanh thu'
-                    }
-                  ]}
-                  width={width}
-                  height={532}
-                />
-              )}
-              {selectedMenu === 'nam' && (
-                <div>
+              {selectedMenu === 'ngay' &&
+                (ngay.some((item) => {
+                  const parts = item.split(',');
+                  return parseFloat(parts[1]) !== 0;
+                }) ? (
+                  <BarChart
+                    margin={{ left: 70 }}
+                    xAxis={[
+                      {
+                        id: 'barCategories',
+                        data: ngay.map((item) => {
+                          const parts = item.split(',');
+                          return parts[0];
+                        }),
+                        scaleType: 'band'
+                      }
+                    ]}
+                    series={[
+                      {
+                        data: ngay.map((item) => {
+                          const parts = item.split(',');
+                          return parseFloat(parts[1]);
+                        }),
+                        label: 'Doanh thu'
+                      }
+                    ]}
+                    width={width}
+                    height={554}
+                  />
+                ) : (
+                  <div style={{ height: 529 }} className="empty-icon-container">
+                    <div style={{ alignItems: 'center', paddingTop: 200 }} className="animation-container">
+                      <div className="bounce"></div>
+                      <div className="pebble1"></div>
+                      <div className="pebble2"></div>
+                      <div className="pebble3"></div>
+                    </div>
+                    <div>
+                      <h2>Không có dữ liệu</h2>
+                      <p>Chúng tôi không tìm thấy dữ liệu để thống kê!</p>
+                      <p>Vui lòng mua hàng và thử lại sau!</p>
+                    </div>
+                  </div>
+                ))}
+              {selectedMenu === 'thang' &&
+                (thang.some((item) => {
+                  const parts = item.split(',');
+                  return parseFloat(parts[1]) !== 0;
+                }) ? (
+                  <BarChart
+                    margin={{ left: 70 }}
+                    xAxis={[
+                      {
+                        id: 'barCategories',
+                        data: thang.map((item) => {
+                          const parts = item.split(',');
+                          return parts[0];
+                        }),
+                        scaleType: 'band'
+                      }
+                    ]}
+                    series={[
+                      {
+                        data: thang.map((item) => {
+                          const parts = item.split(',');
+                          return parseFloat(parts[1]);
+                        }),
+                        label: 'Doanh thu'
+                      }
+                    ]}
+                    width={width}
+                    height={554}
+                  />
+                ) : (
+                  <div style={{ height: 528 }} className="empty-icon-container">
+                    <div style={{ alignItems: 'center', paddingTop: 200 }} className="animation-container">
+                      <div className="bounce"></div>
+                      <div className="pebble1"></div>
+                      <div className="pebble2"></div>
+                      <div className="pebble3"></div>
+                    </div>
+                    <div>
+                      <h2>Không có dữ liệu</h2>
+                      <p>Chúng tôi không tìm thấy dữ liệu để thống kê!</p>
+                      <p>Vui lòng mua hàng và thử lại sau!</p>
+                    </div>
+                  </div>
+                ))}
+              {selectedMenu === 'nam' &&
+                (nam.some((item) => {
+                  const parts = item.split(',');
+                  return parseFloat(parts[1]) !== 0;
+                }) ? (
                   <BarChart
                     margin={{ left: 70 }}
                     xAxis={[
@@ -185,18 +212,29 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       {
                         data: nam.map((item) => {
                           const parts = item.split(',');
-                          const tien = parseFloat(parts[1]);
-                          return tien;
+                          return parseFloat(parts[1]);
                         }),
                         label: 'Doanh thu'
                       }
                     ]}
-                    options={options}
                     width={width}
                     height={554}
                   />
-                </div>
-              )}
+                ) : (
+                  <div style={{ height: 529 }} className="empty-icon-container">
+                    <div style={{ alignItems: 'center', paddingTop: 200 }} className="animation-container">
+                      <div className="bounce"></div>
+                      <div className="pebble1"></div>
+                      <div className="pebble2"></div>
+                      <div className="pebble3"></div>
+                    </div>
+                    <div>
+                      <h2>Không có dữ liệu</h2>
+                      <p>Chúng tôi không tìm thấy dữ liệu để thống kê!</p>
+                      <p>Vui lòng mua hàng và thử lại sau!</p>
+                    </div>
+                  </div>
+                ))}
             </Grid>
           </Grid>
         </MainCard>

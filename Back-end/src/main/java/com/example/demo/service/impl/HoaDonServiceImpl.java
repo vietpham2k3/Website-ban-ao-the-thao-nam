@@ -1,8 +1,11 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.repository.ChiTietSanPhamRepository;
+import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRespository;
 import com.example.demo.response.HoaDonCustom;
 import com.example.demo.service.HoaDonService;
@@ -14,17 +17,32 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-
-
 public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     public HoaDonRespository res;
     @Autowired
     private ChiTietSanPhamRepository resCTSP;
 
+    @Autowired
+    private HoaDonChiTietRepository resHDCT;
     @Override
     public List<HoaDon> listHD() {
         return res.getAllHD();
+    }
+
+    @Override
+    public List<String> listDoiHang(UUID idHD) {
+        return res.doiHang(idHD);
+    }
+
+    @Override
+    public List<HoaDonChiTiet> listYCDoiHang(UUID idHD) {
+        return resHDCT.getAllByIdHDAndIdTHAndSLYCD(idHD);
+    }
+
+    @Override
+    public List<String> YCDoiHang(UUID idHD) {
+        return res.doiHangYC(idHD);
     }
 
     @Override
