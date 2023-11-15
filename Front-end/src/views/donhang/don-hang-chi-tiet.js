@@ -16,6 +16,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
 // import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -66,6 +70,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+
 function DonHangCT() {
   const { id } = useParams();
   const dataLogin = JSON.parse(localStorage.getItem('dataLoginNV'));
@@ -1390,6 +1395,33 @@ function DonHangCT() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+    // xac nhan huy tra hang
+    const [show29, setShow29] = useState(false);
+
+    // const [lshd29, setLshd29] = useState({
+    //   ghiChu: '',
+    //   nguoiTao: dataLogin && dataLogin.ten
+    // });
+  
+    const handleClose29 = () => setShow29(false);
+    const handleShow29 = () => setShow29(true);
+  
+    // const huyTraHang = async (id, value) => {
+    //   const res = await huyDonTraHang(id, value);
+    //   if (res) {
+    //     toast.success('Cập nhật thành công !');
+    //     setShow21(false);
+    //     detail(id);
+    //     detailListLSHD(id);
+    //   }
+    // };
+  
+    // const handleHuyTraHang = async (event) => {
+    //   event.preventDefault();
+    //   await huyTraHang(id, lshd21);
+    // };
+  
 
   return (
     <>
@@ -3986,7 +4018,6 @@ function DonHangCT() {
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
                           <TableCell>Ghi Chú: </TableCell>
-                          <TableCell>Hành Động: </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -4034,21 +4065,22 @@ function DonHangCT() {
                                           <th style={{ paddingLeft: 10 }}>Số lượng</th>
                                           <th style={{ paddingLeft: 5 }}>Đơn giá</th>
                                           <th style={{ paddingLeft: 5 }}>Tổng tiền</th>
+                                          <th style={{ paddingLeft: 5 }}></th>
                                         </tr>
                                         <tbody>
                                           {spYCDoi.map((d, i) => (
                                             <tr key={i}>
-                                              <td>{i + 1}</td>
-                                              <td>{d.chiTietSanPham.sanPham.ma}</td>
+                                              <td style={{ paddingTop: 20 }}>{i + 1}</td>
+                                              <td style={{ paddingTop: 20 }}>{d.chiTietSanPham.sanPham.ma}</td>
                                               <td>
                                                 <img
                                                   src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
                                                   className="product-image"
                                                   style={{ width: '70px', height: '100px' }}
-                                                  alt="vai"
+                                                  alt="none"
                                                 />
                                               </td>
-                                              <td>
+                                              <td style={{ paddingTop: 20 }}>
                                                 <span style={{ fontWeight: 'bold' }}>{d.chiTietSanPham.sanPham.ten} </span>
                                                 <br />
                                                 <span style={{ fontStyle: 'italic' }}>{d.chiTietSanPham.kichCo.ten}</span> -{' '}
@@ -4063,13 +4095,131 @@ function DonHangCT() {
                                                   }}
                                                 ></span>
                                               </td>
-                                              <td>
+                                              <td style={{ paddingTop: 20 }}>
                                                 <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
                                                   {d.soLuongYeuCauDoi}
                                                 </span>
                                               </td>
-                                              <td>{convertToCurrency(d.donGia)}</td>
-                                              <td>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
+                                              <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
+                                              <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
+                                              <td>
+                                                <button
+                                                  onClick={handleShow29}
+                                                  // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
+                                                  className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                                                >
+                                                  <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                                                  <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                                                    <svg
+                                                      className="w-5 h-5 text-green-400"
+                                                      fill="none"
+                                                      stroke="currentColor"
+                                                      viewBox="0 0 24 24"
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                      ></path>
+                                                    </svg>
+                                                  </span>
+                                                  <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                                                    <svg
+                                                      className="w-5 h-5 text-green-400"
+                                                      fill="none"
+                                                      stroke="currentColor"
+                                                      viewBox="0 0 24 24"
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                      ></path>
+                                                    </svg>
+                                                  </span>
+                                                  <span className="relative2 text-left group-hover:text-white">Phân loại</span>
+                                                </button>
+                                                <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
+                                                  <Modal.Header closeButton>
+                                                    <Modal.Title style={{ marginLeft: 185 }}>Đổi hàng</Modal.Title>
+                                                  </Modal.Header>
+                                                  <Modal.Body>
+                                                  <form className="needs-validation" noValidate>
+  <div className="form-group row">
+    <div className="col-12" style={{ paddingLeft: 150 }}>
+      <TextField
+        id="standard-basic"
+        label="Nhập số lượng: "
+        variant="standard"
+        style={{
+          width: '200px',
+          fontSize: '15px',
+          fontWeight: 'bold'
+        }}
+        type="number"
+        // value={hoaDon.tienShip}
+        // onChange={handleTienShipChange}
+      />
+    </div>
+    <div className="col-12" style={{ paddingTop: '38px' ,paddingLeft: 135}}>
+      <FormControl>
+        <RadioGroup
+          row
+          aria-labelledby="demo-form-control-label-placement"
+          name="position"
+          defaultValue="top"
+        >
+          <FormControlLabel
+            value="0"
+            control={<Radio />}
+            label="Hàng đổi"
+            labelPlacement="start"
+          />
+          <FormControlLabel
+            value="1"
+            control={<Radio />}
+            label="Hàng lỗi"
+            labelPlacement="start"
+          />
+        </RadioGroup>
+      </FormControl>
+    </div>
+  </div>
+  <div className="text-center">
+    <button
+      // onClick={handleXacNhanDH}
+      type="submit"
+      className="btn btn-labeled shadow-button"
+      style={{
+        background: 'deepskyblue',
+        borderRadius: '50px',
+        border: '1px solid black',
+        justifyItems: 'center',
+        marginTop: '15px', // Add some spacing between the rows and the button
+      }}
+    >
+      <span
+        style={{
+          marginBottom: '3px',
+          color: 'white',
+          fontSize: '15px',
+          fontWeight: 'bold',
+        }}
+        className="btn-text"
+      >
+        Xác nhận
+      </span>
+    </button>
+  </div>
+</form>
+
+                                                  </Modal.Body>
+                                                </Modal>
+                                              </td>
                                             </tr>
                                           ))}
                                         </tbody>
@@ -4564,54 +4714,54 @@ function DonHangCT() {
               <br></br>
 
               {hoaDon && hoaDon.loaiDon === 1 && (
-              <Container style={{ display: 'flex', justifyContent: 'end' }}>
-                <Row style={{ marginBottom: 10 }}>
-                  <Col sm={12} className="row">
-                    <Col sm={6}>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: '100px',
-                          fontSize: '15px',
-                          fontWeight: 'bold',
-                          paddingTop: 20
-                        }}
-                      >
-                        Phí ship:
-                      </span>
-                    </Col>
-                    <Col sm={6}>
-                      {((hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ) ? (
-                        <TextField
-                          id="standard-basic"
-                          label="Tiền ship"
-                          variant="standard"
-                          style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            fontSize: '15px',
-                            fontWeight: 'bold'
-                          }}
-                          type="number"
-                          value={hoaDon.tienShip}
-                          onChange={handleTienShipChange}
-                        />
-                      ) : (
+                <Container style={{ display: 'flex', justifyContent: 'end' }}>
+                  <Row style={{ marginBottom: 10 }}>
+                    <Col sm={12} className="row">
+                      <Col sm={6}>
                         <span
                           style={{
                             display: 'inline-block',
                             width: '100px',
                             fontSize: '15px',
+                            fontWeight: 'bold',
                             paddingTop: 20
                           }}
                         >
-                          {convertToCurrency(hoaDon.tienShip)}
+                          Phí ship:
                         </span>
-                      )}
+                      </Col>
+                      <Col sm={6}>
+                        {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ? (
+                          <TextField
+                            id="standard-basic"
+                            label="Tiền ship"
+                            variant="standard"
+                            style={{
+                              display: 'inline-block',
+                              width: '100px',
+                              fontSize: '15px',
+                              fontWeight: 'bold'
+                            }}
+                            type="number"
+                            value={hoaDon.tienShip}
+                            onChange={handleTienShipChange}
+                          />
+                        ) : (
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              width: '100px',
+                              fontSize: '15px',
+                              paddingTop: 20
+                            }}
+                          >
+                            {convertToCurrency(hoaDon.tienShip)}
+                          </span>
+                        )}
+                      </Col>
                     </Col>
-                  </Col>
-                </Row>
-              </Container>
+                  </Row>
+                </Container>
               )}
               <br></br>
 
