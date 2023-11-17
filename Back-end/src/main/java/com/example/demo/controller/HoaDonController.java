@@ -342,6 +342,45 @@ public class HoaDonController {
         }
     }
 
+    @PutMapping("update-sl-hang-doi/{id}")
+    public ResponseEntity<?> updateSLHDoi(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDonCT) {
+        HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+
+            hoaDonChiTietService.updateSLDH(hoaDonCT.getSoLuongHangDoi(), hdct
+                    .getId());
+
+            chiTietSanPhamService.update(sp.getSoLuong() + (hoaDonCT.getSoLuongHangDoi() - hdct.getSoLuongHangDoi()),
+                hdct.getChiTietSanPham().getId());
+            return ResponseEntity.ok("ok");
+    }
+
+    @PutMapping("update-sl-hang-loi/{id}")
+    public ResponseEntity<?> updateSLHLoi(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDonCT) {
+        HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+
+        hoaDonChiTietService.updateSLHL(hoaDonCT.getSoLuongHangLoi(), hdct.getId());
+
+        chiTietSanPhamService.update(sp.getSoLuong() +
+                        (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
+                hdct.getChiTietSanPham().getId());
+
+        String maLH = "HL" + new Random().nextInt(100000);
+        HangLoi hl = new HangLoi().builder()
+                .soHangLoi(hdct.getSoLuongHangLoi())
+                .ghiChu("Hàng Lỗi")
+//                .nguoiTao(hdct.getHoaDon().getNguoiTao())
+                .ngayTao(new Date())
+                .ma(maLH)
+                .build();
+        hl = hangLoiService.add(hl);
+        hdct.setHangLoi(hl);
+        hoaDonChiTietService.add(hdct);
+
+        return ResponseEntity.ok("ok");
+    }
+
     @DeleteMapping("delete-hdct/{id}")
     public ResponseEntity<?> deleteHDCT(@PathVariable UUID id) {
         HoaDonChiTiet hd = hoaDonChiTietService.findById(id);

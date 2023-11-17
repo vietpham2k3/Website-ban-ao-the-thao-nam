@@ -59,7 +59,8 @@ import {
   hienThiHangLoi,
   getAllSPLoi,
   hienThiSPYCDoiHang,
-  hienThiYCDoiHang
+  hienThiYCDoiHang,
+  hangLoi
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -1399,28 +1400,29 @@ function DonHangCT() {
     // xac nhan huy tra hang
     const [show29, setShow29] = useState(false);
 
-    // const [lshd29, setLshd29] = useState({
-    //   ghiChu: '',
-    //   nguoiTao: dataLogin && dataLogin.ten
-    // });
+    const [hangLoi1, setHangLoi1] = useState({
+      soLuongHangLoi: 0,
+      hangLoi: {
+        ghiChu: '',
+        nguoiTao: dataLogin && dataLogin.ten
+      }
+    });
   
     const handleClose29 = () => setShow29(false);
     const handleShow29 = () => setShow29(true);
   
-    // const huyTraHang = async (id, value) => {
-    //   const res = await huyDonTraHang(id, value);
-    //   if (res) {
-    //     toast.success('Cập nhật thành công !');
-    //     setShow21(false);
-    //     detail(id);
-    //     detailListLSHD(id);
-    //   }
-    // };
+    const hangLoi9 = async (id, value) => {
+      const res = await hangLoi(id, value);
+      if (res) {
+        toast.success('Cập nhật thành công !');
+        setShow29(false);
+      }
+    };
   
-    // const handleHuyTraHang = async (event) => {
-    //   event.preventDefault();
-    //   await huyTraHang(id, lshd21);
-    // };
+    const handleHangLoi = async (event) => {
+      event.preventDefault();
+      await hangLoi9(idHDCT, hangLoi1);
+    };
   
 
   return (
@@ -4150,20 +4152,22 @@ function DonHangCT() {
                                                   <Modal.Body>
                                                   <form className="needs-validation" noValidate>
   <div className="form-group row">
-    <div className="col-12" style={{ paddingLeft: 150 }}>
-      <TextField
-        id="standard-basic"
-        label="Nhập số lượng: "
-        variant="standard"
-        style={{
-          width: '200px',
-          fontSize: '15px',
-          fontWeight: 'bold'
-        }}
-        type="number"
-        // value={hoaDon.tienShip}
-        // onChange={handleTienShipChange}
-      />
+    <div className="col-12" style={{ paddingLeft: 180, width: 310 }}>
+    {spYCDoi.map((d, i) => (
+    <InputSpinner
+                              type={'real'}
+                              max={d.soLuongYeuCauDoi}
+                              min={1}
+                              key={i}
+                              step={1}
+                              value={d.soLuongYeuCauDoi}
+                              // onChange={(e) => {
+                              //   handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e);
+                              // }}
+                              variant={'dark'}
+                              size="sm"
+                            />
+    ))}
     </div>
     <div className="col-12" style={{ paddingTop: '38px' ,paddingLeft: 135}}>
       <FormControl>
@@ -4731,7 +4735,7 @@ function DonHangCT() {
                         </span>
                       </Col>
                       <Col sm={6}>
-                        {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 ? (
+                        {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 || hoaDon.trangThai === 6 ? (
                           <TextField
                             id="standard-basic"
                             label="Tiền ship"

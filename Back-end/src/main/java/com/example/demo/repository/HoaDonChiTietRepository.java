@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,7 +36,8 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "            FROM HoaDonChiTiet\n" +
             "            WHERE id_hd = :id\n" +
             "              AND id_th IS NOT NULL\n" +
-            "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL", nativeQuery = true)
+            "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL" +
+            " AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
     List<HoaDonChiTiet> getAllByIdHDAndIdTHAndSLYCD(UUID id);
 
     @Query(value = "SELECT *\n" +
@@ -70,4 +72,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "where id = :id", nativeQuery = true)
     void delete(UUID id);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update HoaDonChiTiet c set c.soLuongHangDoi = :soLuongHangDoi  where c.id = :id")
+    void updateSLHD(@Param("soLuongHangDoi") Integer soLuongHangDoi, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update HoaDonChiTiet c set c.soLuongHangLoi = :soLuongHangLoi  where c.id = :id")
+    void updateSLHL(@Param("soLuongHangLoi") Integer soLuongHangLoi, UUID id);
 }

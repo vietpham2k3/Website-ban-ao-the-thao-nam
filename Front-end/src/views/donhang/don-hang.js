@@ -153,10 +153,12 @@ function DonHang() {
   const [isCheckAllDisabled, setIsCheckAllDisabled] = useState(false);
 
   useEffect(() => {
-    // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) => (d.trang_thai !== 0 && d.trang_thai !== 1) || d.loai_don === 0);
+    const shouldDisableCheckAll = data.some(
+      (d) => (d.trang_thai !== 0 && d.trang_thai !== 1 && d.trang_thai !== 6) || d.loai_don === 0
+    );
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
+  
 
   const handleCheckAll = (event) => {
     const { checked } = event.target;
@@ -167,17 +169,17 @@ function DonHang() {
   const handleCheck = (index) => {
     const newCheckedArray = [...isChecked];
     newCheckedArray[index] = !newCheckedArray[index];
-
+  
     // Cập nhật trạng thái disabled của các checkbox dựa trên newCheckedArray
     const updatedData = data.map((d) => {
-      if (d.trang_thai === 0 && d.loai_don === 1) {
-        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 1) };
+      if ((d.trang_thai === 0 || d.trang_thai === 6) && d.loai_don === 1) {
+        return { ...d, disabled: newCheckedArray.some((value, index) => value && (data[index].trang_thai === 1 || data[index].trang_thai === 6)) };
       } else if (d.trang_thai === 1 && d.loai_don === 1) {
-        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 0) };
+        return { ...d, disabled: newCheckedArray.some((value, index) => value && (data[index].trang_thai === 0 || data[index].trang_thai === 6)) };
       }
       return d;
     });
-
+  
     setIsChecked(newCheckedArray);
     setData(updatedData);
   };
@@ -193,7 +195,7 @@ function DonHang() {
 
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
-    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
+    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 || d.trang_thai === 6)).map((d) => d.id);
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, tenNV.nhanVien.ten);
     } else {
@@ -213,7 +215,7 @@ function DonHang() {
   const handleHuyDon = async (event) => {
     event.preventDefault();
     const selectedIds = data
-      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 || (d.trang_thai === 6 && d.loai_don === 1)))
       .map((d) => d.id);
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, tenNV.nhanVien.ten);

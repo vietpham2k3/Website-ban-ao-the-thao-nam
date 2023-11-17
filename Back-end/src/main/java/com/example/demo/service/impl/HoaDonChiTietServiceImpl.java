@@ -67,4 +67,14 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     public HoaDonChiTiet findById(UUID id) {
         return repository.findById(id).orElse(null);
     }
+
+    @Override
+    public void updateSLDH(Integer soLuong, UUID id) {
+        repository.updateSLHD(soLuong,id);
+    }
+
+    @Override
+    public void updateSLHL(Integer soLuong, UUID id) {
+        repository.updateSLHL(soLuong,id);
+    }
 }

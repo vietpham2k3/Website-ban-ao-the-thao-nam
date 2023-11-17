@@ -193,6 +193,10 @@ const getAllSPLoi = (id) => {
   return axios.get('/api/hoa-don/hien-thi-sp-loi/' + id);
 };
 
+const hangLoi = (id,values) => {
+  return axios.put('/api/hoa-don/update-sl-hang-loi/' + id, values);
+};
+
 // const searchMS = (key,trangThai, page) => {
 //     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
 //   };
@@ -245,5 +249,6 @@ export {
   hienThiHangLoi,
   getAllSPLoi,
   hienThiSPYCDoiHang,
-  hienThiYCDoiHang
+  hienThiYCDoiHang,
+  hangLoi
 };

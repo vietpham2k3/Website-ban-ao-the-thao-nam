@@ -24,7 +24,6 @@ import java.util.UUID;
 @Table(name = "HangLoi")
 public class HangLoi {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
