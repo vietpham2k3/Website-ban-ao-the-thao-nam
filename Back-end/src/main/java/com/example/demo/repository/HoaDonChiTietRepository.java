@@ -41,7 +41,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Query(value = "SELECT *\n" +
             "            FROM HoaDonChiTiet\n" +
             "            WHERE id_hd = :id\n" +
-            "              AND id_th IS NOT NULL\n" +
+//            "              AND id_th IS NOT NULL\n" +
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL" +
             " AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
     List<HoaDonChiTiet> getAllByIdHDAndIdTHAndSLYCD(UUID id);
