@@ -12,12 +12,16 @@ const update = (values) => {
   return axios.put(`/api/doi-hang/update`, values);
 };
 
-const yeuCauTraHang = (id, values) => {
-  return axios.post(`/api/tra-hang/yeu-cau-tra-hang/${id}`, values);
+const yeuCauDoiHang = (id, values) => {
+  return axios.post(`/api/doi-hang/yeu-cau-doi-hang/${id}`, values);
 };
 
 const addSPToDH = (values) => {
   return axios.post(`/api/doi-hang/add-sp`, values);
 };
 
-export { taoDonTraHang, update, yeuCauTraHang, getAll, addSPToDH };
+const deleteSPDH = (id) => {
+  return axios.delete(`/api/doi-hang/delete/${id}`);
+};
+
+export { taoDonTraHang, update, yeuCauDoiHang, getAll, addSPToDH, deleteSPDH };

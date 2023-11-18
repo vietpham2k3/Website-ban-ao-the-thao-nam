@@ -29,4 +29,9 @@ public class DoiHangServiceImpl implements DoiHangService {
     public DoiHang add(DoiHang traHang) {
         return repository.save(traHang);
     }
+
+    @Override
+    public DoiHang findById(UUID id) {
+        return repository.findById(id).orElse(null);
+    }
 }

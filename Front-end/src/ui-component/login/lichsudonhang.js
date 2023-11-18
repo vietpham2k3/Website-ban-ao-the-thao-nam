@@ -43,7 +43,7 @@ function History() {
     { title: 'Đang giao', trangThai: [1, 3, 5, 8, 9, 10, 11, 12, 13], size: 0 },
     { title: 'Hoàn thành', trangThai: [4], size: 0 },
     { title: 'Huỷ đơn', trangThai: [2, 14], size: 0 },
-    { title: 'Trả hàng', trangThai: [15, 16, 17], size: 0 }
+    { title: 'Đổi hàng', trangThai: [15, 16, 17], size: 0 }
   ]);
 
   useEffect(() => {

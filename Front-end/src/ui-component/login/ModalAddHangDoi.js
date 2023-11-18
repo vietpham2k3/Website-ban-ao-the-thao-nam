@@ -26,28 +26,34 @@ function ModalAddHangDoi(props) {
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableBody>
-                {dataSP.map((d, i) => (
-                  <TableRow
-                    key={i}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleDetail(d.sanPham.id)}
-                  >
-                    <TableCell component="th" scope="row" className="d-flex">
-                      <img
-                        src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                        className="img-history rounded-start me-3"
-                        alt=""
-                        width={100}
-                        height={80}
-                        style={{ borderRadius: 15 }}
-                      />
-                      {d.sanPham.ten}
-                    </TableCell>
-                    <TableCell align="right">{d.soLuong}</TableCell>
-                    <TableCell align="right">{convertToCurrency(d.giaBan)}</TableCell>
+                {dataSP ? (
+                  dataSP.map((d, i) => (
+                    <TableRow
+                      key={i}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleDetail(d.sanPham.id)}
+                    >
+                      <TableCell component="th" scope="row" className="d-flex">
+                        <img
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                          className="img-history rounded-start me-3"
+                          alt=""
+                          width={70}
+                          height={150}
+                          style={{ borderRadius: 15 }}
+                        />
+                        {d.sanPham.ten}
+                      </TableCell>
+                      <TableCell align="right">{d.soLuong}</TableCell>
+                      <TableCell align="right">{convertToCurrency(d.giaBan)}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell align="right">CC</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>

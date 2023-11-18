@@ -11,4 +11,6 @@ public interface DoiHangService {
     List<HoaDonChiTiet> getAll(UUID id);
 
     DoiHang add(DoiHang traHang);
+
+    DoiHang findById(UUID id);
 }

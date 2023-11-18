@@ -24,6 +24,12 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "AND id_hd = :id\n", nativeQuery = true)
     List<HoaDonChiTiet> getAll(UUID id);
 
+    @Query(value = "SELECT h.*\n" +
+            "FROM HoaDonChiTiet h\n" +
+            "WHERE " +
+            "id_hd = :id\n", nativeQuery = true)
+    List<HoaDonChiTiet> getAllByIdHD(UUID id);
+
 
     @Query(value = "SELECT *\n" +
             "FROM HoaDonChiTiet\n" +

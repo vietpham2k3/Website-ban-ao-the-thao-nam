@@ -11,6 +11,8 @@ public interface HoaDonChiTietService {
 
     List<HoaDonChiTiet> getAll(UUID id);
 
+    List<HoaDonChiTiet> getAllByIdHD(UUID id);
+
     List<HoaDonChiTiet> findAll();
 
     HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet);

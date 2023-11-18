@@ -52,7 +52,7 @@ const TableKCMS = (props) => {
                 type="number"
                 variant="standard"
                 onChange={(e) =>
-                  setValuesAdd({ ...valuesAdd, hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: e.target.value } })
+                  setValuesAdd({ ...valuesAdd, hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) } })
                 }
               />
             </div>

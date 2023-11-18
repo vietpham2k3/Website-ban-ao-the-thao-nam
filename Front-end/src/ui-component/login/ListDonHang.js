@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 import ModalHuyDon from './ModalHuyDon';
 import { useNavigate } from 'react-router';
 import ModalTraHang from './ModalTraHang';
-import { getAll, update } from 'services/DoiHangService';
-import _ from 'lodash';
+import { addSPToDH, deleteSPDH, getAll, update, yeuCauDoiHang } from 'services/DoiHangService';
+// import _ from 'lodash';
 import ModalAddHangDoi from './ModalAddHangDoi';
 import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
 import { getAllByIdSPTT } from 'services/SanPhamService';
@@ -21,10 +21,14 @@ function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
   const [show, setShow] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [isUpdateHD, setIsUpdateHD] = useState(false);
   const [dataHDCT, setDataHDCT] = useState([]);
+  const [dataHDCTDH, setDataHDCTDH] = useState([]);
   const [dataSPDoi, setDataSPDoi] = useState([]);
   const [dataSP, setDataSP] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmountDH, setTotalAmountDH] = useState(0);
+  const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [isShow, setIsshow] = useState(false);
   // const [idCTSP, setIdCTSP] = useState({});
@@ -46,6 +50,7 @@ function ListDonHang(props) {
         id: ''
       },
       soLuongHangDoi: 0,
+      soLuongYeuCauDoi: 1,
       donGia: 0
     },
     doiHang: {
@@ -77,8 +82,25 @@ function ListDonHang(props) {
   ];
 
   useEffect(() => {
-    handleSearchSPofDH();
-  }, [term]);
+    searchSPofDH(term, totalAmount);
+  }, [term, totalAmount]);
+
+  useEffect(() => {
+    let sum = 0;
+    dataHDCT.forEach((d) => {
+      sum += d.soLuongYeuCauDoi * d.donGia;
+    });
+    let sumDH = 0;
+    let sumDG = 0;
+    dataSPDoi.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      sumDG += d.donGia;
+    });
+    // console.log(sumDH);
+    setTotalAmount(sum - sumDH);
+    setTotalAmountDH(sum);
+    setTotalAmountDHSP(sumDG);
+  }, [dataHDCT, dataSPDoi]);
 
   useEffect(() => {
     setValuesAdd({
@@ -104,10 +126,13 @@ function ListDonHang(props) {
 
   useEffect(() => {
     if (isUpdate) {
-      handleUpdateSL();
+      handleUpdateSL(dataHDCT);
       setIsUpdate(false);
+    } else {
+      handleUpdateSL(dataHDCTDH);
+      setIsUpdateHD(false);
     }
-  }, [isUpdate]);
+  }, [isUpdate, isUpdateHD]);
 
   const searchSPofDH = async (term, maxSum) => {
     const res = await searchCTSPofDH(term);
@@ -120,9 +145,28 @@ function ListDonHang(props) {
 
       // Cập nhật state với dữ liệu đã lọc
       setDataSP(filteredData);
-      if (!term) {
-        setDataSP([]);
-      }
+    }
+  };
+
+  const deleteHD = async (idHDCT) => {
+    const res = await deleteSPDH(idHDCT);
+    if (res) {
+      toast.success('Xoá thành công');
+      let sum = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      dataSPDoi.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+      });
+      // console.log(sumDH);
+      setTotalAmount(sum - sumDH);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+      findAll(dataHDCT[0].hoaDon.id);
     }
   };
 
@@ -132,10 +176,6 @@ function ListDonHang(props) {
       setDataSPDoi(res.data);
     }
   };
-
-  const handleSearchSPofDH = _.debounce(async () => {
-    searchSPofDH(term, totalAmount); // Truyền giá trị totalAmount vào hàm searchSPofDH
-  }, []);
 
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
@@ -173,12 +213,16 @@ function ListDonHang(props) {
   const updateSL = async (value) => {
     const res = await update(value);
     if (res) {
-      findAll(dataHDCT[0].hoaDon.id);
+      // findAll(dataHDCT[0].hoaDon.id);
     }
   };
 
-  const handleUpdateSL = () => {
-    updateSL(dataHDCT);
+  const handleUpdateSL = (value) => {
+    updateSL(value);
+  };
+
+  const handleDelete = (id) => {
+    deleteHD(id);
   };
 
   // const nhanDonHang = async (id, value) => {
@@ -233,6 +277,61 @@ function ListDonHang(props) {
     });
   };
 
+  const addSP = async (value) => {
+    let res = await addSPToDH(value);
+    if (res) {
+      setIsshow(true);
+      setIsshowDH(false);
+      setIsshowMSKC(false);
+      findAll(dataHDCT[0].hoaDon.id);
+      toast.success('Chọn sản phẩm thành công');
+      let sum = 0;
+      let count = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      dataSPDoi.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+        count += d.soLuongHangDoi;
+      });
+      setValuesAdd({
+        ...valuesAdd,
+        doiHang: {
+          ...valuesAdd.doiHang,
+          trangThai: 15,
+          tongTienHangDoi: sumDH,
+          soHangDoi: count,
+          nguoiTao: dataLogin.ten
+        }
+      });
+      setTotalAmount(sum - sumDH);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+    }
+  };
+
+  const handleAddSP = () => {
+    if (totalAmount - valuesAdd.hoaDonChiTiet.donGia * valuesAdd.hoaDonChiTiet.soLuongHangDoi < 0) {
+      toast.error('Bạn không tiền để đổi');
+      return;
+    }
+    addSP(valuesAdd);
+  };
+
+  const requestDoiHang = async (id, value) => {
+    let res = await yeuCauDoiHang(id, value);
+    if (res) {
+      toast.success('Thành công');
+    }
+  };
+
+  const handleDoiHang = () => {
+    requestDoiHang(dataHDCT[0].hoaDon.id, ghiChu);
+  };
+
   const getAllMSKC = async (id) => {
     let res = await getAllByIdSPTT(id);
     if (res) {
@@ -277,11 +376,11 @@ function ListDonHang(props) {
                   : d.hoaDon.trangThai === 14
                   ? 'Yêu cầu huỷ đơn'
                   : d.hoaDon.trangThai === 15
-                  ? 'Yêu cầu trả hàng'
+                  ? 'Yêu cầu đổi hàng'
                   : d.hoaDon.trangThai === 16
-                  ? 'Trả hàng thành công'
+                  ? 'Đổi hàng thành công'
                   : d.hoaDon.trangThai === 17
-                  ? 'Trả hàng thất bại'
+                  ? 'Đổi hàng thất bại'
                   : d.hoaDon.trangThai === 6
                   ? 'Thanh toán thành công'
                   : 'Hoàn thành'}
@@ -381,6 +480,16 @@ function ListDonHang(props) {
           setIsshow(false);
           setIsshowDH(true);
         }}
+        setDataHDCTDH={setDataHDCTDH}
+        setIsUpdateHD={setIsUpdateHD}
+        handleDelete={handleDelete}
+        setDataSPDoi={setDataSPDoi}
+        totalAmount={totalAmount}
+        setTotalAmountDH={setTotalAmountDH}
+        totalAmountDH={totalAmountDH}
+        setTotalAmountDHSP={setTotalAmountDHSP}
+        totalAmountDHSP={totalAmountDHSP}
+        handleDoiHang={handleDoiHang}
       ></ModalTraHang>
       <ModalAddHangDoi
         handleClose={() => {
@@ -404,6 +513,7 @@ function ListDonHang(props) {
         handleDetail={handleDetailSL}
         setValuesAdd={setValuesAdd}
         valuesAdd={valuesAdd}
+        handleAdd={handleAddSP}
       ></TableKCMS>
     </div>
   );
