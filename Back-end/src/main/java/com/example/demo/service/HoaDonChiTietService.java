@@ -32,4 +32,6 @@ public interface HoaDonChiTietService {
     void updateSLDH(Integer soLuong, UUID id);
 
     void updateSLHL(Integer soLuong, UUID id);
+
+    void updateHL(String nguoiTao,String ghiChu,UUID id);
 }

@@ -79,6 +79,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 
     @Transactional
     @Modifying
-    @Query(value = "update HoaDonChiTiet c set c.soLuongHangLoi = :soLuongHangLoi  where c.id = :id")
+    @Query(value = "update HoaDonChiTiet c set c.soLuongHangLoi = :soLuongHangLoi where c.id = :id")
     void updateSLHL(@Param("soLuongHangLoi") Integer soLuongHangLoi, UUID id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE HangLoi\n" +
+            "SET ghi_chu = :ghiChu, nguoi_tao = :nguoiTao\n" +
+            "WHERE id IN (SELECT id_hl FROM HoaDonChiTiet WHERE id = :id);",nativeQuery = true)
+    void updateHL(@Param("ghiChu") String ghiChu, @Param("nguoiTao") String nguoiTao,UUID id);
 }

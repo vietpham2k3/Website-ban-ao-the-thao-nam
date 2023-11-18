@@ -360,7 +360,7 @@ public class HoaDonController {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
         ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
 
-        hoaDonChiTietService.updateSLHL(hoaDonCT.getSoLuongHangLoi(), hdct.getId());
+        hdct.setSoLuongHangLoi(hoaDonCT.getSoLuongHangLoi());
 
         chiTietSanPhamService.update(sp.getSoLuong() +
                         (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
@@ -368,16 +368,16 @@ public class HoaDonController {
 
         String maLH = "HL" + new Random().nextInt(100000);
         HangLoi hl = new HangLoi().builder()
-                .soHangLoi(hdct.getSoLuongHangLoi())
-                .ghiChu("Hàng Lỗi")
-//                .nguoiTao(hdct.getHoaDon().getNguoiTao())
+                .soHangLoi(hoaDonCT.getSoLuongHangLoi())
+                .ghiChu(hoaDonCT.getHangLoi().getGhiChu())
+                .nguoiTao(hoaDonCT.getHangLoi().getNguoiTao())
                 .ngayTao(new Date())
                 .ma(maLH)
                 .build();
         hl = hangLoiService.add(hl);
         hdct.setHangLoi(hl);
-        hoaDonChiTietService.add(hdct);
 
+        hoaDonChiTietService.add(hdct);
         return ResponseEntity.ok("ok");
     }
 

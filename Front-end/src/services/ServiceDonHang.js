@@ -197,10 +197,6 @@ const hangLoi = (id,values) => {
   return axios.put('/api/hoa-don/update-sl-hang-loi/' + id, values);
 };
 
-// const searchMS = (key,trangThai, page) => {
-//     return axios.get(`/api/mau-sac/hien-thi-page-search?key=${key}&trangThai=${trangThai}&page=${page}`);
-//   };
-
 export {
   getAllHD,
   requestHuyDon,

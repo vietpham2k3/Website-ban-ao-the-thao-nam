@@ -13,13 +13,13 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+// import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
+// import { styled } from '@mui/system';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 // import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -1411,19 +1411,49 @@ function DonHangCT() {
     const handleClose29 = () => setShow29(false);
     const handleShow29 = () => setShow29(true);
   
-    const hangLoi9 = async (id, value) => {
-      const res = await hangLoi(id, value);
+    const hangLoi9 = async (idHDCT, value) => {
+      const res = await hangLoi(idHDCT, value);
       if (res) {
         toast.success('Cập nhật thành công !');
         setShow29(false);
+        hienThiDonDoi(id);
+        hienThiSPDonDoi(id);
+        hienThiDonLoi(id);
+        hienThiSPLoi(id);
+        hienThiSPYCDoi(id);
+        hienThiDonYCDoi(id);
       }
     };
   
-    const handleHangLoi = async (event) => {
-      event.preventDefault();
-      await hangLoi9(idHDCT, hangLoi1);
+    const handleHangLoi = (idHDCT, e) => {
+      e.preventDefault();
+    
+      setIdHDCT(idHDCT);
+    
+      if (hangLoi1.hangLoi.ghiChu === '') {
+        toast.warning('Vui lòng nhập ghi chú !');
+      }
+    
+      if (hangLoi1.hangLoi.ghiChu !== '') {
+        hangLoi9(idHDCT, hangLoi1)
+          .then((res) => {
+            if (res) {
+              toast.success('Cập nhật thành công !');
+              setShow29(false);
+              
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }
     };
-  
+    
+    // const [isHangLoiSelected, setHangLoiSelected] = useState(false);
+
+    // const handleCheckboxChange = () => {
+    //   setHangLoiSelected((prevValue) => !prevValue);
+    // };
 
   return (
     <>
@@ -4147,7 +4177,7 @@ function DonHangCT() {
                                                 </button>
                                                 <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
                                                   <Modal.Header closeButton>
-                                                    <Modal.Title style={{ marginLeft: 185 }}>Đổi hàng</Modal.Title>
+                                                    <Modal.Title style={{ marginLeft: 185 }}>Hàng Lỗi</Modal.Title>
                                                   </Modal.Header>
                                                   <Modal.Body>
                                                   <form className="needs-validation" noValidate>
@@ -4156,47 +4186,59 @@ function DonHangCT() {
     {spYCDoi.map((d, i) => (
     <InputSpinner
                               type={'real'}
-                              max={d.soLuongYeuCauDoi}
+                              max={d.soLuongYeuCauDoi - d.soLuongHangLoi}
                               min={1}
                               key={i}
                               step={1}
-                              value={d.soLuongYeuCauDoi}
-                              // onChange={(e) => {
-                              //   handleUpdateSl(d.id, d.hoaDon.id, d.chiTietSanPham.id, e);
-                              // }}
+                              value={d.soLuongYeuCauDoi - d.soLuongHangLoi}
+                              onChange={(e) => {
+                                setHangLoi1({
+                                  ...hangLoi1,
+                                  soLuongHangLoi: e
+                                });
+                              }}
+                              
                               variant={'dark'}
                               size="sm"
                             />
     ))}
     </div>
-    <div className="col-12" style={{ paddingTop: '38px' ,paddingLeft: 135}}>
-      <FormControl>
-        <RadioGroup
-          row
-          aria-labelledby="demo-form-control-label-placement"
-          name="position"
-          defaultValue="top"
-        >
-          <FormControlLabel
-            value="0"
-            control={<Radio />}
-            label="Hàng đổi"
-            labelPlacement="start"
-          />
-          <FormControlLabel
-            value="1"
-            control={<Radio />}
-            label="Hàng lỗi"
-            labelPlacement="start"
-          />
-        </RadioGroup>
-      </FormControl>
+
+  <div>
+  {/* <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 178 }}>
+        <FormControlLabel
+          control={<Checkbox checked={isHangLoiSelected} onChange={handleCheckboxChange} size="small" />}
+          label="Hàng lỗi"
+          labelPlacement="start"
+        />
+      </div> */}
+
+        <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
+
+        <textarea
+        style={{width: 320,height:120}}
+  aria-label="minimum height"
+  rows={3}
+  placeholder="Nhập ghi chú..."
+  value={hangLoi1.hangLoi.ghiChu}
+  onChange={(e) => setHangLoi1({
+    ...hangLoi1,
+    hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value }
+  })}
+/>
+
+
+        </div>
     </div>
+
   </div>
   <div className="text-center">
+  {spYCDoi.map((d, i) => (
+
     <button
-      // onClick={handleXacNhanDH}
-      type="submit"
+    key={i}
+      onClick={(e) => handleHangLoi(d.id, e)}
+      type="button"
       className="btn btn-labeled shadow-button"
       style={{
         background: 'deepskyblue',
@@ -4206,6 +4248,7 @@ function DonHangCT() {
         marginTop: '15px', // Add some spacing between the rows and the button
       }}
     >
+      
       <span
         style={{
           marginBottom: '3px',
@@ -4218,6 +4261,7 @@ function DonHangCT() {
         Xác nhận
       </span>
     </button>
+                        ))}
   </div>
 </form>
 

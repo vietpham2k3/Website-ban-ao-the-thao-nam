@@ -77,4 +77,9 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     public void updateSLHL(Integer soLuong, UUID id) {
         repository.updateSLHL(soLuong,id);
     }
+
+    @Override
+    public void updateHL( String ghiChu,String nguoiTao, UUID id) {
+        repository.updateHL(ghiChu,nguoiTao,id);
+    }
 }
