@@ -4213,9 +4213,9 @@ function DonHangCT() {
 
                                                           <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
                                                             <textarea
-                                                              style={{ width: 320, height: 120 }}
-                                                              aria-label="minimum height"
-                                                              rows={3}
+                                                              style={{ width: 320, height: 90 }}
+                                                              className="form-control"
+                                                              rows="4"
                                                               placeholder="Nhập ghi chú..."
                                                               value={hangLoi1.hangLoi.ghiChu}
                                                               onChange={(e) =>
