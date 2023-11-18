@@ -45,9 +45,9 @@ function DonHang() {
     { value: '6', label: 'Thanh toán thành công' },
     { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
-    { value: '15', label: 'Yêu cầu trả hàng' },
-    { value: '16', label: 'Trả hàng thành công' },
-    { value: '17', label: 'Trả hàng thất bại' }
+    { value: '15', label: 'Yêu cầu đổi hàng' },
+    { value: '16', label: 'Đổi hàng thành công' },
+    { value: '17', label: 'Đổi hàng thất bại' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -762,7 +762,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Yêu cầu trả hàng
+                          Yêu cầu đổi hàng
                         </span>
                       )}
                       {d.trang_thai === 16 && (
@@ -781,7 +781,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Trả hàng thành công
+                          Đổi hàng thành công
                         </span>
                       )}
                       {d.trang_thai === 17 && (
