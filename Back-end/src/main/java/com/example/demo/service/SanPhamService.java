@@ -9,4 +9,5 @@ public interface SanPhamService {
     SanPham add(SanPham sanPham);
 
     SanPham detail(UUID id);
+
 }

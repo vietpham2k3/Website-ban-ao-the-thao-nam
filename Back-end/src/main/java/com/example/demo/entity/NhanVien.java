@@ -80,6 +80,9 @@ public class NhanVien {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name="gioi_tinh")
+    private Boolean gioiTinh;
+
     @JsonIgnore
     @Column(name = "anh")
     @Lob

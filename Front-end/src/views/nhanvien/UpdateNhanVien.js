@@ -9,7 +9,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import MyVerticallyCenteredModal from './AddVaiTro';
 
+import { Button, Stack, Avatar } from '@mui/material';
+import { useRef } from 'react';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useLocation } from 'react-router-dom';
+
 function UpdateNhanVien() {
+
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const imageURL = searchParams.get('imageURL');
+
   const [vaiTroS, setVaiTroS] = useState([]);
   const navigate = useNavigate();
   const [values, setValues] = useState({
@@ -21,8 +32,30 @@ function UpdateNhanVien() {
     ngaySinh: '',
     matKhau: '',
     vaiTro: '',
+    gioiTinh: '',
     trangThai: ''
   });
+
+  //Anh
+  const fileInputRef = useRef(null);
+  const [selectedImageURL, setSelectedImageURL] = useState(imageURL || '');
+
+  useEffect(() => {
+    return () => {
+      selectedImageURL && URL.revokeObjectURL(selectedImageURL);
+    };
+  }, [selectedImageURL]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setAnh(file);
+    const imageURL = URL.createObjectURL(file);
+    setSelectedImageURL(imageURL);
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
 
   //Vai Trò:
   const [modalShow, setModalShow] = useState(false);
@@ -87,6 +120,7 @@ function UpdateNhanVien() {
     formData.append('ngaySinh', values.ngaySinh);
     formData.append('matKhau', values.matKhau);
     formData.append('vaiTro', values.vaiTro);
+    formData.append('gioiTinh', values.gioiTinh);
     formData.append('trangThai', values.trangThai);
     formData.append('anh', anh);
 
@@ -100,12 +134,6 @@ function UpdateNhanVien() {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi cập nhật khách hàng');
     }
-  };
-
-  const handlePreviewAnh = (event) => {
-    const file = event.target.files[0];
-    file.preview = URL.createObjectURL(file);
-    setAnh(file);
   };
 
   const detail = async (id) => {
@@ -141,8 +169,36 @@ function UpdateNhanVien() {
   return (
     <MainCard>
       <Card>
-        <div className="div">
-          <div className="body flex-grow-1 px-3">
+        <div className="row g-3">
+          <h1>Sửa Nhân Viên</h1>
+        </div>
+        <div className="div" style={{ display: 'flex', paddingTop: 30 }}>
+          <div className="col-md-4" style={{ border: '1px solid black', width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
+            <Stack direction="column" spacing={2} alignItems="center">
+              <Avatar
+                alt="Ảnh đại diện"
+                src={selectedImageURL || anh}
+                sx={{ width: 250, height: 250, cursor: 'pointer' }}
+                onClick={handleAvatarClick}
+              />
+              <label htmlFor="upload-input">
+                <input
+                  id="upload-input"
+                  type="file"
+                  accept="image/*"
+                  name="anh"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                />
+                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                  Tải lên
+                </Button>
+              </label>
+            </Stack>
+          </div>
+
+          <div className="col-md-8">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
                 <label htmlFor="ma" className="form-label">
@@ -181,7 +237,7 @@ function UpdateNhanVien() {
                   onChange={(e) => setValues({ ...values, sdt: e.target.value })}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <label htmlFor="email" className="form-label">
                   Email
                 </label>
@@ -193,7 +249,7 @@ function UpdateNhanVien() {
                   onChange={(e) => setValues({ ...values, email: e.target.value })}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <label htmlFor="diaChi" className="form-label">
                   Địa Chỉ
                 </label>
@@ -205,7 +261,7 @@ function UpdateNhanVien() {
                   onChange={(e) => setValues({ ...values, diaChi: e.target.value })}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <label htmlFor="ngaySinh" className="form-label">
                   Ngày Sinh
                 </label>
@@ -217,7 +273,7 @@ function UpdateNhanVien() {
                   onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
                 <label htmlFor="matKhau" className="form-label">
                   Mật khẩu
                 </label>
@@ -229,8 +285,7 @@ function UpdateNhanVien() {
                   onChange={(e) => setValues({ ...values, matKhau: e.target.value })}
                 />
               </div>
-
-              <div className="col-6">
+              <div className="col-md-6">
                 <label className="form-label me-3" htmlFor="vaiTro">
                   Vai Trò{' '}
                   <span
@@ -262,15 +317,40 @@ function UpdateNhanVien() {
                   ))}
                 </select>
               </div>
-
-              <div className="col-6">
-                <label htmlFor="a" className="form-label">
-                  Ảnh
+              <div className="col-md-6">
+                <label htmlFor="a" className="form-label" style={{ paddingRight: 5 }}>
+                  Giới tính:{' '}
                 </label>
-                <input type="file" id="anh" className="form-control" name="anh" onChange={handlePreviewAnh} />
-                {anh && <img src={anh.preview} alt="" width="70%"></img>}
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions1"
+                    id="inlineRadio3"
+                    value={true}
+                    checked={values.gioiTinh === true}
+                    onChange={() => setValues({ ...values, gioiTinh: true })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nam
+                  </label>
+                </div>
+                <div className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="inlineRadioOptions1"
+                    id="inlineRadio4"
+                    value={false}
+                    checked={values.gioiTinh === false}
+                    onChange={() => setValues({ ...values, gioiTinh: false })}
+                  />
+                  <label htmlFor="a" className="form-check-label">
+                    Nữ
+                  </label>
+                </div>
               </div>
-              <div className="col-12">
+              <div className="col-md-6">
                 <label htmlFor="a" className="form-label me-3">
                   Trạng thái:{' '}
                 </label>
@@ -280,8 +360,8 @@ function UpdateNhanVien() {
                     type="radio"
                     name="inlineRadioOptions"
                     id="inlineRadio1"
-                    value="0"
-                    checked={values.trangThai === 0}
+                    value={values.trangThai}
+                    checked={true}
                     onChange={() => setValues({ ...values, trangThai: 0 })}
                   />
                   <label htmlFor="a" className="form-check-label">
@@ -294,8 +374,7 @@ function UpdateNhanVien() {
                     type="radio"
                     name="inlineRadioOptions"
                     id="inlineRadio2"
-                    value="1"
-                    checked={values.trangThai === 1}
+                    value={values.trangThai}
                     onChange={() => setValues({ ...values, trangThai: 1 })}
                   />
                   <label htmlFor="a" className="form-check-label">
@@ -303,6 +382,7 @@ function UpdateNhanVien() {
                   </label>
                 </div>
               </div>
+
               <div className="col-12">
                 <button type="submit" className="btn btn-primary">
                   Update
@@ -324,3 +404,5 @@ function UpdateNhanVien() {
 }
 
 export default UpdateNhanVien;
+
+

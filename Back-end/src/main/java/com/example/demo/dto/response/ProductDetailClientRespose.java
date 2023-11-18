@@ -3,10 +3,12 @@ package com.example.demo.dto.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.UUID;
+
 public interface ProductDetailClientRespose {
 
     @Value("#{target.id}")
-    String getId();
+    UUID getId();
 
     @Value("#{target.ma}")
     String getMa();
@@ -29,4 +31,6 @@ public interface ProductDetailClientRespose {
     @Value("#{target.tenCoAo}")
     String getTenCoAO();
 
+    @Value("#{target.idSanPham}")
+    String getIdSanPham();
 }

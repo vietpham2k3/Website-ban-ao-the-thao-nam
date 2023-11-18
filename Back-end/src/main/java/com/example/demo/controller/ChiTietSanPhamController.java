@@ -307,13 +307,16 @@ public class ChiTietSanPhamController {
         return ResponseEntity.ok("ok");
     }
 
-//    @PostMapping("/findAll")
-//    public ResponseEntity<?> findAllClient(@RequestBody FilterProductClient req){
-//        return new ResponseEntity<>(chiTietSanPhamService.findAllClient(req), HttpStatus.OK);
-//    }
+    @GetMapping("/searchMT")
+    public ResponseEntity<?> searchMaAndTen(
+            @RequestParam(value = "key", required = false) String key,
+            @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(chiTietSanPhamService.searchMaAndTen(key, page));
+    }
 
     @PostMapping("/filter")
     public ResponseEntity<?> filter(@RequestBody FilterProductClient filterProductClient, @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        return ResponseEntity.status(HttpStatus.OK).body(chiTietSanPhamService.filter(filterProductClient,page));
+        return ResponseEntity.status(HttpStatus.OK).body(chiTietSanPhamService.filter(filterProductClient, page));
     }
+
 }
