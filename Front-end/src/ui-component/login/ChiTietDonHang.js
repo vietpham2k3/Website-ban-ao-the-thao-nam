@@ -39,7 +39,7 @@ function ChiTietDonHang() {
   }, [id]);
 
   useEffect(() => {
-    const lyDo = dataDetailLSHD.filter((d) => d.trangThai === 14);
+    const lyDo = dataDetailLSHD.filter((d) => d.trangThai === 14 || d.trangThai === 15);
     if (lyDo[0] !== undefined) {
       setLyDo(lyDo[0].ghiChu);
       console.log(lyDo[0].ghiChu);

@@ -112,7 +112,6 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "JOIN\n" +
             "  HoaDonChiTiet HDCT ON DH.id = HDCT.id_th\n" +
             "WHERE id_hd = :idHD \n" +
-            "AND id_th IS NOT NULL\n" +
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL", nativeQuery = true)
     List<String> doiHangYC(@Param("idHD") UUID idHD);
 
