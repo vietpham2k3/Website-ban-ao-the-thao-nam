@@ -27,4 +27,9 @@ public class HangLoiServiceImpl implements HangLoiService {
     public List<HoaDonChiTiet> spLoi(UUID id) {
         return resHDCT.getAllByIdHDAndIdHL(id);
     }
+
+    @Override
+    public HangLoi add(HangLoi hangLoi) {
+        return res.save(hangLoi);
+    }
 }

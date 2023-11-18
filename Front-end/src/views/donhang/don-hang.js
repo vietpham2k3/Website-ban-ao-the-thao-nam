@@ -43,11 +43,11 @@ function DonHang() {
     { value: '4', label: 'Giao hàng thành công' },
     { value: '5,11,12,13', label: 'Giao hàng thất bại' },
     { value: '6', label: 'Thanh toán thành công' },
-    { value: '7', label: 'Đã nhận hàng' },
+    // { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
-    { value: '15', label: 'Yêu cầu trả hàng' },
-    { value: '16', label: 'Trả hàng thành công' },
-    { value: '17', label: 'Trả hàng thất bại' }
+    { value: '15', label: 'Yêu cầu đổi hàng' },
+    { value: '16', label: 'Đổi hàng thành công' },
+    { value: '17', label: 'Đổi hàng thất bại' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -153,8 +153,7 @@ function DonHang() {
   const [isCheckAllDisabled, setIsCheckAllDisabled] = useState(false);
 
   useEffect(() => {
-    // Kiểm tra xem có dòng nào có trang_thái khác 0 hoặc 1 không
-    const shouldDisableCheckAll = data.some((d) => (d.trang_thai !== 0 && d.trang_thai !== 1) || d.loai_don === 0);
+    const shouldDisableCheckAll = data.some((d) => (d.trang_thai !== 0 && d.trang_thai !== 1 && d.trang_thai !== 6) || d.loai_don === 0);
     setIsCheckAllDisabled(shouldDisableCheckAll);
   }, [data]);
 
@@ -170,10 +169,16 @@ function DonHang() {
 
     // Cập nhật trạng thái disabled của các checkbox dựa trên newCheckedArray
     const updatedData = data.map((d) => {
-      if (d.trang_thai === 0 && d.loai_don === 1) {
-        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 1) };
+      if ((d.trang_thai === 0 || d.trang_thai === 6) && d.loai_don === 1) {
+        return {
+          ...d,
+          disabled: newCheckedArray.some((value, index) => value && (data[index].trang_thai === 1 || data[index].trang_thai === 6))
+        };
       } else if (d.trang_thai === 1 && d.loai_don === 1) {
-        return { ...d, disabled: newCheckedArray.some((value, index) => value && data[index].trang_thai === 0) };
+        return {
+          ...d,
+          disabled: newCheckedArray.some((value, index) => value && (data[index].trang_thai === 0 || data[index].trang_thai === 6))
+        };
       }
       return d;
     });
@@ -193,7 +198,9 @@ function DonHang() {
 
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
-    const selectedIds = data.filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1)).map((d) => d.id);
+    const selectedIds = data
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 || d.trang_thai === 6))
+      .map((d) => d.id);
     if (selectedIds.length > 0) {
       await xacNhan(selectedIds, tenNV.nhanVien.ten);
     } else {
@@ -213,7 +220,7 @@ function DonHang() {
   const handleHuyDon = async (event) => {
     event.preventDefault();
     const selectedIds = data
-      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || (d.trang_thai === 1 && d.loai_don === 1)))
+      .filter((d, index) => isChecked[index] && (d.trang_thai === 0 || d.trang_thai === 1 || (d.trang_thai === 6 && d.loai_don === 1)))
       .map((d) => d.id);
     if (selectedIds.length > 0) {
       await huyDon(selectedIds, tenNV.nhanVien.ten);
@@ -760,7 +767,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Yêu cầu trả hàng
+                          Yêu cầu đổi hàng
                         </span>
                       )}
                       {d.trang_thai === 16 && (
@@ -779,7 +786,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Trả hàng thành công
+                          Đổi hàng thành công
                         </span>
                       )}
                       {d.trang_thai === 17 && (
