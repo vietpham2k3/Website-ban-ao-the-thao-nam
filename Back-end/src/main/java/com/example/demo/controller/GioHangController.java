@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HinhThucThanhToan;
@@ -11,6 +12,7 @@ import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.DoiHangServiceImpl;
 import com.example.demo.service.impl.GioHangChiTietServiceImpl;
 import com.example.demo.service.impl.GioHangServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
@@ -64,6 +66,8 @@ public class GioHangController {
     private KhachHangServiceImpl khService;
     @Autowired
     private KhuyenMaiServiceImpl khuyenMaiService;
+    @Autowired
+    public DoiHangServiceImpl doiHangService;
 
     @GetMapping("/countSP")
     public ResponseEntity<?> countSP(@RequestParam(required = false) UUID id) {
@@ -169,17 +173,29 @@ public class GioHangController {
         boolean isValid = false;
         List<HoaDon_KhuyenMai> listHD = hoaDon_khuyenMaiService.getAll(khuyenMai.getHoaDon().getId());
         for (HoaDon_KhuyenMai h : listHD) {
-            if (khuyenMai.getKhuyenMai().getMa().equals(h.getKhuyenMai().getMa())) {
+            if (khuyenMai.getKhuyenMai().getMa().equalsIgnoreCase(h.getKhuyenMai().getMa())) {
                 return ResponseEntity.ok("ff");
             }
+        }
+        double sum = 0;
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.getAll(khuyenMai.getHoaDon().getId());
+        for (HoaDonChiTiet hoaDonChiTiet : listHDCT) {
+            sum += hoaDonChiTiet.getSoLuong() * hoaDonChiTiet.getDonGia();
         }
 
         for (KhuyenMai k : list) {
             if (khuyenMai.getKhuyenMai().getMa().equalsIgnoreCase(k.getMa())) {
-                khuyenMai.setTienGiam(k.getMucGiam());
-                khuyenMai.setKhuyenMai(k);
-                isValid = true;
-                break;
+                if (k.getLoaiGiam() == true) {
+                    khuyenMai.setTienGiam(k.getMucGiam());
+                    khuyenMai.setKhuyenMai(k);
+                    isValid = true;
+                    break;
+                } else {
+                    khuyenMai.setTienGiam((k.getMucGiam() * sum) / 100);
+                    khuyenMai.setKhuyenMai(k);
+                    isValid = true;
+                    break;
+                }
             }
         }
 
@@ -187,8 +203,8 @@ public class GioHangController {
             return ResponseEntity.ok("error");
         }
 
-        hoaDon_khuyenMaiService.add(khuyenMai);
-        return ResponseEntity.ok("Thành công");
+
+        return ResponseEntity.ok(hoaDon_khuyenMaiService.add(khuyenMai));
     }
 
 
@@ -196,6 +212,15 @@ public class GioHangController {
     public ResponseEntity<String> themHoaDonChiTiet(@RequestParam String nguoiTao, @RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
         String ma = "HD" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
+        String maDH = "DH" + new Random().nextInt(100000);
+        DoiHang doiHang = new DoiHang().builder()
+                .ma(maDH)
+                .trangThai(15)
+                .ngayTao(new Date())
+                .soHangDoi(0)
+                .tongTienHangDoi(0.0)
+                .build();
+        doiHang = doiHangService.add(doiHang);
         HoaDon hoaDon = new HoaDon().builder()
                 .ma(ma)
                 .ngayTao(new Date())
@@ -205,6 +230,7 @@ public class GioHangController {
         hoaDon = serviceHD.add(hoaDon);
         for (HoaDonChiTiet hd : hoaDonChiTietList) {
             hd.setHoaDon(hoaDon);
+            hd.setDoiHang(doiHang);
         }
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                 .ma(maLSHD)

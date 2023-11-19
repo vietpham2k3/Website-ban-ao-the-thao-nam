@@ -77,8 +77,6 @@ function AddNhanVien() {
     };
   }, [anh]);
 
-
-
   const [values, setValues] = useState({
     ma: '',
     ten: '',
@@ -140,7 +138,7 @@ function AddNhanVien() {
           <h1>Thêm Nhân Viên</h1>
         </div>
         <div className="div" style={{ display: 'flex', paddingTop: 30 }}>
-          <div className="col-md-4" style={{ border: '1px solid black', width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
+          <div className="col-md-4" style={{ width: 350, height: 350, marginRight: 20, paddingTop: 20 }}>
             <Stack direction="column" spacing={2} alignItems="center">
               <Avatar
                 alt="Ảnh đại diện"
@@ -158,7 +156,7 @@ function AddNhanVien() {
                   style={{ display: 'none' }}
                   ref={fileInputRef}
                 />
-                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+                <Button variant="contained" component="span" startIcon={<CloudUploadIcon />} style={{ display: 'none' }}>
                   Tải lên
                 </Button>
               </label>
@@ -277,7 +275,7 @@ function AddNhanVien() {
                     onChange={() => setValues({ ...values, gioiTinh: true })}
                   />
                   <label htmlFor="a" className="form-check-label">
-                   Nam
+                    Nam
                   </label>
                 </div>
                 <div className="form-check form-check-inline">
@@ -286,7 +284,7 @@ function AddNhanVien() {
                     type="radio"
                     name="inlineRadioOptions1"
                     id="inlineRadio4"
-                    value={false} 
+                    value={false}
                     checked={values.gioiTinh === false}
                     onChange={() => setValues({ ...values, gioiTinh: false })}
                   />

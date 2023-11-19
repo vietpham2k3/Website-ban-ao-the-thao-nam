@@ -135,8 +135,6 @@ function CheckoutForm(props) {
     getThanhPho();
   }, []);
 
-  console.log(valuesUpdateHD);
-
   useEffect(() => {
     if (dataLogin && dataLogin.role == 'KH') {
       dataDC.forEach((d) => {
@@ -358,7 +356,6 @@ function CheckoutForm(props) {
 
   const handleChange = (value) => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setTongTienKhiGiam(totalAmount - totalGiam);
     setValuesKhuyenMai({
       ...valuesKhuyenMai,
       khuyenMai: {
@@ -366,6 +363,7 @@ function CheckoutForm(props) {
         tien: totalAmount
       }
     });
+    setTongTienKhiGiam(totalAmount - totalGiam);
   };
 
   const handleProvinceChange = (event) => {
@@ -540,8 +538,8 @@ function CheckoutForm(props) {
       } else {
         findAllKM(id);
         const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-        setTongTienKhiGiam(totalAmount - totalGiam);
         toast.success('Thêm mã thành công');
+        setTongTienKhiGiam(totalAmount - totalGiam);
       }
     } catch (error) {
       console.log(error);

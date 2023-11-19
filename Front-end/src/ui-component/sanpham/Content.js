@@ -1,7 +1,17 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
-import { getAllCTSPWeb, getAllListCL, getAllListKC, getAllListMS, getAllListCO, getAllListNSX, filterProduct, searchSP } from 'services/SanPhamService';
+import {
+  getAllCTSPWeb,
+  getAllListCL,
+  getAllListKC,
+  getAllListMS,
+  getAllListCO,
+  getAllListNSX,
+  filterProduct,
+  searchSP
+} from 'services/SanPhamService';
 import '../../scss/ChiTietSanPham.scss';
 import ReactPaginate from 'react-paginate';
 // Bộ lọc
@@ -10,7 +20,7 @@ import Form from 'react-bootstrap/Form';
 import Slider from 'react-slider';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router';
-import { remove } from '../../utils/removeItem'
+import { remove } from '../../utils/removeItem';
 
 const MIN = 0;
 const MAX = 10000000;
@@ -34,7 +44,6 @@ function ContentSanPham() {
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
   const [collars, setCollars] = useState([]); // Thêm dòng này
   const [manufacturers, setManufacturers] = useState([]);
-
 
   //Max khoảng tiền:
   const findMaxPrice = (products) => {
@@ -107,10 +116,9 @@ function ContentSanPham() {
       // setData(res.data.content);
       setFilteredData(res.data.content);
       setTotalPages(res.data.totalPages);
-      window.scrollTo({ top: 550, behavior: 'smooth' })
+      window.scrollTo({ top: 550, behavior: 'smooth' });
     }
   };
-
 
   const [filterCretia, setFilterCretia] = useState({
     giaBanMin: 0,
@@ -121,14 +129,13 @@ function ContentSanPham() {
     listLoaiSanPham: [],
     listCoAo: [],
     listNhaSanXuat: []
-  })
-
+  });
 
   // Hàm xử lý khi khoảng giá thay đổi
   const handlePriceRangeChange = (newValues) => {
     setPriceRange(newValues);
     setDisplayedPriceRange(newValues); // Cập nhật displayedPriceRange
-    setFilterCretia({ ...filterCretia, giaBanMin: priceRange[0], giaBanMax: priceRange[1] })
+    setFilterCretia({ ...filterCretia, giaBanMin: priceRange[0], giaBanMax: priceRange[1] });
   };
 
   // Hàm xử lý khi chọn màu sắc
@@ -137,12 +144,11 @@ function ContentSanPham() {
       setSelectedColors(selectedColors.filter((c) => c !== color));
       let filterMau = filterCretia.listMau;
       let listMauNew = remove(color, filterMau);
-      setFilterCretia({ ...filterCretia, listMau: listMauNew })
+      setFilterCretia({ ...filterCretia, listMau: listMauNew });
     } else {
       setSelectedColors([...selectedColors, color]);
-      setFilterCretia({ ...filterCretia, listMau: [...filterCretia.listMau, color] })
+      setFilterCretia({ ...filterCretia, listMau: [...filterCretia.listMau, color] });
     }
-
   };
 
   // Hàm xử lý khi chọn kích cỡ
@@ -151,10 +157,10 @@ function ContentSanPham() {
       setSelectedSizes(selectedSizes.filter((s) => s !== size));
       let filterSize = filterCretia.listSize;
       let listSizeNew = remove(size, filterSize);
-      setFilterCretia({ ...filterCretia, listSize: listSizeNew })
+      setFilterCretia({ ...filterCretia, listSize: listSizeNew });
     } else {
       setSelectedSizes([...selectedSizes, size]);
-      setFilterCretia({ ...filterCretia, listSize: [...filterCretia.listSize, size] })
+      setFilterCretia({ ...filterCretia, listSize: [...filterCretia.listSize, size] });
     }
   };
 
@@ -164,10 +170,10 @@ function ContentSanPham() {
       setSelectedMaterials(selectedMaterials.filter((m) => m !== material));
       let filterChatLieu = filterCretia.listChatLieu;
       let listChatLieuNew = remove(material, filterChatLieu);
-      setFilterCretia({ ...filterCretia, listChatLieu: listChatLieuNew })
+      setFilterCretia({ ...filterCretia, listChatLieu: listChatLieuNew });
     } else {
       setSelectedMaterials([...selectedMaterials, material]);
-      setFilterCretia({ ...filterCretia, listChatLieu: [...filterCretia.listChatLieu, material] })
+      setFilterCretia({ ...filterCretia, listChatLieu: [...filterCretia.listChatLieu, material] });
     }
   };
 
@@ -177,10 +183,10 @@ function ContentSanPham() {
       setSelectedCollars(selectedCollars.filter((c) => c !== collar));
       let filterCollar = filterCretia.listCoAo;
       let listCollarNew = remove(collar, filterCollar);
-      setFilterCretia({ ...filterCretia, listCoAo: listCollarNew })
+      setFilterCretia({ ...filterCretia, listCoAo: listCollarNew });
     } else {
       setSelectedCollars([...selectedCollars, collar]);
-      setFilterCretia({ ...filterCretia, listCoAo: [...filterCretia.listCoAo, collar] })
+      setFilterCretia({ ...filterCretia, listCoAo: [...filterCretia.listCoAo, collar] });
     }
   };
 
@@ -190,15 +196,14 @@ function ContentSanPham() {
       setSelectedManufacturers(selectedManufacturers.filter((m) => m !== manufacturer));
       let filterManufacture = filterCretia.listNhaSanXuat;
       let listNSXNew = remove(manufacturer, filterManufacture);
-      setFilterCretia({ ...filterCretia, listNhaSanXuat: listNSXNew })
+      setFilterCretia({ ...filterCretia, listNhaSanXuat: listNSXNew });
     } else {
       setSelectedManufacturers([...selectedManufacturers, manufacturer]);
-      setFilterCretia({ ...filterCretia, listNhaSanXuat: [...filterCretia.listNhaSanXuat, manufacturer] })
+      setFilterCretia({ ...filterCretia, listNhaSanXuat: [...filterCretia.listNhaSanXuat, manufacturer] });
     }
   };
 
   console.log(filterCretia);
-
 
   const handlePageClick = (event) => {
     getAll(event.selected);
@@ -222,16 +227,17 @@ function ContentSanPham() {
   };
 
   useEffect(() => {
-    filterProduct(filterCretia).then((res) => {
-      console.log(res);
-      setFilteredData(res.data.content)
-      // setData(res.data.content)
-
-    }).catch((err) => console.log(err))
-  }, [filterCretia, data])
+    filterProduct(filterCretia)
+      .then((res) => {
+        console.log(res);
+        setFilteredData(res.data.content);
+        // setData(res.data.content)
+      })
+      .catch((err) => console.log(err));
+  }, [filterCretia, data]);
   console.log(filteredData);
 
-  console.log(totalPages)
+  console.log(totalPages);
 
   //Lọc Sản Phẩm
   const [term, setTerm] = useState('');
@@ -276,9 +282,9 @@ function ContentSanPham() {
                 <Accordion.Body>
                   <Form.Group controlId="searchInput">
                     <Form.Control
-                    style={{borderRadius: '50px', height: '50px'}}
+                      style={{ borderRadius: '50px', height: '50px' }}
                       type="text"
-                      placeholder="Nhập từ khóa tìm kiếm..."
+                      placeholder="Nhập tên sản phẩm..."
                       value={term}
                       onChange={handleInputChange}
                       onKeyDown={handleEnterKeyPress} // Thêm sự kiện xử lý khi nhấn phím
