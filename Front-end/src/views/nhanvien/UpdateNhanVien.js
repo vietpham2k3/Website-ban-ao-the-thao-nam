@@ -15,8 +15,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useLocation } from 'react-router-dom';
 
 function UpdateNhanVien() {
-
-
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const imageURL = searchParams.get('imageURL');
@@ -404,5 +402,3 @@ function UpdateNhanVien() {
 }
 
 export default UpdateNhanVien;
-
-

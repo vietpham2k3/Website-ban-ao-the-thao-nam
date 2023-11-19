@@ -77,8 +77,6 @@ function AddNhanVien() {
     };
   }, [anh]);
 
-
-
   const [values, setValues] = useState({
     ma: '',
     ten: '',
@@ -277,7 +275,7 @@ function AddNhanVien() {
                     onChange={() => setValues({ ...values, gioiTinh: true })}
                   />
                   <label htmlFor="a" className="form-check-label">
-                   Nam
+                    Nam
                   </label>
                 </div>
                 <div className="form-check form-check-inline">
@@ -286,7 +284,7 @@ function AddNhanVien() {
                     type="radio"
                     name="inlineRadioOptions1"
                     id="inlineRadio4"
-                    value={false} 
+                    value={false}
                     checked={values.gioiTinh === false}
                     onChange={() => setValues({ ...values, gioiTinh: false })}
                   />
