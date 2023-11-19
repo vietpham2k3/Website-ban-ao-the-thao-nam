@@ -420,25 +420,31 @@ function DonHang(props) {
     }
   };
 
-  const handleAddValueKm = (idKM, tienGiam) => {
+  const handleAddValueKm = (idKM, tienGiam, loaiGiam) => {
     // const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
     setIdKM(idKM);
     VNP(id);
-    setValuesAddKM({
-      ...valuesAddKM,
-      khuyenMai: {
-        id: idKM
-      },
-      tienGiam: tienGiam
-    });
-    setTienThua(valuesUpdateHD.hinhThucThanhToan.tien - valuesUpdateHD.tongTienKhiGiam);
-    setTienGiam(tienGiam);
-    // if (valuesUpdateHD.tongTien <= valuesUpdateHD.tongTienKhiGiam + totalGiam) {
-    //   setValuesUpdateHD((prevValuesUpdateHD) => ({
-    //     ...prevValuesUpdateHD,
-    //     tongTienKhiGiam: prevValuesUpdateHD.tongTienKhiGiam - tienGiam >= 0 ? prevValuesUpdateHD.tongTienKhiGiam - tienGiam : 0
-    //   }));
-    // }
+    if (loaiGiam) {
+      setValuesAddKM({
+        ...valuesAddKM,
+        khuyenMai: {
+          id: idKM
+        },
+        tienGiam: tienGiam
+      });
+      setTienThua(valuesUpdateHD.hinhThucThanhToan.tien);
+      setTienGiam(tienGiam);
+    } else {
+      setValuesAddKM({
+        ...valuesAddKM,
+        khuyenMai: {
+          id: idKM
+        },
+        tienGiam: (tienGiam * totalAmount) / 100
+      });
+      setTienThua(valuesUpdateHD.hinhThucThanhToan.tien);
+      setTienGiam((tienGiam * totalAmount) / 100);
+    }
   };
 
   const postKM = async (value) => {
@@ -1558,14 +1564,14 @@ function DonHang(props) {
             {dataKM.map((d, i) => (
               <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
                 <h6 style={{ color: 'red', wordWrap: 'break-word' }}>
-                  Giảm {convertToCurrency(d.mucGiam)} cho đơn tối thiểu {convertToCurrency(d.tien)}
+                  Giảm {d.loaiGiam ? convertToCurrency(d.mucGiam) : d.mucGiam + '%'} cho đơn tối thiểu {convertToCurrency(d.tien)}
                 </h6>
                 <div className="text-voucher">
                   <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
                   <button
                     type="button"
                     className="btn btn-outline-primary"
-                    onClick={() => handleAddValueKm(d.id, d.mucGiam)}
+                    onClick={() => handleAddValueKm(d.id, d.mucGiam, d.loaiGiam)}
                     // disabled={true} // Thêm disabled vào đây
                   >
                     Áp dụng

@@ -39,7 +39,7 @@ function ChiTietDonHang() {
   }, [id]);
 
   useEffect(() => {
-    const lyDo = dataDetailLSHD.filter((d) => d.trangThai === 14);
+    const lyDo = dataDetailLSHD.filter((d) => d.trangThai === 14 || d.trangThai === 15);
     if (lyDo[0] !== undefined) {
       setLyDo(lyDo[0].ghiChu);
       console.log(lyDo[0].ghiChu);
@@ -58,16 +58,16 @@ function ChiTietDonHang() {
         (res.data.trangThai === 2 || res.data.trangThai === 15 || res.data.trangThai === 16) &&
         res.data.hinhThucThanhToan.ten === 'VNPay'
       ) {
-        setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thành công']);
+        setSteps(['Yêu cầu Đổi hàng', 'Đổi hàng thành công']);
       } else if (
         (res.data.trangThai === 2 || res.data.trangThai === 15 || res.data.trangThai === 16) &&
         res.data.hinhThucThanhToan.ten === 'Tiền mặt'
       ) {
-        setSteps(['Yêu cầu Trả hàng', 'Trả hàng thành công']);
+        setSteps(['Yêu cầu Đổi hàng', 'Đổi hàng thành công']);
       } else if ((res.data.trangThai === 2 || res.data.trangThai === 17) && res.data.hinhThucThanhToan.ten === 'VNPay') {
-        setSteps(['Yêu cầu Trả hàng', 'Hoàn tiền', 'Trả hàng thất bại']);
+        setSteps(['Yêu cầu Đổi hàng', 'Đổi hàng thất bại']);
       } else if ((res.data.trangThai === 2 || res.data.trangThai === 17) && res.data.hinhThucThanhToan.ten === 'Tiền mặt') {
-        setSteps(['Yêu cầu Trả hàng', 'Trả hàng thất bại']);
+        setSteps(['Yêu cầu Đổi hàng', 'Đổi hàng thất bại']);
       }
     }
   };
@@ -156,11 +156,11 @@ function ChiTietDonHang() {
                     : dataHD.trangThai === 14
                     ? 'Yêu cầu huỷ đơn'
                     : dataHD.trangThai === 15
-                    ? 'Yêu cầu trả hàng'
+                    ? 'Yêu cầu Đổi hàng'
                     : dataHD.trangThai === 16
-                    ? 'Trả hàng thành công'
+                    ? 'Đổi hàng thành công'
                     : dataHD.trangThai === 17
-                    ? 'Trả hàng thất bại'
+                    ? 'Đổi hàng thất bại'
                     : dataHD.trangThai === 6
                     ? 'Thanh toán thành công'
                     : 'Hoàn thành'}
@@ -290,7 +290,7 @@ function ChiTietDonHang() {
                   <div className="col-7">&nbsp;</div>
                   <div className="col-5 d-flex justify-content-between">
                     <h6>Tiền giảm:</h6>
-                    <h6>-{convertToCurrency(d.khuyenMai.mucGiam)}</h6>
+                    <h6>-{convertToCurrency(d.tienGiam)}</h6>
                   </div>
                 </div>
               ))}

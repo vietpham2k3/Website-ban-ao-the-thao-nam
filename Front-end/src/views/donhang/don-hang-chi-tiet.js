@@ -55,7 +55,6 @@ import {
   xacNhanTraHang,
   huyDonTraHang,
   hienThiDoiHang,
-  getAllSPDoiHang,
   hienThiHangLoi,
   getAllSPLoi,
   hienThiSPYCDoiHang,
@@ -71,6 +70,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { getAll as getAllSPDoi } from 'services/DoiHangService';
 
 function DonHangCT() {
   const { id } = useParams();
@@ -1369,7 +1369,7 @@ function DonHangCT() {
   };
 
   const hienThiSPDonDoi = async (id) => {
-    const res = await getAllSPDoiHang(id);
+    const res = await getAllSPDoi(id);
     if (res && res.data) {
       setSpDoiHang(res.data);
     }

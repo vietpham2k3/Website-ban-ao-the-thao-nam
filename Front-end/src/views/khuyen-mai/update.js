@@ -25,7 +25,7 @@ function UpdateKhuyenMai() {
     trangThai: 0,
     loaiGiam: ''
   });
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
 
   const { id } = useParams();
 
@@ -52,11 +52,11 @@ function UpdateKhuyenMai() {
     }
   };
 
-  const handleLoaiGiamChange = (event) => {
-    const loaiGiam = event.target.value;
-    setValues({ ...values, loaiGiam });
-    setError(false); // Reset lỗi khi loại giảm được chọn
-  };
+  // const handleLoaiGiamChange = (event) => {
+  //   const loaiGiam = event.target.value;
+  //   setValues({ ...values, loaiGiam: loaiGiam });
+  //   setError(false); // Reset lỗi khi loại giảm được chọn
+  // };
 
   const put = async (id, value) => {
     const res = await putKM(id, value);
@@ -68,21 +68,14 @@ function UpdateKhuyenMai() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!values.loaiGiam) {
-      setError(true); // Hiển thị lỗi nếu loại giảm chưa được chọn
+    if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 100)) {
+      toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
-
-    if (values.loaiGiam === '0' && (values.mucGiam < 0 || values.mucGiam > 100)) {
-      setError(true); // Hiển thị lỗi nếu giá trị > 100 khi chọn "%"
-      return;
-    }
-
-    const isValid = !error;
-    if (isValid) {
-      put(id, values); // Gọi hàm post nếu dữ liệu hợp lệ
-    }
+    put(id, values); // Gọi hàm post nếu dữ liệu hợp lệ
   };
+
+  console.log(values.loaiGiam);
 
   return (
     <div>
@@ -126,9 +119,11 @@ function UpdateKhuyenMai() {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      value="1"
-                      checked={values.loaiGiam === '1'}
-                      onChange={handleLoaiGiamChange}
+                      value={true}
+                      checked={values.loaiGiam === true}
+                      onChange={() => {
+                        setValues({ ...values, loaiGiam: true });
+                      }}
                     />
                     <label htmlFor="a" className="form-check-label">
                       Tiền giảm
@@ -138,9 +133,11 @@ function UpdateKhuyenMai() {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      value="0"
-                      checked={values.loaiGiam === '0'}
-                      onChange={handleLoaiGiamChange}
+                      value={false}
+                      checked={values.loaiGiam === false}
+                      onChange={() => {
+                        setValues({ ...values, loaiGiam: false });
+                      }}
                     />
                     <label htmlFor="a" className="form-check-label">
                       % giảm
@@ -153,11 +150,11 @@ function UpdateKhuyenMai() {
                   value={values.mucGiam}
                   onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
                 />
-                {error && (
+                {/* {error && (
                   <div className="alert alert-danger">
-                    {values.loaiGiam === '0' ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
+                    {!values.loaiGiam ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="col-md-6" style={{ paddingTop: 10 }}>

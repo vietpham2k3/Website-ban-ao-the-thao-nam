@@ -23,6 +23,11 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     }
 
     @Override
+    public List<HoaDonChiTiet> getAllByIdHD(UUID id) {
+        return repository.getAllByIdHD(id);
+    }
+
+    @Override
     public List<HoaDonChiTiet> findAll() {
         return repository.findAll();
     }

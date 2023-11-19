@@ -26,7 +26,17 @@ public class DoiHangServiceImpl implements DoiHangService {
     }
 
     @Override
+    public List<HoaDonChiTiet> getAllHD(UUID id) {
+        return hoaDonChiTietRepository.getAllHD(id);
+    }
+
+    @Override
     public DoiHang add(DoiHang traHang) {
         return repository.save(traHang);
+    }
+
+    @Override
+    public DoiHang findById(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 }

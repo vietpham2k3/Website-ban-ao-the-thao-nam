@@ -229,7 +229,7 @@ function KhuyenMai() {
                     <span>{d.ma}</span>
                   </td>
                   <td>{d.ten}</td>
-                  <td> {d.loaiGiam === '0' ? `${d.mucGiam}%` : convertToCurrency(d.mucGiam)}</td>
+                  <td>{!d.loaiGiam ? `${d.mucGiam}%` : convertToCurrency(d.mucGiam)}</td>
                   <td>{convertToCurrency(d.tien)}</td>
                   <td>{formatDate(d.thoiGianBatDau)}</td>
                   <td>{formatDate(d.thoiGianKetThuc)}</td>

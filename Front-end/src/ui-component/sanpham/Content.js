@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
@@ -283,7 +284,7 @@ function ContentSanPham() {
                     <Form.Control
                       style={{ borderRadius: '50px', height: '50px' }}
                       type="text"
-                      placeholder="Nhập từ khóa tìm kiếm..."
+                      placeholder="Nhập tên sản phẩm..."
                       value={term}
                       onChange={handleInputChange}
                       onKeyDown={handleEnterKeyPress} // Thêm sự kiện xử lý khi nhấn phím
