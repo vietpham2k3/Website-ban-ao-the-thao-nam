@@ -40,7 +40,9 @@ function ModalTraHang(props) {
     setTotalAmountDHSP,
     handleDoiHang,
     setGhiChu,
-    ghiChu
+    ghiChu,
+    yeuCauDoi,
+    setYeuCauDoi
   } = props;
   const [value, setValue] = useState('');
 
@@ -84,7 +86,6 @@ function ModalTraHang(props) {
     // Cập nhật state với số lượng mới của sản phẩm và maxQuantity tương ứng
     setDataSPDoi(dataWithMaxQuantity);
     setDataHDCTDH(dataWithMaxQuantity);
-    setIsUpdateHD(true);
     setValuesAdd({
       ...valuesAdd,
       doiHang: {
@@ -92,10 +93,14 @@ function ModalTraHang(props) {
         trangThai: 15,
         tongTienHangDoi: sum,
         soHangDoi: count,
-        nguoiTao: dataLogin.ten
+        nguoiTao: dataLogin.tenKhachHang
       }
     });
+    console.log(count);
+    setIsUpdateHD(true);
   };
+
+  console.log(valuesAdd);
 
   const handleChangeHD = (e, i) => {
     // Cập nhật số lượng vào sản phẩm d
@@ -233,7 +238,7 @@ function ModalTraHang(props) {
               value={value || 'Khác'} // Nếu ghiChu không có giá trị hoặc không khớp với bất kỳ label nào, sử dụng 'Khác'
               label="Lý do trả hàng đơn hàng *"
               onChange={(e) => {
-                setGhiChu({ ghiChu: e.target.value });
+                setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } });
                 setValue(e.target.value);
               }}
             >
@@ -244,12 +249,12 @@ function ModalTraHang(props) {
               ))}
             </Select>
           </FormControl>
-          {(value === 'Khác' || ghiChu.ghiChu === '') && (
+          {(value === 'Khác' || yeuCauDoi.lichSuHoaDon.ghiChu === '') && (
             <TextField
               style={{ width: '100%' }}
               label="Lý do trả hàng đơn hàng"
               variant="outlined"
-              onChange={(e) => setGhiChu({ ghiChu: e.target.value })}
+              onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
             />
           )}
         </Modal.Body>

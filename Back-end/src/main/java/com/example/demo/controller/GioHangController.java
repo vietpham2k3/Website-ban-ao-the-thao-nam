@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.ChiTietSanPham;
+import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HinhThucThanhToan;
@@ -11,6 +12,7 @@ import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.LichSuHoaDon;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
+import com.example.demo.service.impl.DoiHangServiceImpl;
 import com.example.demo.service.impl.GioHangChiTietServiceImpl;
 import com.example.demo.service.impl.GioHangServiceImpl;
 import com.example.demo.service.impl.HinhThucThanhToanServiceImpl;
@@ -64,6 +66,8 @@ public class GioHangController {
     private KhachHangServiceImpl khService;
     @Autowired
     private KhuyenMaiServiceImpl khuyenMaiService;
+    @Autowired
+    public DoiHangServiceImpl doiHangService;
 
     @GetMapping("/countSP")
     public ResponseEntity<?> countSP(@RequestParam(required = false) UUID id) {
@@ -208,6 +212,15 @@ public class GioHangController {
     public ResponseEntity<String> themHoaDonChiTiet(@RequestParam String nguoiTao, @RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
         String ma = "HD" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
+        String maDH = "DH" + new Random().nextInt(100000);
+        DoiHang doiHang = new DoiHang().builder()
+                .ma(maDH)
+                .trangThai(15)
+                .ngayTao(new Date())
+                .soHangDoi(0)
+                .tongTienHangDoi(0.0)
+                .build();
+        doiHang = doiHangService.add(doiHang);
         HoaDon hoaDon = new HoaDon().builder()
                 .ma(ma)
                 .ngayTao(new Date())
@@ -217,6 +230,7 @@ public class GioHangController {
         hoaDon = serviceHD.add(hoaDon);
         for (HoaDonChiTiet hd : hoaDonChiTietList) {
             hd.setHoaDon(hoaDon);
+            hd.setDoiHang(doiHang);
         }
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                 .ma(maLSHD)

@@ -56,7 +56,7 @@ public class DoiHangController {
 
     @GetMapping("/getAll/{id}")
     public ResponseEntity<?> getAll(@PathVariable UUID id) {
-        return ResponseEntity.ok(doiHangService.getAll(id));
+        return ResponseEntity.ok(doiHangService.getAllHD(id));
     }
 
     @PostMapping("add-sp")
@@ -81,12 +81,10 @@ public class DoiHangController {
                 .build();
         // Tìm hoặc tạo mới hóa đơn chi tiết
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
-        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.existsById(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham(), doiHangDTO.getHoaDonChiTiet().getHoaDon());
+        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.existsById(
+                doiHangDTO.getHoaDonChiTiet().getChiTietSanPham(), doiHangDTO.getHoaDonChiTiet().getHoaDon());
         for (HoaDonChiTiet hdct : list) {
-            if (hdct.getDoiHang() == null) {
-                System.out.println(2);
-                break;
-            } else {
+            if (hdct.getDoiHang() != null) {
                 DoiHang dh = doiHangService.findById(hdct.getDoiHang().getId());
 
                 // Nếu đã có đổi hàng, cộng dồn số lượng hàng đổi và tổng tiền hàng đổi vào hóa đơn chi tiết
@@ -99,8 +97,10 @@ public class DoiHangController {
                 dh.setSoHangDoi(currentSoLuongHangDoiDH + newSoLuongHangDoiDH);
                 dh.setTongTienHangDoi(tien + newTien);
 
-                doiHangService.add(dh);
+                dh = doiHangService.add(dh);
                 newHoaDonChiTiet.setDoiHang(dh);
+//                hdct.setDoiHang(dh);
+//                hoaDonChiTietService.add(hdct);
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }
         }
@@ -123,27 +123,31 @@ public class DoiHangController {
 
     @PostMapping("yeu-cau-doi-hang/{id}")
     public ResponseEntity<?> xacNhanTra(@PathVariable UUID id,
-                                        @RequestBody LichSuHoaDon lichSuHoaDon) {
+                                        @RequestBody DoiHangDTO doiHangDTO) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
         hoaDon.setNgaySua(new Date());
-        lichSuHoaDon.setTrangThai(15);
+        doiHangDTO.getLichSuHoaDon().setTrangThai(15);
         hoaDon.setTrangThai(15);
-        lichSuHoaDon.setNgayTao(new Date());
-        lichSuHoaDon.setMa(maLSHD);
-        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
-        lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setTen("Yêu cầu đổi hàng");
+        doiHangDTO.getLichSuHoaDon().setNgayTao(new Date());
+        doiHangDTO.getLichSuHoaDon().setMa(maLSHD);
+        doiHangDTO.getLichSuHoaDon().setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
+        doiHangDTO.getLichSuHoaDon().setHoaDon(hoaDon);
+        doiHangDTO.getLichSuHoaDon().setTen("Yêu cầu đổi hàng");
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
         for (HoaDonChiTiet hdct : list) {
             if (hdct.getDoiHang() != null) {
                 DoiHang dh = doiHangService.findById(hdct.getDoiHang().getId());
-                dh.setGhiChu(lichSuHoaDon.getGhiChu());
+                dh.setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
+                dh.setSoHangDoi(doiHangDTO.getDoiHang().getSoHangDoi());
+                dh.setTongTienHangDoi(doiHangDTO.getDoiHang().getTongTienHangDoi());
                 doiHangService.add(dh);
+//                hdct.setDoiHang(dh);
+//                hoaDonChiTietService.add(hdct);
                 break;
             }
         }
-        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(doiHangDTO.getLichSuHoaDon()));
     }
 
 }

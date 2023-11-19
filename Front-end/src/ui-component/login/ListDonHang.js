@@ -33,12 +33,22 @@ function ListDonHang(props) {
   const [isShow, setIsshow] = useState(false);
   // const [idCTSP, setIdCTSP] = useState({});
   const [isShowDH, setIsshowDH] = useState(false);
+  const [isDoiHang, setIsDoiHang] = useState(false);
   const [isShowMSKC, setIsshowMSKC] = useState(false);
   const [term, setTerm] = useState('');
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
+  });
+  const [yeuCauDoi, setYeuCauDoi] = useState({
+    lichSuHoaDon: {
+      ghiChu: ''
+    },
+    doiHang: {
+      soHangDoi: 0,
+      tongTienHangDoi: 0
+    }
   });
 
   const [valuesAdd, setValuesAdd] = useState({
@@ -87,6 +97,7 @@ function ListDonHang(props) {
 
   useEffect(() => {
     let sum = 0;
+    let count = 0;
     dataHDCT.forEach((d) => {
       sum += d.soLuongYeuCauDoi * d.donGia;
     });
@@ -95,8 +106,19 @@ function ListDonHang(props) {
     dataSPDoi.forEach((d) => {
       sumDH += d.soLuongHangDoi * d.donGia;
       sumDG += d.donGia;
+      count += d.soLuongHangDoi;
     });
-    // console.log(sumDH);
+    setValuesAdd({
+      ...valuesAdd,
+      doiHang: {
+        ...valuesAdd.doiHang,
+        trangThai: 15,
+        tongTienHangDoi: sumDH,
+        soHangDoi: count,
+        nguoiTao: dataLogin.tenKhachHang
+      }
+    });
+    console.log(count);
     setTotalAmount(sum - sumDH);
     setTotalAmountDH(sum);
     setTotalAmountDHSP(sumDG);
@@ -117,6 +139,12 @@ function ListDonHang(props) {
   useEffect(() => {
     searchByTT(dataLogin.id, data.trangThai);
   }, []);
+
+  useEffect(() => {
+    if (isDoiHang) {
+      requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+    }
+  }, [isDoiHang]);
 
   useEffect(() => {
     if (dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id) {
@@ -304,7 +332,7 @@ function ListDonHang(props) {
           trangThai: 15,
           tongTienHangDoi: sumDH,
           soHangDoi: count,
-          nguoiTao: dataLogin.ten
+          nguoiTao: dataLogin.tenKhachHang
         }
       });
       setTotalAmount(sum - sumDH);
@@ -325,11 +353,25 @@ function ListDonHang(props) {
     let res = await yeuCauDoiHang(id, value);
     if (res) {
       toast.success('Thành công');
+      window.location.reload();
     }
   };
 
   const handleDoiHang = () => {
-    requestDoiHang(dataHDCT[0].hoaDon.id, ghiChu);
+    setIsDoiHang(true);
+    let count = 0;
+    let sumDH = 0;
+    dataSPDoi.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      count += d.soLuongHangDoi;
+    });
+    setYeuCauDoi({
+      ...yeuCauDoi,
+      doiHang: {
+        soHangDoi: count,
+        tongTienHangDoi: sumDH
+      }
+    });
   };
 
   const getAllMSKC = async (id) => {
@@ -338,10 +380,6 @@ function ListDonHang(props) {
       setMauSacKC(res.data);
     }
   };
-
-  // const handleNhanDonHang = (id) => {
-  //   nhanDonHang(id, ghiChu);
-  // };
 
   const handleHuyDon = () => {
     if (!ghiChu.ghiChu) {
@@ -474,6 +512,8 @@ function ListDonHang(props) {
         setIsUpdate={setIsUpdate}
         setGhiChu={setGhiChu}
         ghiChu={ghiChu}
+        setYeuCauDoi={setYeuCauDoi}
+        yeuCauDoi={yeuCauDoi}
         listLyDo={listLyDo}
         dataSPDoi={dataSPDoi}
         handleOpen={() => {
