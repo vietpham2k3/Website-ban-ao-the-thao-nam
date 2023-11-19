@@ -1278,20 +1278,25 @@ function DonHangCT() {
               <Text style={styles.textLeft}>Tổng tiền</Text>
               <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
             </View>
+            {hoaDon.tienShip !== 0 && (
+              <View style={styles.flexContainer}>
+                <Text style={styles.textLeft}>Tiền ship</Text>
+                <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
+              </View>
+            )}
+
+            <Text style={styles.textLeft}></Text>
             {dataHDKM.map((d) => (
               <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
-                <Text style={styles.textLeft}>Tiền giảm</Text>
+                <Text style={styles.textLeft}>Khuyến mãi</Text>
                 <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
               </View>
             ))}
+
             <View style={styles.flexContainer}>
               <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
               <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
             </View>
-            {/* <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền thừa</Text>
-              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
-            </View> */}
           </View>
           <View>
             <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
@@ -3122,7 +3127,7 @@ function DonHangCT() {
                               <span>Cập Nhật</span>
                             </button>
                           )}
-                          {((hoaDon.trangThai === 7 && hoaDon.loaiDon === 1) ||
+                          {((hoaDon.trangThai === 4 && hoaDon.loaiDon === 1) ||
                             (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
                             hoaDon.trangThai === 16) && (
                             <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
@@ -4773,20 +4778,22 @@ function DonHangCT() {
                       </Col>
                       <Col sm={6}>
                         {(hoaDon && hoaDon.trangThai === 0) || hoaDon.trangThai === 1 || hoaDon.trangThai === 6 ? (
-                          <TextField
-                            id="standard-basic"
-                            label="Tiền ship"
-                            variant="standard"
-                            style={{
-                              display: 'inline-block',
-                              width: '100px',
-                              fontSize: '15px',
-                              fontWeight: 'bold'
-                            }}
-                            type="number"
-                            value={hoaDon.tienShip}
-                            onChange={handleTienShipChange}
-                          />
+                         <TextField
+                         id="standard-basic"
+                         label="Tiền ship"
+                         variant="standard"
+                         style={{
+                           display: 'inline-block',
+                           width: '100px',
+                           fontSize: '15px',
+                           fontWeight: 'bold'
+                         }}
+                         type="number"
+                         value={hoaDon.tienShip}
+                         onChange={handleTienShipChange}
+                         inputProps={{ min: 0 }}
+                       />
+                       
                         ) : (
                           <span
                             style={{
