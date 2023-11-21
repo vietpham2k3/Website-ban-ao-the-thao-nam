@@ -197,7 +197,7 @@ function NhaSanXuat() {
                       <button
                         onClick={() => handleSubmit(d.id, { ma: d.ma })}
                         style={{ color: '#ff1744' }}
-                        className="fa-solid fa-trash fa-khenh"
+                        className="fa-solid fa-trash fa-khenh ms-2"
                       ></button>
                     </td>
                   </tr>

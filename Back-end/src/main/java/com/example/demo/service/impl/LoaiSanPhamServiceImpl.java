@@ -42,6 +42,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
         LoaiSanPham loaiSanPham = repository.findById(id).orElse(null);
         loaiSanPham.setTrangThai(1);
         loaiSanPham.setTen(loaiSanPham.getTen());
+        loaiSanPham.setMa(loaiSanPham.getMa());
         loaiSanPham.setNgayTao(loaiSanPham.getNgayTao());
         loaiSanPham.setNgaySua(new Date());
         return repository.save(loaiSanPham);
