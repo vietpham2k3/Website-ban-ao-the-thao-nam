@@ -26,8 +26,6 @@ const ChatLieu = () => {
     ma: ''
   });
 
-  console.log(data);
-
   useEffect(() => {
     getAll(0);
     setDataDelete();
@@ -48,11 +46,11 @@ const ChatLieu = () => {
     if (res && res.data) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
-      console.log(data);
     }
   };
 
   const search = async (key, trangThai, page) => {
+    setCurrentPage(page);
     const res = await searchCL(key, trangThai, page);
     if (res) {
       setData(res.data.content);
@@ -68,6 +66,7 @@ const ChatLieu = () => {
       search('', 0, currentPage);
     }
   }, 100);
+
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
     if (filterStatus === '') {
@@ -76,8 +75,6 @@ const ChatLieu = () => {
       search('', filterStatus, selectedPage);
     }
   };
-
-  // const { id } = useParams();
 
   const del = async (id, values) => {
     const res = await deleteCL(id, values);
