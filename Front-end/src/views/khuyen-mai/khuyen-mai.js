@@ -240,21 +240,12 @@ function KhuyenMai() {
                     {d.trangThai !== 0 && d.trangThai !== 1 && <span>Đang diễn ra</span>}
                   </td>
                   <td>
-                    {/* <Link className="mx-2" to={`/khuyen-mai/detail/${d.id}`}>
-                    <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
-                  </Link> */}
-                    <button className="mx-2" onClick={() => navigate(`/voucher/detail/${d.id}`)}>
+                    <button className="mx-2 fa-khenh" onClick={() => navigate(`/voucher/detail/${d.id}`)}>
                       <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                     </button>
-                    {/* <Link className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
-                    <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
-                  </Link> */}
-                    <button className="mx-2" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
+                    <button className="mx-2 fa-khenh" onClick={() => handleSubmit(d.id, { ma: d.ma })}>
                       <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                     </button>
-
-                    {/* <Link><i className="fa-solid fa-trash" 
-                    onClick={() => handleDelete(d.id)}></i></Link> */}
                   </td>
                 </tr>
               ))}

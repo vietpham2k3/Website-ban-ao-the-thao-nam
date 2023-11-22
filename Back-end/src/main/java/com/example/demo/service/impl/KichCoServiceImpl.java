@@ -64,6 +64,7 @@ public class KichCoServiceImpl implements KichCoService {
 
     @Override
     public KichCo update(KichCo kichCo) {
+        kichCo.setMa(kichCo.getMa());
         kichCo.setTen(kichCo.getTen());
         kichCo.setTrangThai(kichCo.getTrangThai());
         kichCo.setNgayTao(kichCo.getNgayTao());

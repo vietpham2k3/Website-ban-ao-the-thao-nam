@@ -38,6 +38,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import AddMauSac from './AddQuicklyMauSac';
 import { postMS } from 'services/ServiceMauSac';
+import { postCreate as postKC } from 'services/KichCoService';
 import QrCode from 'qrcode';
 
 function UpdateSanPham() {
@@ -112,6 +113,18 @@ function UpdateSanPham() {
 
   const addMS = (value) => {
     const res = postMS(value);
+    if (res) {
+      closeModal();
+    }
+  };
+
+  const handleAddKC = (event) => {
+    event.preventDefault();
+    addKichCo(valuesCL);
+  };
+
+  const addKichCo = (value) => {
+    const res = postKC(value);
     if (res) {
       closeModal();
     }
@@ -224,6 +237,7 @@ function UpdateSanPham() {
     setModalShowLSP(false);
     setModalShow(false);
     setModalShowNSX(false);
+    setModalShowKC(false);
     getAllList();
     setValuesCL({
       ten: '',
@@ -842,7 +856,7 @@ function UpdateSanPham() {
       <MyVerticallyCenteredModal
         show={modalShowKC}
         onHide={() => setModalShowKC(false)}
-        handleSubmit={handleSubmit}
+        handleSubmit={handleAddKC}
         values={valuesCL}
         setValues={setValuesCL}
       />
