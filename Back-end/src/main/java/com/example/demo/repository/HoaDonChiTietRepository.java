@@ -20,8 +20,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +
             "WHERE " +
-            "id_hl IS NULL \n" +
-            "AND so_luong_hang_doi IS NULL\n" +
+            "so_luong_hang_doi IS NULL\n" +
             "AND id_hd = :id\n", nativeQuery = true)
     List<HoaDonChiTiet> getAll(UUID id);
 
@@ -52,6 +51,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL" +
             " AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
     List<HoaDonChiTiet> getAllByIdHDAndIdTHAndSLYCD(UUID id);
+
+    @Query(value = "SELECT *\n" +
+            "          FROM HoaDonChiTiet\n" +
+            "                        WHERE id = :id\n" +
+            "             AND so_luong_yeu_cau_doi IS NOT NULL \n" +
+            "             AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
+    HoaDonChiTiet detailSLSPDoi(UUID id);
 
     @Query(value = "SELECT *\n" +
             "FROM HoaDonChiTiet\n" +

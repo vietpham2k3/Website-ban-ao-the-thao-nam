@@ -81,6 +81,11 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceHD.listYCDoiHang(id));
     }
 
+    @GetMapping("hien-thi-sl-spDoi/{id}")
+    public ResponseEntity<?> detailSPDoiByIdHDCT(@PathVariable UUID id) {
+        return ResponseEntity.ok(hoaDonChiTietService.detailSLSPDoi(id));
+    }
+
     @GetMapping("hien-thi-sp-doi/{id}")
     public ResponseEntity<?> getAllSPDoiById(@PathVariable UUID id) {
         return ResponseEntity.ok(doiHangService.getAll(id));

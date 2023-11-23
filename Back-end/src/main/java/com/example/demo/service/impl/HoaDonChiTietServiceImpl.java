@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+
 public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
     @Autowired
@@ -25,6 +26,11 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     @Override
     public List<HoaDonChiTiet> getAllByIdHD(UUID id) {
         return repository.getAllByIdHD(id);
+    }
+
+    @Override
+    public HoaDonChiTiet detailSLSPDoi(UUID id) {
+        return repository.detailSLSPDoi(id);
     }
 
     @Override

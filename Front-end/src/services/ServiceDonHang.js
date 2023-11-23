@@ -181,6 +181,10 @@ const hienThiSPYCDoiHang = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-sp-yeu-cau-doi/` + id);
 };
 
+const detailSLSPYCDoiByIdHDCT = (id) => {
+  return axios.get(`/api/hoa-don/hien-thi-sl-spDoi/` + id);
+};
+
 const hienThiYCDoiHang = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-don-yeu-cau-doi/` + id);
 };
@@ -246,5 +250,6 @@ export {
   getAllSPLoi,
   hienThiSPYCDoiHang,
   hienThiYCDoiHang,
-  hangLoi
+  hangLoi,
+  detailSLSPYCDoiByIdHDCT
 };
