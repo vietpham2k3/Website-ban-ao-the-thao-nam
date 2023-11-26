@@ -50,7 +50,10 @@ const ChinhSach = () => {
             </thead>
             <tbody>
               <td>Áo Thể Thao Nam</td>
-              <td>- Khi mua hàng tại Sports Shop: Đổi hàng trong 30 ngày - Khi mua hàng Online: Đổi hàng trong 30 ngày</td>
+              <td>- Khi mua hàng tại Sports Shop: Đổi hàng trong 15 ngày 
+                 <br></br>
+                 <br></br>
+                - Khi mua hàng Online: Đổi hàng trong 15 ngày</td>
             </tbody>
           </table>
         </section>
