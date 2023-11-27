@@ -40,8 +40,8 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "AND (\n" +
             "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , LOWER(:key) , '%'))\n" +
             "    or\n" +
-            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , LOWER(:key) , '%'))\n" +
-            ")", nativeQuery = true)
+            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , LOWER(:key) , '%'))) " +
+            "order by hl.ngay_tao desc", nativeQuery = true)
     Page<HoaDonChiTiet> search(String key, Pageable pageable);
 
     @Query(value = "SELECT h.*\n" +
