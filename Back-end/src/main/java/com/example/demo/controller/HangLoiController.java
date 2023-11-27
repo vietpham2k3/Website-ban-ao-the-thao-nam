@@ -22,4 +22,9 @@ public class HangLoiController {
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") Integer page) {
         return ResponseEntity.ok(doiHangService.page(page));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") Integer page, @RequestParam String key) {
+        return ResponseEntity.ok(doiHangService.search(key, page));
+    }
 }

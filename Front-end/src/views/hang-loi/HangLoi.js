@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-import { getAllPageHL } from 'services/HangLoiService';
+import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
 
 function HangLoi() {
-  //   const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState();
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -16,7 +16,7 @@ function HangLoi() {
   }, []);
 
   const getAll = async (page) => {
-    // setCurrentPage(page);
+    setCurrentPage(page);
     const res = await getAllPageHL(page);
     if (res) {
       console.log(res);
@@ -24,6 +24,23 @@ function HangLoi() {
       setTotalPages(res.data.totalPages);
     }
   };
+
+  const searchHL = async (key, page) => {
+    const res = await search(key, page);
+    if (res) {
+      setData(res.data.content);
+      setTotalPages(res.data.totalPages);
+    }
+  };
+
+  const handleSearch = _.debounce(async (e) => {
+    let term = e.target.value;
+    if (term) {
+      searchHL(term, currentPage);
+    } else {
+      searchHL('', currentPage);
+    }
+  }, 100);
 
   //Format date
   function formatDate(dateString) {
@@ -54,7 +71,7 @@ function HangLoi() {
             type="text"
             className="input-search"
             placeholder=" Nhập tên, mã màu cần tìm..."
-            // onChange={handleSearchKM}
+            onChange={handleSearch}
           />
         </div>
         <Table style={{ marginTop: 20 }}>
