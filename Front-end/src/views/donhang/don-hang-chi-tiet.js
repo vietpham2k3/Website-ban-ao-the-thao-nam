@@ -75,7 +75,7 @@ import { getAll as getAllSPDoi } from 'services/DoiHangService';
 
 function DonHangCT() {
   const { id } = useParams();
-  const dataLogin = JSON.parse(localStorage.getItem('dataLoginNV'));
+  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD'));
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);
@@ -1408,6 +1408,7 @@ function DonHangCT() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const tongHLoi = donLoi.reduce((acc, d) => acc + d.soHangLoi, 0);
 
   // xac nhan huy tra hang
   const [show29, setShow29] = useState(false);
@@ -1419,10 +1420,6 @@ function DonHangCT() {
       nguoiTao: dataLogin && dataLogin.ten
     }
   });
-
-  console.log('yc  ' + slspYCD.soLuongYeuCauDoi);
-  console.log('d   ' + slspYCD.soLuongHangDoi);
-  console.log('l   ' + slspYCD.soLuongHangLoi);
 
   const handleClose29 = () => {
     setIdHDCT(null);
@@ -1446,6 +1443,9 @@ function DonHangCT() {
       hienThiSLSPYCDoi(idHDCT);
     }
   }, [idHDCT]);
+
+  console.log(slspYCD.hangLoi);
+  console.log(tongHLoi);
 
   const hangLoi9 = async (idHDCT, value) => {
     const res = await hangLoi(idHDCT, value);
@@ -1480,7 +1480,6 @@ function DonHangCT() {
       hangLoi9(idHDCT, hangLoi1)
         .then((res) => {
           if (res) {
-            toast.success('Cập nhật thành công !');
             setShow29(false);
           }
         })
@@ -4072,7 +4071,7 @@ function DonHangCT() {
                         <Tab label="Hàng Yêu Cầu Đổi" />
                         <Tab label="Hàng Đổi" />
                         {(slspYCD.soLuongHangLoi !== 0 || slspYCD.soLuongHangLoi !== '') && 
-                        <Tab label="Hàng Lỗi" />
+                        <Tab label="Hàng Lỗi"/>
                         }
                       </Tabs>
                     </Box>
@@ -4100,11 +4099,13 @@ function DonHangCT() {
                           const sizeData = n.split(',');
                           const ma = sizeData[0];
                           const tien = sizeData[1];
-                          const soHangDoi = sizeData[2];
+                          // const soHangDoi = sizeData[2];
                           const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
                           const ghiChu = sizeData[6];
+                          const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+
 
                           return (
                             <React.Fragment key={index}>
@@ -4117,7 +4118,7 @@ function DonHangCT() {
                                 <TableCell component="th" scope="row">
                                   {ma}
                                 </TableCell>
-                                <TableCell>{soHangDoi}</TableCell>
+                                <TableCell>{tong}</TableCell>
                                 <TableCell>{convertToCurrency(tien)}</TableCell>
                                 <TableCell>{trangThai === '15' ? 'Đang chờ xác nhận' : 'Đổi hàng thành công'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
@@ -4172,7 +4173,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>
                                                 <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                                  {d.soLuongYeuCauDoi}
+                                                {d.soLuongYeuCauDoi}
                                                 </span>
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
@@ -4453,7 +4454,7 @@ function DonHangCT() {
                               <TableCell component="th" scope="row">
                                 {l.ma}
                               </TableCell>
-                              <TableCell>{l.soHangLoi}</TableCell>
+                              <TableCell>{tongHLoi}</TableCell>
                               <TableCell>{formatDate(l.ngayTao)}</TableCell>
                               <TableCell>{l.nguoiTao}</TableCell>
                               <TableCell>{l.ghiChu}</TableCell>

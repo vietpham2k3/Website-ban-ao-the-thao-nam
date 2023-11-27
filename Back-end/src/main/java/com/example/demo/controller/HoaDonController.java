@@ -365,26 +365,41 @@ public class HoaDonController {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
         ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
 
-        hdct.setSoLuongHangLoi(hoaDonCT.getSoLuongHangLoi());
-
         chiTietSanPhamService.update(sp.getSoLuong() +
                         (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
                 hdct.getChiTietSanPham().getId());
 
-        String maLH = "HL" + new Random().nextInt(100000);
-        HangLoi hl = new HangLoi().builder()
-                .soHangLoi(hoaDonCT.getSoLuongHangLoi())
-                .ghiChu(hoaDonCT.getHangLoi().getGhiChu())
-                .nguoiTao(hoaDonCT.getHangLoi().getNguoiTao())
-                .ngayTao(new Date())
-                .ma(maLH)
-                .build();
-        hl = hangLoiService.add(hl);
-        hdct.setHangLoi(hl);
+        if (hdct.getHangLoi() == null) {
+            // If idHL is null, it means there is no existing HangLoi, so add a new one
+            String maLH = "HL" + new Random().nextInt(100000);
+            HangLoi hl = new HangLoi().builder()
+                    .soHangLoi(hoaDonCT.getHangLoi().getSoHangLoi())
+                    .ghiChu(hoaDonCT.getHangLoi().getGhiChu())
+                    .nguoiTao(hoaDonCT.getHangLoi().getNguoiTao())
+                    .ngayTao(new Date())
+                    .ma(maLH)
+                    .build();
+            hl = hangLoiService.add(hl);
+            hdct.setHangLoi(hl);
+            hdct.setSoLuongHangLoi(hoaDonCT.getSoLuongHangLoi());
+        } else {
+            // Calculate the sum of old and new soHangLoi values
+            int sumSoHangLoi = hdct.getSoLuongHangLoi() + hoaDonCT.getSoLuongHangLoi();
+            // If idHL is not null, it means there is an existing HangLoi, so update it
+            HangLoi existingHangLoi = hdct.getHangLoi();
+            existingHangLoi.setSoHangLoi(sumSoHangLoi);
+            existingHangLoi.setGhiChu(hoaDonCT.getHangLoi().getGhiChu());
+            existingHangLoi.setNguoiTao(hoaDonCT.getHangLoi().getNguoiTao());
+            existingHangLoi.setNgayTao(new Date());
+            hangLoiService.add(existingHangLoi);
+            hdct.setSoLuongHangLoi(sumSoHangLoi);
+        }
 
         hoaDonChiTietService.add(hdct);
         return ResponseEntity.ok("ok");
     }
+
+
 
     @DeleteMapping("delete-hdct/{id}")
     public ResponseEntity<?> deleteHDCT(@PathVariable UUID id) {
