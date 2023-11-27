@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-import { getAllPageHL } from 'services/HangLoiService';
+import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
 
 function HangLoi() {
-  //   const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState();
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -16,7 +16,7 @@ function HangLoi() {
   }, []);
 
   const getAll = async (page) => {
-    // setCurrentPage(page);
+    setCurrentPage(page);
     const res = await getAllPageHL(page);
     if (res) {
       console.log(res);
@@ -24,6 +24,23 @@ function HangLoi() {
       setTotalPages(res.data.totalPages);
     }
   };
+
+  const searchHL = async (key, page) => {
+    const res = await search(key, page);
+    if (res) {
+      setData(res.data.content);
+      setTotalPages(res.data.totalPages);
+    }
+  };
+
+  const handleSearch = _.debounce(async (e) => {
+    let term = e.target.value;
+    if (term) {
+      searchHL(term, currentPage);
+    } else {
+      searchHL('', currentPage);
+    }
+  }, 100);
 
   //Format date
   function formatDate(dateString) {
@@ -48,38 +65,50 @@ function HangLoi() {
   return (
     <div>
       <MainCard>
-        <Table style={{ textAlign: 'center', marginTop: 50 }}>
+        <div className="search">
+          <input
+            style={{ borderRadius: 15, width: 300, height: 40, paddingBottom: 3, paddingLeft: 10 }}
+            type="text"
+            className="input-search"
+            placeholder=" Nhập tên, mã màu cần tìm..."
+            onChange={handleSearch}
+          />
+        </div>
+        <Table style={{ marginTop: 20 }}>
           <tr>
-            <th>#</th>
+            <th style={{ textAlign: 'center' }}>#</th>
             <th>Sản phẩm</th>
-            <th>Mã hoá đơn</th>
-            <th>Số lượng</th>
-            <th>Ghi chú</th>
-            <th>Ngày tạo</th>
-            <th>Người tạo</th>
+            <th style={{ textAlign: 'center' }}>Mã hoá đơn</th>
+            <th style={{ textAlign: 'center' }}>Số lượng</th>
+            <th style={{ textAlign: 'center' }}>Ghi chú</th>
+            <th style={{ textAlign: 'center' }}>Ngày tạo</th>
+            <th style={{ textAlign: 'center' }}>Người tạo</th>
           </tr>
           <tbody>
             {data.map((d, i) => (
               <tr key={i}>
-                <td>{i + 1}</td>
+                <td style={{ textAlign: 'center' }}>{i + 1}</td>
                 <td>
-                  <div className="d-flex">
+                  <div className="d-flex justify-content-start">
                     <img
                       src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
                       className="product-image me-3"
                       style={{ width: '70px', height: '100px', borderRadius: 15 }}
                     />
                     <div>
-                      {d.chiTietSanPham.sanPham.ten}
-                      {d.chiTietSanPham.sanPham.ten}
+                      {d.chiTietSanPham.sanPham.ten} <br />
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, borderRadius: 15, fontSize: 15 }}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </span>
                     </div>
                   </div>
                 </td>
-                <td>{d.hoaDon.ma}</td>
-                <td>{d.hangLoi.soHangLoi}</td>
-                <td>{d.hangLoi.ghiChu}</td>
-                <td>{formatDate(d.hangLoi.ngayTao)}</td>
-                <td>{d.hangLoi.nguoiTao}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hoaDon.ma}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.soHangLoi}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.ghiChu}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{formatDate(d.hangLoi.ngayTao)}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.nguoiTao}</td>
               </tr>
             ))}
           </tbody>

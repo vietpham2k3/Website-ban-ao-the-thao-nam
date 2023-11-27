@@ -35,6 +35,12 @@ public class DoiHangServiceImpl implements DoiHangService {
     }
 
     @Override
+    public Page<HoaDonChiTiet> search(String key, Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return hoaDonChiTietRepository.search(key, pageable);
+    }
+
+    @Override
     public List<HoaDonChiTiet> getAllHD(UUID id) {
         return hoaDonChiTietRepository.getAllHD(id);
     }
