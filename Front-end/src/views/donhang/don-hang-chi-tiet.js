@@ -1618,6 +1618,9 @@ function DonHangCT() {
                                         {item.trangThai === 17 && (
                                           <i style={{ color: '#990000' }} className="fa-solid fa-xmark fa-beat-fade fa-lg"></i>
                                         )}
+                                        {item.trangThai === 18 && (
+                                          <i style={{ color: 'black' }} className="fa-regular fa-circle-check fa-beat-fade fa-lg"></i>
+                                        )}
                                       </div>
                                     </td>
                                     <td style={{ fontSize: '12px', justifyContent: 'center', display: 'flex' }} className="align-middle">
@@ -1949,6 +1952,25 @@ function DonHangCT() {
                                           Đổi hàng thất bại
                                         </span>
                                       )}
+                                      {item.trangThai === 18 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'darkblue',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Hoàn tiền thành công
+                                        </span>
+                                      )}
                                     </td>
                                     <td>{formatDate(item.ngayTao)}</td>
                                     <td>{item.nguoiTao}</td>
@@ -2231,6 +2253,20 @@ function DonHangCT() {
                                   className="p-timeline-block"
                                 >
                                   <i style={{ marginTop: 27 }} className="fa-solid fa-xmark fa-beat fa-xl"></i>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                           {lshd.trangThai === 18 && (
+                            <li className="timeline-item bmw">
+                              <div className="p-timeline-item">
+                                <time className="p-timeline-date">{lshd.ten}</time>
+                                <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
+                                <div
+                                  style={lshd.hoaDon.trangThai === 18 ? { backgroundColor: '#0000FF', color: 'white' } : {}}
+                                  className="p-timeline-block"
+                                >
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-check fa-beat fa-xl"></i>
                                 </div>
                               </div>
                             </li>

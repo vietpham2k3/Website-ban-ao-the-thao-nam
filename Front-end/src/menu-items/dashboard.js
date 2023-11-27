@@ -23,7 +23,7 @@ const dashboard = {
       id: 'don-huy-chua-hoan-tien',
       title: 'Đơn huỷ chưa hoàn tiền',
       type: 'item',
-      url: '/voucher',
+      url: '/don-huy-chua-hoan-tien',
       icon: icons.IconShirt
     }
   ]
