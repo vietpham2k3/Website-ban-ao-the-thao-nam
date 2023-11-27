@@ -4071,9 +4071,7 @@ function DonHangCT() {
                       <Tabs onChange={handleChange} value={value} aria-label="Tabs where selection follows focus" selectionFollowsFocus>
                         <Tab label="Hàng Yêu Cầu Đổi" />
                         <Tab label="Hàng Đổi" />
-                        {(slspYCD.soLuongHangLoi !== 0 || slspYCD.soLuongHangLoi !== '') && 
-                        <Tab label="Hàng Lỗi" />
-                        }
+                        {(slspYCD.soLuongHangLoi !== 0 || slspYCD.soLuongHangLoi !== '') && <Tab label="Hàng Lỗi" />}
                       </Tabs>
                     </Box>
                   </div>

@@ -5,14 +5,17 @@ import Footer from 'ui-component/trangchu/Footer';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { count } from 'services/GioHangService';
+import { count, saveTransactionNo } from 'services/GioHangService';
 
 function ThankYou() {
   const navigate = useNavigate();
   const [productCount, setProductCount] = useState(0);
-
   const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const id = JSON.parse(localStorage.getItem('res'));
   const idGH = localStorage.getItem('idGH') || '';
+  const urlParams = new URLSearchParams(window.location.search);
+  const transactionNo = urlParams.get('vnp_TransactionNo');
+  console.log(transactionNo); // Log ra giá trị của vnp_TransactionNo từ URL
 
   useEffect(() => {
     if (!dataLogin) {
@@ -27,7 +30,15 @@ function ThankYou() {
     if (idGH) {
       countSP(idGH);
     }
-  }, [dataLogin, idGH, productCount]);
+    save(id, transactionNo);
+  }, [dataLogin, id, idGH, productCount, transactionNo]);
+
+  const save = async (id, transactionNo) => {
+    const res = await saveTransactionNo(id, transactionNo);
+    if (res) {
+      console.log(res.data);
+    }
+  };
 
   const countSP = async (id) => {
     const res = await count(id);
