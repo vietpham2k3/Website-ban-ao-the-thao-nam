@@ -114,8 +114,8 @@ function Header() {
                 </a>
               </li>
               <li className="nav-item mx-3">
-                <a className="nav-link" href="#">
-                  Hỗ Trợ
+                <a className="nav-link" href="/chinh-sach">
+                  Chính Sách Shop
                 </a>
               </li>
               <li className="nav-item mx-3">
