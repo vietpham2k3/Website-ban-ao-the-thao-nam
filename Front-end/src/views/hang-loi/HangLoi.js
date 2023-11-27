@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -61,7 +62,19 @@ function HangLoi() {
             {data.map((d, i) => (
               <tr key={i}>
                 <td>{i + 1}</td>
-                <td></td>
+                <td>
+                  <div className="d-flex">
+                    <img
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                      className="product-image me-3"
+                      style={{ width: '70px', height: '100px', borderRadius: 15 }}
+                    />
+                    <div>
+                      {d.chiTietSanPham.sanPham.ten}
+                      {d.chiTietSanPham.sanPham.ten}
+                    </div>
+                  </div>
+                </td>
                 <td>{d.hoaDon.ma}</td>
                 <td>{d.hangLoi.soHangLoi}</td>
                 <td>{d.hangLoi.ghiChu}</td>
