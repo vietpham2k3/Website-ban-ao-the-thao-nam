@@ -5,6 +5,8 @@ import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "so_luong_hang_doi IS NULL\n" +
             "AND id_hd = :id\n", nativeQuery = true)
     List<HoaDonChiTiet> getAll(UUID id);
+
+    @Query(value = "SELECT * FROM HoaDonChiTiet\n" +
+            "WHERE id_hl IS NOT NULL;", nativeQuery = true)
+    Page<HoaDonChiTiet> getAll(Pageable pageable);
 
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +
