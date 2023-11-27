@@ -69,6 +69,13 @@ const pages = {
           breadcrumbs: false
         }
       ]
+    },
+    {
+      id: 'hang-loi',
+      title: 'Hàng lỗi',
+      type: 'item',
+      url: '/voucher',
+      icon: icons.IconShirt
     }
   ]
 };

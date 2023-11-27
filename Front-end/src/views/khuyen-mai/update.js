@@ -11,6 +11,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
 import { putKM } from 'services/ServiceKhuyenMai';
 import { detailKM } from 'services/ServiceKhuyenMai';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function UpdateKhuyenMai() {
   const navigate = useNavigate();
@@ -115,46 +117,28 @@ function UpdateKhuyenMai() {
               <div className="col-md-6" style={{ paddingTop: 10 }}>
                 <label htmlFor="a" className="form-label" style={{ display: 'flex' }}>
                   Mức giảm:
-                  <div className="form-check" style={{ marginLeft: 15, marginRight: 15 }}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={true}
-                      checked={values.loaiGiam === true}
-                      onChange={() => {
-                        setValues({ ...values, loaiGiam: true });
-                      }}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      Tiền giảm
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={false}
-                      checked={values.loaiGiam === false}
-                      onChange={() => {
-                        setValues({ ...values, loaiGiam: false });
-                      }}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      % giảm
-                    </label>
-                  </div>
                 </label>
-                <input
-                  className="form-control"
-                  type="number"
-                  value={values.mucGiam}
-                  onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
-                />
-                {/* {error && (
-                  <div className="alert alert-danger">
-                    {!values.loaiGiam ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
-                  </div>
-                )} */}
+                <InputGroup className="mb-3">
+                  <Button
+                    variant="outline-secondary"
+                    className={values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: true })}
+                  >
+                    VND
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    className={!values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: false })}
+                  >
+                    %
+                  </Button>
+                  <Form.Control
+                    aria-label="Example text with two button addons"
+                    value={values.mucGiam}
+                    onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
+                  />
+                </InputGroup>
               </div>
 
               <div className="col-md-6" style={{ paddingTop: 10 }}>

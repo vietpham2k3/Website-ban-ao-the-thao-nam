@@ -87,11 +87,6 @@ public class HoaDon implements Serializable {
     @Column(name = "sdt")
     private String soDienThoai;
 
-    @Column(name = "ngay_du_kien_nhan")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date ngayDuKienNhan;
-
     @Column(name = "ngay_ship")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)
