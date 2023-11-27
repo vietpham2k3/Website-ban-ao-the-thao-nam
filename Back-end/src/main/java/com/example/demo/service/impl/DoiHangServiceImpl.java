@@ -6,6 +6,9 @@ import com.example.demo.repository.DoiHangRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.service.DoiHangService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,12 @@ public class DoiHangServiceImpl implements DoiHangService {
     @Override
     public List<HoaDonChiTiet> getAll(UUID id) {
         return hoaDonChiTietRepository.getAllByIdHDAndIdTH(id);
+    }
+
+    @Override
+    public Page<HoaDonChiTiet> page(Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return hoaDonChiTietRepository.getAll(pageable);
     }
 
     @Override
