@@ -18,6 +18,13 @@ const dashboard = {
       url: '/don-hang',
       icon: icons.IconShoppingCart,
       breadcrumbs: false
+    },
+    {
+      id: 'don-huy-chua-hoan-tien',
+      title: 'Đơn huỷ chưa hoàn tiền',
+      type: 'item',
+      url: '/voucher',
+      icon: icons.IconShirt
     }
   ]
 };

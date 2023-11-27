@@ -127,7 +127,8 @@ public class GioHangController {
     }
 
     @PutMapping("update-hd-checkout/{id}")
-    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id, @RequestParam String nguoiTao) {
+    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id,
+                                      @RequestParam String nguoiTao) {
         String ma = "HTTT" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hd = serviceHD.detailHD(id);
@@ -155,11 +156,11 @@ public class GioHangController {
         if (httt.getTen().equalsIgnoreCase("VNPay")) {
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                     .ma(maLSHD)
-                    .ten("Thanh toán thành công")
-                    .trangThai(6)
+                    .ten("Chờ giao hàng")
+                    .trangThai(1)
                     .ngayTao(new Date())
                     .nguoiTao(nguoiTao)
-                    .ghiChu("Thanh toán thành công")
+                    .ghiChu("Chờ giao hàng")
                     .hoaDon(hd)
                     .build();
             serviceLSHD.createLichSuDonHang(lichSuHoaDon);
@@ -206,7 +207,6 @@ public class GioHangController {
 
         return ResponseEntity.ok(hoaDon_khuyenMaiService.add(khuyenMai));
     }
-
 
     @PostMapping("/tao-hoa-don")
     public ResponseEntity<String> themHoaDonChiTiet(@RequestParam String nguoiTao, @RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
