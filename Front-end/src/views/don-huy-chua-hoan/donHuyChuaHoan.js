@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
-import { Card } from '@mui/material';
+// import ReactPaginate from 'react-paginate';
+import { Card, Pagination } from '@mui/material';
 import { toast } from 'react-toastify';
 import '../../scss/DonHang.scss';
 import { getAllPageDHHuyChuaHoan, huyDonHang, findDonHuyChuaHoan } from 'services/ServiceDonHang';
@@ -257,7 +257,16 @@ function DonHuyChuaHoan() {
               </div>
             )}
 
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -274,7 +283,7 @@ function DonHuyChuaHoan() {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center po"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

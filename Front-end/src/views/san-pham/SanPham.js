@@ -4,7 +4,7 @@
 import React from 'react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import ReactPaginate from 'react-paginate';
+import Pagination from '@mui/material/Pagination';
 import Table from 'react-bootstrap/Table';
 import '../../scss/SanPham.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -453,7 +453,18 @@ function SanPham() {
                 ))}
               </tbody>
             </Table>
-            <ReactPaginate
+            
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            /> 
+
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -470,7 +481,7 @@ function SanPham() {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </div>
       </MainCard>

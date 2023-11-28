@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../../scss/DonHang.scss';
@@ -13,6 +13,7 @@ import { FormCheck, FormGroup } from 'react-bootstrap';
 import { format } from 'date-fns';
 import makeAnimated from 'react-select/animated';
 import { addMonths, subMonths, isWithinInterval } from 'date-fns';
+import Pagination from '@mui/material/Pagination';
 
 function DonHang() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -884,7 +885,17 @@ function DonHang() {
               </div>
             )}
 
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            />
+
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -901,7 +912,7 @@ function DonHang() {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center po"
               activeClassName="active"
-            />
+            /> */}
 
             <div style={{ display: 'flex', justifyContent: 'end' }} className="export-form">
               <div style={{ paddingRight: 30 }}>

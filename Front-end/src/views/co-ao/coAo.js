@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // bosstrap
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
-import { Card } from '@mui/material';
+import { Card, Pagination } from '@mui/material';
 import '../../scss/SanPham.scss';
 import { fetchAllList, searchCA } from 'services/ServiceCoAo';
 import { deleteCA } from 'services/ServiceCoAo';
@@ -224,24 +224,15 @@ const CoAo = () => {
               </tbody>
             </table>
 
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="Next >"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={totalPages}
-              previousLabel="< Previous"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination justify-content-center"
-              activeClassName="active"
-            />
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            /> 
 
             {/* <ConfirmDelete
           show={isShow}

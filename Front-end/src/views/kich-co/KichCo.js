@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // bosstrap
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
-import { Card } from '@mui/material';
+import { Card, Pagination } from '@mui/material';
 import '../../scss/SanPham.scss';
 import { fetchAllList, searchKC } from 'services/KichCoService';
 import { deleteKC } from 'services/KichCoService';
@@ -225,7 +225,16 @@ const KichCo = () => {
               </tbody>
             </table>
 
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            /> 
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -242,7 +251,7 @@ const KichCo = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
 
             {/* <ConfirmDelete
           show={isShow}

@@ -13,7 +13,7 @@ import {
   searchSP
 } from 'services/SanPhamService';
 import '../../scss/ChiTietSanPham.scss';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 // Bộ lọc
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
@@ -21,6 +21,7 @@ import Slider from 'react-slider';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router';
 import { remove } from '../../utils/removeItem';
+import { Pagination } from '@mui/material';
 
 const MIN = 0;
 const MAX = 10000000;
@@ -436,24 +437,15 @@ function ContentSanPham() {
             ))}
           </div>
           <div className="pagination-container">
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              pageCount={totalPages}
-              previousLabel="<"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination justify-content-center"
-              activeClassName="active"
-            />
+          <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            /> 
           </div>
         </div>
       </div>

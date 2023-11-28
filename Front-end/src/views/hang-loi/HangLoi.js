@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
-import ReactPaginate from 'react-paginate';
+import { Pagination } from '@mui/material';
 import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -113,7 +113,16 @@ function HangLoi() {
             ))}
           </tbody>
         </Table>
-        <ReactPaginate
+        <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className='d-flex justify-content-center'
+            /> 
+        {/* <ReactPaginate
           breakLabel="..."
           nextLabel="Next >"
           //   onPageChange={handlePageClick}
@@ -130,7 +139,7 @@ function HangLoi() {
           breakLinkClassName="page-link"
           containerClassName="pagination justify-content-center"
           activeClassName="active"
-        />
+        /> */}
       </MainCard>
     </div>
   );
