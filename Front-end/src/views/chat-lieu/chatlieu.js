@@ -48,7 +48,6 @@ const ChatLieu = () => {
     if (res && res.data) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
-      console.log(data);
     }
   };
 

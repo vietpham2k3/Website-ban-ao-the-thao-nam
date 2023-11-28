@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,8 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
     @Override
     public Page<KhuyenMai> pageKM(Pageable pageable) {
-        return khuyenMaiRepository.findAll(pageable);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("ngayTao").descending());
+        return khuyenMaiRepository.findAll(sortedPageable);
     }
 
 
