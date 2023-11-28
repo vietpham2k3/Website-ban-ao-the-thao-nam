@@ -2257,7 +2257,7 @@ function DonHangCT() {
                               </div>
                             </li>
                           )}
-                           {lshd.trangThai === 18 && (
+                          {lshd.trangThai === 18 && (
                             <li className="timeline-item bmw">
                               <div className="p-timeline-item">
                                 <time className="p-timeline-date">{lshd.ten}</time>
@@ -4106,9 +4106,7 @@ function DonHangCT() {
                       <Tabs onChange={handleChange} value={value} aria-label="Tabs where selection follows focus" selectionFollowsFocus>
                         <Tab label="Hàng Yêu Cầu Đổi" />
                         <Tab label="Hàng Đổi" />
-                        {(slspYCD.soLuongHangLoi !== 0 || slspYCD.soLuongHangLoi !== '') && 
-                        <Tab label="Hàng Lỗi"/>
-                        }
+                        {(slspYCD.soLuongHangLoi !== 0 || slspYCD.soLuongHangLoi !== '') && <Tab label="Hàng Lỗi" />}
                       </Tabs>
                     </Box>
                   </div>
@@ -4141,7 +4139,6 @@ function DonHangCT() {
                           const nguoiTao = sizeData[5];
                           const ghiChu = sizeData[6];
                           const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
-
 
                           return (
                             <React.Fragment key={index}>
@@ -4209,7 +4206,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>
                                                 <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                                {d.soLuongYeuCauDoi}
+                                                  {d.soLuongYeuCauDoi}
                                                 </span>
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>

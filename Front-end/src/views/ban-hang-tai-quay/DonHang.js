@@ -36,7 +36,7 @@ import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAllHD } = props;
