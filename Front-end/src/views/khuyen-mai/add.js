@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import '../../scss/KhuyenMai.scss';
 // @mui material components
 import Card from '@mui/material/Card';
 import MainCard from 'ui-component/cards/MainCard';
@@ -10,6 +10,8 @@ import MainCard from 'ui-component/cards/MainCard';
 //  React examples
 import { Button } from 'react-bootstrap';
 import { postKM } from 'services/ServiceKhuyenMai';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function AddKhuyenMai() {
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ function AddKhuyenMai() {
     thoiGianKetThuc: '',
     moTa: '',
     trangThai: 0,
-    loaiGiam: ''
+    loaiGiam: true
   });
 
   // const [error, setError] = useState(false);
@@ -100,38 +102,24 @@ function AddKhuyenMai() {
               <div className="col-md-6" style={{ paddingTop: 10 }}>
                 <label htmlFor="a" className="form-label" style={{ display: 'flex' }}>
                   Mức giảm:
-                  <div className="form-check" style={{ marginLeft: 15, marginRight: 15 }}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={true}
-                      checked={values.loaiGiam === true}
-                      onChange={() => setValues({ ...values, loaiGiam: true })}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      Tiền giảm
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={false}
-                      checked={values.loaiGiam === false}
-                      onChange={() => setValues({ ...values, loaiGiam: false })}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      % giảm
-                    </label>
-                  </div>
                 </label>
-                <input
-                  className="form-control"
-                  type="number"
-                  value={values.mucGiam}
-                  onChange={handleMucGiamChange}
-                  disabled={values.loaiGiam === ''} // Disable nếu loại giảm không được chọn
-                />
+                <InputGroup className="mb-3">
+                  <Button
+                    variant="outline-secondary"
+                    className={values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: true })}
+                  >
+                    VND
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    className={!values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: false })}
+                  >
+                    %
+                  </Button>
+                  <Form.Control aria-label="Example text with two button addons" value={values.mucGiam} onChange={handleMucGiamChange} />
+                </InputGroup>
               </div>
 
               <div className="col-md-6" style={{ paddingTop: 10 }}>

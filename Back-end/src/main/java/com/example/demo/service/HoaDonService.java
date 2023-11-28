@@ -23,11 +23,15 @@ public interface HoaDonService {
 
     Page<HoaDon> pageHD(Pageable pageable);
 
+    Page<HoaDonCustom> pageHDHuyChuaHoan(Pageable pageable);
+
     Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
     public Page<HoaDonCustom> searchVIP(String key, Date tuNgay, Date denNgay, Integer[] trangThai,
                                         Integer loaiDon, Double minSL, Double maxSL, Double minTT,
                                         Double maxTT, Pageable pageable);
+
+    public Page<HoaDonCustom> searchDonHuyChuaHoan(String key, Date tuNgay, Date denNgay, Pageable pageable);
 
     public List<ChiTietSanPham> getAllSP();
 

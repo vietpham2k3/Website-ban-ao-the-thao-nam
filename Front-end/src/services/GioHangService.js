@@ -44,4 +44,21 @@ const clearGH = (id, idHD) => {
   return axios.delete(`/api/gio-hang/clearGH/${id}/${idHD}`);
 };
 
-export { postGH, deleteByIdHD, addKhuyenMai, thanhToan, count, themGioHang, detailGH, getAllGH, deleteSPInGH, updateSLGH, clearGH };
+const saveTransactionNo = (id, transactionNo) => {
+  return axios.patch(`/api/gio-hang/save-transactionNo/${id}?transactionNo=${transactionNo}`);
+};
+
+export {
+  postGH,
+  deleteByIdHD,
+  addKhuyenMai,
+  thanhToan,
+  count,
+  themGioHang,
+  detailGH,
+  getAllGH,
+  deleteSPInGH,
+  updateSLGH,
+  clearGH,
+  saveTransactionNo
+};

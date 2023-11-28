@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -127,7 +128,8 @@ public class GioHangController {
     }
 
     @PutMapping("update-hd-checkout/{id}")
-    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id, @RequestParam String nguoiTao) {
+    public ResponseEntity<?> updateHD(@RequestBody HoaDon hoaDon, @PathVariable UUID id,
+                                      @RequestParam String nguoiTao) {
         String ma = "HTTT" + new Random().nextInt(100000);
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hd = serviceHD.detailHD(id);
@@ -155,11 +157,11 @@ public class GioHangController {
         if (httt.getTen().equalsIgnoreCase("VNPay")) {
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon().builder()
                     .ma(maLSHD)
-                    .ten("Thanh toán thành công")
-                    .trangThai(6)
+                    .ten("Chờ giao hàng")
+                    .trangThai(1)
                     .ngayTao(new Date())
                     .nguoiTao(nguoiTao)
-                    .ghiChu("Thanh toán thành công")
+                    .ghiChu("Chờ giao hàng")
                     .hoaDon(hd)
                     .build();
             serviceLSHD.createLichSuDonHang(lichSuHoaDon);
@@ -206,7 +208,6 @@ public class GioHangController {
 
         return ResponseEntity.ok(hoaDon_khuyenMaiService.add(khuyenMai));
     }
-
 
     @PostMapping("/tao-hoa-don")
     public ResponseEntity<String> themHoaDonChiTiet(@RequestParam String nguoiTao, @RequestBody List<HoaDonChiTiet> hoaDonChiTietList) {
@@ -300,6 +301,13 @@ public class GioHangController {
     public ResponseEntity<?> deleteByIdHD(@PathVariable UUID id) {
         hoaDonChiTietService.deleteByIdHD(id);
         return ResponseEntity.ok("Thành công");
+    }
+
+    @PatchMapping("/save-transactionNo/{id}")
+    public ResponseEntity<?> transactionNo(@PathVariable UUID id, @RequestParam String transactionNo) {
+        HinhThucThanhToan thanhToan = serviceHttt.detail(id);
+        thanhToan.setMaGiaoDich(transactionNo);
+        return ResponseEntity.ok(serviceHttt.add(thanhToan));
     }
 
 }

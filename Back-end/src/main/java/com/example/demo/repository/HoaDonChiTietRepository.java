@@ -5,6 +5,8 @@ import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,10 +22,27 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +
             "WHERE " +
-            "id_hl IS NULL \n" +
-            "AND so_luong_hang_doi IS NULL\n" +
+            "so_luong_hang_doi IS NULL\n" +
             "AND id_hd = :id\n", nativeQuery = true)
     List<HoaDonChiTiet> getAll(UUID id);
+
+    @Query(value = "SELECT * FROM HoaDonChiTiet\n" +
+            "WHERE id_hl IS NOT NULL;", nativeQuery = true)
+    Page<HoaDonChiTiet> getAll(Pageable pageable);
+
+    @Query(value = "SELECT hdct.*\n" +
+            "FROM HoaDonChiTiet hdct\n" +
+            "JOIN ChiTietSanPham ctsp ON hdct.id_ctsp = ctsp.id\n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
+            "JOIN HoaDon hd ON hd.id = hdct.id_hd\n" +
+            "JOIN HangLoi hl ON hl.id = hdct.id_hl\n" +
+            "WHERE id_hl IS NOT NULL\n" +
+            "AND (\n" +
+            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , LOWER(:key) , '%'))\n" +
+            "    or\n" +
+            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , LOWER(:key) , '%'))) " +
+            "order by hl.ngay_tao desc", nativeQuery = true)
+    Page<HoaDonChiTiet> search(String key, Pageable pageable);
 
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +
@@ -52,6 +71,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL" +
             " AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
     List<HoaDonChiTiet> getAllByIdHDAndIdTHAndSLYCD(UUID id);
+
+    @Query(value = "SELECT *\n" +
+            "          FROM HoaDonChiTiet\n" +
+            "                        WHERE id = :id\n" +
+            "             AND so_luong_yeu_cau_doi IS NOT NULL \n" +
+            "             AND so_luong_yeu_cau_doi > 0", nativeQuery = true)
+    HoaDonChiTiet detailSLSPDoi(UUID id);
 
     @Query(value = "SELECT *\n" +
             "FROM HoaDonChiTiet\n" +

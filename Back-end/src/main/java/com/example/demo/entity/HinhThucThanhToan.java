@@ -30,6 +30,9 @@ public class HinhThucThanhToan {
     @Column(name = "ghi_chu")
     private String ghiChu;
 
+    @Column(name = "ma_giao_dich")
+    private String maGiaoDich;
+
     @Column(name = "ngay_tao")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Temporal(TemporalType.TIMESTAMP)

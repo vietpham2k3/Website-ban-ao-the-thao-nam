@@ -194,13 +194,12 @@ function MauSac() {
                       <button
                         onClick={() => navigate(`/san-pham/mau-sac/detail/${d.id}`)}
                         style={{ color: 'aqua' }}
-                        className="fa-regular fa-pen-to-square fa-lg fa-khenh"
+                        className="fa-regular fa-pen-to-square fa-lg fa-khenh "
                       ></button>
-
                       <button
                         onClick={() => handleSubmit(d.id, { ma: d.ma })}
                         style={{ color: '#ff1744' }}
-                        className="fa-solid fa-trash fa-khenh"
+                        className="fa-solid fa-trash fa-khenh ms-2"
                       ></button>
                     </td>
                   </tr>

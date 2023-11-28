@@ -13,6 +13,8 @@ public interface HoaDonChiTietService {
 
     List<HoaDonChiTiet> getAllByIdHD(UUID id);
 
+    HoaDonChiTiet detailSLSPDoi(UUID id);
+
     List<HoaDonChiTiet> findAll();
 
     HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet);
