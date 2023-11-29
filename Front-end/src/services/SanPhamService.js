@@ -49,9 +49,7 @@ const searchCTSP = (key, trangThai, min, max, mauSac, chatLieu, loaiSanPham, nha
 };
 
 const searchSP = (key, page) => {
-  return axios.get(
-    `/api/chi-tiet-san-pham/searchMT?key=${key}&page=${page}`
-  );
+  return axios.get(`/api/chi-tiet-san-pham/searchMT?key=${key}&page=${page}`);
 };
 
 const detailCTSP = (id) => {
@@ -106,12 +104,12 @@ const updateSL = (id, soLuong) => {
 };
 
 const findAllProductClient = (values) => {
-  return axios.post(`/api/chi-tiet-san-pham/findAll`,values);
+  return axios.post(`/api/chi-tiet-san-pham/findAll`, values);
 };
 
 const filterProduct = (values) => {
   return axios.post('/api/chi-tiet-san-pham/filter', values);
-}
+};
 
 export {
   getAll,

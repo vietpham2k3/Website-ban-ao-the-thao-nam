@@ -135,8 +135,6 @@ function CheckoutForm(props) {
     getThanhPho();
   }, []);
 
-  console.log(valuesUpdateHD);
-
   useEffect(() => {
     if (dataLogin && dataLogin.role == 'KH') {
       dataDC.forEach((d) => {
@@ -358,7 +356,6 @@ function CheckoutForm(props) {
 
   const handleChange = (value) => {
     const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-    setTongTienKhiGiam(totalAmount - totalGiam);
     setValuesKhuyenMai({
       ...valuesKhuyenMai,
       khuyenMai: {
@@ -366,6 +363,7 @@ function CheckoutForm(props) {
         tien: totalAmount
       }
     });
+    setTongTienKhiGiam(totalAmount - totalGiam);
   };
 
   const handleProvinceChange = (event) => {
@@ -540,8 +538,8 @@ function CheckoutForm(props) {
       } else {
         findAllKM(id);
         const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
-        setTongTienKhiGiam(totalAmount - totalGiam);
         toast.success('Thêm mã thành công');
+        setTongTienKhiGiam(totalAmount - totalGiam);
       }
     } catch (error) {
       console.log(error);
@@ -662,6 +660,7 @@ function CheckoutForm(props) {
       const res = await thanhToan(id, value, nguoiTao);
       if (res) {
         toast.success('Thành công');
+        localStorage.setItem('res', JSON.stringify(res.data.hinhThucThanhToan.id));
       }
     } catch (error) {
       console.log(error);
@@ -1119,18 +1118,19 @@ function CheckoutForm(props) {
                             id="vnpayradio"
                             name="paymentMethod"
                             value="vnpay"
-                            onChange={() =>
+                            onChange={() => {
+                              const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
                               setValuesUpdateHD({
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
-                                trangThai: 6,
+                                trangThai: 1,
                                 hinhThucThanhToan: {
                                   ten: 'VNPay',
-                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  tien: totalAmount - totalGiam,
                                   trangThai: 1
                                 }
-                              })
-                            }
+                              });
+                            }}
                           />
 
                           <label className="custom-control-label" htmlFor="vnpayradio" style={{ marginLeft: '10px', marginTop: '15px' }}>
@@ -1154,18 +1154,19 @@ function CheckoutForm(props) {
                             name="paymentMethod"
                             value="Tiền mặt"
                             // checked={true}
-                            onChange={() =>
+                            onChange={() => {
+                              const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
                               setValuesUpdateHD({
                                 ...valuesUpdateHD,
                                 ...valuesUpdateHD.hinhThucThanhToan,
                                 trangThai: 0,
                                 hinhThucThanhToan: {
                                   ten: 'Tiền mặt',
-                                  tien: valuesUpdateHD.tongTienKhiGiam,
+                                  tien: totalAmount - totalGiam,
                                   trangThai: 0
                                 }
-                              })
-                            }
+                              });
+                            }}
                           />
                           <label className="custom-control-label" htmlFor="codradio" style={{ marginLeft: '10px', marginTop: '12px' }}>
                             Thanh toán COD

@@ -49,7 +49,9 @@ function AddMauSac() {
           <div className="body flex-grow-1 px-3">
             <form className="row g-3" onSubmit={handleSubmit}>
               <div className="col-md-6">
-                <span className="form-label">Tên màu</span>
+                <span style={{ fontWeight: 'bold' }} className="form-label">
+                  Tên màu
+                </span>
                 <input
                   type="text"
                   className="form-control"

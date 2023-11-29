@@ -11,6 +11,10 @@ public interface HoaDonChiTietService {
 
     List<HoaDonChiTiet> getAll(UUID id);
 
+    List<HoaDonChiTiet> getAllByIdHD(UUID id);
+
+    HoaDonChiTiet detailSLSPDoi(UUID id);
+
     List<HoaDonChiTiet> findAll();
 
     HoaDonChiTiet add(HoaDonChiTiet hoaDonChiTiet);
@@ -29,4 +33,9 @@ public interface HoaDonChiTietService {
 
     HoaDonChiTiet findById(UUID id);
 
+    void updateSLDH(Integer soLuong, UUID id);
+
+    void updateSLHL(Integer soLuong, UUID id);
+
+    void updateHL(String nguoiTao,String ghiChu,UUID id);
 }

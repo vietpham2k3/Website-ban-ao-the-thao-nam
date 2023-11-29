@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import '../../scss/KhuyenMai.scss';
 // @mui material components
 import Card from '@mui/material/Card';
 import MainCard from 'ui-component/cards/MainCard';
@@ -10,6 +10,8 @@ import MainCard from 'ui-component/cards/MainCard';
 //  React examples
 import { Button } from 'react-bootstrap';
 import { postKM } from 'services/ServiceKhuyenMai';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function AddKhuyenMai() {
   const navigate = useNavigate();
@@ -22,40 +24,36 @@ function AddKhuyenMai() {
     thoiGianKetThuc: '',
     moTa: '',
     trangThai: 0,
-    loaiGiam: ''
+    loaiGiam: true
   });
 
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!values.loaiGiam) {
-      setError(true); // Hiển thị lỗi nếu loại giảm chưa được chọn
+    if (values.loaiGiam === '') {
+      toast.error('Vui lòng chọn loại giảm');
       return;
     }
 
-    if (values.loaiGiam === '0' && (values.mucGiam < 0 || values.mucGiam > 100)) {
-      setError(true); // Hiển thị lỗi nếu giá trị > 100 khi chọn "%"
+    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 100)) {
+      toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
-
-    const isValid = !error;
-    if (isValid) {
-      await post(values); // Gọi hàm post nếu dữ liệu hợp lệ
-    }
+    await post(values); // Gọi hàm post nếu dữ liệu hợp lệ
   };
 
-  const handleLoaiGiamChange = (event) => {
-    const loaiGiam = event.target.value;
-    setValues({ ...values, loaiGiam });
-    setError(false); // Reset lỗi khi loại giảm được chọn
-  };
+  // const handleLoaiGiamChange = (event) => {
+  //   const loaiGiam = event.target.value;
+  //   setValues({ ...values, loaiGiam });
+  //   setError(false); // Reset lỗi khi loại giảm được chọn
+  // };
 
   const handleMucGiamChange = (event) => {
     const mucGiam = event.target.value;
     setValues({ ...values, mucGiam });
-    setError(false); // Reset lỗi khi giá trị thay đổi
+    // setError(false); // Reset lỗi khi giá trị thay đổi
   };
 
   const post = async (value) => {
@@ -104,43 +102,24 @@ function AddKhuyenMai() {
               <div className="col-md-6" style={{ paddingTop: 10 }}>
                 <label htmlFor="a" className="form-label" style={{ display: 'flex' }}>
                   Mức giảm:
-                  <div className="form-check" style={{ marginLeft: 15, marginRight: 15 }}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      checked={values.loaiGiam === '1'}
-                      onChange={handleLoaiGiamChange}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      Tiền giảm
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="0"
-                      checked={values.loaiGiam === '0'}
-                      onChange={handleLoaiGiamChange}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      % giảm
-                    </label>
-                  </div>
                 </label>
-                <input
-                  className="form-control"
-                  type="number"
-                  value={values.mucGiam}
-                  onChange={handleMucGiamChange}
-                  disabled={!values.loaiGiam} // Disable nếu loại giảm không được chọn
-                />
-                {error && (
-                  <div className="alert alert-danger">
-                    {values.loaiGiam === '0' ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
-                  </div>
-                )}
+                <InputGroup className="mb-3">
+                  <Button
+                    variant="outline-secondary"
+                    className={values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: true })}
+                  >
+                    VND
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    className={!values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: false })}
+                  >
+                    %
+                  </Button>
+                  <Form.Control aria-label="Example text with two button addons" value={values.mucGiam} onChange={handleMucGiamChange} />
+                </InputGroup>
               </div>
 
               <div className="col-md-6" style={{ paddingTop: 10 }}>

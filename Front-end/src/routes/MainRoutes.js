@@ -22,6 +22,8 @@ import UpdateNSX from 'views/nha-san-xuat/NSXupdate';
 //
 import AddKichCo from 'views/kich-co/addKichCo';
 import BanHangTaiQuay from 'views/ban-hang-tai-quay/BanHangTaiQuay';
+import HangLoi from 'views/hang-loi/HangLoi';
+import DonHuyChuaHoan from 'views/don-huy-chua-hoan/donHuyChuaHoan';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -78,6 +80,15 @@ const MainRoutes = {
     {
       path: '/don-hang/chi-tiet/:id',
       element: <DonHangCT />
+    },
+    {
+      path: '/hang-loi',
+      element: <HangLoi />
+    }
+    ,
+    {
+      path: '/don-huy-chua-hoan-tien',
+      element: <DonHuyChuaHoan />
     },
     {
       path: '/san-pham',

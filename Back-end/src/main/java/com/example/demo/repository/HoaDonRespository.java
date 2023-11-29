@@ -29,6 +29,17 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             nativeQuery = true)
     public Page<HoaDonCustom> hienThiPageHD(Pageable pageable);
 
+    @Query(value = "SELECT HD.id, HD.ma, httt.ma_giao_dich,HD.ten_nguoi_nhan, HD.ngay_tao, SUM(HDCT.so_luong) AS tong_so_luong,\n" +
+            "            SUM(HDCT.so_luong * HDCT.don_gia) as tong_tien,HD.trang_thai, HD.loai_don\n" +
+            "            FROM HoaDon HD\n" +
+            "            JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
+            "\t\t\tJOIN HinhThucThanhToan httt ON HD.id_httt = httt.id\n" +
+            "\t\t\tWHERE HD.loai_don = 1 AND HD.trang_thai = 14 AND httt.ten = 'VNPay'\n" +
+            "            GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien, HD.trang_thai, HD.loai_don,httt.ma_giao_dich\n" +
+            "            ORDER BY HD.ngay_tao DESC",
+            nativeQuery = true)
+    public Page<HoaDonCustom> hienThiPageHDHuyChuaHoan(Pageable pageable);
+
     @Query(value = "SELECT hd.*, hdct.id as idHDCT, hdct.id_ctsp, hdct.id_hd, hdct.don_gia, hdct.so_luong\n" +
             "FROM HoaDon HD\n" +
             "JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
@@ -67,6 +78,25 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
                                       @Param("maxSL") Double maxSL,
                                       @Param("minTT") Double minTT,
                                       @Param("maxTT") Double maxTT,
+                                      Pageable pageable);
+
+    @Query(value = "SELECT HD.id, HD.ma, httt.ma_giao_dich,HD.ten_nguoi_nhan, HD.ngay_tao, SUM(HDCT.so_luong) AS tong_so_luong,\n" +
+            "            SUM(HDCT.so_luong * HDCT.don_gia) as tong_tien\n" +
+            "            FROM HoaDon HD\n" +
+            "            JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
+            "\t\t\tJOIN HinhThucThanhToan httt ON HD.id_httt = httt.id\n" +
+            "\t\t\tWHERE ((:key IS NULL OR HD.ma LIKE CONCAT('%', :key, '%'))\n" +
+            "                 OR (:key IS NULL OR HD.ten_nguoi_nhan LIKE CONCAT('%', :key, '%'))\n" +
+            "\t\t\t\t  OR (:key IS NULL OR httt.ma_giao_dich LIKE CONCAT('%', :key, '%')))\n" +
+            "                   AND ((:tuNgay IS NULL OR HD.ngay_tao >= :tuNgay)\n" +
+            "                   AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay))\n" +
+            "\t\t\t\t   AND HD.loai_don = 1 AND HD.trang_thai = 14 AND httt.ten = 'VNPay'\n" +
+            "            GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.tong_tien, HD.trang_thai, HD.loai_don,httt.ma_giao_dich\n" +
+            "            ORDER BY HD.ngay_tao DESC",
+            nativeQuery = true)
+    public Page<HoaDonCustom> findDonHuyChuaHoan(@Param("key") String key,
+                                      @Param("tuNgay") Date tuNgay,
+                                      @Param("denNgay") Date denNgay,
                                       Pageable pageable);
 
     @Transactional
@@ -112,7 +142,6 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "JOIN\n" +
             "  HoaDonChiTiet HDCT ON DH.id = HDCT.id_th\n" +
             "WHERE id_hd = :idHD \n" +
-            "AND id_th IS NOT NULL\n" +
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL", nativeQuery = true)
     List<String> doiHangYC(@Param("idHD") UUID idHD);
 

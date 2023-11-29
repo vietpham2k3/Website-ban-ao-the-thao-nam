@@ -39,9 +39,9 @@ function NhaSanXuat() {
     }
   };
 
-  const search = async (key, trangThai, diaChi, page) => {
+  const search = async (key, trangThai, page) => {
     setCurrentPage(page);
-    const res = await searchNSX(key, trangThai, diaChi, page);
+    const res = await searchNSX(key, trangThai, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
@@ -197,7 +197,7 @@ function NhaSanXuat() {
                       <button
                         onClick={() => handleSubmit(d.id, { ma: d.ma })}
                         style={{ color: '#ff1744' }}
-                        className="fa-solid fa-trash fa-khenh"
+                        className="fa-solid fa-trash fa-khenh ms-2"
                       ></button>
                     </td>
                   </tr>

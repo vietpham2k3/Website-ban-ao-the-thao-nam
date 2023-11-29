@@ -26,8 +26,6 @@ const ChatLieu = () => {
     ma: ''
   });
 
-  console.log(data);
-
   useEffect(() => {
     getAll(0);
     setDataDelete();
@@ -52,6 +50,7 @@ const ChatLieu = () => {
   };
 
   const search = async (key, trangThai, page) => {
+    setCurrentPage(page);
     const res = await searchCL(key, trangThai, page);
     if (res) {
       setData(res.data.content);
@@ -67,6 +66,7 @@ const ChatLieu = () => {
       search('', 0, currentPage);
     }
   }, 100);
+
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
     if (filterStatus === '') {
@@ -75,8 +75,6 @@ const ChatLieu = () => {
       search('', filterStatus, selectedPage);
     }
   };
-
-  // const { id } = useParams();
 
   const del = async (id, values) => {
     const res = await deleteCL(id, values);
@@ -211,7 +209,7 @@ const ChatLieu = () => {
                       <button
                         onClick={() => handleSubmit(d.id, { ma: d.ma })}
                         style={{ color: '#ff1744' }}
-                        className="fa-solid fa-trash fa-khenh"
+                        className="fa-solid fa-trash fa-khenh ms-2"
                       ></button>
                     </td>
                   </tr>

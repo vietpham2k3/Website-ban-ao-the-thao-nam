@@ -442,7 +442,11 @@ function SanPham() {
                     <td>{convertToCurrency(d.giaBan)}</td>
                     <td>{d.sanPham.trangThai === 1 ? 'Kinh doanh' : 'Ngừng kinh doanh'}</td>
                     <td>
-                      <button onClick={() => handleUpdate(d.sanPham.id, d.id)} className="fa-solid fa-pen"></button>
+                      <button
+                        style={{ color: 'aqua' }}
+                        onClick={() => handleUpdate(d.sanPham.id, d.id)}
+                        className="fa-regular fa-pen-to-square fa-khenh"
+                      ></button>
                       <button onClick={() => handleDelete(d.sanPham.id)} className="fa-solid fa-trash mx-3"></button>
                     </td>
                   </tr>

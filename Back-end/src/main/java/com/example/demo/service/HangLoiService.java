@@ -11,4 +11,6 @@ public interface HangLoiService {
     public List<HangLoi> thongTinHangLoi(UUID id);
 
     public List<HoaDonChiTiet> spLoi(UUID id);
+
+    public HangLoi add(HangLoi hangLoi);
 }

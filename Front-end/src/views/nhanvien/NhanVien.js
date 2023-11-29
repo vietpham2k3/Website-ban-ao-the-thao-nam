@@ -174,11 +174,14 @@ const NhanVien = () => {
                     </td>
 
                     <td>
-                      <Link className="mx-2" to={`/nhan-vien/detail/${d.id}?imageURL=${encodeURIComponent(`http://localhost:8080/api/nhanvien/getAll/${d.id}`)}`}>
+                      <Link
+                        className="mx-2"
+                        to={`/nhan-vien/detail/${d.id}?imageURL=${encodeURIComponent(`http://localhost:8080/api/nhanvien/getAll/${d.id}`)}`}
+                      >
                         <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
                       </Link>
 
-                      <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>
+                      <button className="mx-2 fa-khenh" onClick={() => handleDeleteKH(d.id)}>
                         <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
                       </button>
                     </td>

@@ -42,6 +42,11 @@ public class HoaDonChiTiet {
     private DoiHang doiHang;
 
     @ManyToOne
+    @JoinColumn(name = "id_hl", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private HangLoi hangLoi;
+
+    @ManyToOne
     @JoinColumn(name = "id_ctsp", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private ChiTietSanPham chiTietSanPham;
@@ -55,9 +60,10 @@ public class HoaDonChiTiet {
     @Column(name = "so_luong_hang_doi")
     private Integer soLuongHangDoi;
 
+    @Column(name = "so_luong_yeu_cau_doi")
+    private Integer soLuongYeuCauDoi;
+
     @Column(name = "so_luong_hang_loi")
     private Integer soLuongHangLoi;
 
-    @Column(name = "so_luong_yeu_cau_doi")
-    private Integer soLuongYeuCauDoi;
 }

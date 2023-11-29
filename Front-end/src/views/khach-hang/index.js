@@ -6,6 +6,7 @@ import { getAllPageKH, deleteKH, searchKh } from 'services/KhachHangService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 // import DeleteKhachHang from "./DeleteKhachHang";
+import '../../scss/MauSac.scss';
 
 const KhachHang = () => {
   const navigate = useNavigate();
@@ -227,11 +228,20 @@ const KhachHang = () => {
                     </td>
                     <td>{d.trangThai === 0 ? 'Không hoạt động' : 'Hoạt động'}</td>
                     <td>
-                      <button className="mx-2" onClick={() => navigate(`/khach-hang/detail/${d.id}?imageURL=${encodeURIComponent(`http://localhost:8080/api/khach-hang/getAll/${d.id}`)}`)}>
-                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg"></i>
+                      <button
+                        className="mx-2 fa-khenh"
+                        onClick={() =>
+                          navigate(
+                            `/khach-hang/detail/${d.id}?imageURL=${encodeURIComponent(
+                              `http://localhost:8080/api/khach-hang/getAll/${d.id}`
+                            )}`
+                          )
+                        }
+                      >
+                        <i style={{ color: 'aqua' }} className="fa-regular fa-pen-to-square fa-lg fa-khenh"></i>
                       </button>
-                      <button className="mx-2" onClick={() => handleDeleteKH(d.id)}>
-                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash"></i>
+                      <button className="mx-2 fa-khenh" onClick={() => handleDeleteKH(d.id)}>
+                        <i style={{ color: '#ff1744' }} className="fa-solid fa-trash fa-khenh"></i>
                       </button>
                     </td>
                   </tr>

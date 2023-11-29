@@ -51,7 +51,8 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     @Override
     public NhaSanXuat xoa(UUID id) {
         NhaSanXuat nhaSanXuat = repository.findById(id).orElse(null);
-        nhaSanXuat.setTen(nhaSanXuat.getMa());
+        nhaSanXuat.setTen(nhaSanXuat.getTen());
+        nhaSanXuat.setMa(nhaSanXuat.getMa());
         nhaSanXuat.setNgayTao(nhaSanXuat.getNgayTao());
         nhaSanXuat.setNgaySua(new Date());
         nhaSanXuat.setTrangThai(1);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+
 public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
 
     @Autowired
@@ -20,6 +21,16 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     @Override
     public List<HoaDonChiTiet> getAll(UUID id) {
         return repository.getAll(id);
+    }
+
+    @Override
+    public List<HoaDonChiTiet> getAllByIdHD(UUID id) {
+        return repository.getAllByIdHD(id);
+    }
+
+    @Override
+    public HoaDonChiTiet detailSLSPDoi(UUID id) {
+        return repository.detailSLSPDoi(id);
     }
 
     @Override
@@ -66,5 +77,20 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
     @Override
     public HoaDonChiTiet findById(UUID id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void updateSLDH(Integer soLuong, UUID id) {
+        repository.updateSLHD(soLuong,id);
+    }
+
+    @Override
+    public void updateSLHL(Integer soLuong, UUID id) {
+        repository.updateSLHL(soLuong,id);
+    }
+
+    @Override
+    public void updateHL( String ghiChu,String nguoiTao, UUID id) {
+        repository.updateHL(ghiChu,nguoiTao,id);
     }
 }

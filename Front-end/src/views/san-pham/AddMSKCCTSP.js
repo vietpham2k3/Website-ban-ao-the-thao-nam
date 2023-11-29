@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';

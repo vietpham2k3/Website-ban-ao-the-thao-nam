@@ -1,9 +1,10 @@
 // assets
-import { IconShirt } from '@tabler/icons';
+import { IconShirt, IconShirtOff } from '@tabler/icons';
 
 // constant
 const icons = {
-  IconShirt
+  IconShirt,
+  IconShirtOff
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
@@ -69,6 +70,13 @@ const pages = {
           breadcrumbs: false
         }
       ]
+    },
+    {
+      id: 'hang-loi',
+      title: 'Hàng lỗi',
+      type: 'item',
+      url: '/hang-loi',
+      icon: icons.IconShirtOff
     }
   ]
 };

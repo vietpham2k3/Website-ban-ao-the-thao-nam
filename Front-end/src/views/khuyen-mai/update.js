@@ -11,6 +11,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
 import { putKM } from 'services/ServiceKhuyenMai';
 import { detailKM } from 'services/ServiceKhuyenMai';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function UpdateKhuyenMai() {
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ function UpdateKhuyenMai() {
     trangThai: 0,
     loaiGiam: ''
   });
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
 
   const { id } = useParams();
 
@@ -52,11 +54,11 @@ function UpdateKhuyenMai() {
     }
   };
 
-  const handleLoaiGiamChange = (event) => {
-    const loaiGiam = event.target.value;
-    setValues({ ...values, loaiGiam });
-    setError(false); // Reset lỗi khi loại giảm được chọn
-  };
+  // const handleLoaiGiamChange = (event) => {
+  //   const loaiGiam = event.target.value;
+  //   setValues({ ...values, loaiGiam: loaiGiam });
+  //   setError(false); // Reset lỗi khi loại giảm được chọn
+  // };
 
   const put = async (id, value) => {
     const res = await putKM(id, value);
@@ -68,21 +70,14 @@ function UpdateKhuyenMai() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!values.loaiGiam) {
-      setError(true); // Hiển thị lỗi nếu loại giảm chưa được chọn
+    if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 100)) {
+      toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
-
-    if (values.loaiGiam === '0' && (values.mucGiam < 0 || values.mucGiam > 100)) {
-      setError(true); // Hiển thị lỗi nếu giá trị > 100 khi chọn "%"
-      return;
-    }
-
-    const isValid = !error;
-    if (isValid) {
-      put(id, values); // Gọi hàm post nếu dữ liệu hợp lệ
-    }
+    put(id, values); // Gọi hàm post nếu dữ liệu hợp lệ
   };
+
+  console.log(values.loaiGiam);
 
   return (
     <div>
@@ -122,42 +117,28 @@ function UpdateKhuyenMai() {
               <div className="col-md-6" style={{ paddingTop: 10 }}>
                 <label htmlFor="a" className="form-label" style={{ display: 'flex' }}>
                   Mức giảm:
-                  <div className="form-check" style={{ marginLeft: 15, marginRight: 15 }}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      checked={values.loaiGiam === '1'}
-                      onChange={handleLoaiGiamChange}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      Tiền giảm
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="0"
-                      checked={values.loaiGiam === '0'}
-                      onChange={handleLoaiGiamChange}
-                    />
-                    <label htmlFor="a" className="form-check-label">
-                      % giảm
-                    </label>
-                  </div>
                 </label>
-                <input
-                  className="form-control"
-                  type="number"
-                  value={values.mucGiam}
-                  onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
-                />
-                {error && (
-                  <div className="alert alert-danger">
-                    {values.loaiGiam === '0' ? 'Vui lòng nhập giá trị từ 0 đến 100.' : 'Vui lòng chọn loại giảm trước khi nhập.'}
-                  </div>
-                )}
+                <InputGroup className="mb-3">
+                  <Button
+                    variant="outline-secondary"
+                    className={values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: true })}
+                  >
+                    VND
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    className={!values.loaiGiam ? 'active' : ''}
+                    onClick={() => setValues({ ...values, loaiGiam: false })}
+                  >
+                    %
+                  </Button>
+                  <Form.Control
+                    aria-label="Example text with two button addons"
+                    value={values.mucGiam}
+                    onChange={(event) => setValues({ ...values, mucGiam: event.target.value })}
+                  />
+                </InputGroup>
               </div>
 
               <div className="col-md-6" style={{ paddingTop: 10 }}>
