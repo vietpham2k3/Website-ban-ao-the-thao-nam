@@ -75,7 +75,7 @@ import { getAll as getAllSPDoi } from 'services/DoiHangService';
 
 function DonHangCT() {
   const { id } = useParams();
-  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
   const navigate = useNavigate();
   const [lichSuHoaDon, setLichSuHoaDon] = useState([]);
   const [thanhPho, setThanhPho] = useState([]);

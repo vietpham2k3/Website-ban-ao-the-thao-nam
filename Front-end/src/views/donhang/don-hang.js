@@ -862,7 +862,6 @@ function DonHang() {
                         )}
                       </div>
                     </td>
-                    <td>{d.ten}</td>
                   </tr>
                 ))}
               </tbody>
