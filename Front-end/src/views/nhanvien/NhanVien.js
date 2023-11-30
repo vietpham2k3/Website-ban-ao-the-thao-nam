@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+import Pagination from '@mui/material/Pagination';
 import MainCard from 'ui-component/cards/MainCard';
 import { Card } from '@mui/material';
 import { getAllPageNV, deleteNhanVien, searchNV } from 'services/NhanVienService';
@@ -189,7 +189,16 @@ const NhanVien = () => {
                 ))}
               </tbody>
             </table>
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -206,7 +215,7 @@ const NhanVien = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

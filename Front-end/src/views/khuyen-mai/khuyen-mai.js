@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import React from 'react';
 import MainCard from 'ui-component/cards/MainCard';
@@ -15,7 +15,7 @@ import _ from 'lodash';
 
 //  React examples
 import { deleteKM } from 'services/ServiceKhuyenMai';
-import { Card } from '@mui/material';
+import { Card, Pagination } from '@mui/material';
 function KhuyenMai() {
   const [filterStatus, setFilterStatus] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
@@ -251,7 +251,16 @@ function KhuyenMai() {
               ))}
             </tbody>
           </Table>
-          <ReactPaginate
+          <Pagination
+            count={totalPages}
+            onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+            variant="text"
+            color="primary"
+            showFirstButton
+            showLastButton
+            className="d-flex justify-content-center"
+          />
+          {/* <ReactPaginate
             breakLabel="..."
             nextLabel="Next >"
             onPageChange={handlePageClick}
@@ -268,7 +277,7 @@ function KhuyenMai() {
             breakLinkClassName="page-link"
             containerClassName="pagination justify-content-center"
             activeClassName="active"
-          />
+          /> */}
         </div>
       </Card>
     </MainCard>

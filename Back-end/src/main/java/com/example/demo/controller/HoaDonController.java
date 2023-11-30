@@ -482,7 +482,7 @@ public class HoaDonController {
     @GetMapping("hien-thi-page-find-don-huy-chua-hoan")
     public ResponseEntity<?> findVIPDonHuyChuaHoan(String key, String tuNgay, String denNgay,
                                      @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
         Date tuNgayDate = null;
         Date denNgayDate = null;

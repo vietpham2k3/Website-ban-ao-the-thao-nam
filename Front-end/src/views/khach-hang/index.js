@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import MainCard from 'ui-component/cards/MainCard';
-import { Card } from '@mui/material';
+import { Card, Pagination } from '@mui/material';
 import { getAllPageKH, deleteKH, searchKh } from 'services/KhachHangService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -248,7 +248,16 @@ const KhachHang = () => {
                 ))}
               </tbody>
             </table>
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -265,7 +274,7 @@ const KhachHang = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>
