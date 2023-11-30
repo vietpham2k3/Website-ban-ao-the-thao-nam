@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import SlideBar from 'layout/SlideBar';
-// import '../../scss/information.scss';
+import '../../scss/information.scss';
 import React from 'react';
 import Footer from 'ui-component/trangchu/Footer';
 import Header from 'ui-component/trangchu/Header';
@@ -129,11 +129,10 @@ function ChiTietDonHang() {
     <div>
       <Header />
       <div className="container">
-        <div className="row slide-bar">
-          <div className="col-2 slide-bar-children">
+        <div className="row slide-bar mt-4">
+          <div className="col-3 slide-bar-children">
             <SlideBar></SlideBar>
           </div>
-          <div className="separator"></div>
           <div className="col-9">
             <div className="user-details row">
               <div className="col-12 d-flex align-items-center justify-content-between">

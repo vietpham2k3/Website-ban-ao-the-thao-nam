@@ -39,7 +39,9 @@ public class KhuyenMaiController {
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody KhuyenMai khuyenMai) {
         String ma = "KM" + new Random().nextInt(100000);
-        khuyenMai.setMa(ma);
+        if(khuyenMai.getMa().equalsIgnoreCase("")){
+            khuyenMai.setMa(ma);
+        }
         khuyenMai.setNgayTao(new Date());
         Date today = new Date();
         if(today.before(khuyenMai.getThoiGianBatDau())){

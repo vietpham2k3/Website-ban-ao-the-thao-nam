@@ -1580,8 +1580,10 @@ function DonHang(props) {
               </div>
             ))}
           </div>
-          <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} className="me-2" />
-          In hoá đơn
+          <div>
+            <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
+            In hoá đơn
+          </div>
           <div className="button-thanh-toan">
             {check ? (
               httt === 'VNPAY' ? (

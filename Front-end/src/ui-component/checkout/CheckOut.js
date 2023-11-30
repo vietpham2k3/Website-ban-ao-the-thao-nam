@@ -669,7 +669,7 @@ function CheckoutForm(props) {
 
   const VNP = async (tien) => {
     try {
-      const res = await payOnline(tien);
+      const res = await payOnline(tien, 'http://localhost:3000/loading');
       if (res) {
         setUrlPay(res.data);
       }

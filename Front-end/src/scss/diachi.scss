@@ -44,9 +44,6 @@ button:hover {
   height: 100%;
 }
 
-.col-2 {
-  background-color: white;
-}
 .row {
   margin-top: 40px;
 }
@@ -83,7 +80,6 @@ button:hover {
   margin: 0;
 }
 
-
 .button2 {
   display: inline-block;
   margin: 10px;
@@ -104,26 +100,25 @@ button:hover {
 }
 
 .right-aligned-modal {
- position: fixed;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
- background-color: white;
- padding: 20px;
- border: 1px solid #ccc;
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
- max-width: 95%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 95%;
 }
-
 
 .modal-content {
- border: 1px solid #0d89d7;
- padding: 20px;
- background-color: #fff;
+  border: 1px solid #0d89d7;
+  padding: 20px;
+  background-color: #fff;
 }
 .input-group {
- position: relative;
- margin-bottom: 20px;
+  position: relative;
+  margin-bottom: 20px;
 }
 .input1 input,
 .input1 select {
@@ -137,74 +132,72 @@ button:hover {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a box shadow */
 }
 
-
-
 .button1 {
- display: flex;
- justify-content: space-between;
- margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .button1 button {
- flex: 1;
- padding: 10px 20px;
- font-size: 16px;
- background-color: #3498db;
- color: #fff;
- border: none;
- cursor: pointer;
- border-radius: 5px;
- margin-right: 10px;
+  flex: 1;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
 }
 
 .button1 button:last-child {
- margin-right: 0;
+  margin-right: 0;
 }
 
 .button1 button:hover {
- background-color: #2980b9;
+  background-color: #2980b9;
 }
 
 .centered-modal {
- position: fixed;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
- display: flex;
- justify-content: center;
- align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .button3 {
- display: flex;
- justify-content: space-between;
- margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .button3 button {
- background: #0074d9;
- color: white;
- border: none;
- padding: 10px 20px;
- cursor: pointer;
- flex: 1;
- margin: 0 10px; /* Add spacing between buttons */
+  background: #0074d9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  flex: 1;
+  margin: 0 10px; /* Add spacing between buttons */
 }
 
 .button3 button:hover {
- background: #1a9461;
+  background: #1a9461;
 }
 .button4 button {
- background: gray;
- color: white;
- border: none;
- padding: 10px 20px;
- cursor: pointer;
- flex: 1;
- margin: 0 10px; /* Add spacing between buttons */
+  background: gray;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  flex: 1;
+  margin: 0 10px; /* Add spacing between buttons */
 }
 
 .button4 button:hover {
- background: #060606;
+  background: #060606;
 }
 
 /* ... */
@@ -231,7 +224,6 @@ button:hover {
   background-color: #9ccff1; /* Màu nền xanh khi hover */
   color: #fff; /* Màu chữ trắng khi hover */
 }
-
 
 /* Chỉnh CSS cho modal tổng thể */
 .right-aligned-modal {
@@ -281,7 +273,7 @@ button:hover {
   }
 
   select,
-  input[type="text"] {
+  input[type='text'] {
     /* Tùy chỉnh màu sắc, border và padding cho input và select box */
     width: 100%;
     padding: 10px;

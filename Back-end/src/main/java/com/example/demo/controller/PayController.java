@@ -106,7 +106,7 @@ public class PayController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> payInOnline(@RequestParam("tien") long tien) throws UnsupportedEncodingException {
+    public ResponseEntity<?> payInOnline(@RequestParam("tien") long tien, @RequestParam String urlReturn) throws UnsupportedEncodingException {
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -132,7 +132,7 @@ public class PayController {
         vnp_Params.put("vnp_OrderType", orderType);
 
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000/checkout/thankyou");
+        vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));

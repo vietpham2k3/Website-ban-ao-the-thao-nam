@@ -84,8 +84,7 @@ const MainRoutes = {
     {
       path: '/hang-loi',
       element: <HangLoi />
-    }
-    ,
+    },
     {
       path: '/don-huy-chua-hoan-tien',
       element: <DonHuyChuaHoan />

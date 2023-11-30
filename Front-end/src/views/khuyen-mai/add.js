@@ -37,7 +37,7 @@ function AddKhuyenMai() {
       return;
     }
 
-    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 100)) {
+    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 80)) {
       toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
@@ -81,7 +81,6 @@ function AddKhuyenMai() {
                   className="form-control"
                   type="text"
                   value={values.ma}
-                  disabled
                   onChange={(event) => setValues({ ...values, ma: event.target.value })}
                   style={{ fontWeight: 'bold' }}
                 />

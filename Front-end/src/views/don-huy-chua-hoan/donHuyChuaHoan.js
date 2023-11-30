@@ -165,7 +165,7 @@ function DonHuyChuaHoan() {
           <div style={{ height: 'auto' }} className="w-auto rounded bg-white border shadow p-4">
             <div className="row" style={{ marginLeft: 100 }}>
               <div className="box col-auto col-6">
-              <div style={{ marginLeft: 6 }} className="values">
+                <div style={{ marginLeft: 6 }} className="values">
                   <strong>Mã đơn hàng, mã giao dịch hoặc tên khách hàng :</strong>
                 </div>
                 <div style={{ marginTop: 10 }} className="search">
@@ -180,25 +180,25 @@ function DonHuyChuaHoan() {
                 </div>
               </div>
 
-                <div className="box col-auto col-6">
-                  <div style={{ textAlign: 'start' }} className="field">
-                    <div className="values">
-                      <strong>Ngày tạo đơn :</strong>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <DateRangePicker
-                        format="dd/MM/yyyy HH:mm aa"
-                        showMeridian
-                        defaultCalendarValue={defaultCalendarValue}
-                        onChange={handleDateChange}
-                        onClean={() => {
-                          setTuNgay(null);
-                          setDenNgay(null);
-                        }}
-                        disabledDate={disabledDate}
-                      />
-                    </div>
+              <div className="box col-auto col-6">
+                <div style={{ textAlign: 'start' }} className="field">
+                  <div className="values">
+                    <strong>Ngày tạo đơn :</strong>
                   </div>
+                  <div style={{ marginTop: 10 }}>
+                    <DateRangePicker
+                      format="dd/MM/yyyy HH:mm aa"
+                      showMeridian
+                      defaultCalendarValue={defaultCalendarValue}
+                      onChange={handleDateChange}
+                      onClean={() => {
+                        setTuNgay(null);
+                        setDenNgay(null);
+                      }}
+                      disabledDate={disabledDate}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

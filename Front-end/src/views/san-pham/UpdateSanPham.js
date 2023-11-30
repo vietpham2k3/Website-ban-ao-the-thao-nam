@@ -108,7 +108,7 @@ function UpdateSanPham() {
 
   const handleAddMS = (event) => {
     event.preventDefault();
-    addMS(valuesCL);
+    addMS(valuesMS);
   };
 
   const addMS = (value) => {
@@ -228,6 +228,12 @@ function UpdateSanPham() {
 
   const [valuesCL, setValuesCL] = useState({
     ten: '',
+    trangThai: 0
+  });
+
+  const [valuesMS, setValuesMS] = useState({
+    ten: '#ffffffff',
+    ma: '',
     trangThai: 0
   });
 
@@ -864,8 +870,8 @@ function UpdateSanPham() {
         show={modalShowMS}
         onHide={() => setModalShowMS(false)}
         handleSubmit={handleAddMS}
-        values={valuesCL}
-        setValues={setValuesCL}
+        values={valuesMS}
+        setValues={setValuesMS}
       />
       <ConfirmDelete show={isShow} handleClose={handleClose} dataDelete={idCTSP} getAll={getAllMSKC} id={idSP} />
     </div>

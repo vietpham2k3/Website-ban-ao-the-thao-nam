@@ -141,12 +141,10 @@ function UserAccount() {
     <div>
       <Header />
       <div className="container">
-        <div className="row slide-bar">
-          <div className="col-2 slide-bar-children">
+        <div className="row slide-bar mt-4">
+          <div className="col-3 slide-bar-children">
             <SlideBar></SlideBar>
           </div>
-
-          <div className="separator"></div>
           <div className="col-9">
             <div className="user-details">
               <h1>THÔNG TIN TÀI KHOẢN</h1>
@@ -159,7 +157,7 @@ function UserAccount() {
               </p>
 
               <button
-                className="mx-2"
+                className="btn btn-primary"
                 onClick={() => {
                   handleUpdate();
                   navigate(`/khachhang-info/${dataLogin.id}`);
@@ -237,6 +235,7 @@ function UserAccount() {
 
               <br></br>
               <button
+                className="btn btn-primary"
                 onClick={() => {
                   handleCapNhat();
                   navigate(`/khachhang-doiMatKhau/${dataLogin.id}`);

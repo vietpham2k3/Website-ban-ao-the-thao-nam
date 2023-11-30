@@ -71,6 +71,8 @@ public class DoiHangController {
         doiHang.setGhiChu(doiHangDTO.getDoiHang().getGhiChu());
         doiHang.setNguoiTao(doiHangDTO.getDoiHang().getNguoiTao());
         doiHang.setTongTienHangDoi(doiHangDTO.getDoiHang().getTongTienHangDoi());
+        doiHang.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
+        doiHang.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
         // Nếu chưa có đổi hàng, tạo mới hóa đơn chi tiết
         HoaDonChiTiet newHoaDonChiTiet = new HoaDonChiTiet().builder()
                 .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
@@ -141,6 +143,9 @@ public class DoiHangController {
                 dh.setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
                 dh.setSoHangDoi(doiHangDTO.getDoiHang().getSoHangDoi());
                 dh.setTongTienHangDoi(doiHangDTO.getDoiHang().getTongTienHangDoi());
+                dh.setNguoiTao(doiHangDTO.getDoiHang().getNguoiTao());
+                dh.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
+                dh.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
                 doiHangService.add(dh);
 //                hdct.setDoiHang(dh);
 //                hoaDonChiTietService.add(hdct);

@@ -16,6 +16,7 @@ import { addSPToDH, deleteSPDH, getAll, update, yeuCauDoiHang } from 'services/D
 import ModalAddHangDoi from './ModalAddHangDoi';
 import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
 import { getAllByIdSPTT } from 'services/SanPhamService';
+import { payOnline } from 'services/PayService';
 
 function ListDonHang(props) {
   const { tabs, data, dataLogin, values, setValues, size } = props;
@@ -31,7 +32,7 @@ function ListDonHang(props) {
   const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [isShow, setIsshow] = useState(false);
-  // const [idCTSP, setIdCTSP] = useState({});
+  const [urlPay, setUrlPay] = useState('');
   const [isShowDH, setIsshowDH] = useState(false);
   const [isDoiHang, setIsDoiHang] = useState(false);
   const [isShowMSKC, setIsshowMSKC] = useState(false);
@@ -47,7 +48,10 @@ function ListDonHang(props) {
     },
     doiHang: {
       soHangDoi: 0,
-      tongTienHangDoi: 0
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0,
+      nguoiTao: ''
     }
   });
 
@@ -68,7 +72,9 @@ function ListDonHang(props) {
       trangThai: 0,
       ghiChu: '',
       nguoiTao: '',
-      tongTienHangDoi: 0
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0
     }
   });
 
@@ -92,8 +98,8 @@ function ListDonHang(props) {
   ];
 
   useEffect(() => {
-    searchSPofDH(term, totalAmount);
-  }, [term, totalAmount]);
+    searchSPofDH(term);
+  }, [term]);
 
   useEffect(() => {
     let sum = 0;
@@ -115,11 +121,11 @@ function ListDonHang(props) {
         trangThai: 15,
         tongTienHangDoi: sumDH,
         soHangDoi: count,
-        nguoiTao: dataLogin.tenKhachHang
+        nguoiTao: dataLogin.tenKhachHang,
+        tienKhachPhaiTra: sumDH - sum
       }
     });
-    console.log(count);
-    setTotalAmount(sum - sumDH);
+    setTotalAmount(sumDH - sum);
     setTotalAmountDH(sum);
     setTotalAmountDHSP(sumDG);
   }, [dataHDCT, dataSPDoi]);
@@ -141,8 +147,18 @@ function ListDonHang(props) {
   }, []);
 
   useEffect(() => {
+    VNP(totalAmount);
+  }, [yeuCauDoi, totalAmount]);
+
+  useEffect(() => {
     if (isDoiHang) {
-      requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+      if (yeuCauDoi.doiHang.phuongThucThanhToan === true) {
+        requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+      } else {
+        localStorage.setItem('idHDCT', dataHDCT[0].hoaDon.id);
+        localStorage.setItem('yeuCauDoi', JSON.stringify(yeuCauDoi));
+        window.location.href = urlPay;
+      }
     }
   }, [isDoiHang]);
 
@@ -162,17 +178,10 @@ function ListDonHang(props) {
     }
   }, [isUpdate, isUpdateHD]);
 
-  const searchSPofDH = async (term, maxSum) => {
+  const searchSPofDH = async (term) => {
     const res = await searchCTSPofDH(term);
     if (res) {
-      // Lọc dữ liệu nếu cần
-      const filteredData = res.data.filter((item) => {
-        // Điều kiện lọc, ví dụ: chỉ lấy các item có giá trị nhỏ hơn maxSum
-        return item.giaBan < maxSum;
-      });
-
-      // Cập nhật state với dữ liệu đã lọc
-      setDataSP(filteredData);
+      setDataSP(res.data);
     }
   };
 
@@ -208,20 +217,7 @@ function ListDonHang(props) {
   const searchByTT = async (id, values) => {
     const res = await searchByTrangThai(id, values);
     if (res) {
-      // Sắp xếp mảng values sao cho trạng thái 14 lên đầu
-      const sortedValues = res.data.hoaDonList.sort((a, b) => {
-        // Đặt ưu tiên cho các phần tử có trạng thái 14 lên đầu
-        if (a.hoaDon.trangThai === 14 && b.hoaDon.trangThai !== 14) {
-          return -1;
-        } else if (a.hoaDon.trangThai !== 14 && b.hoaDon.trangThai === 14) {
-          return 1;
-        } else {
-          // Sắp xếp theo trạng thái khác (nếu cần)
-          return a.hoaDon.trangThai - b.hoaDon.trangThai;
-        }
-      });
-
-      setValues(sortedValues);
+      setValues(res.data.hoaDonList);
     }
   };
 
@@ -332,20 +328,17 @@ function ListDonHang(props) {
           trangThai: 15,
           tongTienHangDoi: sumDH,
           soHangDoi: count,
-          nguoiTao: dataLogin.tenKhachHang
+          nguoiTao: dataLogin.tenKhachHang,
+          tienKhachPhaiTra: sumDH - sum
         }
       });
-      setTotalAmount(sum - sumDH);
+      setTotalAmount(sumDH - sum);
       setTotalAmountDH(sum);
       setTotalAmountDHSP(sumDG);
     }
   };
 
   const handleAddSP = () => {
-    if (totalAmount - valuesAdd.hoaDonChiTiet.donGia * valuesAdd.hoaDonChiTiet.soLuongHangDoi < 0) {
-      toast.error('Bạn không tiền để đổi');
-      return;
-    }
     addSP(valuesAdd);
   };
 
@@ -358,6 +351,14 @@ function ListDonHang(props) {
   };
 
   const handleDoiHang = () => {
+    if (yeuCauDoi.lichSuHoaDon.ghiChu === '') {
+      toast.error('Vui lòng nhập ghi chú');
+      return;
+    }
+    if (yeuCauDoi.doiHang.phuongThucThanhToan === '' && totalAmount < 0) {
+      toast.error('Vui lòng chọn phương thức thanh toán');
+      return;
+    }
     setIsDoiHang(true);
     let count = 0;
     let sumDH = 0;
@@ -369,7 +370,10 @@ function ListDonHang(props) {
       ...yeuCauDoi,
       doiHang: {
         soHangDoi: count,
-        tongTienHangDoi: sumDH
+        tongTienHangDoi: sumDH,
+        phuongThucThanhToan: valuesAdd.doiHang.phuongThucThanhToan,
+        tienKhachPhaiTra: totalAmount,
+        nguoiTao: dataLogin.tenKhachHang
       }
     });
   };
@@ -378,6 +382,17 @@ function ListDonHang(props) {
     let res = await getAllByIdSPTT(id);
     if (res) {
       setMauSacKC(res.data);
+    }
+  };
+
+  const VNP = async (tien) => {
+    try {
+      const res = await payOnline(tien, 'http://localhost:3000/loading');
+      if (res) {
+        setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -392,7 +407,7 @@ function ListDonHang(props) {
   return (
     <div>
       {values.map((d, i) => (
-        <div key={i} className="card-box row" style={{ marginTop: '20px' }}>
+        <div key={i} className="card-box1 row" style={{ marginTop: '20px' }}>
           <div className="col-md-12 card-box-center">
             <div className=" d-flex justify-content-between" style={{ borderBottom: '1px solid gray', alignItems: 'center' }}>
               <Button variant="outline-info ms-3 mt-3 mb-3" onClick={() => navigate(`/history/${d.hoaDon.id}`)}>

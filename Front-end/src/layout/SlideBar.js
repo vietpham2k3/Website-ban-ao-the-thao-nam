@@ -1,6 +1,7 @@
 import React from 'react';
 import Anhuser from '../assets/images/bieutuong.jpg';
 import { useNavigate } from 'react-router';
+import '../scss/SlideBar.scss';
 
 function SlideBar() {
   const navigate = useNavigate();

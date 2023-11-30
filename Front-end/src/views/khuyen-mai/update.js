@@ -70,7 +70,7 @@ function UpdateKhuyenMai() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 100)) {
+    if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 80)) {
       toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
@@ -98,7 +98,6 @@ function UpdateKhuyenMai() {
                   value={values.ma}
                   onChange={(event) => setValues({ ...values, ma: event.target.value })}
                   style={{ fontWeight: 'bold' }}
-                  disabled
                 />
               </div>
 
