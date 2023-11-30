@@ -29,6 +29,12 @@ public class HangLoiServiceImpl implements HangLoiService {
     }
 
     @Override
+    public HangLoi detail(UUID id) {
+        return res.findById(id).orElse(null);
+    }
+
+
+    @Override
     public HangLoi add(HangLoi hangLoi) {
         return res.save(hangLoi);
     }
