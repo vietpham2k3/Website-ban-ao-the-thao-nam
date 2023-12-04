@@ -133,7 +133,7 @@ function ModalTraHang(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose} centered size="xl" keyboard={false} backdrop="static">
+      <Modal style={{paddingTop:90, marginLeft: 150}} show={show} onHide={handleClose} centered size="lg" keyboard={false} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>
             Đổi hàng{'   '}
@@ -152,7 +152,7 @@ function ModalTraHang(props) {
                   style={{ width: 120, borderRadius: 15 }}
                 />
               </div>
-              <div className="mt-3" style={{ width: 400 }}>
+              <div className="mt-3" style={{ width: 250 }}>
                 <p>
                   {d.chiTietSanPham.sanPham.ten}
                   <br />
@@ -194,7 +194,7 @@ function ModalTraHang(props) {
                   style={{ width: 120, borderRadius: 15 }}
                 />
               </div>
-              <div className="mt-3" style={{ width: 400 }}>
+              <div className="mt-3" style={{ width: 200 }}>
                 <p>
                   {d.chiTietSanPham.sanPham.ten}
                   <br />

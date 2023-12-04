@@ -10,6 +10,7 @@ import '../../scss/TableMSKC.scss';
 import '../../scss/SearchResult.scss';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import ButtonMUI from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import TableBody from '@mui/material/TableBody';
@@ -73,8 +74,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { getAll as getAllSPDoi } from 'services/DoiHangService';
+import { addSPToDH, deleteSPDH, getAll as getAllSPDoi ,update as updateSLDoiHang, yeuCauDoiHang } from 'services/DoiHangService';
 
+import ModalTraHang from 'ui-component/login/ModalTraHang';
+import ModalAddHangDoi from 'ui-component/login/ModalAddHangDoi';
+import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
+import { payOnline } from 'services/PayService';
 function DonHangCT() {
   const { id } = useParams();
   const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
@@ -88,7 +93,78 @@ function DonHangCT() {
   const [selectedWard, setSelectedWard] = useState('');
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
-  // const [inputDetail, setInputDetail] = useState(null);
+  const [isShowMSKC, setIsshowMSKC] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isUpdateHD, setIsUpdateHD] = useState(false);
+  const [dataHDCT, setDataHDCT] = useState([]);
+  const [urlPay, setUrlPay] = useState('');
+  const [dataHDCTDH, setDataHDCTDH] = useState([]);
+  const [totalAmountV, setTotalAmountV] = useState(0);
+  const [totalAmountDH, setTotalAmountDH] = useState(0);
+  const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
+  const [isShowDH, setIsshowDH] = useState(false);
+  const [isDoiHang, setIsDoiHang] = useState(false);
+  // const [isShowMSKC, setIsshowMSKC] = useState(false);
+  const [isShow, setIsshow] = useState(false);
+
+  const [ghiChu, setGhiChu] = useState({
+    ghiChu: ''
+  });
+
+  const [yeuCauDoi, setYeuCauDoi] = useState({
+    lichSuHoaDon: {
+      ghiChu: ''
+    },
+    doiHang: {
+      soHangDoi: 0,
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0,
+      nguoiTao: ''
+    }
+  });
+
+  const [valuesAddDH, setValuesAddDH] = useState({
+    hoaDonChiTiet: {
+      chiTietSanPham: {
+        id: ''
+      },
+      hoaDon: {
+        id: ''
+      },
+      soLuongHangDoi: 0,
+      soLuongYeuCauDoi: 1,
+      donGia: 0
+    },
+    doiHang: {
+      soHangDoi: 0,
+      trangThai: 0,
+      ghiChu: '',
+      nguoiTao: '',
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0
+    }
+  });
+
+  const listLyDo = [
+    {
+      label: 'Hàng lỗi',
+      value: 'Hàng lỗi'
+    },
+    {
+      label: 'Thiếu hàng',
+      value: 'Thiếu hàng'
+    },
+    {
+      label: 'Người bán gửi sai hàng',
+      value: 'Người bán gửi sai hàng'
+    },
+    {
+      label: 'Khác',
+      value: ''
+    }
+  ];
   const [dataSP, setDataSP] = useState([]);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
@@ -196,6 +272,7 @@ function DonHangCT() {
     const res = await getById(idHD);
     if (res) {
       setValuesSanPham(res.data);
+      setDataHDCT(res.data)
     }
   };
 
@@ -636,10 +713,6 @@ function DonHangCT() {
 
   const handleXacNhanGiaoHang = async (event) => {
     event.preventDefault();
-    if (hoaDon.tienShip === 0 || hoaDon.tienShip === '') {
-      toast.error('Vui lòng nhập tiền ship !');
-      return;
-    }
     await giaoHang(id, lshd2);
   };
 
@@ -1332,8 +1405,6 @@ function DonHangCT() {
     }
   };
 
-  // console.log(hoaDon.tienShip);
-
   ///hàng doi
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -1421,10 +1492,10 @@ function DonHangCT() {
       ghiChu: '',
       nguoiTao: dataLogin && dataLogin.ten
     }
-  }); 
-  
+  });
+
   const [soLuongHangKLoi, setSoLuongHangKLoi] = useState({
-    soLuong: 0,
+    soLuong: 0
   });
 
   const hangKhongLoi = async (idHDCT, value) => {
@@ -1441,7 +1512,7 @@ function DonHangCT() {
     }
   };
 
-  const handleHangKoLoi = (idHDCT,soLuong, e) => {
+  const handleHangKoLoi = (idHDCT, soLuong, e) => {
     e.preventDefault();
 
     setIdHDCT(idHDCT);
@@ -1451,7 +1522,7 @@ function DonHangCT() {
       return;
     }
 
-    hangKhongLoi(idHDCT,soLuong);
+    hangKhongLoi(idHDCT, soLuong);
   };
 
   const handleClose29 = () => {
@@ -1466,7 +1537,7 @@ function DonHangCT() {
     });
     setSoLuongHangKLoi({
       soLuong: 0
-    })
+    });
   };
 
   const handleShow29 = (id) => {
@@ -1525,10 +1596,243 @@ function DonHangCT() {
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState('a'); // Giá trị mặc định là 'a'
+  const [selectedOption, setSelectedOption] = useState('a');
 
   const handleRadioChange = (e) => {
     setSelectedOption(e.target.value);
+  };
+
+  ///
+
+  useEffect(() => {
+    let sum = 0;
+    let count = 0;
+    dataHDCT.forEach((d) => {
+      sum += d.soLuongYeuCauDoi * d.donGia;
+    });
+    let sumDH = 0;
+    let sumDG = 0;
+    spDoiHang.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      sumDG += d.donGia;
+      count += d.soLuongHangDoi;
+    });
+    setValuesAddDH({
+      ...valuesAddDH,
+      doiHang: {
+        ...valuesAddDH.doiHang,
+        trangThai: 15,
+        tongTienHangDoi: sumDH,
+        soHangDoi: count,
+        nguoiTao: dataLogin.ten,
+        tienKhachPhaiTra: sumDH - sum
+      }
+    });
+    setTotalAmountV(sumDH - sum);
+    setTotalAmountDH(sum);
+    setTotalAmountDHSP(sumDG);
+  }, [dataHDCT, spDoiHang]);
+
+  useEffect(() => {
+    setValuesAddDH({
+      ...valuesAddDH,
+      hoaDonChiTiet: {
+        ...valuesAddDH.hoaDonChiTiet,
+        hoaDon: {
+          id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+        }
+      }
+    });
+  }, [isShowDH]);
+
+  useEffect(() => {
+    VNP(totalAmountV);
+  }, [yeuCauDoi, totalAmountV]);
+
+  useEffect(() => {
+    if (isDoiHang) {
+      if (yeuCauDoi.doiHang.phuongThucThanhToan === true) {
+        requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+      } else {
+        localStorage.setItem('idHDCT', dataHDCT[0].hoaDon.id);
+        localStorage.setItem('yeuCauDoi', JSON.stringify(yeuCauDoi));
+        window.location.href = urlPay;
+      }
+    }
+  }, [isDoiHang]);
+
+  useEffect(() => {
+    if (dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id) {
+      findAll(dataHDCT[0].hoaDon.id);
+    }
+  }, [dataHDCT]);
+
+  useEffect(() => {
+    if (isUpdate) {
+      handleUpdateSL(dataHDCT);
+      setIsUpdate(false);
+    } else {
+      handleUpdateSL(dataHDCTDH);
+      setIsUpdateHD(false);
+    }
+  }, [isUpdate, isUpdateHD]);
+
+  const deleteHD2 = async (idHDCT) => {
+    const res = await deleteSPDH(idHDCT);
+    if (res) {
+      toast.success('Xoá thành công');
+      let sum = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      spDoiHang.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+      });
+      // console.log(sumDH);
+      setTotalAmountV(sum - sumDH);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+      findAll(dataHDCT[0].hoaDon.id);
+    }
+  };
+
+  const findAll = async (id) => {
+    const res = await getAllSPDoi(id);
+    if (res) {
+      setSpDoiHang(res.data);
+    }
+  };
+
+  const updateSL2 = async (value) => {
+    const res = await updateSLDoiHang(value);
+    if (res) {
+      // findAll(dataHDCT[0].hoaDon.id);
+    }
+  };
+
+  const handleUpdateSL = (value) => {
+    updateSL2(value);
+  };
+
+  const handleDelete2 = (id) => {
+    deleteHD2(id);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setIsshow(false);
+  };
+
+  const handleDetail2 = (id) => {
+    getAllMSKC(id);
+    setIsshowMSKC(true);
+    setIsshowDH(false);
+  };
+
+  const handleDetailSL = (id, donGia) => {
+    setValuesAddDH({
+      ...valuesAddDH,
+      hoaDonChiTiet: {
+        ...valuesAddDH.hoaDonChiTiet,
+        chiTietSanPham: {
+          id: id
+        },
+        donGia: donGia
+      }
+    });
+  };
+
+  const addSP2 = async (value) => {
+    let res = await addSPToDH(value);
+    if (res) {
+      setIsshow(true);
+      setIsshowDH(false);
+      setIsshowMSKC(false);
+      findAll(dataHDCT[0].hoaDon.id);
+      toast.success('Chọn sản phẩm thành công');
+      let sum = 0;
+      let count = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      spDoiHang.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+        count += d.soLuongHangDoi;
+      });
+      setValuesAddDH({
+        ...valuesAddDH,
+        doiHang: {
+          ...valuesAddDH.doiHang,
+          trangThai: 15,
+          tongTienHangDoi: sumDH,
+          soHangDoi: count,
+          nguoiTao: dataLogin.ten,
+          tienKhachPhaiTra: sumDH - sum
+        }
+      });
+      setTotalAmount(sumDH - sum);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+    }
+  };
+
+  const handleAddSP = () => {
+    addSP2(valuesAddDH);
+  };
+
+  const requestDoiHang = async (id, value) => {
+    let res = await yeuCauDoiHang(id, value);
+    if (res) {
+      toast.success('Thành công');
+      window.location.reload();
+    }
+  };
+
+  console.log('db'+ yeuCauDoi.doiHang.phuongThucThanhToan);
+
+  const handleDoiHang = () => {
+    if (yeuCauDoi.lichSuHoaDon.ghiChu === '') {
+      toast.error('Vui lòng nhập ghi chú');
+      return;
+    }
+    if (yeuCauDoi.doiHang.phuongThucThanhToan === '' && totalAmountV < 0) {
+      toast.error('Vui lòng chọn phương thức thanh toán');
+      return;
+    }
+    setIsDoiHang(true);
+    let count = 0;
+    let sumDH = 0;
+    spDoiHang.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      count += d.soLuongHangDoi;
+    });
+    setYeuCauDoi({
+      ...yeuCauDoi,
+      doiHang: {
+        soHangDoi: count,
+        tongTienHangDoi: sumDH,
+        phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+        tienKhachPhaiTra: totalAmountV,
+        nguoiTao: dataLogin.ten
+      }
+    });
+  };
+
+  const VNP = async (tien) => {
+    try {
+      const res = await payOnline(tien, 'http://localhost:3000/loading');
+      if (res) {
+        setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -4250,51 +4554,51 @@ function DonHangCT() {
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
-                                                    onClick={() => handleShow29(d.id)}
-                                                    // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
-                                                    className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
-                                                  >
-                                                    <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
-                                                    <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                                                      <svg
-                                                        className="w-5 h-5 text-green-400"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                      >
-                                                        <path
-                                                          strokeLinecap="round"
-                                                          strokeLinejoin="round"
-                                                          strokeWidth="2"
-                                                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                                        ></path>
-                                                      </svg>
-                                                    </span>
-                                                    <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                                                      <svg
-                                                        className="w-5 h-5 text-green-400"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                      >
-                                                        <path
-                                                          strokeLinecap="round"
-                                                          strokeLinejoin="round"
-                                                          strokeWidth="2"
-                                                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                                        ></path>
-                                                      </svg>
-                                                    </span>
-                                                    <span className="relative2 text-left group-hover:text-white">Phân loại</span>
-                                                  </button>
+                                                      onClick={() => handleShow29(d.id)}
+                                                      // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
+                                                      className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                                                    >
+                                                      <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                                                      <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                                                        <svg
+                                                          className="w-5 h-5 text-green-400"
+                                                          fill="none"
+                                                          stroke="currentColor"
+                                                          viewBox="0 0 24 24"
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                          ></path>
+                                                        </svg>
+                                                      </span>
+                                                      <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                                                        <svg
+                                                          className="w-5 h-5 text-green-400"
+                                                          fill="none"
+                                                          stroke="currentColor"
+                                                          viewBox="0 0 24 24"
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                          ></path>
+                                                        </svg>
+                                                      </span>
+                                                      <span className="relative2 text-left group-hover:text-white">Phân loại</span>
+                                                    </button>
                                                   )}
-                                                  
-                                                  {d.soLuongYeuCauDoi <= 0 && (
-                                                       
-                                                       <h3 style={{color: "red",fontStyle: 'italic'}}>Đã phân loại sản phẩm thành công !</h3>
 
+                                                  {d.soLuongYeuCauDoi <= 0 && (
+                                                    <h3 style={{ color: 'red', fontStyle: 'italic' }}>
+                                                      Đã phân loại sản phẩm thành công !
+                                                    </h3>
                                                   )}
                                                   <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
                                                     <Modal.Header closeButton>
@@ -4304,147 +4608,141 @@ function DonHangCT() {
                                                       <form className="needs-validation" noValidate>
                                                         <div className="form-group row">
                                                           <div className="col-12" style={{ paddingLeft: 180, width: 310 }}>
-                                                          {selectedOption === 'a' && (
-  <InputSpinner
-    type={'real'}
-    max={slspYCD.soLuongYeuCauDoi}
-    min={0}
-    key={`inputSpinnerA_${i}`} // Sử dụng key duy nhất
-    step={1}
-    value={hangLoi1.soLuongHangLoi}
-    onChange={(e) => {
-      setHangLoi1({
-        ...hangLoi1,
-        soLuongHangLoi: e
-      });
-    }}
-    variant={'dark'}
-    size="sm"
-  />
-)}
+                                                            {selectedOption === 'a' && (
+                                                              <InputSpinner
+                                                                type={'real'}
+                                                                max={slspYCD.soLuongYeuCauDoi}
+                                                                min={0}
+                                                                key={`inputSpinnerA_${i}`} // Sử dụng key duy nhất
+                                                                step={1}
+                                                                value={hangLoi1.soLuongHangLoi}
+                                                                onChange={(e) => {
+                                                                  setHangLoi1({
+                                                                    ...hangLoi1,
+                                                                    soLuongHangLoi: e
+                                                                  });
+                                                                }}
+                                                                variant={'dark'}
+                                                                size="sm"
+                                                              />
+                                                            )}
 
-{selectedOption === 'b' && (
-  <InputSpinner
-    type={'real'}
-    max={slspYCD.soLuongYeuCauDoi}
-    min={0}
-    key={`inputSpinnerB_${i}`} // Sử dụng key duy nhất
-    step={1}
-    value={soLuongHangKLoi.soLuong}
-    onChange={(e) => {
-      setSoLuongHangKLoi({
-        soLuong: e
-      });
-    }}
-    variant={'dark'}
-    size="sm"
-  />
-)}
-
-
+                                                            {selectedOption === 'b' && (
+                                                              <InputSpinner
+                                                                type={'real'}
+                                                                max={slspYCD.soLuongYeuCauDoi}
+                                                                min={0}
+                                                                key={`inputSpinnerB_${i}`} // Sử dụng key duy nhất
+                                                                step={1}
+                                                                value={soLuongHangKLoi.soLuong}
+                                                                onChange={(e) => {
+                                                                  setSoLuongHangKLoi({
+                                                                    soLuong: e
+                                                                  });
+                                                                }}
+                                                                variant={'dark'}
+                                                                size="sm"
+                                                              />
+                                                            )}
                                                           </div>
                                                           <div>
                                                             <div className="col-12 flex" style={{ paddingTop: '38px', paddingLeft: 121 }}>
-        <Form.Check
-          type="radio"
-          id="radio-a"
-          label="Hàng lỗi"
-          value="a"
-          name="radio-buttons"
-          aria-label="A"
-          checked={selectedOption === 'a'}
-          onChange={handleRadioChange}
-        />
-        <Form.Check
-          style={{ paddingLeft: 55 }}
-          type="radio"
-          id="radio-b"
-          label="Hàng không lỗi"
-          value="b"
-          name="radio-buttons"
-          aria-label="B"
-          checked={selectedOption === 'b'}
-          onChange={handleRadioChange}
-        />
-      </div>
-      {selectedOption === 'a' && (
-        <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
-          <textarea
-            style={{ width: 320, height: 90 }}
-            className="form-control"
-            rows="4"
-            placeholder="Nhập ghi chú..."
-            value={hangLoi1.hangLoi.ghiChu}
-            onChange={(e) =>
-              setHangLoi1({
-                ...hangLoi1,
-                hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value },
-              })
-            }
-          />
-        </div>
-      )}
+                                                              <Form.Check
+                                                                type="radio"
+                                                                id="radio-a"
+                                                                label="Hàng lỗi"
+                                                                value="a"
+                                                                name="radio-buttons"
+                                                                aria-label="A"
+                                                                checked={selectedOption === 'a'}
+                                                                onChange={handleRadioChange}
+                                                              />
+                                                              <Form.Check
+                                                                style={{ paddingLeft: 55 }}
+                                                                type="radio"
+                                                                id="radio-b"
+                                                                label="Hàng không lỗi"
+                                                                value="b"
+                                                                name="radio-buttons"
+                                                                aria-label="B"
+                                                                checked={selectedOption === 'b'}
+                                                                onChange={handleRadioChange}
+                                                              />
+                                                            </div>
+                                                            {selectedOption === 'a' && (
+                                                              <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
+                                                                <textarea
+                                                                  style={{ width: 320, height: 90 }}
+                                                                  className="form-control"
+                                                                  rows="4"
+                                                                  placeholder="Nhập ghi chú..."
+                                                                  value={hangLoi1.hangLoi.ghiChu}
+                                                                  onChange={(e) =>
+                                                                    setHangLoi1({
+                                                                      ...hangLoi1,
+                                                                      hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value }
+                                                                    })
+                                                                  }
+                                                                />
+                                                              </div>
+                                                            )}
                                                           </div>
                                                         </div>
                                                         <div className="text-center">
-                                                        {selectedOption === 'a' && (
-
-                                                          <button
-                                                            key={i}
-                                                            onClick={(e) => handleHangLoi(slspYCD.id, e)}
-                                                            type="button"
-                                                            className="btn btn-labeled shadow-button"
-                                                            style={{
-                                                              background: 'deepskyblue',
-                                                              borderRadius: '50px',
-                                                              border: '1px solid black',
-                                                              justifyItems: 'center',
-                                                              marginTop: '15px' // Add some spacing between the rows and the button
-                                                            }}
-                                                          >
-                                                            <span
+                                                          {selectedOption === 'a' && (
+                                                            <button
+                                                              key={i}
+                                                              onClick={(e) => handleHangLoi(slspYCD.id, e)}
+                                                              type="button"
+                                                              className="btn btn-labeled shadow-button"
                                                               style={{
-                                                                marginBottom: '3px',
-                                                                color: 'white',
-                                                                fontSize: '15px',
-                                                                fontWeight: 'bold'
+                                                                background: 'deepskyblue',
+                                                                borderRadius: '50px',
+                                                                border: '1px solid black',
+                                                                justifyItems: 'center',
+                                                                marginTop: '15px' // Add some spacing between the rows and the button
                                                               }}
-                                                              className="btn-text"
                                                             >
-                                                              Xác nhận
-                                                            </span>
-                                                          </button>
-                        )}
-{selectedOption === 'b' && (
-
-<button
-  key={i}
-  onClick={(e) => handleHangKoLoi(slspYCD.id,soLuongHangKLoi.soLuong, e)}
-  type="button"
-  className="btn btn-labeled shadow-button"
-  style={{
-    background: 'deepskyblue',
-    borderRadius: '50px',
-    border: '1px solid black',
-    justifyItems: 'center',
-    marginTop: '15px' // Add some spacing between the rows and the button
-  }}
->
-  <span
-    style={{
-      marginBottom: '3px',
-      color: 'white',
-      fontSize: '15px',
-      fontWeight: 'bold'
-    }}
-    className="btn-text"
-  >
-    Xác nhận 2
-  </span>
-</button>
-)}
-
-
+                                                              <span
+                                                                style={{
+                                                                  marginBottom: '3px',
+                                                                  color: 'white',
+                                                                  fontSize: '15px',
+                                                                  fontWeight: 'bold'
+                                                                }}
+                                                                className="btn-text"
+                                                              >
+                                                                Xác nhận
+                                                              </span>
+                                                            </button>
+                                                          )}
+                                                          {selectedOption === 'b' && (
+                                                            <button
+                                                              key={i}
+                                                              onClick={(e) => handleHangKoLoi(slspYCD.id, soLuongHangKLoi.soLuong, e)}
+                                                              type="button"
+                                                              className="btn btn-labeled shadow-button"
+                                                              style={{
+                                                                background: 'deepskyblue',
+                                                                borderRadius: '50px',
+                                                                border: '1px solid black',
+                                                                justifyItems: 'center',
+                                                                marginTop: '15px' // Add some spacing between the rows and the button
+                                                              }}
+                                                            >
+                                                              <span
+                                                                style={{
+                                                                  marginBottom: '3px',
+                                                                  color: 'white',
+                                                                  fontSize: '15px',
+                                                                  fontWeight: 'bold'
+                                                                }}
+                                                                className="btn-text"
+                                                              >
+                                                                Xác nhận
+                                                              </span>
+                                                            </button>
+                                                          )}
                                                         </div>
                                                       </form>
                                                     </Modal.Body>
@@ -4706,6 +5004,16 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
+                   <ButtonMUI
+                    variant="outlined"
+                    className="mt-2 me-3 tra-hang"
+                    color="primary"
+                    onClick={() => {
+                      setIsshow(true);
+                    }}
+                  >
+                    Đổi hàng
+                  </ButtonMUI>
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -5069,6 +5377,62 @@ function DonHangCT() {
                 </Row>
               </Container>
             </div>
+            <ModalTraHang
+        handleClose={handleClose}
+        show={isShow}
+        setValuesAdd={setValuesAddDH}
+        setTotalAmount={setTotalAmountV}
+        dataLogin={dataLogin}
+        valuesAdd={valuesAddDH}
+        dataHDCT={dataHDCT}
+        convertToCurrency={convertToCurrency}
+        setDataHDCT={setDataHDCT}
+        setIsUpdate={setIsUpdate}
+        setGhiChu={setGhiChu}
+        ghiChu={ghiChu}
+        setYeuCauDoi={setYeuCauDoi}
+        yeuCauDoi={yeuCauDoi}
+        listLyDo={listLyDo}
+        dataSPDoi={spDoiHang}
+        handleOpen={() => {
+          setIsshow(false);
+          setIsshowDH(true);
+        }}
+        setDataHDCTDH={setDataHDCTDH}
+        setIsUpdateHD={setIsUpdateHD}
+        handleDelete={handleDelete2}
+        setDataSPDoi={setSpDoiHang}
+        totalAmount={totalAmountV}
+        setTotalAmountDH={setTotalAmountDH}
+        totalAmountDH={totalAmountDH}
+        setTotalAmountDHSP={setTotalAmountDHSP}
+        totalAmountDHSP={totalAmountDHSP}
+        handleDoiHang={handleDoiHang}
+      ></ModalTraHang>
+      <ModalAddHangDoi
+        handleClose={() => {
+          setIsshow(true);
+          setIsshowDH(false);
+        }}
+        show={isShowDH}
+        setTerm={setTerm}
+        term={term}
+        dataSP={dataSP}
+        convertToCurrency={convertToCurrency}
+        handleDetail={handleDetail2}
+      ></ModalAddHangDoi>
+       <TableKCMS
+        handleClose={() => {
+          setIsshowMSKC(false);
+          setIsshowDH(true);
+        }}
+        show={isShowMSKC}
+        values={mauSacKC}
+        handleDetail={handleDetailSL}
+        setValuesAdd={setValuesAddDH}
+        valuesAdd={valuesAddDH}
+        handleAdd={handleAddSP}
+      ></TableKCMS>
           </div>
         </Card>
       </MainCard>
