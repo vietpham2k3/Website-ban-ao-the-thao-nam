@@ -133,7 +133,15 @@ function ModalTraHang(props) {
 
   return (
     <div>
-      <Modal style={{paddingTop:90, marginLeft: 150}} show={show} onHide={handleClose} centered size="lg" keyboard={false} backdrop="static">
+      <Modal
+        style={{ paddingTop: 90, marginLeft: 150 }}
+        show={show}
+        onHide={handleClose}
+        centered
+        size="lg"
+        keyboard={false}
+        backdrop="static"
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             Đổi hàng{'   '}
@@ -252,7 +260,7 @@ function ModalTraHang(props) {
               onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
             />
           )}
-          {totalAmount > 0 && (
+          {totalAmount !== 0 && (
             <div className="d-flex justify-content-between align-items-center">
               <FormControl>
                 <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>
@@ -289,9 +297,17 @@ function ModalTraHang(props) {
                   />
                 </RadioGroup>
               </FormControl>
-              <h4>
-                Tiền phải trả: <span style={{ color: 'red' }}> {convertToCurrency(totalAmount)}</span>
-              </h4>
+              {totalAmount < 0 && (
+                <h4>
+                  Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
+                </h4>
+              )}
+
+              {totalAmount > 0 && (
+                <h4>
+                  Khách phải trả: <span style={{ color: 'red' }}> {convertToCurrency(totalAmount)}</span>
+                </h4>
+              )}
             </div>
           )}
         </Modal.Body>
