@@ -209,6 +209,10 @@ const hangLoi = (id, values) => {
   return axios.put('/api/hoa-don/update-sl-hang-loi/' + id, values);
 };
 
+const hangKoLoi = (id, soLuong) => {
+  return axios.put(`/api/hoa-don/update-sl-hang-ko-loi/${id}?soLuong=${soLuong}`);
+};
+
 export {
   getAllHD,
   requestHuyDon,
@@ -261,5 +265,6 @@ export {
   hangLoi,
   detailSLSPYCDoiByIdHDCT,
   getAllPageDHHuyChuaHoan,
-  findDonHuyChuaHoan
+  findDonHuyChuaHoan,
+  hangKoLoi
 };

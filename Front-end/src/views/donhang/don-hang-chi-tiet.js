@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import '../../scss/TimeLine.scss';
 import '../../scss/TableMSKC.scss';
@@ -60,7 +61,8 @@ import {
   hienThiSPYCDoiHang,
   hienThiYCDoiHang,
   hangLoi,
-  detailSLSPYCDoiByIdHDCT
+  detailSLSPYCDoiByIdHDCT,
+  hangKoLoi
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -1419,7 +1421,38 @@ function DonHangCT() {
       ghiChu: '',
       nguoiTao: dataLogin && dataLogin.ten
     }
+  }); 
+  
+  const [soLuongHangKLoi, setSoLuongHangKLoi] = useState({
+    soLuong: 0,
   });
+
+  const hangKhongLoi = async (idHDCT, value) => {
+    const res = await hangKoLoi(idHDCT, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      handleClose29();
+      hienThiDonDoi(id);
+      hienThiSPDonDoi(id);
+      hienThiDonLoi(id);
+      hienThiSPLoi(id);
+      hienThiSPYCDoi(id);
+      hienThiDonYCDoi(id);
+    }
+  };
+
+  const handleHangKoLoi = (idHDCT,soLuong, e) => {
+    e.preventDefault();
+
+    setIdHDCT(idHDCT);
+
+    if (soLuongHangKLoi.soLuong === 0 || soLuongHangKLoi.soLuong === '') {
+      toast.warning('Vui lòng nhập đúng số lượng !');
+      return;
+    }
+
+    hangKhongLoi(idHDCT,soLuong);
+  };
 
   const handleClose29 = () => {
     setIdHDCT(null);
@@ -1431,6 +1464,9 @@ function DonHangCT() {
         nguoiTao: dataLogin && dataLogin.ten
       }
     });
+    setSoLuongHangKLoi({
+      soLuong: 0
+    })
   };
 
   const handleShow29 = (id) => {
@@ -1489,11 +1525,11 @@ function DonHangCT() {
     }
   };
 
-  // const [isHangLoiSelected, setHangLoiSelected] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('a'); // Giá trị mặc định là 'a'
 
-  // const handleCheckboxChange = () => {
-  //   setHangLoiSelected((prevValue) => !prevValue);
-  // };
+  const handleRadioChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
   return (
     <>
@@ -1930,7 +1966,7 @@ function DonHangCT() {
                                           }}
                                           className="btn btn-labeled shadow-button btn status-cancelled"
                                         >
-                                          Đổi hàng thành công
+                                          Đã xác nhận đổi
                                         </span>
                                       )}
                                       {item.trangThai === 17 && (
@@ -3802,7 +3838,7 @@ function DonHangCT() {
                             }}
                             className="btn btn-labeled shadow-button btn status-cancelled"
                           >
-                            Đổi hàng thành công
+                            Đã xác nhận đổi
                           </span>
                         )}
                         {hoaDon.trangThai === 17 && (
@@ -4134,7 +4170,7 @@ function DonHangCT() {
                           const ma = sizeData[0];
                           const tien = sizeData[1];
                           // const soHangDoi = sizeData[2];
-                          const trangThai = sizeData[3];
+                          // const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
                           const ghiChu = sizeData[6];
@@ -4152,7 +4188,7 @@ function DonHangCT() {
                                 </TableCell>
                                 <TableCell>{tong}</TableCell>
                                 <TableCell>{convertToCurrency(tien)}</TableCell>
-                                <TableCell>{trangThai === '15' ? 'Đang chờ xác nhận' : 'Đổi hàng thành công'}</TableCell>
+                                <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
                                 <TableCell>{ghiChu}</TableCell>
@@ -4210,9 +4246,10 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                              {hoaDon.trangThai !== 16 && (
+                                              {hoaDon.trangThai === 16 && (
                                                 <td>
-                                                  <button
+                                                  {d.soLuongYeuCauDoi > 0 && (
+                                                    <button
                                                     onClick={() => handleShow29(d.id)}
                                                     // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
                                                     className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
@@ -4252,58 +4289,106 @@ function DonHangCT() {
                                                     </span>
                                                     <span className="relative2 text-left group-hover:text-white">Phân loại</span>
                                                   </button>
+                                                  )}
+                                                  
+                                                  {d.soLuongYeuCauDoi <= 0 && (
+                                                       
+                                                       <h3 style={{color: "red",fontStyle: 'italic'}}>Đã phân loại sản phẩm thành công !</h3>
+
+                                                  )}
                                                   <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
                                                     <Modal.Header closeButton>
-                                                      <Modal.Title style={{ marginLeft: 185 }}>Hàng Lỗi</Modal.Title>
+                                                      <Modal.Title style={{ marginLeft: 145 }}>Phân loại hàng</Modal.Title>
                                                     </Modal.Header>
                                                     <Modal.Body>
                                                       <form className="needs-validation" noValidate>
                                                         <div className="form-group row">
                                                           <div className="col-12" style={{ paddingLeft: 180, width: 310 }}>
-                                                            <InputSpinner
-                                                              type={'real'}
-                                                              max={slspYCD.soLuongYeuCauDoi - slspYCD.soLuongHangLoi}
-                                                              min={0}
-                                                              key={i}
-                                                              step={1}
-                                                              value={hangLoi1.soLuongHangLoi}
-                                                              onChange={(e) => {
-                                                                setHangLoi1({
-                                                                  ...hangLoi1,
-                                                                  soLuongHangLoi: e
-                                                                });
-                                                              }}
-                                                              variant={'dark'}
-                                                              size="sm"
-                                                            />
+                                                          {selectedOption === 'a' && (
+  <InputSpinner
+    type={'real'}
+    max={slspYCD.soLuongYeuCauDoi}
+    min={0}
+    key={`inputSpinnerA_${i}`} // Sử dụng key duy nhất
+    step={1}
+    value={hangLoi1.soLuongHangLoi}
+    onChange={(e) => {
+      setHangLoi1({
+        ...hangLoi1,
+        soLuongHangLoi: e
+      });
+    }}
+    variant={'dark'}
+    size="sm"
+  />
+)}
+
+{selectedOption === 'b' && (
+  <InputSpinner
+    type={'real'}
+    max={slspYCD.soLuongYeuCauDoi}
+    min={0}
+    key={`inputSpinnerB_${i}`} // Sử dụng key duy nhất
+    step={1}
+    value={soLuongHangKLoi.soLuong}
+    onChange={(e) => {
+      setSoLuongHangKLoi({
+        soLuong: e
+      });
+    }}
+    variant={'dark'}
+    size="sm"
+  />
+)}
+
+
                                                           </div>
                                                           <div>
-                                                            {/* <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 178 }}>
-        <FormControlLabel
-          control={<Checkbox checked={isHangLoiSelected} onChange={handleCheckboxChange} size="small" />}
+                                                            <div className="col-12 flex" style={{ paddingTop: '38px', paddingLeft: 121 }}>
+        <Form.Check
+          type="radio"
+          id="radio-a"
           label="Hàng lỗi"
-          labelPlacement="start"
+          value="a"
+          name="radio-buttons"
+          aria-label="A"
+          checked={selectedOption === 'a'}
+          onChange={handleRadioChange}
         />
-      </div> */}
-
-                                                            <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
-                                                              <textarea
-                                                                style={{ width: 320, height: 90 }}
-                                                                className="form-control"
-                                                                rows="4"
-                                                                placeholder="Nhập ghi chú..."
-                                                                value={hangLoi1.hangLoi.ghiChu}
-                                                                onChange={(e) =>
-                                                                  setHangLoi1({
-                                                                    ...hangLoi1,
-                                                                    hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value }
-                                                                  })
-                                                                }
-                                                              />
-                                                            </div>
+        <Form.Check
+          style={{ paddingLeft: 55 }}
+          type="radio"
+          id="radio-b"
+          label="Hàng không lỗi"
+          value="b"
+          name="radio-buttons"
+          aria-label="B"
+          checked={selectedOption === 'b'}
+          onChange={handleRadioChange}
+        />
+      </div>
+      {selectedOption === 'a' && (
+        <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
+          <textarea
+            style={{ width: 320, height: 90 }}
+            className="form-control"
+            rows="4"
+            placeholder="Nhập ghi chú..."
+            value={hangLoi1.hangLoi.ghiChu}
+            onChange={(e) =>
+              setHangLoi1({
+                ...hangLoi1,
+                hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value },
+              })
+            }
+          />
+        </div>
+      )}
                                                           </div>
                                                         </div>
                                                         <div className="text-center">
+                                                        {selectedOption === 'a' && (
+
                                                           <button
                                                             key={i}
                                                             onClick={(e) => handleHangLoi(slspYCD.id, e)}
@@ -4329,6 +4414,37 @@ function DonHangCT() {
                                                               Xác nhận
                                                             </span>
                                                           </button>
+                        )}
+{selectedOption === 'b' && (
+
+<button
+  key={i}
+  onClick={(e) => handleHangKoLoi(slspYCD.id,soLuongHangKLoi.soLuong, e)}
+  type="button"
+  className="btn btn-labeled shadow-button"
+  style={{
+    background: 'deepskyblue',
+    borderRadius: '50px',
+    border: '1px solid black',
+    justifyItems: 'center',
+    marginTop: '15px' // Add some spacing between the rows and the button
+  }}
+>
+  <span
+    style={{
+      marginBottom: '3px',
+      color: 'white',
+      fontSize: '15px',
+      fontWeight: 'bold'
+    }}
+    className="btn-text"
+  >
+    Xác nhận 2
+  </span>
+</button>
+)}
+
+
                                                         </div>
                                                       </form>
                                                     </Modal.Body>
@@ -4371,7 +4487,7 @@ function DonHangCT() {
                           const ma = sizeData[0];
                           const tien = sizeData[1];
                           const soHangDoi = sizeData[2];
-                          const trangThai = sizeData[3];
+                          // const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
                           const ghiChu = sizeData[6];
@@ -4389,7 +4505,7 @@ function DonHangCT() {
                                 </TableCell>
                                 <TableCell>{soHangDoi}</TableCell>
                                 <TableCell>{convertToCurrency(tien)}</TableCell>
-                                <TableCell>{trangThai === '15' ? 'Đang chờ xác nhận' : 'Đổi hàng thành công'}</TableCell>
+                                <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
                                 <TableCell>{ghiChu}</TableCell>

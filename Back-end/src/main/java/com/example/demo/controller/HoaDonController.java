@@ -366,17 +366,17 @@ public class HoaDonController {
     @PutMapping("update-sl-hang-loi/{id}")
     public ResponseEntity<?> updateSLHLoi(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDonCT) {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
-        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-
-        chiTietSanPhamService.update(sp.getSoLuong() +
-                        (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
-                hdct.getChiTietSanPham().getId());
+//        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+//
+//        chiTietSanPhamService.update(sp.getSoLuong() +
+//                        (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
+//                hdct.getChiTietSanPham().getId());
 
         if (hdct.getHangLoi() == null) {
             // If idHL is null, it means there is no existing HangLoi, so add a new one
             String maLH = "HL" + new Random().nextInt(100000);
             HangLoi hl = new HangLoi().builder()
-                    .soHangLoi(hoaDonCT.getHangLoi().getSoHangLoi())
+                    .soHangLoi(hoaDonCT.getSoLuongHangLoi())
                     .ghiChu(hoaDonCT.getHangLoi().getGhiChu())
                     .nguoiTao(hoaDonCT.getHangLoi().getNguoiTao())
                     .ngayTao(new Date())
@@ -385,16 +385,23 @@ public class HoaDonController {
             hl = hangLoiService.add(hl);
             hdct.setHangLoi(hl);
             hdct.setSoLuongHangLoi(hoaDonCT.getSoLuongHangLoi());
+            hdct.setSoLuongYeuCauDoi(hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi());
         } else {
-            // Calculate the sum of old and new soHangLoi values
+            List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(hdct.getHoaDon().getId());
+
             int sumSoHangLoi = hdct.getSoLuongHangLoi() + hoaDonCT.getSoLuongHangLoi();
-            // If idHL is not null, it means there is an existing HangLoi, so update it
-            HangLoi existingHangLoi = hdct.getHangLoi();
-            existingHangLoi.setSoHangLoi(sumSoHangLoi);
-            existingHangLoi.setGhiChu(hoaDonCT.getHangLoi().getGhiChu());
-            existingHangLoi.setNguoiTao(hoaDonCT.getHangLoi().getNguoiTao());
-            existingHangLoi.setNgayTao(new Date());
-            hangLoiService.add(existingHangLoi);
+
+            if (!Objects.equals(hdct.getHangLoi().getId(), hoaDonCT.getHangLoi().getId())) {
+                // Nếu idHL không thay đổi, bạn có thể tránh thực hiện một số thao tác không cần thiết
+                HangLoi existingHangLoi = hdct.getHangLoi();
+                existingHangLoi.setSoHangLoi(sumSoHangLoi);
+                existingHangLoi.setGhiChu(hoaDonCT.getHangLoi().getGhiChu());
+                existingHangLoi.setNguoiTao(hoaDonCT.getHangLoi().getNguoiTao());
+                existingHangLoi.setNgayTao(new Date());
+                hangLoiService.add(existingHangLoi);
+                hdct.setSoLuongHangLoi(sumSoHangLoi);
+            }
+            hdct.setSoLuongYeuCauDoi(hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi());
             hdct.setSoLuongHangLoi(sumSoHangLoi);
         }
 
@@ -402,6 +409,19 @@ public class HoaDonController {
         return ResponseEntity.ok("ok");
     }
 
+    @PutMapping("update-sl-hang-ko-loi/{id}")
+    public ResponseEntity<?> updateSLHKOLoi(@PathVariable UUID id, @RequestParam("soLuong") Integer soLuong) {
+        HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
+        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+
+        chiTietSanPhamService.update(sp.getSoLuong() + soLuong,
+                hdct.getChiTietSanPham().getId());
+
+        hdct.setSoLuongYeuCauDoi(hdct.getSoLuongYeuCauDoi() - soLuong);
+
+        hoaDonChiTietService.add(hdct);
+        return ResponseEntity.ok("ok");
+    }
 
 
     @DeleteMapping("delete-hdct/{id}")
@@ -518,7 +538,7 @@ public class HoaDonController {
         lichSuHoaDon.setMa(maLSHD);
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setTen("Đổi hàng thành công");
+        lichSuHoaDon.setTen("Đã xác nhận đổi");
 
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }

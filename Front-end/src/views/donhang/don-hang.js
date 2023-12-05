@@ -47,7 +47,7 @@ function DonHang() {
     // { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
     { value: '15', label: 'Yêu cầu đổi hàng' },
-    { value: '16', label: 'Đổi hàng thành công' },
+    { value: '16', label: 'Đã xác nhận đổi hàng' },
     { value: '17', label: 'Đổi hàng thất bại' }
   ];
 
@@ -787,7 +787,7 @@ function DonHang() {
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Đổi hàng thành công
+                          Đã xác nhận đổi hàng
                         </span>
                       )}
                       {d.trang_thai === 17 && (
