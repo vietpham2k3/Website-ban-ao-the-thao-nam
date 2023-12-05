@@ -1388,6 +1388,31 @@ function DonHangCT() {
     </Tooltip>
   );
 
+  const handleTienTraKhachChange = async (e) => {
+    if (e) {
+      const value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        if (value < 0) {
+          // Nếu nhỏ hơn 0, đặt giá trị thành 0
+          setValuesAddDH({
+            ...valuesAddDH,
+            doiHang:{
+              tienKhachPhaiTra: value
+            }
+          })
+        } else {
+          // Nếu không, cập nhật giá trị trong state
+          setValuesAddDH({
+            ...valuesAddDH,
+            doiHang:{
+              tienKhachPhaiTra: value
+            }
+          })
+        }
+      }
+    }
+  };
+
   const handleTienShipChange = async (e) => {
     if (e) {
       const value = parseFloat(e.target.value);
@@ -1551,8 +1576,8 @@ function DonHangCT() {
     }
   }, [idHDCT]);
 
-  console.log(slspYCD.hangLoi);
-  console.log(tongHLoi);
+  // console.log(slspYCD.hangLoi);
+  // console.log(tongHLoi);
 
   const hangLoi9 = async (idHDCT, value) => {
     const res = await hangLoi(idHDCT, value);
@@ -1822,7 +1847,7 @@ function DonHangCT() {
         doiHang: {
           soHangDoi: count,
           tongTienHangDoi: sumDH,
-          phuongThucThanhToan: true,
+          phuongThucThanhToan: null,
           tienKhachPhaiTra: totalAmountV,
           nguoiTao: dataLogin.ten
         }
@@ -1865,6 +1890,18 @@ function DonHangCT() {
     }
   };
 
+  // const tongSlYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+  // const tongSlHDoi = spYCDoi.reduce((acc, d) => acc + d.doiHang.soHangDoi, 0);
+  // const tongGiaDon = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
+  // const tienKhachPhaiTra = spYCDoi.reduce((acc, d) => acc + d.doiHang.tienKhachPhaiTra, 0);
+
+  // const giaTienYCD = tongSlYCD * tongGiaDon
+  // const giaTienHDoi = tongSlHDoi * tongGiaDon
+  // console.log(tongSlHDoi);
+
+  // console.log(giaTienYCD);
+  // console.log(giaTienHDoi);
+  console.log(totalAmountDH);
   return (
     <>
       <MainCard>
@@ -4496,12 +4533,6 @@ function DonHangCT() {
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
                           <TableCell>Phương Thức Thanh Toán: </TableCell>
-                          {totalAmountDH < 0 && (
-                            <TableCell>Tiền Khách Phải Trả: </TableCell>
-                          )}
-                           {totalAmountDH > 0 &&(
-                            <TableCell>Tiền Phải Trả Khách: </TableCell>
-                          )}
                           <TableCell>Ghi Chú: </TableCell>
                         </TableRow>
                       </TableHead>
@@ -4509,15 +4540,16 @@ function DonHangCT() {
                         {donYCDoi.slice(0, 1).map((n, index) => {
                           const sizeData = n.split(',');
                           const ma = sizeData[0];
-                          const tien = sizeData[1];
+                          // const tien = sizeData[1];
                           // const soHangDoi = sizeData[2];
                           // const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
                           const phuongThuc = sizeData[6];
-                          const tienKhachTra = sizeData[7];
+                          // const tienKhachTra = sizeData[7];
                           const ghiChu = sizeData[8];
                           const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+                          // const gia = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
                           return (
                             <React.Fragment key={index}>
                               <TableRow>
@@ -4530,12 +4562,12 @@ function DonHangCT() {
                                   {ma}
                                 </TableCell>
                                 <TableCell>{tong}</TableCell>
-                                <TableCell>{convertToCurrency(tien)}</TableCell>
+                                <TableCell>{convertToCurrency(totalAmountDH)}</TableCell>
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
                                 <TableCell>{phuongThuc === "true" ? 'Tiền mặt' : 'VNPay'}</TableCell>
-                                <TableCell>{convertToCurrency(tienKhachTra)}</TableCell>
+                                {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
                               <TableRow>
@@ -4794,6 +4826,48 @@ function DonHangCT() {
                                           ))}
                                         </tbody>
                                       </Table>
+                                      <hr></hr>
+                                      {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+  <h3>Khách phải trả: <span style={{color: "red"}}>
+                        <TextField
+                            id="standard-basic"
+                            variant="standard"
+                            style={{
+                              display: 'inline-block',
+                              width: '100px',
+                              fontSize: '22px',
+                              fontWeight: 'bold',
+                              color: "red"
+                            }}
+                            type="number"
+                            value={valuesAddDH.doiHang.tienKhachPhaiTra}
+                            onChange={handleTienTraKhachChange}
+                            inputProps={{ min: 0 }}
+                          />
+    </span> 
+    </h3>
+)}
+{totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+  <h3>Tiền trả khách: <span style={{color: "red"}}>
+    <TextField
+    id="standard-basic"
+    variant="standard"
+    style={{
+      display: 'inline-block',
+      width: '100px',
+      fontSize: '22px',
+      fontWeight: 'bold',
+      color: "red"
+    }}
+    type="number"
+    value={valuesAddDH.doiHang.tienKhachPhaiTra}
+    onChange={handleTienTraKhachChange}
+    inputProps={{ min: 0 }}
+  />
+  </span> </h3>
+)}
+
+
                                     </Box>
                                   </Collapse>
                                 </TableCell>
@@ -4818,12 +4892,6 @@ function DonHangCT() {
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
                           <TableCell>Phương Thức Thanh Toán: </TableCell>
-                          {totalAmountDH < 0 && (
-                            <TableCell>Tiền Khách Phải Trả: </TableCell>
-                          )}
-                           {totalAmountDH > 0 &&(
-                            <TableCell>Tiền Phải Trả Khách: </TableCell>
-                          )}
                           <TableCell>Ghi Chú: </TableCell>
                         </TableRow>
                       </TableHead>
@@ -4837,7 +4905,7 @@ function DonHangCT() {
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
                           const phuongThuc = sizeData[6];
-                          const tienKhachTra = sizeData[7];
+                          // const tienKhachTra = sizeData[7];
                           const ghiChu = sizeData[8];
                           const tong = spDoiHang.reduce((acc, d) => acc + d.soLuongHangDoi, 0);
                           return (
@@ -4857,7 +4925,7 @@ function DonHangCT() {
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
                                 <TableCell>{phuongThuc === "true" ? 'Tiền mặt' : 'VNPay'}</TableCell>
-                                <TableCell>{convertToCurrency(tienKhachTra)}</TableCell>
+                                {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
                               <TableRow>

@@ -173,9 +173,9 @@ function ModalTraHang(props) {
                   key={d.id}
                   type={'real'}
                   max={d.soLuong}
-                  min={0}
+                  min={null}
                   step={1}
-                  value={d.soLuongYeuCauDoi || 0} // Sử dụng counts[i] thay vì count
+                  value={d.soLuongYeuCauDoi || null} // Sử dụng counts[i] thay vì count
                   onChange={(e) => handleChangeHD(e, i)}
                   variant={'dark'}
                   size="sm"

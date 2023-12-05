@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -105,6 +102,12 @@ public class DoiHangController {
 //                hoaDonChiTietService.add(hdct);
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }
+            else if (!Objects.equals(hdct.getChiTietSanPham().getId(), doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+                HoaDonChiTiet hdct2 = hoaDonChiTietService.findById(hdct.getDoiHang().getId());
+
+
+                    return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
+            }
         }
 
         // Thêm đổi hàng
@@ -147,8 +150,6 @@ public class DoiHangController {
                 dh.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
                 dh.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
                 doiHangService.add(dh);
-//                hdct.setDoiHang(dh);
-//                hoaDonChiTietService.add(hdct);
                 break;
             }
         }
