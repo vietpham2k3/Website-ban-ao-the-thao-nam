@@ -234,6 +234,8 @@ function DonHang(props) {
     }
   });
 
+  console.log(tienThua);
+
   const InvoiceDocument = () => {
     return (
       <Document>
@@ -289,12 +291,8 @@ function DonHang(props) {
               </View>
             ))}
             <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textLeft}>Tiền khách thanh toán</Text>
               <Text style={styles.textRight}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</Text>
-            </View>
-            <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền thừa</Text>
-              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
             </View>
           </View>
           <View>
@@ -951,7 +949,7 @@ function DonHang(props) {
                 ></span>
               </button>
             </div>
-            <Modal style={{paddingTop: 100}} centered show={isModalOpen} onHide={closeModal}>
+            <Modal style={{ paddingTop: 100 }} centered show={isModalOpen} onHide={closeModal}>
               <Modal.Body>
                 <QrReader delay={1000} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
               </Modal.Body>
@@ -1552,14 +1550,14 @@ function DonHang(props) {
               </select>
             </div>
           </div>
-          <div className="ma-giam-gia">
+          {/* <div className="ma-giam-gia">
             <div>
               <h6>Tiền thừa</h6>
             </div>
             <div>
               <p>{convertToCurrency(tienThua)}</p>
             </div>
-          </div>
+          </div> */}
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
               <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
@@ -1590,7 +1588,7 @@ function DonHang(props) {
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToanWithVNP()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1601,7 +1599,7 @@ function DonHang(props) {
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToan()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1613,7 +1611,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToan()}
               >
                 Thanh toán
@@ -1622,7 +1620,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToanWithVNP()}
               >
                 Thanh toán
