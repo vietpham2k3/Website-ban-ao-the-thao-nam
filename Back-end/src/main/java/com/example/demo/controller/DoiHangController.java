@@ -1,11 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.DoiHangDTO;
-import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.DoiHang;
-import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.entity.*;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.DoiHangServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
@@ -98,17 +94,23 @@ public class DoiHangController {
 
                 dh = doiHangService.add(dh);
                 newHoaDonChiTiet.setDoiHang(dh);
-//                hdct.setDoiHang(dh);
-//                hoaDonChiTietService.add(hdct);
+
+                if (hdct.getSoLuongHangDoi() != null) {
+                    int sumSoHangDoi = hdct.getSoLuongHangDoi() + doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi();
+                    if (!Objects.equals(hdct.getChiTietSanPham().getId(), doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+                        // Nếu idHL không thay đổi, bạn có thể tránh thực hiện một số thao tác không cần thiết
+//                        ChiTietSanPham ctsp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+
+                    }
+                    newHoaDonChiTiet.setId(doiHangDTO.getHoaDonChiTiet().getId());
+                    newHoaDonChiTiet.setSoLuongHangDoi(sumSoHangDoi);
+                }
+
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }
-            else if (!Objects.equals(hdct.getChiTietSanPham().getId(), doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
-                HoaDonChiTiet hdct2 = hoaDonChiTietService.findById(hdct.getDoiHang().getId());
-
-
-                    return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
-            }
         }
+
+
 
         // Thêm đổi hàng
         doiHangService.add(doiHang);
