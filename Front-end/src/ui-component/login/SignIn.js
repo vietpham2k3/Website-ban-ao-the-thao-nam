@@ -40,7 +40,6 @@ function SignInForm(props) {
       toast.success('Đăng nhập thành công');
       localStorage.setItem('dataLoginAD', JSON.stringify(res.data));
     }
-    console.log(res);
   };
 
   const detail = async (id) => {

@@ -343,7 +343,7 @@ function ListDonHang(props) {
       toast.error('Vui lòng nhập ghi chú');
       return;
     }
-    if (yeuCauDoi.doiHang.phuongThucThanhToan === '' && totalAmount < 0) {
+    if (valuesAdd.doiHang.phuongThucThanhToan === '') {
       toast.error('Vui lòng chọn phương thức thanh toán');
       return;
     }
@@ -405,6 +405,7 @@ function ListDonHang(props) {
     setShow(true);
     setId(id);
   };
+  console.log(yeuCauDoi.doiHang.phuongThucThanhToan + '-' + totalAmount);
 
   return (
     <div>
@@ -488,7 +489,7 @@ function ListDonHang(props) {
             <div className="d-flex justify-content-end mb-5" style={{ height: '100%', alignItems: 'center' }}>
               {d.hoaDon.trangThai === 4 && (
                 <>
-                  <ButtonMUI
+                  {/* <ButtonMUI
                     variant="outlined"
                     className="mt-2 me-3 tra-hang"
                     color="primary"
@@ -498,7 +499,7 @@ function ListDonHang(props) {
                     }}
                   >
                     Đổi hàng
-                  </ButtonMUI>
+                  </ButtonMUI> */}
                   {/* <ButtonMUI className="mt-2 me-3" variant="contained" color="primary" onClick={() => handleNhanDonHang(d.hoaDon.id)}>
                     Nhận hàng
                   </ButtonMUI> */}
