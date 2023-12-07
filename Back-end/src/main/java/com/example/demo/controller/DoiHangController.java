@@ -1,11 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.DoiHangDTO;
-import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.DoiHang;
-import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.LichSuHoaDon;
+import com.example.demo.entity.*;
 import com.example.demo.service.impl.ChiTietSanPhamServiceImpl;
 import com.example.demo.service.impl.DoiHangServiceImpl;
 import com.example.demo.service.impl.HoaDonChiTietServiceImpl;
@@ -23,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -101,11 +94,23 @@ public class DoiHangController {
 
                 dh = doiHangService.add(dh);
                 newHoaDonChiTiet.setDoiHang(dh);
-//                hdct.setDoiHang(dh);
-//                hoaDonChiTietService.add(hdct);
+
+                if (hdct.getSoLuongHangDoi() != null) {
+                    int sumSoHangDoi = hdct.getSoLuongHangDoi() + doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi();
+                    if (!Objects.equals(hdct.getChiTietSanPham().getId(), doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+                        // Nếu idHL không thay đổi, bạn có thể tránh thực hiện một số thao tác không cần thiết
+//                        ChiTietSanPham ctsp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+
+                    }
+                    newHoaDonChiTiet.setId(doiHangDTO.getHoaDonChiTiet().getId());
+                    newHoaDonChiTiet.setSoLuongHangDoi(sumSoHangDoi);
+                }
+
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }
         }
+
+
 
         // Thêm đổi hàng
         doiHangService.add(doiHang);
@@ -147,8 +152,6 @@ public class DoiHangController {
                 dh.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
                 dh.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
                 doiHangService.add(dh);
-//                hdct.setDoiHang(dh);
-//                hoaDonChiTietService.add(hdct);
                 break;
             }
         }

@@ -38,9 +38,9 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "JOIN HangLoi hl ON hl.id = hdct.id_hl\n" +
             "WHERE id_hl IS NOT NULL\n" +
             "AND (\n" +
-            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , LOWER(:key) , '%'))\n" +
+            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , :key , '%'))\n" +
             "    or\n" +
-            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , LOWER(:key) , '%'))) " +
+            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , :key , '%'))) " +
             "order by hl.ngay_tao desc", nativeQuery = true)
     Page<HoaDonChiTiet> search(String key, Pageable pageable);
 

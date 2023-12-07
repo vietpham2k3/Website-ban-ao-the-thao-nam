@@ -10,6 +10,7 @@ import '../../scss/TableMSKC.scss';
 import '../../scss/SearchResult.scss';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import ButtonMUI from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import TableBody from '@mui/material/TableBody';
@@ -73,8 +74,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { getAll as getAllSPDoi } from 'services/DoiHangService';
+import { addSPToDH, deleteSPDH, getAll as getAllSPDoi, update as updateSLDoiHang, yeuCauDoiHang } from 'services/DoiHangService';
 
+import ModalTraHang from 'ui-component/login/ModalTraHang';
+import ModalAddHangDoi from 'ui-component/login/ModalAddHangDoi';
+import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
+import { payOnline } from 'services/PayService';
 function DonHangCT() {
   const { id } = useParams();
   const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
@@ -88,7 +93,78 @@ function DonHangCT() {
   const [selectedWard, setSelectedWard] = useState('');
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
-  // const [inputDetail, setInputDetail] = useState(null);
+  const [isShowMSKC, setIsshowMSKC] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isUpdateHD, setIsUpdateHD] = useState(false);
+  const [dataHDCT, setDataHDCT] = useState([]);
+  const [urlPay, setUrlPay] = useState('');
+  const [dataHDCTDH, setDataHDCTDH] = useState([]);
+  const [totalAmountV, setTotalAmountV] = useState(0);
+  const [totalAmountDH, setTotalAmountDH] = useState(0);
+  const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
+  const [isShowDH, setIsshowDH] = useState(false);
+  const [isDoiHang, setIsDoiHang] = useState(false);
+  // const [isShowMSKC, setIsshowMSKC] = useState(false);
+  const [isShow, setIsshow] = useState(false);
+
+  const [ghiChu, setGhiChu] = useState({
+    ghiChu: ''
+  });
+
+  const [yeuCauDoi, setYeuCauDoi] = useState({
+    lichSuHoaDon: {
+      ghiChu: ''
+    },
+    doiHang: {
+      soHangDoi: 0,
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0,
+      nguoiTao: ''
+    }
+  });
+
+  const [valuesAddDH, setValuesAddDH] = useState({
+    hoaDonChiTiet: {
+      chiTietSanPham: {
+        id: ''
+      },
+      hoaDon: {
+        id: ''
+      },
+      soLuongHangDoi: 0,
+      soLuongYeuCauDoi: 1,
+      donGia: 0
+    },
+    doiHang: {
+      soHangDoi: 0,
+      trangThai: 0,
+      ghiChu: '',
+      nguoiTao: '',
+      tongTienHangDoi: 0,
+      phuongThucThanhToan: '',
+      tienKhachPhaiTra: 0
+    }
+  });
+
+  const listLyDo = [
+    {
+      label: 'Hàng lỗi',
+      value: 'Hàng lỗi'
+    },
+    {
+      label: 'Thiếu hàng',
+      value: 'Thiếu hàng'
+    },
+    {
+      label: 'Người bán gửi sai hàng',
+      value: 'Người bán gửi sai hàng'
+    },
+    {
+      label: 'Khác',
+      value: ''
+    }
+  ];
   const [dataSP, setDataSP] = useState([]);
   const [mauSacKC, setMauSacKC] = useState([]);
   const [dataDetail, setDataDetail] = useState({});
@@ -196,6 +272,7 @@ function DonHangCT() {
     const res = await getById(idHD);
     if (res) {
       setValuesSanPham(res.data);
+      setDataHDCT(res.data);
     }
   };
 
@@ -636,10 +713,6 @@ function DonHangCT() {
 
   const handleXacNhanGiaoHang = async (event) => {
     event.preventDefault();
-    if (hoaDon.tienShip === 0 || hoaDon.tienShip === '') {
-      toast.error('Vui lòng nhập tiền ship !');
-      return;
-    }
     await giaoHang(id, lshd2);
   };
 
@@ -1315,6 +1388,31 @@ function DonHangCT() {
     </Tooltip>
   );
 
+  const handleTienTraKhachChange = async (e) => {
+    if (e) {
+      const value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        if (value < 0) {
+          // Nếu nhỏ hơn 0, đặt giá trị thành 0
+          setValuesAddDH({
+            ...valuesAddDH,
+            doiHang: {
+              tienKhachPhaiTra: value
+            }
+          });
+        } else {
+          // Nếu không, cập nhật giá trị trong state
+          setValuesAddDH({
+            ...valuesAddDH,
+            doiHang: {
+              tienKhachPhaiTra: value
+            }
+          });
+        }
+      }
+    }
+  };
+
   const handleTienShipChange = async (e) => {
     if (e) {
       const value = parseFloat(e.target.value);
@@ -1331,8 +1429,6 @@ function DonHangCT() {
       }
     }
   };
-
-  // console.log(hoaDon.tienShip);
 
   ///hàng doi
   const [open, setOpen] = React.useState(false);
@@ -1480,8 +1576,8 @@ function DonHangCT() {
     }
   }, [idHDCT]);
 
-  console.log(slspYCD.hangLoi);
-  console.log(tongHLoi);
+  // console.log(slspYCD.hangLoi);
+  // console.log(tongHLoi);
 
   const hangLoi9 = async (idHDCT, value) => {
     const res = await hangLoi(idHDCT, value);
@@ -1525,12 +1621,287 @@ function DonHangCT() {
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState('a'); // Giá trị mặc định là 'a'
+  const [selectedOption, setSelectedOption] = useState('a');
 
   const handleRadioChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
+  ///
+
+  useEffect(() => {
+    let sum = 0;
+    let count = 0;
+    dataHDCT.forEach((d) => {
+      sum += d.soLuongYeuCauDoi * d.donGia;
+    });
+    let sumDH = 0;
+    let sumDG = 0;
+    spDoiHang.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      sumDG += d.donGia;
+      count += d.soLuongHangDoi;
+    });
+    setValuesAddDH({
+      ...valuesAddDH,
+      doiHang: {
+        ...valuesAddDH.doiHang,
+        trangThai: 15,
+        tongTienHangDoi: sumDH,
+        soHangDoi: count,
+        nguoiTao: dataLogin.ten,
+        tienKhachPhaiTra: sumDH - sum
+      }
+    });
+    setTotalAmountV(sumDH - sum);
+    setTotalAmountDH(sum);
+    setTotalAmountDHSP(sumDG);
+  }, [dataHDCT, spDoiHang]);
+
+  useEffect(() => {
+    setValuesAddDH({
+      ...valuesAddDH,
+      hoaDonChiTiet: {
+        ...valuesAddDH.hoaDonChiTiet,
+        hoaDon: {
+          id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+        }
+      }
+    });
+  }, [isShowDH]);
+
+  useEffect(() => {
+    if (totalAmountV !== 0) {
+      VNP(totalAmountV);
+    }
+  }, [yeuCauDoi, totalAmountV]);
+
+  useEffect(() => {
+    if (isDoiHang) {
+      if (yeuCauDoi.doiHang.phuongThucThanhToan === true) {
+        requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+      } else {
+        localStorage.setItem('idHDCT', dataHDCT[0].hoaDon.id);
+        localStorage.setItem('yeuCauDoi', JSON.stringify(yeuCauDoi));
+        window.location.href = urlPay;
+      }
+    }
+  }, [isDoiHang]);
+
+  useEffect(() => {
+    if (dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id) {
+      findAll(dataHDCT[0].hoaDon.id);
+    }
+  }, [dataHDCT]);
+
+  useEffect(() => {
+    if (isUpdate) {
+      handleUpdateSL(dataHDCT);
+      setIsUpdate(false);
+    } else {
+      handleUpdateSL(dataHDCTDH);
+      setIsUpdateHD(false);
+    }
+  }, [isUpdate, isUpdateHD]);
+
+  const deleteHD2 = async (idHDCT) => {
+    const res = await deleteSPDH(idHDCT);
+    if (res) {
+      toast.success('Xoá thành công');
+      let sum = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      spDoiHang.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+      });
+      // console.log(sumDH);
+      setTotalAmountV(sum - sumDH);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+      findAll(dataHDCT[0].hoaDon.id);
+    }
+  };
+
+  const findAll = async (id) => {
+    const res = await getAllSPDoi(id);
+    if (res) {
+      setSpDoiHang(res.data);
+    }
+  };
+
+  const updateSL2 = async (value) => {
+    const res = await updateSLDoiHang(value);
+    if (res) {
+      // findAll(dataHDCT[0].hoaDon.id);
+    }
+  };
+
+  const handleUpdateSL = (value) => {
+    updateSL2(value);
+  };
+
+  const handleDelete2 = (id) => {
+    deleteHD2(id);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setIsshow(false);
+  };
+
+  const handleDetail2 = (id) => {
+    getAllMSKC(id);
+    setIsshowMSKC(true);
+    setIsshowDH(false);
+  };
+
+  const handleDetailSL = (id, donGia) => {
+    setValuesAddDH({
+      ...valuesAddDH,
+      hoaDonChiTiet: {
+        ...valuesAddDH.hoaDonChiTiet,
+        chiTietSanPham: {
+          id: id
+        },
+        donGia: donGia
+      }
+    });
+  };
+
+  const addSP2 = async (value) => {
+    let res = await addSPToDH(value);
+    if (res) {
+      setIsshow(true);
+      setIsshowDH(false);
+      setIsshowMSKC(false);
+      findAll(dataHDCT[0].hoaDon.id);
+      toast.success('Chọn sản phẩm thành công');
+      let sum = 0;
+      let count = 0;
+      dataHDCT.forEach((d) => {
+        sum += d.soLuongYeuCauDoi * d.donGia;
+      });
+      let sumDH = 0;
+      let sumDG = 0;
+      spDoiHang.forEach((d) => {
+        sumDH += d.soLuongHangDoi * d.donGia;
+        sumDG += d.donGia;
+        count += d.soLuongHangDoi;
+      });
+      setValuesAddDH({
+        ...valuesAddDH,
+        doiHang: {
+          ...valuesAddDH.doiHang,
+          trangThai: 15,
+          tongTienHangDoi: sumDH,
+          soHangDoi: count,
+          nguoiTao: dataLogin.ten,
+          tienKhachPhaiTra: sumDH - sum
+        }
+      });
+      setTotalAmount(sumDH - sum);
+      setTotalAmountDH(sum);
+      setTotalAmountDHSP(sumDG);
+    }
+  };
+
+  const handleAddSP = () => {
+    addSP2(valuesAddDH);
+  };
+
+  const requestDoiHang = async (id, value) => {
+    let res = await yeuCauDoiHang(id, value);
+    if (res) {
+      toast.success('Thành công');
+      window.location.reload();
+    }
+  };
+
+  const handleDoiHang = () => {
+    if (yeuCauDoi.lichSuHoaDon.ghiChu === '') {
+      toast.error('Vui lòng nhập ghi chú');
+      return;
+    }
+
+    if (totalAmountV !== 0) {
+      if (valuesAddDH.doiHang.phuongThucThanhToan === '') {
+        toast.error('Vui lòng chọn phương thức thanh toán');
+        return;
+      }
+    }
+
+    setIsDoiHang(true);
+    let count = 0;
+    let sumDH = 0;
+    spDoiHang.forEach((d) => {
+      sumDH += d.soLuongHangDoi * d.donGia;
+      count += d.soLuongHangDoi;
+    });
+    if (totalAmountV === 0) {
+      setYeuCauDoi({
+        ...yeuCauDoi,
+        doiHang: {
+          soHangDoi: count,
+          tongTienHangDoi: sumDH,
+          phuongThucThanhToan: null,
+          tienKhachPhaiTra: totalAmountV,
+          nguoiTao: dataLogin.ten
+        }
+      });
+    }
+    if (totalAmountV > 0) {
+      setYeuCauDoi({
+        ...yeuCauDoi,
+        doiHang: {
+          soHangDoi: count,
+          tongTienHangDoi: sumDH,
+          phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+          tienKhachPhaiTra: totalAmountV,
+          nguoiTao: dataLogin.ten
+        }
+      });
+    }
+    if (totalAmountV < 0) {
+      setYeuCauDoi({
+        ...yeuCauDoi,
+        doiHang: {
+          soHangDoi: count,
+          tongTienHangDoi: sumDH,
+          phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+          tienKhachPhaiTra: -totalAmountV,
+          nguoiTao: dataLogin.ten
+        }
+      });
+    }
+  };
+
+  const VNP = async (tien) => {
+    try {
+      const res = await payOnline(tien, 'http://localhost:3000/loading');
+      if (res) {
+        setUrlPay(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const tongSlYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+  // const tongSlHDoi = spYCDoi.reduce((acc, d) => acc + d.doiHang.soHangDoi, 0);
+  // const tongGiaDon = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
+  // const tienKhachPhaiTra = spYCDoi.reduce((acc, d) => acc + d.doiHang.tienKhachPhaiTra, 0);
+
+  // const giaTienYCD = tongSlYCD * tongGiaDon
+  // const giaTienHDoi = tongSlHDoi * tongGiaDon
+  // console.log(tongSlHDoi);
+
+  // console.log(giaTienYCD);
+  // console.log(giaTienHDoi);
+  console.log(totalAmountDH);
   return (
     <>
       <MainCard>
@@ -4161,6 +4532,7 @@ function DonHangCT() {
                           <TableCell>Trạng Thái: </TableCell>
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
+                          <TableCell>Phương Thức Thanh Toán: </TableCell>
                           <TableCell>Ghi Chú: </TableCell>
                         </TableRow>
                       </TableHead>
@@ -4168,13 +4540,16 @@ function DonHangCT() {
                         {donYCDoi.slice(0, 1).map((n, index) => {
                           const sizeData = n.split(',');
                           const ma = sizeData[0];
-                          const tien = sizeData[1];
+                          // const tien = sizeData[1];
                           // const soHangDoi = sizeData[2];
                           // const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
-                          const ghiChu = sizeData[6];
+                          const phuongThuc = sizeData[6];
+                          // const tienKhachTra = sizeData[7];
+                          const ghiChu = sizeData[8];
                           const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+                          // const gia = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
                           return (
                             <React.Fragment key={index}>
                               <TableRow>
@@ -4187,10 +4562,12 @@ function DonHangCT() {
                                   {ma}
                                 </TableCell>
                                 <TableCell>{tong}</TableCell>
-                                <TableCell>{convertToCurrency(tien)}</TableCell>
+                                <TableCell>{convertToCurrency(totalAmountDH)}</TableCell>
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
+                                <TableCell>{phuongThuc === 'true' ? 'Tiền mặt' : 'VNPay'}</TableCell>
+                                {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
                               <TableRow>
@@ -4435,7 +4812,7 @@ function DonHangCT() {
                                                                 }}
                                                                 className="btn-text"
                                                               >
-                                                                Xác nhận 2
+                                                                Xác nhận
                                                               </span>
                                                             </button>
                                                           )}
@@ -4449,6 +4826,51 @@ function DonHangCT() {
                                           ))}
                                         </tbody>
                                       </Table>
+                                      <hr></hr>
+                                      {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+                                        <h3>
+                                          Khách phải trả:{' '}
+                                          <span style={{ color: 'red' }}>
+                                            <TextField
+                                              id="standard-basic"
+                                              variant="standard"
+                                              style={{
+                                                display: 'inline-block',
+                                                width: '100px',
+                                                fontSize: '22px',
+                                                fontWeight: 'bold',
+                                                color: 'red'
+                                              }}
+                                              type="number"
+                                              value={valuesAddDH.doiHang.tienKhachPhaiTra}
+                                              onChange={handleTienTraKhachChange}
+                                              inputProps={{ min: 0 }}
+                                            />
+                                          </span>
+                                        </h3>
+                                      )}
+                                      {totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+                                        <h3>
+                                          Tiền trả khách:{' '}
+                                          <span style={{ color: 'red' }}>
+                                            <TextField
+                                              id="standard-basic"
+                                              variant="standard"
+                                              style={{
+                                                display: 'inline-block',
+                                                width: '100px',
+                                                fontSize: '22px',
+                                                fontWeight: 'bold',
+                                                color: 'red'
+                                              }}
+                                              type="number"
+                                              value={valuesAddDH.doiHang.tienKhachPhaiTra}
+                                              onChange={handleTienTraKhachChange}
+                                              inputProps={{ min: 0 }}
+                                            />
+                                          </span>{' '}
+                                        </h3>
+                                      )}
                                     </Box>
                                   </Collapse>
                                 </TableCell>
@@ -4472,6 +4894,7 @@ function DonHangCT() {
                           <TableCell>Trạng Thái: </TableCell>
                           <TableCell>Ngày Tạo: </TableCell>
                           <TableCell>Người Tạo: </TableCell>
+                          <TableCell>Phương Thức Thanh Toán: </TableCell>
                           <TableCell>Ghi Chú: </TableCell>
                         </TableRow>
                       </TableHead>
@@ -4480,12 +4903,14 @@ function DonHangCT() {
                           const sizeData = n.split(',');
                           const ma = sizeData[0];
                           const tien = sizeData[1];
-                          const soHangDoi = sizeData[2];
+                          // const soHangDoi = sizeData[2];
                           // const trangThai = sizeData[3];
                           const ngayTao = sizeData[4];
                           const nguoiTao = sizeData[5];
-                          const ghiChu = sizeData[6];
-
+                          const phuongThuc = sizeData[6];
+                          // const tienKhachTra = sizeData[7];
+                          const ghiChu = sizeData[8];
+                          const tong = spDoiHang.reduce((acc, d) => acc + d.soLuongHangDoi, 0);
                           return (
                             <React.Fragment key={index}>
                               <TableRow>
@@ -4497,11 +4922,13 @@ function DonHangCT() {
                                 <TableCell component="th" scope="row">
                                   {ma}
                                 </TableCell>
-                                <TableCell>{soHangDoi}</TableCell>
+                                <TableCell>{tong}</TableCell>
                                 <TableCell>{convertToCurrency(tien)}</TableCell>
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
+                                <TableCell>{phuongThuc === 'true' ? 'Tiền mặt' : 'VNPay'}</TableCell>
+                                {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
                               <TableRow>
@@ -4700,6 +5127,16 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
+                      <ButtonMUI
+                        variant="outlined"
+                        className="mt-2 me-3 tra-hang"
+                        color="primary"
+                        onClick={() => {
+                          setIsshow(true);
+                        }}
+                      >
+                        Đổi hàng
+                      </ButtonMUI>
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -5063,6 +5500,62 @@ function DonHangCT() {
                 </Row>
               </Container>
             </div>
+            <ModalTraHang
+              handleClose={handleClose}
+              show={isShow}
+              setValuesAdd={setValuesAddDH}
+              setTotalAmount={setTotalAmountV}
+              dataLogin={dataLogin}
+              valuesAdd={valuesAddDH}
+              dataHDCT={dataHDCT}
+              convertToCurrency={convertToCurrency}
+              setDataHDCT={setDataHDCT}
+              setIsUpdate={setIsUpdate}
+              setGhiChu={setGhiChu}
+              ghiChu={ghiChu}
+              setYeuCauDoi={setYeuCauDoi}
+              yeuCauDoi={yeuCauDoi}
+              listLyDo={listLyDo}
+              dataSPDoi={spDoiHang}
+              handleOpen={() => {
+                setIsshow(false);
+                setIsshowDH(true);
+              }}
+              setDataHDCTDH={setDataHDCTDH}
+              setIsUpdateHD={setIsUpdateHD}
+              handleDelete={handleDelete2}
+              setDataSPDoi={setSpDoiHang}
+              totalAmount={totalAmountV}
+              setTotalAmountDH={setTotalAmountDH}
+              totalAmountDH={totalAmountDH}
+              setTotalAmountDHSP={setTotalAmountDHSP}
+              totalAmountDHSP={totalAmountDHSP}
+              handleDoiHang={handleDoiHang}
+            ></ModalTraHang>
+            <ModalAddHangDoi
+              handleClose={() => {
+                setIsshow(true);
+                setIsshowDH(false);
+              }}
+              show={isShowDH}
+              setTerm={setTerm}
+              term={term}
+              dataSP={dataSP}
+              convertToCurrency={convertToCurrency}
+              handleDetail={handleDetail2}
+            ></ModalAddHangDoi>
+            <TableKCMS
+              handleClose={() => {
+                setIsshowMSKC(false);
+                setIsshowDH(true);
+              }}
+              show={isShowMSKC}
+              values={mauSacKC}
+              handleDetail={handleDetailSL}
+              setValuesAdd={setValuesAddDH}
+              valuesAdd={valuesAddDH}
+              handleAdd={handleAddSP}
+            ></TableKCMS>
           </div>
         </Card>
       </MainCard>
