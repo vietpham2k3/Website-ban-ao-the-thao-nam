@@ -1,12 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.MauSac;
 import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.repository.NhaSanXuatRepository;
 import com.example.demo.service.NhaSanXuatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
 
     @Override
     public Page<NhaSanXuat> pageNSX(Pageable pageable) {
-        return repository.findAll(pageable);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("ngayTao").descending());
+        return repository.findAll(sortedPageable);
     }
 
     @Override

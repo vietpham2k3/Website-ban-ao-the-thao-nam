@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.LoaiSanPham;
-import com.example.demo.entity.MauSac;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.service.LoaiSanPhamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Override
     public Page<LoaiSanPham> getAllPages(Integer page) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("ngayTao").descending());
         return repository.findAll(pageable);
     }
 

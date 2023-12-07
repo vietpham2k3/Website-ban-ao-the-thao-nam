@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +23,7 @@ public class VaiTroServiceImpl implements VaiTroService {
 
     @Override
     public Page<VaiTro> fillAll(Integer page) {
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("ngayTao").descending());
         return vaiTroRepository.findAll(pageable);
     }
 

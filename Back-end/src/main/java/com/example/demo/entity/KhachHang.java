@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Blob;
@@ -52,5 +53,10 @@ public class KhachHang implements Serializable {
     @Lob
     @JsonIgnore
     private Blob anh;
+
+    @Column(name = "ngay_tao")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ngayTao;
 
 }

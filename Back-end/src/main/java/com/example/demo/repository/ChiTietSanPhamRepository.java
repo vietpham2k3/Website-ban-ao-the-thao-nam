@@ -85,7 +85,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             ") AS T\n" +
             "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
             "JOIN SanPham S ON S.id = C.id_sp\n" +
-            "order by c.ngay_tao desc", nativeQuery = true)
+            "order by ngay_tao desc", nativeQuery = true)
     Page<ChiTietSanPham> getAll(Pageable pageable);
 
 
@@ -103,7 +103,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "ON C.id_sp = T.id_sp AND C.id = T.min_id\n" +
             "JOIN SanPham S ON S.id = C.id_sp\n" +
             "Where S.trang_thai = 1\n" +
-            "order by c.ngay_tao desc", nativeQuery = true)
+            "order by C.ngay_tao desc", nativeQuery = true)
     List<ChiTietSanPham> getAllSP();
 
     @Transactional
@@ -161,7 +161,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "    (:nhaSanXuat IS NULL OR LOWER(nsx.ten) LIKE CONCAT('%', LOWER(:nhaSanXuat), '%'))\n" +
             "AND\n" +
             "    (:coAo IS NULL OR LOWER(ca.ten) LIKE CONCAT('%', LOWER(:coAo), '%'))\n" +
-            "ORDER BY c.ngay_tao DESC;\n",
+            "ORDER BY C.ngay_tao DESC;\n",
             nativeQuery = true)
     Page<ChiTietSanPham> search(
             @Param("key") String key,
@@ -222,7 +222,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
                     "GROUP BY C.id, c.id_cl, c.id_sp, c.id_lsp, c.id_nsx, c.id_kc, c.id_ms, " +
                     "c.id_ca, c.ma, T.so_luong, " +
                     "c.gia_ban,c.ngay_tao, c.ngay_sua, c.nguoi_tao, c.nguoi_sua, c.trang_thai " +
-                    "ORDER BY c.ngay_tao DESC",
+                    "ORDER BY C.ngay_tao DESC",
             nativeQuery = true)
     List<ChiTietSanPham> searchSPofHDCT(
             @Param("key") String key);
