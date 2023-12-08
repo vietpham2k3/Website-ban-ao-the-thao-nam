@@ -8,8 +8,16 @@ const getAll = (id) => {
   return axios.get(`/api/doi-hang/getAll/${id}`);
 };
 
+const detailDoiHang = (id) => {
+  return axios.get(`/api/doi-hang/detailDoiHang/${id}`);
+};
+
 const update = (values) => {
   return axios.put(`/api/doi-hang/update`, values);
+};
+
+const updateMoney = (id, values) => {
+  return axios.put(`/api/doi-hang/updateMoney/${id}`, values);
 };
 
 const yeuCauDoiHang = (id, values) => {
@@ -24,4 +32,4 @@ const deleteSPDH = (id) => {
   return axios.delete(`/api/doi-hang/delete/${id}`);
 };
 
-export { taoDonTraHang, update, yeuCauDoiHang, getAll, addSPToDH, deleteSPDH };
+export { taoDonTraHang, update, yeuCauDoiHang, getAll, addSPToDH, deleteSPDH, detailDoiHang, updateMoney };

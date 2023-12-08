@@ -47,6 +47,26 @@ public class DoiHangController {
         return ResponseEntity.ok("ok");
     }
 
+    @PutMapping("/updateMoney/{id}")
+    public ResponseEntity<?> updateMoney(@RequestBody DoiHang doiHang, @PathVariable UUID id) {
+        doiHang.setId(id);
+        DoiHang doihang = doiHangService.findById(id);
+        doiHang.setMa(doihang.getMa());
+        doiHang.setTongTienHangDoi(doihang.getTongTienHangDoi());
+        doiHang.setSoHangDoi(doihang.getSoHangDoi());
+        doiHang.setTrangThai(doihang.getTrangThai());
+        doiHang.setNgayTao(doihang.getNgayTao());
+        doiHang.setNguoiTao(doihang.getNguoiTao());
+        doiHang.setPhuongThucThanhToan(doihang.getPhuongThucThanhToan());
+        doiHang.setGhiChu(doihang.getMa());
+        return ResponseEntity.ok(doiHangService.add(doiHang));
+    }
+
+    @GetMapping("/detailDoiHang/{id}")
+    public ResponseEntity<?> detailDoiHang(@PathVariable UUID id) {
+        return ResponseEntity.ok(doiHangService.findById(id));
+    }
+
     @GetMapping("/getAll/{id}")
     public ResponseEntity<?> getAll(@PathVariable UUID id) {
         return ResponseEntity.ok(doiHangService.getAllHD(id));
@@ -109,7 +129,6 @@ public class DoiHangController {
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }
         }
-
 
 
         // Thêm đổi hàng
