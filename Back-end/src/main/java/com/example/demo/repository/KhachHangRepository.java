@@ -27,7 +27,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, UUID> {
             "or (sdt is null or sdt LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (email is null or email LIKE lower(CONCAT('%', ?1, '%'))))\n" +
             "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))\n" +
-            "and(gioi_tinh is null or gioi_tinh LIKE lower(CONCAT('%', ?3 , '%')))", nativeQuery = true)
+            "and(gioi_tinh is null or gioi_tinh LIKE lower(CONCAT('%', ?3 , '%')))\n" +
+            "ORDER BY ngay_tao DESC", nativeQuery = true)
     Page<KhachHang> searchKH(
             @Param("key") String key,
             @Param("trangThai") Integer trangThai,

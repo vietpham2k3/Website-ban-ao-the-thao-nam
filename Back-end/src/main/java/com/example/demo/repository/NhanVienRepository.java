@@ -20,7 +20,8 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, UUID> {
             "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (sdt is null or sdt LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (email is null or email LIKE lower(CONCAT('%', ?1, '%'))))\n" +
-            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
+            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%'))) \n" +
+            "ORDER BY ngay_tao DESC", nativeQuery = true)
     Page<NhanVien> searchNhanVien(
             @Param("key") String key,
             @Param("trangThai") Integer trangThai,

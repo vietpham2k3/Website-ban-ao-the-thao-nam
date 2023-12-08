@@ -253,10 +253,14 @@ function DonHang(props) {
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
+            {(dataDetailHD && dataDetailHD.diaChi) &&(
             <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
-            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            )}
+            {(dataDetailHD && dataDetailHD.soDienThoai) &&(
+            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
+             )}
             <Text style={styles.textThuocTinh}>
-              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+              Nhân viên bán hàng: {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
             </Text>
           </div>
           <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>

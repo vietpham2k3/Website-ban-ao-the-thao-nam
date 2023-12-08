@@ -112,7 +112,7 @@ function DonHangCT() {
   const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
   const [isShowDH, setIsshowDH] = useState(false);
   const [isDoiHang, setIsDoiHang] = useState(false);
-  // const [isShowMSKC, setIsshowMSKC] = useState(false);
+  const [isShowButtonPhanLoai, setIsShowButtonPhanLoai] = useState(true);
   const [isShow, setIsshow] = useState(false);
 
   const [ghiChu, setGhiChu] = useState({
@@ -1546,6 +1546,8 @@ function DonHangCT() {
       return;
     }
 
+    setIsShowButtonPhanLoai(false);
+
     hangKhongLoi(idHDCT, soLuong);
   };
 
@@ -1616,6 +1618,9 @@ function DonHangCT() {
           console.error('Error:', error);
         });
     }
+
+    localStorage.setItem(setIsShowButtonPhanLoai, false);
+    setIsShowButtonPhanLoai(false);
   };
 
   const [selectedOption, setSelectedOption] = useState('a');
@@ -4648,7 +4653,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                              {hoaDon.trangThai === 16 && (
+                                              {hoaDon.loaiDon === 0 && hoaDon.trangThai === 15 && isShowButtonPhanLoai === true && (
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
@@ -4693,11 +4698,6 @@ function DonHangCT() {
                                                     </button>
                                                   )}
 
-                                                  {d.soLuongYeuCauDoi <= 0 && (
-                                                    <h3 style={{ color: 'red', fontStyle: 'italic' }}>
-                                                      Đã phân loại sản phẩm thành công !
-                                                    </h3>
-                                                  )}
                                                   <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
                                                     <Modal.Header closeButton>
                                                       <Modal.Title style={{ marginLeft: 145 }}>Phân loại hàng</Modal.Title>
@@ -4845,6 +4845,12 @@ function DonHangCT() {
                                                       </form>
                                                     </Modal.Body>
                                                   </Modal>
+                                                  {/* 
+                                                  {isShowButtonPhanLoai === false && (
+                                                    <h3 style={{ color: 'red', fontStyle: 'italic' }}>
+                                                      Đã phân loại sản phẩm thành công !
+                                                    </h3>
+                                                  )} */}
                                                 </td>
                                               )}
                                             </tr>
@@ -5158,16 +5164,19 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
-                      <ButtonMUI
-                        variant="outlined"
-                        className="mt-2 me-3 tra-hang"
-                        color="primary"
-                        onClick={() => {
-                          setIsshow(true);
-                        }}
-                      >
-                        Đổi hàng
-                      </ButtonMUI>
+                      {hoaDon.loaiDon === 0 && hoaDon.trangThai === 6 && (
+                        <ButtonMUI
+                          variant="outlined"
+                          className="mt-2 me-3 tra-hang"
+                          color="primary"
+                          onClick={() => {
+                            setIsshow(true);
+                          }}
+                        >
+                          Đổi hàng
+                        </ButtonMUI>
+                      )}
+
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
