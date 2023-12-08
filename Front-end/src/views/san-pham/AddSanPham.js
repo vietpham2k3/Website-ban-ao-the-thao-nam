@@ -155,6 +155,8 @@ function AddSanPham() {
     if (values.sanPham.ten.trim() === '' || values.giaBan.trim() === '' || values.sanPham.moTa.trim() === '') {
       // Display an error message or prevent confirmation
       toast.error('Vui lòng điền đầy đủ thông tin tên, mô tả và giá bán.');
+    } else if (values.giaBan <= 0) {
+      toast.error('Vui lòng nhập giá bán lớn hơn 0');
     } else {
       // Validation passed, update the states
       toast.success('Xác nhận thành công');

@@ -3,11 +3,12 @@ import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button } from '@mui/material'; // Import Button from '@mui/material'
-
+import Modal from 'react-bootstrap/Modal';
 import MainCard from 'ui-component/cards/MainCard';
 
 function AddKichCo() {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [values, setValues] = useState({
     ma: '',
     ten: '',
@@ -22,9 +23,31 @@ function AddKichCo() {
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (values.ten.trim() === '') {
+      toast.error('Tên không được để trống');
+      return;
+    }
+    if (values.ten.length > 15) {
+      toast.error('Tên không được quá 15 kí tự');
+      return;
+    }
+    handleOpenModal();
+  };
+
+  const handleConfirm = () => {
+    // Xử lý khi form được confirm và thêm mới
     post(values);
+    handleCloseModal();
   };
 
   return (
@@ -80,6 +103,22 @@ function AddKichCo() {
           </div>
         </Card>
       </MainCard>
+      <Modal style={{ paddingTop: 100 }} show={isModalOpen} onHide={handleCloseModal}>
+        <Modal.Header>
+          <Modal.Title>Xác nhận thêm mới</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Bạn có chắc chắn muốn thêm mới?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn btn-primary" onClick={handleConfirm}>
+            Xác nhận
+          </Button>
+          <Button className="btn btn-secondary" onClick={handleCloseModal}>
+            Hủy
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

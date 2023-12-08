@@ -121,6 +121,8 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
             "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
             "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.phuong_thuc_thanh_toan, '') as pttt,\n" +
+            "  ISNULL(DH.tien_khach_phai_tra, '') as tienKhachTra,\n" +
             "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
             "FROM\n" +
             "  DoiHang DH\n" +
@@ -136,6 +138,8 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
             "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
             "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.phuong_thuc_thanh_toan, '') as pttt,\n" +
+            "  ISNULL(DH.tien_khach_phai_tra, '') as tienKhachTra,\n" +
             "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
             "FROM\n" +
             "  DoiHang DH\n" +
