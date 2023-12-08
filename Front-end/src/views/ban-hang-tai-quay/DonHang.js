@@ -59,7 +59,8 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
-  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -259,7 +260,7 @@ function DonHang(props) {
             <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
              )}
             <Text style={styles.textThuocTinh}>
-              Nhân viên bán hàng: {dataLogin && dataLogin.ten}
+              Nhân viên bán hàng: {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
             </Text>
           </div>
           <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
@@ -596,7 +597,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -611,7 +612,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -1528,6 +1529,7 @@ function DonHang(props) {
                 type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
+                min={0}
               />
             </div>
           </div>

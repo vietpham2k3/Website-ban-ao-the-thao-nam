@@ -1618,8 +1618,8 @@ function DonHangCT() {
           console.error('Error:', error);
         });
     }
-    
-    localStorage.setItem(setIsShowButtonPhanLoai,false);
+
+    localStorage.setItem(setIsShowButtonPhanLoai, false);
     setIsShowButtonPhanLoai(false);
   };
 
@@ -4654,7 +4654,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                              {(hoaDon.trangThai === 16 && isShowButtonPhanLoai === true) && (
+                                              {hoaDon.loaiDon === 0 && hoaDon.trangThai === 15 && isShowButtonPhanLoai === true && (
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
@@ -4846,7 +4846,7 @@ function DonHangCT() {
                                                       </form>
                                                     </Modal.Body>
                                                   </Modal>
-{/* 
+                                                  {/* 
                                                   {isShowButtonPhanLoai === false && (
                                                     <h3 style={{ color: 'red', fontStyle: 'italic' }}>
                                                       Đã phân loại sản phẩm thành công !
@@ -5165,19 +5165,19 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
-                      {(hoaDon.loaiDon === 0 && hoaDon.trangThai === 6) &&(
+                      {hoaDon.loaiDon === 0 && hoaDon.trangThai === 6 && (
                         <ButtonMUI
-                        variant="outlined"
-                        className="mt-2 me-3 tra-hang"
-                        color="primary"
-                        onClick={() => {
-                          setIsshow(true);
-                        }}
-                      >
-                        Đổi hàng
-                      </ButtonMUI>
+                          variant="outlined"
+                          className="mt-2 me-3 tra-hang"
+                          color="primary"
+                          onClick={() => {
+                            setIsshow(true);
+                          }}
+                        >
+                          Đổi hàng
+                        </ButtonMUI>
                       )}
-                      
+
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"

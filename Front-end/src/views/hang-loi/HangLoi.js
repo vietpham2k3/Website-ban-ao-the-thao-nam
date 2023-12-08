@@ -42,6 +42,11 @@ function HangLoi() {
     }
   }, 100);
 
+  const handlePageClick = (event) => {
+    const selectedPage = event.selected;
+    searchHL('', selectedPage);
+  };
+
   //Format date
   function formatDate(dateString) {
     if (dateString === null) {

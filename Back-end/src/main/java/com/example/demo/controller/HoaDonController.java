@@ -282,6 +282,7 @@ public class HoaDonController {
             hoaDon.setTenNguoiNhan("Khách lẻ");
         }
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
+        hoaDon.setNhanVien(hd.getNhanVien());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         if (hoaDon.getTrangThai() != 6) {
             hoaDon.setTrangThai(0);
