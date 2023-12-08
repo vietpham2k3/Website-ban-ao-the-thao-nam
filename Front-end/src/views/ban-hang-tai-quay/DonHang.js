@@ -36,7 +36,7 @@ import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAllHD } = props;
@@ -59,7 +59,7 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -252,10 +252,14 @@ function DonHang(props) {
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
+            {(dataDetailHD && dataDetailHD.diaChi) &&(
             <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
-            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            )}
+            {(dataDetailHD && dataDetailHD.soDienThoai) &&(
+            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
+             )}
             <Text style={styles.textThuocTinh}>
-              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+              Nhân viên bán hàng: {dataLogin && dataLogin.ten}
             </Text>
           </div>
           <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
@@ -592,7 +596,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, dataLogin.ten);
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -607,7 +611,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, dataLogin.ten);
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
