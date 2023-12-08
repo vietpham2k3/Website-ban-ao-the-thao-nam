@@ -5164,7 +5164,8 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
-                      <ButtonMUI
+                      {(hoaDon.loaiDon === 0 && hoaDon.trangThai === 6) &&(
+                        <ButtonMUI
                         variant="outlined"
                         className="mt-2 me-3 tra-hang"
                         color="primary"
@@ -5174,6 +5175,8 @@ function DonHangCT() {
                       >
                         Đổi hàng
                       </ButtonMUI>
+                      )}
+                      
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
