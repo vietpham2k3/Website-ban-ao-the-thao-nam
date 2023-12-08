@@ -131,7 +131,8 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "WHERE id_hd = :idHD", nativeQuery = true)
     List<String> doiHang(@Param("idHD") UUID idHD);
 
-    @Query(value = "SELECT\n" +
+    @Query(value = "SELECT" +
+            "  DH.id, \n" +
             "  DH.ma,\n" +
             "  ISNULL(DH.tong_tien_hang_doi, '') as tong_tien_hang_doi,\n" +
             "  ISNULL(DH.so_hang_doi, '') as so_hang_doi,\n" +

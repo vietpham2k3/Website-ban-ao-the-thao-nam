@@ -74,7 +74,15 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { addSPToDH, deleteSPDH, getAll as getAllSPDoi ,update as updateSLDoiHang, yeuCauDoiHang } from 'services/DoiHangService';
+import {
+  addSPToDH,
+  deleteSPDH,
+  detailDoiHang,
+  getAll as getAllSPDoi,
+  updateMoney,
+  update as updateSLDoiHang,
+  yeuCauDoiHang
+} from 'services/DoiHangService';
 
 import ModalTraHang from 'ui-component/login/ModalTraHang';
 import ModalAddHangDoi from 'ui-component/login/ModalAddHangDoi';
@@ -272,7 +280,7 @@ function DonHangCT() {
     const res = await getById(idHD);
     if (res) {
       setValuesSanPham(res.data);
-      setDataHDCT(res.data)
+      setDataHDCT(res.data);
     }
   };
 
@@ -1388,31 +1396,6 @@ function DonHangCT() {
     </Tooltip>
   );
 
-  const handleTienTraKhachChange = async (e) => {
-    if (e) {
-      const value = parseFloat(e.target.value);
-      if (!isNaN(value)) {
-        if (value < 0) {
-          // Nếu nhỏ hơn 0, đặt giá trị thành 0
-          setValuesAddDH({
-            ...valuesAddDH,
-            doiHang:{
-              tienKhachPhaiTra: value
-            }
-          })
-        } else {
-          // Nếu không, cập nhật giá trị trong state
-          setValuesAddDH({
-            ...valuesAddDH,
-            doiHang:{
-              tienKhachPhaiTra: value
-            }
-          })
-        }
-      }
-    }
-  };
-
   const handleTienShipChange = async (e) => {
     if (e) {
       const value = parseFloat(e.target.value);
@@ -1451,6 +1434,9 @@ function DonHangCT() {
   const [donYCDoi, setDonYCDoi] = useState([]);
   const [spYCDoi, setSpYCDoi] = useState([]);
   const [slspYCD, setslspYCD] = useState({});
+  const [tienKhachPhaiTra, setTienKhachPhaiTra] = useState({
+    tienKhachPhaiTra: 0
+  });
 
   const hienThiSLSPYCDoi = async (id) => {
     const res = await detailSLSPYCDoiByIdHDCT(id);
@@ -1463,6 +1449,19 @@ function DonHangCT() {
     const res = await hienThiYCDoiHang(id);
     if (res && res.data) {
       setDonYCDoi(res.data);
+      res.data.slice(0, 1).map((n) => {
+        const sizeData = n.split(',');
+        const id = sizeData[0];
+        detailDH(id);
+      });
+    }
+  };
+
+  const detailDH = async (id) => {
+    const res = await detailDoiHang(id);
+    if (res && res.data) {
+      setTienKhachPhaiTra(res.data);
+      console.log(res.data);
     }
   };
 
@@ -1577,8 +1576,6 @@ function DonHangCT() {
       hienThiSLSPYCDoi(idHDCT);
     }
   }, [idHDCT]);
-
-  // console.log(slspYCD.hangLoi);
   // console.log(tongHLoi);
 
   const hangLoi9 = async (idHDCT, value) => {
@@ -1655,7 +1652,7 @@ function DonHangCT() {
         tongTienHangDoi: sumDH,
         soHangDoi: count,
         nguoiTao: dataLogin.ten,
-        tienKhachPhaiTra: sumDH - sum
+        tienKhachPhaiTra: sum - sumDH
       }
     });
     setTotalAmountV(sumDH - sum);
@@ -1832,13 +1829,13 @@ function DonHangCT() {
       return;
     }
 
-  if (totalAmountV !== 0) {
-  if (valuesAddDH.doiHang.phuongThucThanhToan === '') {
-      toast.error('Vui lòng chọn phương thức thanh toán');
-      return;
+    if (totalAmountV !== 0) {
+      if (valuesAddDH.doiHang.phuongThucThanhToan === '') {
+        toast.error('Vui lòng chọn phương thức thanh toán');
+        return;
+      }
     }
-  }
-      
+
     setIsDoiHang(true);
     let count = 0;
     let sumDH = 0;
@@ -1859,29 +1856,29 @@ function DonHangCT() {
       });
     }
     if (totalAmountV > 0) {
-    setYeuCauDoi({
-      ...yeuCauDoi,
-      doiHang: {
-        soHangDoi: count,
-        tongTienHangDoi: sumDH,
-        phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
-        tienKhachPhaiTra: totalAmountV,
-        nguoiTao: dataLogin.ten
-      }
-    });
-  }
-  if (totalAmountV < 0) {
-    setYeuCauDoi({
-      ...yeuCauDoi,
-      doiHang: {
-        soHangDoi: count,
-        tongTienHangDoi: sumDH,
-        phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
-        tienKhachPhaiTra: -totalAmountV,
-        nguoiTao: dataLogin.ten
-      }
-    });
-  }
+      setYeuCauDoi({
+        ...yeuCauDoi,
+        doiHang: {
+          soHangDoi: count,
+          tongTienHangDoi: sumDH,
+          phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+          tienKhachPhaiTra: totalAmountV,
+          nguoiTao: dataLogin.ten
+        }
+      });
+    }
+    if (totalAmountV < 0) {
+      setYeuCauDoi({
+        ...yeuCauDoi,
+        doiHang: {
+          soHangDoi: count,
+          tongTienHangDoi: sumDH,
+          phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+          tienKhachPhaiTra: -totalAmountV,
+          nguoiTao: dataLogin.ten
+        }
+      });
+    }
   };
 
   const VNP = async (tien) => {
@@ -1895,6 +1892,32 @@ function DonHangCT() {
     }
   };
 
+  const updateTienTraKhach = async (id, values) => {
+    try {
+      const res = await updateMoney(id, values);
+      if (res) {
+        toast.success('Cập nhật thành công');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleTienTraKhachChange = async (e) => {
+    if (e) {
+      const value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        setTienKhachPhaiTra({
+          tienKhachPhaiTra: value
+        });
+      }
+    }
+  };
+
+  const handleUpdateTienKhachTra = (id) => {
+    updateTienTraKhach(id, tienKhachPhaiTra);
+  };
+
   // const tongSlYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
   // const tongSlHDoi = spYCDoi.reduce((acc, d) => acc + d.doiHang.soHangDoi, 0);
   // const tongGiaDon = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
@@ -1906,7 +1929,7 @@ function DonHangCT() {
 
   // console.log(giaTienYCD);
   // console.log(giaTienHDoi);
-  console.log(totalAmountDH);
+  console.log(donYCDoi);
   return (
     <>
       <MainCard>
@@ -4544,17 +4567,19 @@ function DonHangCT() {
                       <TableBody>
                         {donYCDoi.slice(0, 1).map((n, index) => {
                           const sizeData = n.split(',');
-                          const ma = sizeData[0];
+                          const id = sizeData[0];
+                          const ma = sizeData[1];
                           // const tien = sizeData[1];
                           // const soHangDoi = sizeData[2];
                           // const trangThai = sizeData[3];
-                          const ngayTao = sizeData[4];
-                          const nguoiTao = sizeData[5];
-                          const phuongThuc = sizeData[6];
-                          // const tienKhachTra = sizeData[7];
-                          const ghiChu = sizeData[8];
+                          const ngayTao = sizeData[3];
+                          const nguoiTao = sizeData[6];
+                          const phuongThuc = sizeData[7];
+                          {
+                            /* const tienKhachTra = sizeData[8]; */
+                          }
+                          const ghiChu = sizeData[9];
                           const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
-                          // const gia = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
                           return (
                             <React.Fragment key={index}>
                               <TableRow>
@@ -4571,7 +4596,7 @@ function DonHangCT() {
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
-                                <TableCell>{phuongThuc === "true" ? 'Tiền mặt' : 'VNPay'}</TableCell>
+                                <TableCell>{phuongThuc === 'true' ? 'Tiền mặt' : 'VNPay'}</TableCell>
                                 {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
@@ -4834,46 +4859,55 @@ function DonHangCT() {
                                       </Table>
                                       <hr></hr>
                                       {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
-  <h3>Khách phải trả: <span style={{color: "red"}}>
-                        <TextField
-                            id="standard-basic"
-                            variant="standard"
-                            style={{
-                              display: 'inline-block',
-                              width: '100px',
-                              fontSize: '22px',
-                              fontWeight: 'bold',
-                              color: "red"
-                            }}
-                            type="number"
-                            value={valuesAddDH.doiHang.tienKhachPhaiTra}
-                            onChange={handleTienTraKhachChange}
-                            inputProps={{ min: 0 }}
-                          />
-    </span> 
-    </h3>
-)}
-{totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
-  <h3>Tiền trả khách: <span style={{color: "red"}}>
-    <TextField
-    id="standard-basic"
-    variant="standard"
-    style={{
-      display: 'inline-block',
-      width: '100px',
-      fontSize: '22px',
-      fontWeight: 'bold',
-      color: "red"
-    }}
-    type="number"
-    value={valuesAddDH.doiHang.tienKhachPhaiTra}
-    onChange={handleTienTraKhachChange}
-    inputProps={{ min: 0 }}
-  />
-  </span> </h3>
-)}
-
-
+                                        <h3>
+                                          Khách phải trả:{' '}
+                                          <span style={{ color: 'red' }}>
+                                            {convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}
+                                            {/* <TextField
+                                              id="standard-basic"
+                                              variant="standard"
+                                              style={{
+                                                display: 'inline-block',
+                                                width: '100px',
+                                                fontSize: '22px',
+                                                fontWeight: 'bold',
+                                                color: 'red'
+                                              }}
+                                              type="number"
+                                              value={valuesAddDH.doiHang.tienKhachPhaiTra}
+                                              onChange={handleTienTraKhachChange}
+                                              inputProps={{ min: 0 }}
+                                            /> */}
+                                          </span>
+                                        </h3>
+                                      )}
+                                      {totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+                                        <h3 className="d-flex justify-content-between">
+                                          <div>
+                                            Tiền trả khách:{' '}
+                                            <span style={{ color: 'red' }}>
+                                              <TextField
+                                                id="standard-basic"
+                                                variant="standard"
+                                                style={{
+                                                  display: 'inline-block',
+                                                  width: '100px',
+                                                  fontSize: '22px',
+                                                  fontWeight: 'bold',
+                                                  color: 'red'
+                                                }}
+                                                type="number"
+                                                value={tienKhachPhaiTra.tienKhachPhaiTra}
+                                                onChange={(e) => handleTienTraKhachChange(e, id)}
+                                                inputProps={{ min: 0 }}
+                                              />
+                                            </span>{' '}
+                                          </div>
+                                          <button type="button" className="btn btn-primary" onClick={() => handleUpdateTienKhachTra(id)}>
+                                            Cập nhật
+                                          </button>
+                                        </h3>
+                                      )}
                                     </Box>
                                   </Collapse>
                                 </TableCell>
@@ -4930,7 +4964,7 @@ function DonHangCT() {
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
-                                <TableCell>{phuongThuc === "true" ? 'Tiền mặt' : 'VNPay'}</TableCell>
+                                <TableCell>{phuongThuc === 'true' ? 'Tiền mặt' : 'VNPay'}</TableCell>
                                 {/* <TableCell>{convertToCurrency(tienKhachTra)}</TableCell> */}
                                 <TableCell>{ghiChu}</TableCell>
                               </TableRow>
@@ -5130,16 +5164,16 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
-                   <ButtonMUI
-                    variant="outlined"
-                    className="mt-2 me-3 tra-hang"
-                    color="primary"
-                    onClick={() => {
-                      setIsshow(true);
-                    }}
-                  >
-                    Đổi hàng
-                  </ButtonMUI>
+                      <ButtonMUI
+                        variant="outlined"
+                        className="mt-2 me-3 tra-hang"
+                        color="primary"
+                        onClick={() => {
+                          setIsshow(true);
+                        }}
+                      >
+                        Đổi hàng
+                      </ButtonMUI>
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
@@ -5504,61 +5538,61 @@ function DonHangCT() {
               </Container>
             </div>
             <ModalTraHang
-        handleClose={handleClose}
-        show={isShow}
-        setValuesAdd={setValuesAddDH}
-        setTotalAmount={setTotalAmountV}
-        dataLogin={dataLogin}
-        valuesAdd={valuesAddDH}
-        dataHDCT={dataHDCT}
-        convertToCurrency={convertToCurrency}
-        setDataHDCT={setDataHDCT}
-        setIsUpdate={setIsUpdate}
-        setGhiChu={setGhiChu}
-        ghiChu={ghiChu}
-        setYeuCauDoi={setYeuCauDoi}
-        yeuCauDoi={yeuCauDoi}
-        listLyDo={listLyDo}
-        dataSPDoi={spDoiHang}
-        handleOpen={() => {
-          setIsshow(false);
-          setIsshowDH(true);
-        }}
-        setDataHDCTDH={setDataHDCTDH}
-        setIsUpdateHD={setIsUpdateHD}
-        handleDelete={handleDelete2}
-        setDataSPDoi={setSpDoiHang}
-        totalAmount={totalAmountV}
-        setTotalAmountDH={setTotalAmountDH}
-        totalAmountDH={totalAmountDH}
-        setTotalAmountDHSP={setTotalAmountDHSP}
-        totalAmountDHSP={totalAmountDHSP}
-        handleDoiHang={handleDoiHang}
-      ></ModalTraHang>
-      <ModalAddHangDoi
-        handleClose={() => {
-          setIsshow(true);
-          setIsshowDH(false);
-        }}
-        show={isShowDH}
-        setTerm={setTerm}
-        term={term}
-        dataSP={dataSP}
-        convertToCurrency={convertToCurrency}
-        handleDetail={handleDetail2}
-      ></ModalAddHangDoi>
-       <TableKCMS
-        handleClose={() => {
-          setIsshowMSKC(false);
-          setIsshowDH(true);
-        }}
-        show={isShowMSKC}
-        values={mauSacKC}
-        handleDetail={handleDetailSL}
-        setValuesAdd={setValuesAddDH}
-        valuesAdd={valuesAddDH}
-        handleAdd={handleAddSP}
-      ></TableKCMS>
+              handleClose={handleClose}
+              show={isShow}
+              setValuesAdd={setValuesAddDH}
+              setTotalAmount={setTotalAmountV}
+              dataLogin={dataLogin}
+              valuesAdd={valuesAddDH}
+              dataHDCT={dataHDCT}
+              convertToCurrency={convertToCurrency}
+              setDataHDCT={setDataHDCT}
+              setIsUpdate={setIsUpdate}
+              setGhiChu={setGhiChu}
+              ghiChu={ghiChu}
+              setYeuCauDoi={setYeuCauDoi}
+              yeuCauDoi={yeuCauDoi}
+              listLyDo={listLyDo}
+              dataSPDoi={spDoiHang}
+              handleOpen={() => {
+                setIsshow(false);
+                setIsshowDH(true);
+              }}
+              setDataHDCTDH={setDataHDCTDH}
+              setIsUpdateHD={setIsUpdateHD}
+              handleDelete={handleDelete2}
+              setDataSPDoi={setSpDoiHang}
+              totalAmount={totalAmountV}
+              setTotalAmountDH={setTotalAmountDH}
+              totalAmountDH={totalAmountDH}
+              setTotalAmountDHSP={setTotalAmountDHSP}
+              totalAmountDHSP={totalAmountDHSP}
+              handleDoiHang={handleDoiHang}
+            ></ModalTraHang>
+            <ModalAddHangDoi
+              handleClose={() => {
+                setIsshow(true);
+                setIsshowDH(false);
+              }}
+              show={isShowDH}
+              setTerm={setTerm}
+              term={term}
+              dataSP={dataSP}
+              convertToCurrency={convertToCurrency}
+              handleDetail={handleDetail2}
+            ></ModalAddHangDoi>
+            <TableKCMS
+              handleClose={() => {
+                setIsshowMSKC(false);
+                setIsshowDH(true);
+              }}
+              show={isShowMSKC}
+              values={mauSacKC}
+              handleDetail={handleDetailSL}
+              setValuesAdd={setValuesAddDH}
+              valuesAdd={valuesAddDH}
+              handleAdd={handleAddSP}
+            ></TableKCMS>
           </div>
         </Card>
       </MainCard>

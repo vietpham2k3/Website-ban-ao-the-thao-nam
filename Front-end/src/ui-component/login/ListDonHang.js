@@ -152,7 +152,7 @@ function ListDonHang(props) {
   }, [yeuCauDoi, totalAmount]);
 
   console.log(yeuCauDoi.doiHang.phuongThucThanhToan);
- 
+
   useEffect(() => {
     if (isDoiHang) {
       if (yeuCauDoi.doiHang.phuongThucThanhToan === true) {
@@ -405,7 +405,6 @@ function ListDonHang(props) {
     setShow(true);
     setId(id);
   };
-  console.log(yeuCauDoi.doiHang.phuongThucThanhToan + '-' + totalAmount);
 
   return (
     <div>
