@@ -59,7 +59,8 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -592,7 +593,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -607,7 +608,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -1524,6 +1525,7 @@ function DonHang(props) {
                 type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
+                min={0}
               />
             </div>
           </div>
