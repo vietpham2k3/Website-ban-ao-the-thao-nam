@@ -1421,10 +1421,10 @@ function DonHangCT() {
       ghiChu: '',
       nguoiTao: dataLogin && dataLogin.ten
     }
-  }); 
-  
+  });
+
   const [soLuongHangKLoi, setSoLuongHangKLoi] = useState({
-    soLuong: 0,
+    soLuong: 0
   });
 
   const hangKhongLoi = async (idHDCT, value) => {
@@ -1441,7 +1441,7 @@ function DonHangCT() {
     }
   };
 
-  const handleHangKoLoi = (idHDCT,soLuong, e) => {
+  const handleHangKoLoi = (idHDCT, soLuong, e) => {
     e.preventDefault();
 
     setIdHDCT(idHDCT);
@@ -1451,7 +1451,7 @@ function DonHangCT() {
       return;
     }
 
-    hangKhongLoi(idHDCT,soLuong);
+    hangKhongLoi(idHDCT, soLuong);
   };
 
   const handleClose29 = () => {
@@ -1466,7 +1466,7 @@ function DonHangCT() {
     });
     setSoLuongHangKLoi({
       soLuong: 0
-    })
+    });
   };
 
   const handleShow29 = (id) => {
@@ -4250,51 +4250,51 @@ function DonHangCT() {
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
-                                                    onClick={() => handleShow29(d.id)}
-                                                    // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
-                                                    className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
-                                                  >
-                                                    <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
-                                                    <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                                                      <svg
-                                                        className="w-5 h-5 text-green-400"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                      >
-                                                        <path
-                                                          strokeLinecap="round"
-                                                          strokeLinejoin="round"
-                                                          strokeWidth="2"
-                                                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                                        ></path>
-                                                      </svg>
-                                                    </span>
-                                                    <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                                                      <svg
-                                                        className="w-5 h-5 text-green-400"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                      >
-                                                        <path
-                                                          strokeLinecap="round"
-                                                          strokeLinejoin="round"
-                                                          strokeWidth="2"
-                                                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                                        ></path>
-                                                      </svg>
-                                                    </span>
-                                                    <span className="relative2 text-left group-hover:text-white">Phân loại</span>
-                                                  </button>
+                                                      onClick={() => handleShow29(d.id)}
+                                                      // onClick={() => handleChooseKH(k.id, k.tenKhachHang, k.sdt)}
+                                                      className="relative inline-flex items-center justify-start py-2 pl-4 pr-12 overflow-hidden font-semibold shadow text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group"
+                                                    >
+                                                      <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                                                      <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                                                        <svg
+                                                          className="w-5 h-5 text-green-400"
+                                                          fill="none"
+                                                          stroke="currentColor"
+                                                          viewBox="0 0 24 24"
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                          ></path>
+                                                        </svg>
+                                                      </span>
+                                                      <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
+                                                        <svg
+                                                          className="w-5 h-5 text-green-400"
+                                                          fill="none"
+                                                          stroke="currentColor"
+                                                          viewBox="0 0 24 24"
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                                          ></path>
+                                                        </svg>
+                                                      </span>
+                                                      <span className="relative2 text-left group-hover:text-white">Phân loại</span>
+                                                    </button>
                                                   )}
-                                                  
-                                                  {d.soLuongYeuCauDoi <= 0 && (
-                                                       
-                                                       <h3 style={{color: "red",fontStyle: 'italic'}}>Đã phân loại sản phẩm thành công !</h3>
 
+                                                  {d.soLuongYeuCauDoi <= 0 && (
+                                                    <h3 style={{ color: 'red', fontStyle: 'italic' }}>
+                                                      Đã phân loại sản phẩm thành công !
+                                                    </h3>
                                                   )}
                                                   <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
                                                     <Modal.Header closeButton>
@@ -4304,147 +4304,141 @@ function DonHangCT() {
                                                       <form className="needs-validation" noValidate>
                                                         <div className="form-group row">
                                                           <div className="col-12" style={{ paddingLeft: 180, width: 310 }}>
-                                                          {selectedOption === 'a' && (
-  <InputSpinner
-    type={'real'}
-    max={slspYCD.soLuongYeuCauDoi}
-    min={0}
-    key={`inputSpinnerA_${i}`} // Sử dụng key duy nhất
-    step={1}
-    value={hangLoi1.soLuongHangLoi}
-    onChange={(e) => {
-      setHangLoi1({
-        ...hangLoi1,
-        soLuongHangLoi: e
-      });
-    }}
-    variant={'dark'}
-    size="sm"
-  />
-)}
+                                                            {selectedOption === 'a' && (
+                                                              <InputSpinner
+                                                                type={'real'}
+                                                                max={slspYCD.soLuongYeuCauDoi}
+                                                                min={0}
+                                                                key={`inputSpinnerA_${i}`} // Sử dụng key duy nhất
+                                                                step={1}
+                                                                value={hangLoi1.soLuongHangLoi}
+                                                                onChange={(e) => {
+                                                                  setHangLoi1({
+                                                                    ...hangLoi1,
+                                                                    soLuongHangLoi: e
+                                                                  });
+                                                                }}
+                                                                variant={'dark'}
+                                                                size="sm"
+                                                              />
+                                                            )}
 
-{selectedOption === 'b' && (
-  <InputSpinner
-    type={'real'}
-    max={slspYCD.soLuongYeuCauDoi}
-    min={0}
-    key={`inputSpinnerB_${i}`} // Sử dụng key duy nhất
-    step={1}
-    value={soLuongHangKLoi.soLuong}
-    onChange={(e) => {
-      setSoLuongHangKLoi({
-        soLuong: e
-      });
-    }}
-    variant={'dark'}
-    size="sm"
-  />
-)}
-
-
+                                                            {selectedOption === 'b' && (
+                                                              <InputSpinner
+                                                                type={'real'}
+                                                                max={slspYCD.soLuongYeuCauDoi}
+                                                                min={0}
+                                                                key={`inputSpinnerB_${i}`} // Sử dụng key duy nhất
+                                                                step={1}
+                                                                value={soLuongHangKLoi.soLuong}
+                                                                onChange={(e) => {
+                                                                  setSoLuongHangKLoi({
+                                                                    soLuong: e
+                                                                  });
+                                                                }}
+                                                                variant={'dark'}
+                                                                size="sm"
+                                                              />
+                                                            )}
                                                           </div>
                                                           <div>
                                                             <div className="col-12 flex" style={{ paddingTop: '38px', paddingLeft: 121 }}>
-        <Form.Check
-          type="radio"
-          id="radio-a"
-          label="Hàng lỗi"
-          value="a"
-          name="radio-buttons"
-          aria-label="A"
-          checked={selectedOption === 'a'}
-          onChange={handleRadioChange}
-        />
-        <Form.Check
-          style={{ paddingLeft: 55 }}
-          type="radio"
-          id="radio-b"
-          label="Hàng không lỗi"
-          value="b"
-          name="radio-buttons"
-          aria-label="B"
-          checked={selectedOption === 'b'}
-          onChange={handleRadioChange}
-        />
-      </div>
-      {selectedOption === 'a' && (
-        <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
-          <textarea
-            style={{ width: 320, height: 90 }}
-            className="form-control"
-            rows="4"
-            placeholder="Nhập ghi chú..."
-            value={hangLoi1.hangLoi.ghiChu}
-            onChange={(e) =>
-              setHangLoi1({
-                ...hangLoi1,
-                hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value },
-              })
-            }
-          />
-        </div>
-      )}
+                                                              <Form.Check
+                                                                type="radio"
+                                                                id="radio-a"
+                                                                label="Hàng lỗi"
+                                                                value="a"
+                                                                name="radio-buttons"
+                                                                aria-label="A"
+                                                                checked={selectedOption === 'a'}
+                                                                onChange={handleRadioChange}
+                                                              />
+                                                              <Form.Check
+                                                                style={{ paddingLeft: 55 }}
+                                                                type="radio"
+                                                                id="radio-b"
+                                                                label="Hàng không lỗi"
+                                                                value="b"
+                                                                name="radio-buttons"
+                                                                aria-label="B"
+                                                                checked={selectedOption === 'b'}
+                                                                onChange={handleRadioChange}
+                                                              />
+                                                            </div>
+                                                            {selectedOption === 'a' && (
+                                                              <div className="col-12" style={{ paddingTop: '38px', paddingLeft: 80 }}>
+                                                                <textarea
+                                                                  style={{ width: 320, height: 90 }}
+                                                                  className="form-control"
+                                                                  rows="4"
+                                                                  placeholder="Nhập ghi chú..."
+                                                                  value={hangLoi1.hangLoi.ghiChu}
+                                                                  onChange={(e) =>
+                                                                    setHangLoi1({
+                                                                      ...hangLoi1,
+                                                                      hangLoi: { ...hangLoi1.hangLoi, ghiChu: e.target.value }
+                                                                    })
+                                                                  }
+                                                                />
+                                                              </div>
+                                                            )}
                                                           </div>
                                                         </div>
                                                         <div className="text-center">
-                                                        {selectedOption === 'a' && (
-
-                                                          <button
-                                                            key={i}
-                                                            onClick={(e) => handleHangLoi(slspYCD.id, e)}
-                                                            type="button"
-                                                            className="btn btn-labeled shadow-button"
-                                                            style={{
-                                                              background: 'deepskyblue',
-                                                              borderRadius: '50px',
-                                                              border: '1px solid black',
-                                                              justifyItems: 'center',
-                                                              marginTop: '15px' // Add some spacing between the rows and the button
-                                                            }}
-                                                          >
-                                                            <span
+                                                          {selectedOption === 'a' && (
+                                                            <button
+                                                              key={i}
+                                                              onClick={(e) => handleHangLoi(slspYCD.id, e)}
+                                                              type="button"
+                                                              className="btn btn-labeled shadow-button"
                                                               style={{
-                                                                marginBottom: '3px',
-                                                                color: 'white',
-                                                                fontSize: '15px',
-                                                                fontWeight: 'bold'
+                                                                background: 'deepskyblue',
+                                                                borderRadius: '50px',
+                                                                border: '1px solid black',
+                                                                justifyItems: 'center',
+                                                                marginTop: '15px' // Add some spacing between the rows and the button
                                                               }}
-                                                              className="btn-text"
                                                             >
-                                                              Xác nhận
-                                                            </span>
-                                                          </button>
-                        )}
-{selectedOption === 'b' && (
-
-<button
-  key={i}
-  onClick={(e) => handleHangKoLoi(slspYCD.id,soLuongHangKLoi.soLuong, e)}
-  type="button"
-  className="btn btn-labeled shadow-button"
-  style={{
-    background: 'deepskyblue',
-    borderRadius: '50px',
-    border: '1px solid black',
-    justifyItems: 'center',
-    marginTop: '15px' // Add some spacing between the rows and the button
-  }}
->
-  <span
-    style={{
-      marginBottom: '3px',
-      color: 'white',
-      fontSize: '15px',
-      fontWeight: 'bold'
-    }}
-    className="btn-text"
-  >
-    Xác nhận 2
-  </span>
-</button>
-)}
-
-
+                                                              <span
+                                                                style={{
+                                                                  marginBottom: '3px',
+                                                                  color: 'white',
+                                                                  fontSize: '15px',
+                                                                  fontWeight: 'bold'
+                                                                }}
+                                                                className="btn-text"
+                                                              >
+                                                                Xác nhận
+                                                              </span>
+                                                            </button>
+                                                          )}
+                                                          {selectedOption === 'b' && (
+                                                            <button
+                                                              key={i}
+                                                              onClick={(e) => handleHangKoLoi(slspYCD.id, soLuongHangKLoi.soLuong, e)}
+                                                              type="button"
+                                                              className="btn btn-labeled shadow-button"
+                                                              style={{
+                                                                background: 'deepskyblue',
+                                                                borderRadius: '50px',
+                                                                border: '1px solid black',
+                                                                justifyItems: 'center',
+                                                                marginTop: '15px' // Add some spacing between the rows and the button
+                                                              }}
+                                                            >
+                                                              <span
+                                                                style={{
+                                                                  marginBottom: '3px',
+                                                                  color: 'white',
+                                                                  fontSize: '15px',
+                                                                  fontWeight: 'bold'
+                                                                }}
+                                                                className="btn-text"
+                                                              >
+                                                                Xác nhận 2
+                                                              </span>
+                                                            </button>
+                                                          )}
                                                         </div>
                                                       </form>
                                                     </Modal.Body>
