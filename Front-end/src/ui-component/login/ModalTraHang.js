@@ -131,6 +131,8 @@ function ModalTraHang(props) {
     });
   };
 
+  console.log(totalAmount);
+
   return (
     <div>
       <Modal
@@ -260,7 +262,7 @@ function ModalTraHang(props) {
               onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
             />
           )}
-          {(totalAmount !== 0 || totalAmount   ) && (
+          {(totalAmount !== 0 || totalAmount > 0 ) && (
             <div className="d-flex justify-content-between align-items-center">
               <FormControl>
                 <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>

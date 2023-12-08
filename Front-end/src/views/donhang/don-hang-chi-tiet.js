@@ -1850,7 +1850,7 @@ function DonHangCT() {
           soHangDoi: count,
           tongTienHangDoi: sumDH,
           phuongThucThanhToan: null,
-          tienKhachPhaiTra: totalAmountV,
+          tienKhachPhaiTra: 0,
           nguoiTao: dataLogin.ten
         }
       });
@@ -1861,7 +1861,7 @@ function DonHangCT() {
         doiHang: {
           soHangDoi: count,
           tongTienHangDoi: sumDH,
-          phuongThucThanhToan: valuesAddDH.doiHang.phuongThucThanhToan,
+          phuongThucThanhToan: null,
           tienKhachPhaiTra: totalAmountV,
           nguoiTao: dataLogin.ten
         }
@@ -1881,6 +1881,7 @@ function DonHangCT() {
     }
   };
 
+  console.log(totalAmountV);
   const VNP = async (tien) => {
     try {
       const res = await payOnline(tien, 'http://localhost:3000/loading');
