@@ -96,8 +96,6 @@ public class DoiHangController {
                 .build();
         // Tìm hoặc tạo mới hóa đơn chi tiết
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
-        List<HoaDonChiTiet> listHDCT = hoaDonChiTietService.existsById(
-                doiHangDTO.getHoaDonChiTiet().getChiTietSanPham(), doiHangDTO.getHoaDonChiTiet().getHoaDon());
         for (HoaDonChiTiet hdct : list) {
             if (hdct.getDoiHang() != null) {
                 DoiHang dh = doiHangService.findById(hdct.getDoiHang().getId());
@@ -114,17 +112,6 @@ public class DoiHangController {
 
                 dh = doiHangService.add(dh);
                 newHoaDonChiTiet.setDoiHang(dh);
-
-                if (hdct.getSoLuongHangDoi() != null) {
-                    int sumSoHangDoi = hdct.getSoLuongHangDoi() + doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi();
-                    if (!Objects.equals(hdct.getChiTietSanPham().getId(), doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
-                        // Nếu idHL không thay đổi, bạn có thể tránh thực hiện một số thao tác không cần thiết
-//                        ChiTietSanPham ctsp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-
-                    }
-                    newHoaDonChiTiet.setId(doiHangDTO.getHoaDonChiTiet().getId());
-                    newHoaDonChiTiet.setSoLuongHangDoi(sumSoHangDoi);
-                }
 
                 return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
             }

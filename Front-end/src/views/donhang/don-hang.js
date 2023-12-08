@@ -46,7 +46,7 @@ function DonHang() {
     { value: '6', label: 'Thanh toán thành công' },
     // { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
-    { value: '15', label: 'Yêu cầu đổi hàng' },
+    { value: '15', label: 'Đổi hàng' },
     { value: '16', label: 'Đã xác nhận đổi hàng' },
     { value: '17', label: 'Đổi hàng thất bại' }
   ];
@@ -763,12 +763,12 @@ function DonHang() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: 'bold',
-                            backgroundColor: '#FFFF00',
-                            color: 'black'
+                            backgroundColor: '#0000FF',
+                            color: 'white'
                           }}
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
-                          Yêu cầu đổi hàng
+                          Đổi hàng
                         </span>
                       )}
                       {d.trang_thai === 16 && (
@@ -935,7 +935,13 @@ function DonHang() {
               </div>
 
               <div>
-                <button onClick={handleHuyDon} className="relative inline-block text-base group">
+                <button
+                  onClick={handleHuyDon}
+                  className={`relative inline-block text-base group ${
+                    isChecked.some((checked, index) => checked && data[index].ten === 'VNPay') ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={isChecked.some((checked, index) => checked && data[index].ten === 'VNPay')}
+                >
                   <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                     <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
                     <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>

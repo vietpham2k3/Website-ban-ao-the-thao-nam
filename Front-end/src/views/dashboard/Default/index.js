@@ -34,7 +34,7 @@ const Dashboard = () => {
           <Grid item lg={6} md={6} sm={6} xs={12}>
             <DoanhThuOnline isLoading={isLoading} />
           </Grid>
-          <Grid item xs={12} style={{ display: 'flex' }}>
+          <Grid item xs={12}>
             <Grid container spacing={gridSpacing}>
               <Grid item lg={3} md={6} sm={6} xs={12}>
                 <DonChoXacNhan isLoading={isLoading} />
