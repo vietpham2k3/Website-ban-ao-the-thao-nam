@@ -112,7 +112,6 @@ function DonHangCT() {
   const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
   const [isShowDH, setIsshowDH] = useState(false);
   const [isDoiHang, setIsDoiHang] = useState(false);
-  const [isShowButtonPhanLoai, setIsShowButtonPhanLoai] = useState(true);
   const [isShow, setIsshow] = useState(false);
 
   const [ghiChu, setGhiChu] = useState({
@@ -1548,8 +1547,6 @@ function DonHangCT() {
       return;
     }
 
-    setIsShowButtonPhanLoai(false);
-
     hangKhongLoi(idHDCT, soLuong);
   };
 
@@ -1620,9 +1617,6 @@ function DonHangCT() {
           console.error('Error:', error);
         });
     }
-
-    localStorage.setItem(setIsShowButtonPhanLoai, false);
-    setIsShowButtonPhanLoai(false);
   };
 
   const [selectedOption, setSelectedOption] = useState('a');
@@ -4256,6 +4250,25 @@ function DonHangCT() {
                             Đổi hàng thất bại
                           </span>
                         )}
+                        {hoaDon.trangThai === 18 && (
+                                        <span
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'darkblue',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
+                                          Hoàn tiền thành công
+                                        </span>
+                                      )}
                       </div>
                     </Col>
                   </Col>
@@ -4650,7 +4663,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                              {hoaDon.loaiDon === 0 && hoaDon.trangThai === 15 && isShowButtonPhanLoai === true && (
+                                              {(hoaDon.loaiDon === 0 && hoaDon.trangThai === 15) && (
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
