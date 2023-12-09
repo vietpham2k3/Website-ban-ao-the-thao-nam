@@ -606,6 +606,8 @@ function DonHangCT() {
     nhanVien: { ten: dataLogin && dataLogin.ten }
   };
 
+  console.log(dataLogin);
+
   const [lshd, setLshd] = useState({
     ghiChu: '',
     nguoiTao: dataLogin && dataLogin.ten

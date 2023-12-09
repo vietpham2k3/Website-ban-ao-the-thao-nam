@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, Pagination } from '@mui/material';
 import { toast } from 'react-toastify';
 import '../../scss/DonHang.scss';
-import { getAllPageDHHuyChuaHoan, huyDonHang, findDonHuyChuaHoan } from 'services/ServiceDonHang';
+import { getAllPageDHHuyChuaHoan, findDonHuyChuaHoan, hoanTien } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { DateRangePicker } from 'rsuite';
 import Button from '@mui/material/Button';
@@ -18,7 +18,15 @@ function DonHuyChuaHoan() {
   const [denNgay, setDenNgay] = useState(null);
   const [term, setTerm] = useState('');
   const [data, setData] = useState([]);
-  const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+
+  //ngayTao
+  const currentDate = new Date();
+  const threeMonthsAgo = subMonths(currentDate, 3);
+  const threeMonthsLater = addMonths(currentDate, 0);
+
+  const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
 
   useEffect(() => {
     getAll(0);
@@ -67,13 +75,6 @@ function DonHuyChuaHoan() {
     setTerm(e.target.value);
   };
 
-  //ngayTao
-  const currentDate = new Date();
-  const threeMonthsAgo = subMonths(currentDate, 3);
-  const threeMonthsLater = addMonths(currentDate, 0);
-
-  const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
-
   const handleDateChange = (selectedRange) => {
     if (selectedRange && selectedRange[0] && selectedRange[1]) {
       const startDate = selectedRange[0];
@@ -102,7 +103,7 @@ function DonHuyChuaHoan() {
 
   // huy don
   const huyDon = async (id, value) => {
-    const res = await huyDonHang(id, value, tenNV.nhanVien.ten);
+    const res = await hoanTien(id, dataLoginAD.id || dataLoginNV.id, value);
     if (res) {
       toast.success('Cập nhật thành công !');
       getAll(0);
@@ -153,9 +154,9 @@ function DonHuyChuaHoan() {
     return formattedDate;
   }
 
-  const tenNV = {
-    nhanVien: { ten: dataLogin && dataLogin.ten }
-  };
+  // const tenNV = {
+  //   nhanVien: { ten: dataLogin && dataLogin.ten }
+  // };
 
   return (
     <div>
@@ -216,7 +217,7 @@ function DonHuyChuaHoan() {
                 <th>Ngày Tạo Đơn</th>
                 <th>Số Luợng</th>
                 <th>Tổng tiền</th>
-                <th>Action: </th>
+                <th>Action</th>
               </tr>
               <br></br>
 

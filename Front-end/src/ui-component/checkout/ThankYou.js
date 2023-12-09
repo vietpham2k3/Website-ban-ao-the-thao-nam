@@ -29,7 +29,9 @@ function ThankYou() {
     if (idGH) {
       countSP(idGH);
     }
-    save(id, transactionNo);
+    if (transactionNo) {
+      save(id, transactionNo);
+    }
   }, [dataLogin, id, idGH, productCount, transactionNo]);
 
   const save = async (id, transactionNo) => {
