@@ -66,7 +66,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
-  const width = 855;
+  const width = 985;
 
   return (
     <>
@@ -130,7 +130,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={554}
+                    height={575}
                   />
                 ) : (
                   <div style={{ height: 529 }} className="empty-icon-container">
@@ -174,7 +174,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={554}
+                    height={575}
                   />
                 ) : (
                   <div style={{ height: 528 }} className="empty-icon-container">
@@ -218,7 +218,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={554}
+                    height={575}
                   />
                 ) : (
                   <div style={{ height: 529 }} className="empty-icon-container">
