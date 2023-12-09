@@ -2342,20 +2342,20 @@ function DonHangCT() {
                                       )}
                                       {item.trangThai === 15 && (
                                         <span
-                                        style={{
-                                          width: '240px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold',
-                                          backgroundColor: 'darkblue',
-                                          color: 'white'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn status-cancelled"
-                                      >
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'darkblue',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
                                           Đổi hàng
                                         </span>
                                       )}
@@ -4857,13 +4857,8 @@ function DonHangCT() {
                                       <hr></hr>
                                       {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
                                         <h3>
-                                          {tienKhachPhaiTra.phuongThucThanhToan === false &&(
-                                          <span>Khách đã thanh toán:{' '}</span>
-                                          )}
-                                                                                    {tienKhachPhaiTra.phuongThucThanhToan === true &&(
-
-<span>Khách phải trả:{' '}</span>
-)}
+                                          {tienKhachPhaiTra.phuongThucThanhToan === false && <span>Khách đã thanh toán: </span>}
+                                          {tienKhachPhaiTra.phuongThucThanhToan === true && <span>Khách phải trả: </span>}
                                           <span style={{ color: 'red' }}>
                                             {convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}
                                             {/* <TextField
@@ -4887,7 +4882,7 @@ function DonHangCT() {
                                       {totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
                                         <h3 className="d-flex justify-content-between">
                                           <div>
-                                            <span>Tiền trả khách:{' '}</span>
+                                            <span>Tiền trả khách: </span>
                                             <span style={{ color: 'red' }}>
                                               <TextField
                                                 id="standard-basic"
