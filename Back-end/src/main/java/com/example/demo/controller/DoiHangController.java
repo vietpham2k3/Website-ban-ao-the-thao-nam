@@ -43,6 +43,9 @@ public class DoiHangController {
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
+        for (HoaDonChiTiet hoaDonChiTiet :hoaDonChiTiets) {
+            hoaDonChiTiet.setLichSuSoLuongYeuCauDoi(hoaDonChiTiet.getSoLuongYeuCauDoi());
+        }
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
         return ResponseEntity.ok("ok");
     }
@@ -58,7 +61,7 @@ public class DoiHangController {
         doiHang.setNgayTao(doihang.getNgayTao());
         doiHang.setNguoiTao(doihang.getNguoiTao());
         doiHang.setPhuongThucThanhToan(doihang.getPhuongThucThanhToan());
-        doiHang.setGhiChu(doihang.getMa());
+        doiHang.setGhiChu(doihang.getGhiChu());
         return ResponseEntity.ok(doiHangService.add(doiHang));
     }
 
@@ -86,43 +89,65 @@ public class DoiHangController {
         doiHang.setTongTienHangDoi(doiHangDTO.getDoiHang().getTongTienHangDoi());
         doiHang.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
         doiHang.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
-        // Nếu chưa có đổi hàng, tạo mới hóa đơn chi tiết
-        HoaDonChiTiet newHoaDonChiTiet = new HoaDonChiTiet().builder()
-                .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
-                .doiHang(doiHang)
-                .hoaDon(doiHangDTO.getHoaDonChiTiet().getHoaDon())
-                .donGia(doiHangDTO.getHoaDonChiTiet().getDonGia())
-                .soLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()) // Số lượng hàng đổi mới
-                .build();
-        // Tìm hoặc tạo mới hóa đơn chi tiết
+
+        // Tìm hoặc tạo mới đổi hàng
+        DoiHang existingDoiHang = null;
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
         for (HoaDonChiTiet hdct : list) {
             if (hdct.getDoiHang() != null) {
-                DoiHang dh = doiHangService.findById(hdct.getDoiHang().getId());
-
-                // Nếu đã có đổi hàng, cộng dồn số lượng hàng đổi và tổng tiền hàng đổi vào hóa đơn chi tiết
-                int currentSoLuongHangDoiDH = dh.getSoHangDoi();
-                double tien = dh.getTongTienHangDoi();
-
-                int newSoLuongHangDoiDH = doiHangDTO.getDoiHang().getSoHangDoi();
-                double newTien = doiHangDTO.getDoiHang().getTongTienHangDoi();
-
-                dh.setSoHangDoi(currentSoLuongHangDoiDH + newSoLuongHangDoiDH);
-                dh.setTongTienHangDoi(tien + newTien);
-
-                dh = doiHangService.add(dh);
-                newHoaDonChiTiet.setDoiHang(dh);
-
-                return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
+                existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
+                break;
             }
         }
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet().builder()
+                .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
+                .doiHang(existingDoiHang)
+                .hoaDon(doiHangDTO.getHoaDonChiTiet().getHoaDon())
+                .donGia(doiHangDTO.getHoaDonChiTiet().getDonGia())
+                .soLuongHangDoi(doiHang.getSoHangDoi())
+                .build();
 
+        if (existingDoiHang != null) {
+            // Đã có đổi hàng, cộng dồn số lượng hàng đổi và tổng tiền hàng đổi vào hóa đơn chi tiết
+            int currentSoLuongHangDoiDH = existingDoiHang.getSoHangDoi();
+            double tien = existingDoiHang.getTongTienHangDoi();
 
-        // Thêm đổi hàng
-        doiHangService.add(doiHang);
+            int newSoLuongHangDoiDH = doiHangDTO.getDoiHang().getSoHangDoi();
+            double newTien = doiHangDTO.getDoiHang().getTongTienHangDoi();
 
-        // Thêm mới hóa đơn chi tiết
-        return ResponseEntity.ok(hoaDonChiTietService.add(newHoaDonChiTiet));
+            existingDoiHang.setSoHangDoi(currentSoLuongHangDoiDH + newSoLuongHangDoiDH);
+            existingDoiHang.setTongTienHangDoi(tien + newTien);
+
+            existingDoiHang = doiHangService.add(existingDoiHang);
+
+            // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
+            for (HoaDonChiTiet hdct : list) {
+                if (hdct.getDoiHang() == null) {
+                    hdct.setDoiHang(existingDoiHang);
+                    hoaDonChiTietService.add(hdct);
+                }
+            }
+            hoaDonChiTietService.add(hoaDonChiTiet);
+        } else {
+            // Thêm mới đổi hàng
+            doiHangService.add(doiHang);
+
+//            // Thêm mới hoá đơn chi tiết
+//            HoaDonChiTiet hoaDonChiTiet = doiHangDTO.getHoaDonChiTiet();
+//            hoaDonChiTiet.setDoiHang(doiHang);
+//            hoaDonChiTietService.add(hoaDonChiTiet);
+
+            // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
+            for (HoaDonChiTiet hdct : list) {
+                if (hdct.getDoiHang() == null) {
+                    hdct.setDoiHang(doiHang);
+                    hoaDonChiTietService.add(hdct);
+                }
+            }
+            hoaDonChiTietService.add(hoaDonChiTiet);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("delete/{id}")

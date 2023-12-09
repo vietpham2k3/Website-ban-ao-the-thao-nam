@@ -9,6 +9,7 @@ const TableKCMS = (props) => {
   return (
     <div>
       <Modal
+        style={{ paddingTop: 90, marginLeft: 150 }}
         show={show}
         onHide={handleClose}
         backdrop="static"
