@@ -35,10 +35,12 @@ function SignInForm(props) {
       navigate('/ban-hang-tai-quay');
       toast.success('Đăng nhập thành công');
       localStorage.setItem('dataLoginNV', JSON.stringify(res.data));
+      window.location.reload();
     } else {
       navigate('/thong-ke');
       toast.success('Đăng nhập thành công');
       localStorage.setItem('dataLoginAD', JSON.stringify(res.data));
+      window.location.reload();
     }
   };
 

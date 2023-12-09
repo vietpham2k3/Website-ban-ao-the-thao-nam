@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { useState } from 'react';
@@ -6,14 +7,31 @@ import { Table } from 'react-bootstrap';
 import { Pagination } from '@mui/material';
 import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
+import { DateRangePicker } from 'rsuite';
+import { format } from 'date-fns';
+import { addMonths, subMonths } from 'date-fns';
 
 function HangLoi() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState();
+  const [tuNgay, setTuNgay] = useState(null);
+  const [denNgay, setDenNgay] = useState(null);
+  const [term, setTerm] = useState(null);
   const [data, setData] = useState([]);
+  //ngayTao
+  const currentDate = new Date();
+  const threeMonthsAgo = subMonths(currentDate, 3);
+  const threeMonthsLater = addMonths(currentDate, 0);
+
+  const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
+
   useEffect(() => {
     getAll(0);
   }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [term, tuNgay, denNgay]);
 
   const getAll = async (page) => {
     setCurrentPage(page);
@@ -25,26 +43,29 @@ function HangLoi() {
     }
   };
 
-  const searchHL = async (key, page) => {
-    const res = await search(key, page);
+  const searchHL = async (key, tuNgay, denNgay, page) => {
+    const res = await search(key, tuNgay, denNgay, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearch = _.debounce(async (e) => {
-    let term = e.target.value;
+  const handleSearch = _.debounce(async () => {
     if (term) {
-      searchHL(term, currentPage);
+      searchHL(term, tuNgay, denNgay, currentPage);
     } else {
-      searchHL('', currentPage);
+      searchHL('', tuNgay, denNgay, currentPage);
     }
   }, 100);
 
   const handlePageClick = (event) => {
     const selectedPage = event.selected;
-    searchHL('', selectedPage);
+    searchHL('', tuNgay, denNgay, selectedPage);
+  };
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
   };
 
   //Format date
@@ -67,17 +88,47 @@ function HangLoi() {
     return formattedDate;
   }
 
+  const handleDateChange = (selectedRange) => {
+    if (selectedRange && selectedRange[0] && selectedRange[1]) {
+      const startDate = selectedRange[0];
+      const endDate = selectedRange[1];
+
+      const formattedStartDate = format(startDate, 'dd/MM/yyyy HH:mm aa');
+      const formattedEndDate = format(endDate, 'dd/MM/yyyy HH:mm aa');
+
+      setTuNgay(formattedStartDate);
+      setDenNgay(formattedEndDate);
+    }
+  };
+
   return (
     <div>
       <MainCard>
-        <div className="search">
-          <input
-            style={{ borderRadius: 15, width: 300, height: 40, paddingBottom: 3, paddingLeft: 10 }}
-            type="text"
-            className="input-search"
-            placeholder=" Nhập tên, mã màu cần tìm..."
-            onChange={handleSearch}
-          />
+        <div className="row">
+          <div className="col-6">
+            <div className="search">
+              <input
+                style={{ borderRadius: 15, width: 300, height: 40, paddingBottom: 3, paddingLeft: 10 }}
+                type="text"
+                className="input-search"
+                placeholder=" Nhập tên, mã màu cần tìm..."
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="col-3">
+            <DateRangePicker
+              format="dd/MM/yyyy HH:mm aa"
+              showMeridian
+              defaultCalendarValue={defaultCalendarValue}
+              onChange={handleDateChange}
+              onClean={() => {
+                setTuNgay(null);
+                setDenNgay(null);
+              }}
+              // disabledDate={disabledDate}
+            />
+          </div>
         </div>
         <Table style={{ marginTop: 20 }}>
           <tr>
