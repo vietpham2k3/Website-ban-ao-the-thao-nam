@@ -378,7 +378,7 @@ function DonHangCT() {
     if (totalAmount) {
       updateHD(id, hoaDon);
     }
-  }, [hoaDon.tongTien]);
+  }, [hoaDon.tongTien,totalAmount]);
 
   useEffect(() => {
     if (idHDCT) {
