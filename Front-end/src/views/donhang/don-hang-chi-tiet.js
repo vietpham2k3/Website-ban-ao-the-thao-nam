@@ -605,6 +605,8 @@ function DonHangCT() {
     nhanVien: { ten: dataLogin && dataLogin.ten }
   };
 
+  console.log(dataLogin);
+
   const [lshd, setLshd] = useState({
     ghiChu: '',
     nguoiTao: dataLogin && dataLogin.ten
@@ -1660,7 +1662,7 @@ function DonHangCT() {
       hoaDonChiTiet: {
         ...valuesAddDH.hoaDonChiTiet,
         hoaDon: {
-          id: dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id
+          id: id
         }
       }
     });
@@ -1673,10 +1675,10 @@ function DonHangCT() {
   }, [yeuCauDoi, totalAmountV]);
 
   useEffect(() => {
-    if (dataHDCT[0] && dataHDCT[0].hoaDon && dataHDCT[0].hoaDon.id) {
-      findAll(dataHDCT[0].hoaDon.id);
+    if (id) {
+      findAll(id);
     }
-  }, [dataHDCT]);
+  }, [id]);
 
   useEffect(() => {
     if (isUpdate) {
@@ -1706,7 +1708,7 @@ function DonHangCT() {
       setTotalAmountV(sum - sumDH);
       setTotalAmountDH(sum);
       setTotalAmountDHSP(sumDG);
-      findAll(dataHDCT[0].hoaDon.id);
+      findAll(id);
     }
   };
 
@@ -1762,7 +1764,7 @@ function DonHangCT() {
       setIsshow(true);
       setIsshowDH(false);
       setIsshowMSKC(false);
-      findAll(dataHDCT[0].hoaDon.id);
+      findAll(id);
       toast.success('Chọn sản phẩm thành công');
       let sum = 0;
       let count = 0;
@@ -1872,9 +1874,9 @@ function DonHangCT() {
   useEffect(() => {
     if (isDoiHang) {
       if (valuesAddDH.doiHang.phuongThucThanhToan === true) {
-        requestDoiHang(dataHDCT[0].hoaDon.id, yeuCauDoi);
+        requestDoiHang(id, yeuCauDoi);
       } else if (valuesAddDH.doiHang.phuongThucThanhToan === false) {
-        localStorage.setItem('idHDCT', dataHDCT[0].hoaDon.id);
+        localStorage.setItem('idHDCT', id);
         localStorage.setItem('yeuCauDoi', JSON.stringify(yeuCauDoi));
         window.location.href = urlPay;
       }
@@ -2334,20 +2336,20 @@ function DonHangCT() {
                                       )}
                                       {item.trangThai === 15 && (
                                         <span
-                                        style={{
-                                          width: '240px',
-                                          pointerEvents: 'none',
-                                          height: '30px',
-                                          borderRadius: '20px',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          fontWeight: 'bold',
-                                          backgroundColor: 'darkblue',
-                                          color: 'white'
-                                        }}
-                                        className="btn btn-labeled shadow-button btn status-cancelled"
-                                      >
+                                          style={{
+                                            width: '240px',
+                                            pointerEvents: 'none',
+                                            height: '30px',
+                                            borderRadius: '20px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'darkblue',
+                                            color: 'white'
+                                          }}
+                                          className="btn btn-labeled shadow-button btn status-cancelled"
+                                        >
                                           Đổi hàng
                                         </span>
                                       )}
@@ -4249,24 +4251,24 @@ function DonHangCT() {
                           </span>
                         )}
                         {hoaDon.trangThai === 18 && (
-                                        <span
-                                          style={{
-                                            width: '240px',
-                                            pointerEvents: 'none',
-                                            height: '30px',
-                                            borderRadius: '20px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontWeight: 'bold',
-                                            backgroundColor: 'darkblue',
-                                            color: 'white'
-                                          }}
-                                          className="btn btn-labeled shadow-button btn status-cancelled"
-                                        >
-                                          Hoàn tiền thành công
-                                        </span>
-                                      )}
+                          <span
+                            style={{
+                              width: '240px',
+                              pointerEvents: 'none',
+                              height: '30px',
+                              borderRadius: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 'bold',
+                              backgroundColor: 'darkblue',
+                              color: 'white'
+                            }}
+                            className="btn btn-labeled shadow-button btn status-cancelled"
+                          >
+                            Hoàn tiền thành công
+                          </span>
+                        )}
                       </div>
                     </Col>
                   </Col>
@@ -4661,7 +4663,7 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
-                                              {(hoaDon.loaiDon === 0 && hoaDon.trangThai === 15) && (
+                                              {hoaDon.loaiDon === 0 && hoaDon.trangThai === 15 && (
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
                                                     <button
@@ -4868,13 +4870,8 @@ function DonHangCT() {
                                       <hr></hr>
                                       {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
                                         <h3>
-                                          {tienKhachPhaiTra.phuongThucThanhToan === false &&(
-                                          <span>Khách đã thanh toán:{' '}</span>
-                                          )}
-                                                                                    {tienKhachPhaiTra.phuongThucThanhToan === true &&(
-
-<span>Khách phải trả:{' '}</span>
-)}
+                                          {tienKhachPhaiTra.phuongThucThanhToan === false && <span>Khách đã thanh toán: </span>}
+                                          {tienKhachPhaiTra.phuongThucThanhToan === true && <span>Khách phải trả: </span>}
                                           <span style={{ color: 'red' }}>
                                             {convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}
                                             {/* <TextField
@@ -4898,7 +4895,7 @@ function DonHangCT() {
                                       {totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
                                         <h3 className="d-flex justify-content-between">
                                           <div>
-                                            <span>Tiền trả khách:{' '}</span>
+                                            <span>Tiền trả khách: </span>
                                             <span style={{ color: 'red' }}>
                                               <TextField
                                                 id="standard-basic"

@@ -16,6 +16,7 @@ import DonChoXacNhan from './DonChoXacNhan';
 import DonHuy from './DonHuy';
 import DonTra from './DonTra';
 import DoanhThuAll from './DoanhThuTongAll';
+import HangLoi from 'views/hang-loi/HangLoi';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
@@ -66,6 +67,13 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12} md={3.4}>
             <PopularCard isLoading={isLoading} />
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid container spacing={gridSpacing}>
+          <Grid item xs={12} md={12}>
+            <HangLoi></HangLoi>
           </Grid>
         </Grid>
       </Grid>

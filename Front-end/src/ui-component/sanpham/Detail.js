@@ -266,6 +266,7 @@ function Detail(props) {
 
   const handleTaoHoaDon = () => {
     if (!dataLogin) {
+      localStorage.setItem('checkedLogin', true);
       navigate('/login');
       return;
     }
@@ -294,6 +295,7 @@ function Detail(props) {
 
   const handleAddToCartGH = () => {
     if (!dataLogin) {
+      localStorage.setItem('checkedLogin', true);
       navigate('/login');
       return;
     }

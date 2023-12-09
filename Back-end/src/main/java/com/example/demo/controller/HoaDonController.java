@@ -356,12 +356,12 @@ public class HoaDonController {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
         ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
 
-            hoaDonChiTietService.updateSLDH(hoaDonCT.getSoLuongHangDoi(), hdct
-                    .getId());
+        hoaDonChiTietService.updateSLDH(hoaDonCT.getSoLuongHangDoi(), hdct
+                .getId());
 
-            chiTietSanPhamService.update(sp.getSoLuong() + (hoaDonCT.getSoLuongHangDoi() - hdct.getSoLuongHangDoi()),
+        chiTietSanPhamService.update(sp.getSoLuong() + (hoaDonCT.getSoLuongHangDoi() - hdct.getSoLuongHangDoi()),
                 hdct.getChiTietSanPham().getId());
-            return ResponseEntity.ok("ok");
+        return ResponseEntity.ok("ok");
     }
 
     @PutMapping("update-sl-hang-loi/{id}")
@@ -515,7 +515,7 @@ public class HoaDonController {
 
     @GetMapping("hien-thi-page-find-don-huy-chua-hoan")
     public ResponseEntity<?> findVIPDonHuyChuaHoan(String key, String tuNgay, String denNgay,
-                                     @RequestParam(defaultValue = "0") int page) {
+                                                   @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
         Date tuNgayDate = null;
@@ -538,6 +538,26 @@ public class HoaDonController {
                 hoaDon.getDiaChi(), hoaDon.getTinh(), hoaDon.getHuyen(), hoaDon.getXa(),
                 hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam(), hoaDon.getTienShip());
         return ResponseEntity.ok().body("ok");
+    }
+
+    @PostMapping("hoan-tien/{id}/{idNV}")
+    public ResponseEntity<?> hoanTien(@PathVariable UUID id,
+                                      @PathVariable UUID idNV,
+                                      @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        NhanVien nhanVien = nvService.getOne(idNV);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(18);
+        hoaDon.setTrangThai(18);
+        hoaDon.setNhanVien(nhanVien);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Hoàn tiền thành công");
+        lichSuHoaDon.setNguoiTao(nhanVien.getTen());
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
     @PostMapping("xac-nhan-tra-hang/{id}")
@@ -570,7 +590,7 @@ public class HoaDonController {
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Đổi hàng thất bại");
-
+        lichSuHoaDon.setNguoiTao(hoaDon.getNhanVien().getTen());
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 

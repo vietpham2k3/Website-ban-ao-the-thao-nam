@@ -262,7 +262,7 @@ function ModalTraHang(props) {
               onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
             />
           )}
-          {(totalAmount !== 0 && totalAmount > 0 ) && (
+          {totalAmount !== 0 && totalAmount > 0 && (
             <div className="d-flex justify-content-between align-items-center">
               <FormControl>
                 <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>
@@ -300,7 +300,6 @@ function ModalTraHang(props) {
                   />
                 </RadioGroup>
               </FormControl>
-     
 
               {totalAmount > 0 && (
                 <h4>
@@ -310,9 +309,9 @@ function ModalTraHang(props) {
             </div>
           )}
           {totalAmount < 0 && (
-                <h4 style={{display: "flex", justifyContent: 'flex-end',paddingTop: 10}}>
-                  Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
-                </h4>
+            <h4 style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
+              Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
+            </h4>
           )}
         </Modal.Body>
         <Modal.Footer>
