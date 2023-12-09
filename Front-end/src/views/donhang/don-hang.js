@@ -47,8 +47,9 @@ function DonHang() {
     // { value: '7', label: 'Đã nhận hàng' },
     { value: '14', label: 'Yêu cầu hủy đơn' },
     { value: '15', label: 'Đổi hàng' },
-    { value: '16', label: 'Đã xác nhận đổi hàng' },
-    { value: '17', label: 'Đổi hàng thất bại' }
+    // { value: '16', label: 'Đã xác nhận đổi hàng' },
+    // { value: '17', label: 'Đổi hàng thất bại' },
+    { value: '18', label: 'Hoàn tiền thành công' }
   ];
 
   function handleSelect(selectedOptions) {
@@ -807,6 +808,25 @@ function DonHang() {
                           className="btn btn-labeled shadow-button btn status-cancelled"
                         >
                           Đã hủy đơn
+                        </span>
+                      )}
+                      {d.trang_thai === 18 && (
+                        <span
+                          style={{
+                            width: '240px',
+                            pointerEvents: 'none',
+                            height: '30px',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            backgroundColor: 'darkblue',
+                            color: 'white'
+                          }}
+                          className="btn btn-labeled shadow-button btn status-cancelled"
+                        >
+                          Hoàn tiền thành công
                         </span>
                       )}
                     </td>
