@@ -107,12 +107,19 @@ function DonHangCT() {
   const [dataHDCT, setDataHDCT] = useState([]);
   const [urlPay, setUrlPay] = useState('');
   const [dataHDCTDH, setDataHDCTDH] = useState([]);
-  const [totalAmountV, setTotalAmountV] = useState(0);
-  const [totalAmountDH, setTotalAmountDH] = useState(0);
-  const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
   const [isShowDH, setIsshowDH] = useState(false);
   const [isDoiHang, setIsDoiHang] = useState(false);
   const [isShow, setIsshow] = useState(false);
+  const [donDoi, setDonDoi] = useState([]);
+  const [spDoiHang, setSpDoiHang] = useState([]);
+  const [donLoi, setDonLoi] = useState([]);
+  const [spLoi, setSpLoi] = useState([]);
+  const [donYCDoi, setDonYCDoi] = useState([]);
+  const [spYCDoi, setSpYCDoi] = useState([]);
+  const [slspYCD, setslspYCD] = useState({});
+  const [tienKhachPhaiTra, setTienKhachPhaiTra] = useState({
+    tienKhachPhaiTra: 0
+  });
 
   const [ghiChu, setGhiChu] = useState({
     ghiChu: ''
@@ -378,7 +385,7 @@ function DonHangCT() {
     if (totalAmount) {
       updateHD(id, hoaDon);
     }
-  }, [hoaDon.tongTien,totalAmount]);
+  }, [hoaDon.tongTien, totalAmount]);
 
   useEffect(() => {
     if (idHDCT) {
@@ -1317,6 +1324,11 @@ function DonHangCT() {
     }
   });
 
+  console.log(hoaDon.nhanVien);
+  const lichSuHoaDon2 = lichSuHoaDon[lichSuHoaDon.length - 1]?.nguoiTao || '';
+  const tien = spYCDoi.reduce((acc, d) => acc + d.lichSuSoLuongYeuCauDoi * d.donGia, 0);
+  const tien2 = spDoiHang.reduce((acc, d) => acc + d.soLuongHangDoi * d.donGia, 0);
+
   const InvoiceDocument = () => {
     return (
       <Document>
@@ -1327,61 +1339,205 @@ function DonHangCT() {
           <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
           <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
           <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
-          <Text style={styles.titleHD}>HOÁ ĐƠN BÁN HÀNG</Text>
+          {hoaDon.trangThai === 15 ? (
+            <Text style={styles.titleHD}>HOÁ ĐƠN ĐỔI HÀNG</Text>
+          ) : (
+            <Text style={styles.titleHD}>HOÁ ĐƠN MUA HÀNG</Text>
+          )}
           <Text style={styles.textMaHD}>{hoaDon.ma}</Text>
-
           <div style={styles.container}>
+            <Text style={styles.textThuocTinh}>Nhân viên bán hàng: {lichSuHoaDon2}</Text>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(hoaDon.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {hoaDon.tenNguoiNhan}</Text>
-            <Text style={styles.textThuocTinh}>Địa chỉ: {hoaDon.diaChi}</Text>
-            <Text style={styles.textThuocTinh}>Số điện thoại: {hoaDon.sdt}</Text>
-            <Text style={styles.textThuocTinh}>Nhân viên bán hàng: {hoaDon && hoaDon.taiKhoan && hoaDon.taiKhoan.ten}</Text>
+            {hoaDon && hoaDon.soDienThoai && <Text style={styles.textThuocTinh}>Số điện thoại: {hoaDon.soDienThoai}</Text>}
+            {hoaDon && hoaDon.diaChi && (
+              <Text style={styles.textThuocTinh}>
+                Địa chỉ: {hoaDon.diaChi + ', ' + hoaDon.xa + ', ' + hoaDon.huyen + ', ' + hoaDon.tinh}
+              </Text>
+            )}
           </div>
-          <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
-          <View style={styles.table}>
-            <View style={[styles.row, styles.header]}>
-              <Text style={styles.row1}>STT</Text>
-              <Text style={styles.row2}>Sản phẩm</Text>
-              <Text style={styles.row3}>Số lượng</Text>
-              <Text style={styles.row4}>Đơn giá</Text>
-              <Text style={styles.row5}>Thành tiền</Text>
-            </View>
-            {valuesSanPham.map((d, i) => (
-              <View key={i} style={[styles.row, styles.header]}>
-                <Text style={styles.row1}>{i + 1}</Text>
-                <Text style={styles.row2}>
-                  {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
-                </Text>
-                <Text style={styles.row3}>{d.soLuong}</Text>
-                <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
-                <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+          <br></br>
+          <Text style={styles.textThuocTinh}></Text>
+          {hoaDon.trangThai !== 15 && (
+            <>
+              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
+              <View style={styles.table}>
+                <View style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>STT</Text>
+                  <Text style={styles.row2}>Sản phẩm</Text>
+                  <Text style={styles.row3}>Số lượng</Text>
+                  <Text style={styles.row4}>Đơn giá</Text>
+                  <Text style={styles.row5}>Thành tiền</Text>
+                </View>
+                {valuesSanPham.map((d, i) => (
+                  <View key={i} style={[styles.row, styles.header]}>
+                    <Text style={styles.row1}>{i + 1}</Text>
+                    <Text style={styles.row2}>
+                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                    </Text>
+                    <Text style={styles.row3}>{d.soLuong}</Text>
+                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                    <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
+            </>
+          )}
+
+          {hoaDon.trangThai === 15 && (
+            <>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG YÊU CẦU ĐỔI</Text>
+              <View style={styles.table}>
+                <View style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>STT</Text>
+                  <Text style={styles.row2}>Sản phẩm</Text>
+                  <Text style={styles.row3}>Số lượng</Text>
+                  <Text style={styles.row4}>Đơn giá</Text>
+                  <Text style={styles.row5}>Thành tiền</Text>
+                </View>
+                {spYCDoi.map((d, i) => (
+                  <View key={i} style={[styles.row, styles.header]}>
+                    <Text style={styles.row1}>{i + 1}</Text>
+                    <Text style={styles.row2}>
+                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                    </Text>
+                    <Text style={styles.row3}>{d.lichSuSoLuongYeuCauDoi}</Text>
+                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                    <Text style={styles.row5}>{convertToCurrency(d.lichSuSoLuongYeuCauDoi * d.donGia)}</Text>
+                  </View>
+                ))}
+              </View>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUỐN ĐỔI</Text>
+              <View style={styles.table}>
+                <View style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>STT</Text>
+                  <Text style={styles.row2}>Sản phẩm</Text>
+                  <Text style={styles.row3}>Số lượng</Text>
+                  <Text style={styles.row4}>Đơn giá</Text>
+                  <Text style={styles.row5}>Thành tiền</Text>
+                </View>
+                {spDoiHang.map((d, i) => (
+                  <View key={i} style={[styles.row, styles.header]}>
+                    <Text style={styles.row1}>{i + 1}</Text>
+                    <Text style={styles.row2}>
+                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                    </Text>
+                    <Text style={styles.row3}>{d.soLuongHangDoi}</Text>
+                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                    <Text style={styles.row5}>{convertToCurrency(d.soLuongHangDoi * d.donGia)}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          )}
+          <br></br>
+          <Text style={styles.textThuocTinh}></Text>
+
           <View>
-            <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
-              <Text style={styles.textLeft}>Tổng tiền</Text>
-              <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
-            </View>
-            {hoaDon.tienShip !== 0 && (
-              <View style={styles.flexContainer}>
-                <Text style={styles.textLeft}>Tiền ship</Text>
-                <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
-              </View>
+            {hoaDon.trangThai !== 15 && (
+              <>
+                <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+                  <Text style={styles.textLeft}>Tiền hàng: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+                </View>
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                {hoaDon.tienShip !== 0 && (
+                  <View style={styles.flexContainer}>
+                    <Text style={styles.textLeft}>Tiền ship: </Text>
+                    <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
+                  </View>
+                )}
+
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+                {dataHDKM.map((d) => (
+                  <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                    <Text style={styles.textLeft}>Khuyến mãi:</Text>
+                    <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+                  </View>
+                ))}
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                <View style={styles.flexContainer}>
+                  <Text style={styles.textLeft}>Tiền cần thanh toán: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
+                </View>
+              </>
             )}
 
-            <Text style={styles.textLeft}></Text>
-            {dataHDKM.map((d) => (
-              <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
-                <Text style={styles.textLeft}>Khuyến mãi</Text>
-                <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
-              </View>
-            ))}
+            {hoaDon.trangThai === 15 && (
+              <>
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
 
-            <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
-              <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
-            </View>
+                <View style={styles.flexContainer}>
+                  <Text style={styles.textLeft}>Tổng tiền hóa đơn yêu cầu đổi: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(tien)}</Text>
+                </View>
+
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                <View style={styles.flexContainer}>
+                  <Text style={styles.textLeft}>Tổng tiền hóa đơn khách muốn đổi: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(tien2)}</Text>
+                </View>
+
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                <View style={styles.flexContainer}>
+                  <Text style={styles.textLeft}>Tổng tiền: </Text>
+                  <Text style={styles.textRight}>
+                    {tien < tien2 && <>{convertToCurrency(-(tien - tien2))}</>}
+                    {tien > tien2 && <>{convertToCurrency(tien - tien2)}</>}
+                    {tien === tien2 && <>{convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}</>}
+                  </Text>
+                </View>
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                {tien !== tien2 && (
+                  <>
+                    <View style={[styles.flexContainer, { color: 'red' }]}>
+                      <Text style={styles.textLeft}>
+                        {tien > tien2 && <>Tiền trả khách: </>}
+                        {tien < tien2 && (
+                          <>
+                            {tienKhachPhaiTra.phuongThucThanhToan === false && <>Khách đã thanh toán: </>}
+                            {tienKhachPhaiTra.phuongThucThanhToan === true && <>Khách phải trả: </>}
+                          </>
+                        )}
+                      </Text>
+                      <Text style={styles.textRight}>{convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}</Text>
+                    </View>
+                  </>
+                )}
+                {tien === tien2 && (
+                  <>
+                    <View style={[styles.flexContainer, { color: 'red' }]}>
+                      <Text style={styles.textLeft}>Khách phải trả: </Text>
+                      <Text style={styles.textRight}>{convertToCurrency(tienKhachPhaiTra.tienKhachPhaiTra)}</Text>
+                    </View>
+                  </>
+                )}
+              </>
+            )}
           </View>
           <View>
             <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
@@ -1427,17 +1583,6 @@ function DonHangCT() {
     hienThiSPYCDoi(id);
     hienThiDonYCDoi(id);
   }, [id]);
-
-  const [donDoi, setDonDoi] = useState([]);
-  const [spDoiHang, setSpDoiHang] = useState([]);
-  const [donLoi, setDonLoi] = useState([]);
-  const [spLoi, setSpLoi] = useState([]);
-  const [donYCDoi, setDonYCDoi] = useState([]);
-  const [spYCDoi, setSpYCDoi] = useState([]);
-  const [slspYCD, setslspYCD] = useState({});
-  const [tienKhachPhaiTra, setTienKhachPhaiTra] = useState({
-    tienKhachPhaiTra: 0
-  });
 
   const hienThiSLSPYCDoi = async (id) => {
     const res = await detailSLSPYCDoiByIdHDCT(id);
@@ -1627,6 +1772,10 @@ function DonHangCT() {
 
   ///
 
+  const [totalAmountV, setTotalAmountV] = useState(0);
+  const [totalAmountDH, setTotalAmountDH] = useState(0);
+  const [totalAmountDHSP, setTotalAmountDHSP] = useState(0);
+
   useEffect(() => {
     let sum = 0;
     let count = 0;
@@ -1796,6 +1945,15 @@ function DonHangCT() {
   };
 
   const handleAddSP = () => {
+    if (valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === null) {
+      toast.warning('Vui lòng chọn sản phẩm !');
+      return;
+    }
+    if (valuesAddDH.hoaDonChiTiet.soLuongHangDoi === null) {
+      toast.warning('Vui lòng chọn sản phẩm !');
+      return;
+    }
+
     addSP2(valuesAddDH);
   };
 
@@ -1919,6 +2077,10 @@ function DonHangCT() {
   };
 
   const handleUpdateTienKhachTra = (id) => {
+    if (tienKhachPhaiTra.tienKhachPhaiTra > tien - tien2) {
+      toast.error('Vui lòng nhập số tiền hợp lệ !');
+      return;
+    }
     updateTienTraKhach(id, tienKhachPhaiTra);
   };
 
@@ -1933,7 +2095,10 @@ function DonHangCT() {
 
   // console.log(giaTienYCD);
   // console.log(giaTienHDoi);
-  console.log(donYCDoi);
+
+  const lichSuHoaDon5 = lichSuHoaDon[lichSuHoaDon.length - 1]?.ngayTao || '';
+
+  console.log(formatDate(lichSuHoaDon5));
   return (
     <>
       <MainCard>
@@ -2660,10 +2825,10 @@ function DonHangCT() {
                                 <time className="p-timeline-date">{lshd.ten}</time>
                                 <span className="p-timeline-carmodel">{formatDate(lshd.ngayTao)}</span>
                                 <div
-                                  style={lshd.hoaDon.trangThai === 15 ? { backgroundColor: '#FFFF00', color: 'black' } : {}}
+                                  style={lshd.hoaDon.trangThai === 15 ? { backgroundColor: '#0000FF', color: 'white' } : {}}
                                   className="p-timeline-block"
                                 >
-                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-question fa-beat fa-xl"></i>
+                                  <i style={{ marginTop: 27 }} className="fa-solid fa-clipboard-check fa-beat fa-xl"></i>
                                 </div>
                               </div>
                             </li>
@@ -3640,7 +3805,7 @@ function DonHangCT() {
                           )}
                           {((hoaDon.trangThai === 4 && hoaDon.loaiDon === 1) ||
                             (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
-                            hoaDon.trangThai === 16) && (
+                            hoaDon.trangThai === 15) && (
                             <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
                                 <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -4579,7 +4744,7 @@ function DonHangCT() {
                           const sizeData = n.split(',');
                           const id = sizeData[0];
                           const ma = sizeData[1];
-                          // const tien = sizeData[1];
+                          // const tien = sizeData[2];
                           // const soHangDoi = sizeData[2];
                           // const trangThai = sizeData[3];
                           const ngayTao = sizeData[5];
@@ -4589,7 +4754,8 @@ function DonHangCT() {
                             /* const tienKhachTra = sizeData[8]; */
                           }
                           const ghiChu = sizeData[9];
-                          const tong = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
+                          const tong = spYCDoi.reduce((acc, d) => acc + d.lichSuSoLuongYeuCauDoi, 0);
+                          const tien = spYCDoi.reduce((acc, d) => acc + d.lichSuSoLuongYeuCauDoi * d.donGia, 0);
                           return (
                             <React.Fragment key={index}>
                               <TableRow>
@@ -4602,7 +4768,7 @@ function DonHangCT() {
                                   {ma}
                                 </TableCell>
                                 <TableCell>{tong}</TableCell>
-                                <TableCell>{convertToCurrency(totalAmountDH)}</TableCell>
+                                <TableCell>{convertToCurrency(tien)}</TableCell>
                                 <TableCell>{hoaDon.trangThai === '15' ? 'Đang chờ xác nhận' : 'Đã xác nhận đổi'}</TableCell>
                                 <TableCell>{formatDate(ngayTao)}</TableCell>
                                 <TableCell>{nguoiTao}</TableCell>
@@ -4658,11 +4824,15 @@ function DonHangCT() {
                                               </td>
                                               <td style={{ paddingTop: 20 }}>
                                                 <span style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 20, fontStyle: 'italic' }}>
-                                                  {d.soLuongYeuCauDoi}
+                                                  {d.lichSuSoLuongYeuCauDoi}
+                                                </span>
+                                                <br />
+                                                <span style={{ fontWeight: 'bold', fontSize: 15, fontStyle: 'italic', color: 'red' }}>
+                                                  Số lượng còn lại : {d.soLuongYeuCauDoi}
                                                 </span>
                                               </td>
                                               <td style={{ paddingTop: 20 }}>{convertToCurrency(d.donGia)}</td>
-                                              <td style={{ paddingTop: 20 }}>{convertToCurrency(d.soLuongYeuCauDoi * d.donGia)}</td>
+                                              <td style={{ paddingTop: 20 }}>{convertToCurrency(d.lichSuSoLuongYeuCauDoi * d.donGia)}</td>
                                               {hoaDon.loaiDon === 0 && hoaDon.trangThai === 15 && (
                                                 <td>
                                                   {d.soLuongYeuCauDoi > 0 && (
@@ -4706,6 +4876,12 @@ function DonHangCT() {
                                                       </span>
                                                       <span className="relative2 text-left group-hover:text-white">Phân loại</span>
                                                     </button>
+                                                  )}
+                                                  {d.soLuongYeuCauDoi <= 0 && (
+                                                    <>
+                                                      <h5 style={{ color: 'red' }}>Sản phẩm đã được</h5>
+                                                      <h5 style={{ color: 'red' }}>phân loại xong !</h5>
+                                                    </>
                                                   )}
 
                                                   <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show29} onHide={handleClose29}>
@@ -4868,7 +5044,7 @@ function DonHangCT() {
                                         </tbody>
                                       </Table>
                                       <hr></hr>
-                                      {totalAmountDH < (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+                                      {tien < tien2 && (
                                         <h3>
                                           {tienKhachPhaiTra.phuongThucThanhToan === false && <span>Khách đã thanh toán: </span>}
                                           {tienKhachPhaiTra.phuongThucThanhToan === true && <span>Khách phải trả: </span>}
@@ -4892,7 +5068,7 @@ function DonHangCT() {
                                           </span>
                                         </h3>
                                       )}
-                                      {totalAmountDH > (valuesAddDH.doiHang.tongTienHangDoi || 0) && (
+                                      {tien > tien2 && (
                                         <h3 className="d-flex justify-content-between">
                                           <div>
                                             <span>Tiền trả khách: </span>
@@ -5175,18 +5351,21 @@ function DonHangCT() {
                           ></span>
                         </button>
                       )}
-                      {hoaDon.loaiDon === 0 && (
-                        <ButtonMUI
-                          variant="outlined"
-                          className="mt-2 me-3 tra-hang"
-                          color="primary"
-                          onClick={() => {
-                            setIsshow(true);
-                          }}
-                        >
-                          Đổi hàng
-                        </ButtonMUI>
-                      )}
+
+                      {hoaDon.loaiDon === 0 &&
+                        hoaDon.trangThai === 6 &&
+                        new Date(lichSuHoaDon5).getTime() + 15 * 24 * 60 * 60 * 1000 > Date.now() && (
+                          <ButtonMUI
+                            variant="outlined"
+                            className="mt-2 me-3 tra-hang"
+                            color="primary"
+                            onClick={() => {
+                              setIsshow(true);
+                            }}
+                          >
+                            Đổi hàng
+                          </ButtonMUI>
+                        )}
 
                       <Modal
                         size="lg"
@@ -5417,7 +5596,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {convertToCurrency(totalAmount)}
+                        {convertToCurrency(hoaDon.tongTien)}
                       </span>
                     </Col>
                   </Col>
@@ -5544,7 +5723,7 @@ function DonHangCT() {
                           fontWeight: 'bold'
                         }}
                       >
-                        {convertToCurrency(tongTienKhiGiam)}{' '}
+                        {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
                       </span>
                     </Col>
                   </Col>
@@ -5606,6 +5785,7 @@ function DonHangCT() {
               setValuesAdd={setValuesAddDH}
               valuesAdd={valuesAddDH}
               handleAdd={handleAddSP}
+              // idCTSP={idCTSP}
             ></TableKCMS>
           </div>
         </Card>

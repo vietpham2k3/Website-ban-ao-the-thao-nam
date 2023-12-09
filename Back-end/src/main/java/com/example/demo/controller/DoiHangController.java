@@ -43,7 +43,7 @@ public class DoiHangController {
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
-        for (HoaDonChiTiet hoaDonChiTiet :hoaDonChiTiets) {
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             hoaDonChiTiet.setLichSuSoLuongYeuCauDoi(hoaDonChiTiet.getSoLuongYeuCauDoi());
         }
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
@@ -98,6 +98,14 @@ public class DoiHangController {
                 existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
                 break;
             }
+            if (hdct.getSoLuongHangDoi() != null &&
+                    hdct.getId().equals(doiHangDTO.getHoaDonChiTiet().getId()) &&
+                    hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+
+                // Check if the current HoaDonChiTiet has the same idHDCT and idCTSP
+                hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
+                break; // Break out of the loop once the update is done
+            }
         }
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet().builder()
                 .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
@@ -122,11 +130,20 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
+                hoaDonChiTietService.add(hdct);
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(existingDoiHang);
                     hoaDonChiTietService.add(hdct);
                 }
+//                else {
+//                    ChiTietSanPham existingCTSP = hdct.getChiTietSanPham();
+//                    HoaDon existingHD = hdct.getHoaDon();
+//                    hdct.setHoaDon(existingHD);
+//                    hdct.setChiTietSanPham(existingCTSP);
+//                    hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
+//                }
             }
+
             hoaDonChiTietService.add(hoaDonChiTiet);
         } else {
             // Thêm mới đổi hàng
@@ -171,7 +188,8 @@ public class DoiHangController {
         doiHangDTO.getLichSuHoaDon().setMa(maLSHD);
         doiHangDTO.getLichSuHoaDon().setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
         doiHangDTO.getLichSuHoaDon().setHoaDon(hoaDon);
-        doiHangDTO.getLichSuHoaDon().setTen("Yêu cầu đổi hàng");
+        doiHangDTO.getLichSuHoaDon().setNguoiTao(doiHangDTO.getLichSuHoaDon().getNguoiTao());
+        doiHangDTO.getLichSuHoaDon().setTen("Đổi hàng");
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
         for (HoaDonChiTiet hdct : list) {
             if (hdct.getDoiHang() != null) {
@@ -186,6 +204,7 @@ public class DoiHangController {
                 break;
             }
         }
+
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(doiHangDTO.getLichSuHoaDon()));
     }
 

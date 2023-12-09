@@ -52,6 +52,7 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
+                inputProps={{ min: 0 }}
                 onChange={(e) =>
                   setValuesAdd({
                     ...valuesAdd,
