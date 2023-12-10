@@ -123,7 +123,7 @@ function UpdateKhuyenMai() {
                     className={values.loaiGiam ? 'active' : ''}
                     onClick={() => setValues({ ...values, loaiGiam: true })}
                   >
-                    VND
+                    VNĐ
                   </Button>
                   <Button
                     variant="outline-secondary"

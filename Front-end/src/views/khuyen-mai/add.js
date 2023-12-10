@@ -51,7 +51,6 @@ function AddKhuyenMai() {
       toast.error('Không được để trống thời gian bắt đầu!');
       return;
     }
-
     if (values.thoiGianKetThuc === '') {
       toast.error('Không được để trống thời gian kết thúc!');
       return;
@@ -138,7 +137,7 @@ function AddKhuyenMai() {
                     className={values.loaiGiam ? 'active' : ''}
                     onClick={() => setValues({ ...values, loaiGiam: true })}
                   >
-                    VND
+                    VNĐ
                   </Button>
                   <Button
                     variant="outline-secondary"
