@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { addNV, vaitro } from 'services/NhanVienService';
 import { postCreate } from 'services/ServiceVaiTro';
 import MyVerticallyCenteredModal from './AddVaiTro';
+import '../../scss/Loading.scss';
 
 function AddNhanVien() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ function AddNhanVien() {
   const handleAvatarClick = () => {
     fileInputRef.current.click();
   };
+
+  console.log(vaiTroS);
 
   useEffect(() => {
     return () => {
@@ -89,6 +92,8 @@ function AddNhanVien() {
     trangThai: 0
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -96,6 +101,7 @@ function AddNhanVien() {
       toast.error('Vui lòng chọn ảnh');
       return;
     }
+    setLoading(true);
 
     const formData = new FormData();
     formData.append('ten', values.ten);
@@ -117,6 +123,8 @@ function AddNhanVien() {
     } catch (error) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi thêm khách hàng');
+    } finally {
+      setLoading(false); // Kết thúc trạng thái loading sau khi yêu cầu kết thúc (hoặc lỗi)
     }
   };
 
@@ -134,6 +142,13 @@ function AddNhanVien() {
   return (
     <MainCard>
       <Card>
+        {loading && (
+          <div className="overlay">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
         <div className="row g-3">
           <h1>Thêm Nhân Viên</h1>
         </div>
@@ -250,14 +265,9 @@ function AddNhanVien() {
                   value={values.vaiTro}
                   onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
                 >
-                  <option>Chọn vai trò</option>
-                  {vaiTroS
-                    .filter((vaiTro) => vaiTro.trangThai === 1) // Lọc ra các vai trò có trạng thái là 1
-                    .map((d, i) => (
-                      <option key={i} value={d.id}>
-                        {d.ten}
-                      </option>
-                    ))}
+                  <option value={''}>Chọn vai trò</option>
+                  <option value={'Admin'}>Admin</option>
+                  <option value={'Nhân viên'}>Nhân viên</option>
                 </select>
               </div>
               <div className="col-md-6">

@@ -105,6 +105,9 @@ function HangLoi() {
     <div>
       <MainCard>
         <div className="row">
+          <div className="text-center">
+            <h1>Hàng lỗi</h1>
+          </div>
           <div className="col-6">
             <div className="search">
               <input
