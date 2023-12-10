@@ -90,7 +90,7 @@ function ModalTraHang(props) {
         trangThai: 15,
         tongTienHangDoi: sum,
         soHangDoi: count,
-        nguoiTao: dataLogin.tenKhachHang,
+        nguoiTao: dataLogin.ten,
         tienKhachPhaiTra: sum - sumDH
       }
     });
