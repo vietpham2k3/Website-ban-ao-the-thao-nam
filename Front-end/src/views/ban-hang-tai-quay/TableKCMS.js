@@ -62,13 +62,11 @@ const TableKCMS = (props) => {
                         ...valuesAdd.doiHang,
                         soHangDoi: parseInt(e.target.value)
                       }
-                    })
-                  }else{
+                    });
+                  } else {
                     e.preventDefault();
                   }
-                  }
-                }
-                  
+                }}
               />
             </div>
           </div>

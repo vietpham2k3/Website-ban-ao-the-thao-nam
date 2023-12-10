@@ -24,7 +24,6 @@ function LoadingPay() {
     if (transactionStaus === '00') {
       // So sánh với chuỗi '00' thay vì số
       requestDoiHang(idHDCT, yeuCauDoi);
-      window.location.href = 'http://localhost:3000/don-hang/chi-tiet/' + idHDCT;
     }
     if (transactionStaus === '02') {
       toast.error('Giao dịch thất bại');
@@ -57,7 +56,7 @@ function LoadingPay() {
     let res = await yeuCauDoiHang(id, value);
     if (res) {
       toast.success('Thành công');
-      window.location.reload();
+      window.location.href = 'http://localhost:3000/don-hang/chi-tiet/' + idHDCT;
     }
   };
 
