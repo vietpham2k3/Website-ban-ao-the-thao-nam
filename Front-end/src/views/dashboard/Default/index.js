@@ -73,6 +73,7 @@ const Dashboard = () => {
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={12} md={12}>
+            <span>Hàng lỗi</span>
             <HangLoi></HangLoi>
           </Grid>
         </Grid>

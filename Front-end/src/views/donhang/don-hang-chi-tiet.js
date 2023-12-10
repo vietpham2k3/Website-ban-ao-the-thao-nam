@@ -63,7 +63,8 @@ import {
   hienThiYCDoiHang,
   hangLoi,
   detailSLSPYCDoiByIdHDCT,
-  hangKoLoi
+  hangKoLoi,
+  hoanTien
 } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { Button } from 'react-bootstrap';
@@ -932,7 +933,7 @@ function DonHangCT() {
   });
 
   const handleClose20 = () => setShow20(false);
-  const handleShow20 = () => setShow20(true);
+  // const handleShow20 = () => setShow20(true);
 
   const xacNhanTra = async (id, value) => {
     const res = await xacNhanTraHang(id, value);
@@ -989,6 +990,22 @@ function DonHangCT() {
   //     detailListLSHD(id);
   //   }
   // };
+
+  ///
+   // hoanTien
+   const hoanTien2 = async (id, value) => {
+    const res = await hoanTien(id, dataLogin.id, value);
+    if (res) {
+      toast.success('Cập nhật thành công !');
+      getAll(0);
+      detail(id);
+      detailListLSHD(id);    }
+  };
+
+  const handleHoanTien = async (id, event) => {
+    event.preventDefault();
+    await hoanTien2(id, { ghiChu: 'hoan tien' });
+  };
 
   // const handleXacNhanNhanHang = async (event) => {
   //   event.preventDefault();
@@ -1556,16 +1573,11 @@ function DonHangCT() {
   const handleTienShipChange = async (e) => {
     if (e) {
       const value = parseFloat(e.target.value);
-      if (!isNaN(value)) {
-        if (value < 0) {
-          // Nếu nhỏ hơn 0, đặt giá trị thành 0
+      if (!isNaN(value) && value >= 0) {
+        // const nonNegativeValue = Math.max(value, 0);
+        // Nếu nhỏ hơn 0, đặt giá trị thành 0
           setHoaDon({ ...hoaDon, tienShip: value });
           updateHD(id, { ...hoaDon, tienShip: value });
-        } else {
-          // Nếu không, cập nhật giá trị trong state
-          setHoaDon({ ...hoaDon, tienShip: value });
-          updateHD(id, { ...hoaDon, tienShip: value });
-        }
       }
     }
   };
@@ -2977,7 +2989,7 @@ function DonHangCT() {
                   </button>
                 )}
                 {/* //xac nhan huy don  */}
-                {hoaDon.trangThai === 14 && hoaDon.loaiDon === 1 && (
+                {(hoaDon.trangThai === 14 && hoaDon.loaiDon === 1 && hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt') && (
                   <button onClick={handleShow3} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -2993,12 +3005,13 @@ function DonHangCT() {
                   </button>
                 )}
                 {/* //xac nhan tra hang  */}
-                {hoaDon.trangThai === 300 && (
-                  <button onClick={handleShow20} className="relative inline-block text-base group">
+                {(hoaDon.trangThai === 14)
+                 && (hoaDon.loaiDon === 1 && hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay') && (
+                  <button onClick={(e) => handleHoanTien(hoaDon.id,e)} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-7 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-6 py-3 rounded-lg bg-gray-50"></span>
                       <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                      <span className="relative">Xác nhận đổi hàng</span>
+                      <span className="relative">Hoàn tiền</span>
                     </span>
                     <span
                       className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
@@ -3006,6 +3019,23 @@ function DonHangCT() {
                     ></span>
                   </button>
                 )}
+                    {(hoaDon.trangThai === 18  ||
+                  hoaDon.trangThai === 13) && (
+
+                             <button onClick={handleShow3} className="relative inline-block text-base group">
+                      <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                        <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                        <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                        <span className="relative" style={{ color: 'red' }}>
+                          Hủy đơn
+                        </span>
+                      </span>
+                      <span
+                        className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                        data-rounded="rounded-lg"
+                      ></span>
+                    </button>
+                                )}
                 {/* //xac nhan tra hang  */}
                 {/* {hoaDon.trangThai === 4 && (
                   <button onClick={handleXacNhanNhanHang} className="relative inline-block text-base group">
@@ -3368,11 +3398,10 @@ function DonHangCT() {
               {/* //huy don */}
               <div className="col-3">
                 {(hoaDon.trangThai === 0 ||
-                  hoaDon.trangThai === 1 ||
                   hoaDon.trangThai === 6 ||
                   hoaDon.trangThai === 5 ||
                   hoaDon.trangThai === 11 ||
-                  hoaDon.trangThai === 10 ||
+                  // hoaDon.trangThai === 10 ||
                   hoaDon.trangThai === 12) &&
                   hoaDon.loaiDon === 1 && (
                     <button onClick={handleShow3} className="relative inline-block text-base group">
@@ -3388,6 +3417,36 @@ function DonHangCT() {
                         data-rounded="rounded-lg"
                       ></span>
                     </button>
+                  )}
+                  {(hoaDon.trangThai === 1 && hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'Tiền mặt') &&
+                  hoaDon.loaiDon === 1 && (
+                    <button onClick={handleShow3} className="relative inline-block text-base group">
+                      <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                        <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
+                        <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                        <span className="relative" style={{ color: 'red' }}>
+                          Hủy đơn
+                        </span>
+                      </span>
+                      <span
+                        className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                        data-rounded="rounded-lg"
+                      ></span>
+                    </button>
+                  )}
+                  {(hoaDon.trangThai === 1 || hoaDon.trangThai === 13) && (hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay') &&
+                  hoaDon.loaiDon === 1 && (
+                    <button onClick={(e) => handleHoanTien(hoaDon.id,e)} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-7 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-6 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative">Hoàn tiền</span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
                   )}
                 <Modal style={{ marginTop: 150, marginLeft: 150 }} show={show3} onHide={handleClose3}>
                   <Modal.Header closeButton>
@@ -3634,7 +3693,7 @@ function DonHangCT() {
                   </Modal.Body>
                 </Modal>
                 {/* //giao hang that bai lần 3*/}
-                {hoaDon.trangThai === 19 && (
+                {hoaDon.trangThai === 10 && (
                   <button onClick={handleShow18} className="relative inline-block text-base group">
                     <span className="relative z-10 block px-8 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
                       <span className="absolute inset-0 w-full h-full px-8 py-3 rounded-lg bg-gray-50"></span>
@@ -3763,6 +3822,23 @@ function DonHangCT() {
                     </form>
                   </Modal.Body>
                 </Modal>
+              </div>
+
+              <div className='col-3'>
+              {(hoaDon.trangThai === 5 || hoaDon.trangThai === 11 || hoaDon.trangThai === 12 )
+                 && (hoaDon.loaiDon === 1 && hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay') && (
+                  <button onClick={(e) => handleHoanTien(hoaDon.id,e)} className="relative inline-block text-base group">
+                    <span className="relative z-10 block px-7 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                      <span className="absolute inset-0 w-full h-full px-6 py-3 rounded-lg bg-gray-50"></span>
+                      <span className="absolute left-0 w-48 h-48 -ml-5 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                      <span className="relative">Hoàn tiền</span>
+                    </span>
+                    <span
+                      className="absolute bottom-0 right-0 w-full h-10 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0"
+                      data-rounded="rounded-lg"
+                    ></span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -4700,6 +4776,38 @@ function DonHangCT() {
                   </Col>
                 </Row>
               </Container>
+{(hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay') && (
+<Container>
+  <Row>
+    <Col sm={6} className="row">
+      <Col sm={3}>
+        <span
+          style={{
+            display: 'inline-block',
+            width: '200px',
+            fontSize: '15px',
+            fontWeight: 'bold'
+          }}
+        >
+          Mã Giao Dịch: 
+        </span>
+      </Col>
+      <Col sm={3}>
+        <span
+          style={{
+            display: 'inline-block',
+            width: '300px',
+            fontSize: '15px'
+          }}
+        >
+          {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.maGiaoDich}
+        </span>
+      </Col>
+    </Col>
+  </Row>
+</Container>
+)}
+
             </div>
           </div>
         </Card>
@@ -5596,7 +5704,7 @@ function DonHangCT() {
                           fontSize: '15px'
                         }}
                       >
-                        {convertToCurrency(hoaDon.tongTien)}
+                        {convertToCurrency(totalAmount)}
                       </span>
                     </Col>
                   </Col>
@@ -5723,7 +5831,7 @@ function DonHangCT() {
                           fontWeight: 'bold'
                         }}
                       >
-                        {convertToCurrency(hoaDon.tongTienKhiGiam)}{' '}
+                        {convertToCurrency(tongTienKhiGiam)}{' '}
                       </span>
                     </Col>
                   </Col>

@@ -52,17 +52,23 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
-                inputProps={{ min: 0 }}
-                onChange={(e) =>
-                  setValuesAdd({
-                    ...valuesAdd,
-                    hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
-                    doiHang: {
-                      ...valuesAdd.doiHang,
-                      soHangDoi: parseInt(e.target.value)
-                    }
-                  })
+                inputProps={{ min: 1 }}
+                onChange={(e) => {
+                  if (e.target.value >= 1) {
+                    setValuesAdd({
+                      ...valuesAdd,
+                      hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
+                      doiHang: {
+                        ...valuesAdd.doiHang,
+                        soHangDoi: parseInt(e.target.value)
+                      }
+                    })
+                  }else{
+                    e.preventDefault();
+                  }
+                  }
                 }
+                  
               />
             </div>
           </div>

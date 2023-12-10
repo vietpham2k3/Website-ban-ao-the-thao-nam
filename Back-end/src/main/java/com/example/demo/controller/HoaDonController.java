@@ -749,38 +749,38 @@ public class HoaDonController {
         hoaDon.setNgaySua(new Date());
         hoaDon.setTrangThai(2);
 
-        if (hoaDon.getLoaiDon() == 1 && "VNPay".equals(hoaDon.hinhThucThanhToan.getTen())) {
-            lichSuHoaDon.setTen("Hoàn tiền thành công");
-            lichSuHoaDon.setTrangThai(18);
-
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.schedule(() -> {
-                LichSuHoaDon additionalLichSu = new LichSuHoaDon();
-                additionalLichSu.setTen("Đã hủy đơn hàng");
-                additionalLichSu.setTrangThai(2);
-                additionalLichSu.setNgayTao(new Date());
-                additionalLichSu.setMa(maLSHD);
-                additionalLichSu.setGhiChu(lichSuHoaDon.getGhiChu());
-                additionalLichSu.setHoaDon(hoaDon);
-
-                List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
-
-                for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
-                    String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
-                    if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
-                        lichSu.setNguoiTao(nguoiTao);
-                        additionalLichSu.setNguoiTao(nguoiTao);
-                    }
-                }
-
-                // Save the additional LichSuHoaDon
-                serviceLSHD.createLichSuDonHang(additionalLichSu);
-            }, 1, TimeUnit.MILLISECONDS);
-        } else {
-            lichSuHoaDon.setTrangThai(2);
-            lichSuHoaDon.setTen("Đã hủy đơn hàng");
-        }
-
+//        if (hoaDon.getLoaiDon() == 1 && "VNPay".equals(hoaDon.hinhThucThanhToan.getTen())) {
+//            lichSuHoaDon.setTen("Hoàn tiền thành công");
+//            lichSuHoaDon.setTrangThai(18);
+//
+//            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+//            executorService.schedule(() -> {
+//                LichSuHoaDon additionalLichSu = new LichSuHoaDon();
+//                additionalLichSu.setTen("Đã hủy đơn hàng");
+//                additionalLichSu.setTrangThai(2);
+//                additionalLichSu.setNgayTao(new Date());
+//                additionalLichSu.setMa(maLSHD);
+//                additionalLichSu.setGhiChu(lichSuHoaDon.getGhiChu());
+//                additionalLichSu.setHoaDon(hoaDon);
+//
+//                List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
+//
+//                for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
+//                    String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
+//                    if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
+//                        lichSu.setNguoiTao(nguoiTao);
+//                        additionalLichSu.setNguoiTao(nguoiTao);
+//                    }
+//                }
+//
+//                // Save the additional LichSuHoaDon
+//                serviceLSHD.createLichSuDonHang(additionalLichSu);
+//            }, 1, TimeUnit.MILLISECONDS);
+//        } else {
+//
+//        }
+        lichSuHoaDon.setTrangThai(2);
+        lichSuHoaDon.setTen("Đã hủy đơn hàng");
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
