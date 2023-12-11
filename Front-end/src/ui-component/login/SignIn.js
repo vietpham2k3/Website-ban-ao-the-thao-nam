@@ -108,7 +108,7 @@ function SignInForm(props) {
               email: res.email,
               tenKhachHang: res.name
             });
-            console.log(res);
+            localStorage.setItem('picture', res.picture);
           }}
           onError={() => {
             console.log('Login Failed');
