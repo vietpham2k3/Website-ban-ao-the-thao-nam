@@ -68,6 +68,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "        WHEN KC.ten = 'L' THEN 3\n" +
             "        WHEN KC.ten = 'XL' THEN 4\n" +
             "        WHEN KC.ten = 'XXL' THEN 5\n" +
+            "        WHEN KC.ten = '3XL' THEN 6\n" +
             "    END;\n"
             , nativeQuery = true)
     List<String> getKCByIdMSAndIdSP(UUID idMS, UUID idSP);

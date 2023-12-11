@@ -1954,6 +1954,7 @@ function DonHangCT() {
       setTotalAmount(sumDH - sum);
       setTotalAmountDH(sum);
       setTotalAmountDHSP(sumDG);
+      handleDetailSL();
     }
   };
 

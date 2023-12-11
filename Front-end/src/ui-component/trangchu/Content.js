@@ -5,7 +5,7 @@ import '../../scss/Content.scss';
 import '../../scss/ChiTietSanPham.scss';
 import { getAllBestseller, getAllSPNEW, getAllProduct } from '../../services/SanPhamService';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AnhBanner from '../../assets/images/banner44.jpg';
 import AnhBanner1 from '../../assets/images/333333.jpg';
 
@@ -99,7 +99,7 @@ function Content() {
               })}
           </div>
           <div className="text-center">
-            <button className="btn btn1">Xem tất cả </button>
+            <Link to="/san-pham/web" className="btn btn1">Xem tất cả </Link>
           </div>
         </div>
 
@@ -133,7 +133,7 @@ function Content() {
             })}
           </div>
           <div className="text-center">
-            <button className="btn btn1">Xem tất cả </button>
+          <Link to="/san-pham/web" className="btn btn1">Xem tất cả </Link>
           </div>
         </div>
       </section>

@@ -44,8 +44,24 @@ public class DoiHangController {
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+//            HoaDonChiTiet hd = hoaDonChiTietService.findById(hoaDonChiTiet.getId());
+//            if (hoaDonChiTiet.getId() == hd.getId()) {
+//                ChiTietSanPham sp = chiTietSanPhamService.detail(hd.getChiTietSanPham().getId());
+//                if (sp.getId() == hd.getChiTietSanPham().getId()) {
+////                    if (hoaDonChiTiet.getSoLuongHangDoi() > sp.getSoLuong()) {
+//                        chiTietSanPhamService.update((sp.getSoLuong() - hoaDonChiTiet.getSoLuongHangDoi()),
+//                                hd.getChiTietSanPham().getId());
+////                    }else{
+////                        chiTietSanPhamService.update((sp.getSoLuong() + hoaDonChiTiet.getSoLuongHangDoi()),
+////                                hd.getChiTietSanPham().getId());
+////                    }
+//
+//                }
+//            }
             hoaDonChiTiet.setLichSuSoLuongYeuCauDoi(hoaDonChiTiet.getSoLuongYeuCauDoi());
         }
+
+
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
         return ResponseEntity.ok("ok");
     }
@@ -90,22 +106,25 @@ public class DoiHangController {
         doiHang.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
         doiHang.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
 
+
         // Tìm hoặc tạo mới đổi hàng
         DoiHang existingDoiHang = null;
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
         for (HoaDonChiTiet hdct : list) {
+            ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+            chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+            hdct.getChiTietSanPham().getId());
             if (hdct.getDoiHang() != null) {
                 existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
                 break;
             }
-            if (hdct.getSoLuongHangDoi() != null &&
-                    hdct.getId().equals(doiHangDTO.getHoaDonChiTiet().getId()) &&
-                    hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
-
-                // Check if the current HoaDonChiTiet has the same idHDCT and idCTSP
-                hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
-                break; // Break out of the loop once the update is done
-            }
+//            if (hdct.getId().equals(doiHangDTO.getHoaDonChiTiet().getId()) &&
+//                    hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+//
+//                // Check if the current HoaDonChiTiet has the same idHDCT and idCTSP
+//                hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
+//                break; // Break out of the loop once the update is done
+//            }
         }
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet().builder()
                 .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
@@ -130,6 +149,9 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+                        hdct.getChiTietSanPham().getId());
                 hoaDonChiTietService.add(hdct);
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(existingDoiHang);
@@ -156,6 +178,9 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+                        hdct.getChiTietSanPham().getId());
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(doiHang);
                     hoaDonChiTietService.add(hdct);
