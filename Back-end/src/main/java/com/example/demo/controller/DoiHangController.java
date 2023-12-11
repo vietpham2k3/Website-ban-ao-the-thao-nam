@@ -127,13 +127,9 @@ public class DoiHangController {
                 .build();
 
         HoaDonChiTiet matchedHoaDonChiTiet = null;
-        HoaDonChiTiet matchedHoaDonChiTiet2 = null;
         for (HoaDonChiTiet hdct : list) {
             if (hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
                 matchedHoaDonChiTiet = hdct;
-            }
-            if (hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId()) || hdct.getSoLuong() != null) {
-                matchedHoaDonChiTiet2 = hdct;
             }
         }
 
@@ -159,10 +155,6 @@ public class DoiHangController {
                 }
             }
             ChiTietSanPham sp = chiTietSanPhamService.detail(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId());
-            if (matchedHoaDonChiTiet2 != null) {
-                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
-                return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
-            }
             if (matchedHoaDonChiTiet != null) {
                 if (matchedHoaDonChiTiet.getSoLuong() != null) {
                     chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
@@ -186,10 +178,6 @@ public class DoiHangController {
                 }
             }
             ChiTietSanPham sp = chiTietSanPhamService.detail(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId());
-            if (matchedHoaDonChiTiet2 != null) {
-                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
-                return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
-            }
             if (matchedHoaDonChiTiet != null) {
                 if (matchedHoaDonChiTiet.getSoLuong() != null) {
                     chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
