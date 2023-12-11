@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -40,7 +42,7 @@ public class LoginController {
             return ResponseEntity.ok("Both customer and employee found");
         } else if (kh != null) {
             // Tìm thấy khách hàng
-            if(kh.getTrangThai() == 0){
+            if (kh.getTrangThai() == 0) {
                 return ResponseEntity.ok("Tài khoản này đã bị khoá");
             }
             KhachHangDTO nvDTO = new KhachHangDTO();
@@ -52,7 +54,7 @@ public class LoginController {
             return ResponseEntity.ok(nvDTO);
         } else if (nv != null) {
             // Tìm thấy nhân viên
-            if(nv.getTrangThai() == 1){
+            if (nv.getTrangThai() == 1) {
                 return ResponseEntity.ok("Tài khoản này đã bị khoá");
             }
             NhanVienDTO nvDTO = new NhanVienDTO();
@@ -63,7 +65,7 @@ public class LoginController {
             if (nv.getVaiTro().getTen().equalsIgnoreCase("Nhân viên")) {
                 nvDTO.setRole("NV"); // Đặt vai trò cho nhân viên
             } else {
-               nvDTO.setRole("AD"); // Đặt vai trò cho nhân viên
+                nvDTO.setRole("AD"); // Đặt vai trò cho nhân viên
             }
             return ResponseEntity.ok(nvDTO);
         } else {
@@ -71,6 +73,49 @@ public class LoginController {
             return ResponseEntity.ok("Not found");
         }
     }
+
+    @PostMapping("/loginGoogle")
+    public ResponseEntity<?> loginGoogle(@RequestBody KhachHang khachHang) {
+        List<KhachHang> list = khService.getAll();
+        boolean foundMatchingCustomer = false;
+
+        for (KhachHang kh : list) {
+            if (khachHang.getEmail().equalsIgnoreCase(kh.getEmail()) && khachHang.getTenKhachHang().equalsIgnoreCase(kh.getTenKhachHang())) {
+                foundMatchingCustomer = true;
+
+                if (kh.getTrangThai() == 0) {
+                    return ResponseEntity.ok("Tài khoản này đã bị khoá");
+                }
+
+                KhachHangDTO nvDTO = new KhachHangDTO();
+                nvDTO.setId(kh.getId());
+                nvDTO.setTenKhachHang(kh.getTenKhachHang());
+                nvDTO.setEmail(kh.getEmail());
+                nvDTO.setRole("KH"); // Đặt vai trò cho khách hàng
+                return ResponseEntity.ok(nvDTO);
+            }
+        }
+
+        if (!foundMatchingCustomer) {
+            String ma = "KH" + new Random().nextInt(100000);
+            khachHang.setMaKhachHang(ma);
+            khachHang.setTrangThai(1);
+            khachHang.setNgayTao(new Date());
+
+            // Thêm khách hàng mới vào cơ sở dữ liệu
+            KhachHang savedKhachHang = khService.dangKy(khachHang);
+            KhachHangDTO nvDTO = new KhachHangDTO();
+            nvDTO.setMaKhachHang(savedKhachHang.getMaKhachHang());
+            nvDTO.setId(savedKhachHang.getId());
+            nvDTO.setTenKhachHang(savedKhachHang.getTenKhachHang());
+            nvDTO.setEmail(savedKhachHang.getEmail());
+            nvDTO.setRole("KH"); // Đặt vai trò cho khách hàng mới
+            return ResponseEntity.ok(nvDTO);
+        }
+
+        return ResponseEntity.ok(khachHang);
+    }
+
 
     @PostMapping("/SignUp")
     public ResponseEntity<?> signUp(@RequestBody KhachHang khachHang) {

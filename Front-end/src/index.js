@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 // third party
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 // project imports
 import * as serviceWorker from 'serviceWorker';
 import App from 'App';
@@ -22,9 +22,11 @@ const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <Provider store={store}>
-    <BrowserRouter basename={config.basename}>
-      <App />
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId="922646833014-tsutt5t8ar4v8d5pir38ngh4n6bj32ja.apps.googleusercontent.com">
+      <BrowserRouter basename={config.basename}>
+        <App />
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   </Provider>
 );
 

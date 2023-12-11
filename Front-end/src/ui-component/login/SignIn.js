@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
@@ -6,12 +7,19 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { detailGH } from 'services/GioHangService';
-import { login } from 'services/LoginService';
+import { login, loginGoogle } from 'services/LoginService';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
 
 // eslint-disable-next-line react/prop-types
 function SignInForm(props) {
   const navigate = useNavigate();
   const { setState, state, openForgotPasswordModal } = props;
+  const [valueLogin, setValueLogin] = useState({
+    email: '',
+    tenKhachHang: ''
+  });
   const checkedLogin = localStorage.getItem('checkedLogin');
 
   useEffect(() => {
@@ -20,6 +28,12 @@ function SignInForm(props) {
       localStorage.removeItem('checkedLogin');
     }
   }, [checkedLogin]);
+
+  useEffect(() => {
+    if (valueLogin.email && valueLogin.tenKhachHang) {
+      loginGG(valueLogin);
+    }
+  }, [valueLogin]);
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -64,6 +78,16 @@ function SignInForm(props) {
     }
   };
 
+  const loginGG = async (value) => {
+    const res = await loginGoogle(value);
+    if (res.data.role === 'KH') {
+      navigate('/trang-chu');
+      toast.success('Đăng nhập thành công');
+      localStorage.setItem('dataLogin', JSON.stringify(res.data));
+      detail(res.data.id);
+    }
+  };
+
   const handleOnSubmit = () => {
     dangNhap(state.email, state.password);
   };
@@ -77,6 +101,20 @@ function SignInForm(props) {
         <a onClick={openForgotPasswordModal} className="text-forgot">
           Quên mật khẩu?
         </a>
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            const res = jwtDecode(credentialResponse.credential);
+            setValueLogin({
+              email: res.email,
+              tenKhachHang: res.name
+            });
+            console.log(res);
+          }}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />
+        ;
         <button className="button-login" onClick={handleOnSubmit}>
           Đăng nhập
         </button>
