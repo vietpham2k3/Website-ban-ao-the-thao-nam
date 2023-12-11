@@ -16,7 +16,9 @@ import { add } from 'services/LoaiSanPhamService';
 import { postNSX } from 'services/NhaSanXuatService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 import { Autocomplete, TextField } from '@mui/material';
-
+import AddMauSac from './AddQuicklyMauSac';
+import { postMS } from 'services/ServiceMauSac';
+import { postCreate as postKC } from 'services/KichCoService';
 function AddSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
@@ -27,6 +29,8 @@ function AddSanPham() {
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
   const [modalShowLSP, setModalShowLSP] = useState(false);
+  const [modalShowKC, setModalShowKC] = useState(false);
+  const [modalShowMS, setModalShowMS] = useState(false);
   const [modalShowNSX, setModalShowNSX] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
   const [confirmClicked, setConfirmClicked] = useState(false);
@@ -61,6 +65,12 @@ function AddSanPham() {
     trangThai: 1
   });
 
+  const [valuesMS, setValuesMS] = useState({
+    ten: '#ffffffff',
+    ma: '',
+    trangThai: 0
+  });
+
   const [valuesCL, setValuesCL] = useState({
     ten: '',
     trangThai: 0
@@ -71,9 +81,16 @@ function AddSanPham() {
     setModalShow(false);
     setModalShowNSX(false);
     setModalShowLSP(false);
+    setModalShowKC(false);
+    setModalShowMS(false);
     getAllList();
     setValuesCL({
       ten: '',
+      trangThai: 0
+    });
+    setValuesMS({
+      ten: '#ffffffff',
+      ma: '',
       trangThai: 0
     });
   };
@@ -178,7 +195,14 @@ function AddSanPham() {
       setListNSX(resNSX.data);
       setListMS(resMS.data);
       setListLC(resKC.data);
-      if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
+      if (
+        resCL.data.length > 0 ||
+        resCA.data.length > 0 ||
+        resLSP.data.length > 0 ||
+        resNSX.data.length > 0 ||
+        resKC.data.length > 0 ||
+        resMS.data.length > 0
+      ) {
         setValues({
           ...values,
           chatLieu: {
@@ -192,6 +216,12 @@ function AddSanPham() {
           },
           nhaSanXuat: {
             id: resNSX.data[0].id
+          },
+          kichCo: {
+            id: resKC.data[0].id
+          },
+          mauSac: {
+            id: resMS.data[0].id
           }
         });
       }
@@ -233,6 +263,32 @@ function AddSanPham() {
           id: ''
         }
       });
+    }
+  };
+
+  const handleAddKC = (event) => {
+    event.preventDefault();
+    addKichCo(valuesCL);
+  };
+
+  const addKichCo = (value) => {
+    const res = postKC(value);
+    if (res) {
+      toast.success('Thêm thành công !');
+      closeModal();
+    }
+  };
+
+  const handleAddMS = (event) => {
+    event.preventDefault();
+    addMS(valuesMS);
+  };
+
+  const addMS = (value) => {
+    const res = postMS(value);
+    if (res) {
+      toast.success('Thêm thành công !');
+      closeModal();
     }
   };
 
@@ -315,7 +371,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -352,7 +408,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>
             <select
@@ -389,7 +445,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -426,7 +482,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -493,6 +549,20 @@ function AddSanPham() {
           values={valuesCL}
           setValues={setValuesCL}
         />
+        <MyVerticallyCenteredModal
+          show={modalShowKC}
+          onHide={() => setModalShowKC(false)}
+          handleSubmit={handleAddKC}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
+        <AddMauSac
+          show={modalShowMS}
+          onHide={() => setModalShowMS(false)}
+          handleSubmit={handleAddMS}
+          values={valuesMS}
+          setValues={setValuesMS}
+        />
       </MainCard>
       {!isHidden && (
         <div className="hidden-element">
@@ -501,12 +571,27 @@ function AddSanPham() {
               <div className="col-12">
                 <h2>Thuộc tính</h2>
               </div>
+              <br></br>
               <div className="col-12 row">
                 <div className="col-6">
                   <div className="form-inline">
-                    <label style={{ fontWeight: 'bold' }} className="form-label me-3 mb-3">
-                      Màu sắc:
-                    </label>
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3" htmlFor="trang-thai6">
+                      Màu sắc:{' '}
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="fa-solid"
+                        onClick={() => setModalShowMS(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setModalShowMS(true);
+                          }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
+                      </span>
+                    </label>{' '}
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
@@ -519,9 +604,23 @@ function AddSanPham() {
                 </div>
                 <div className="col-6">
                   <div className="form-inline">
-                    <label style={{ fontWeight: 'bold' }} className="form-label me-3 mb-3">
-                      Kích cỡ:
-                    </label>
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3" htmlFor="trang-thai6">
+                      Kích cỡ:{' '}
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="fa-solid"
+                        onClick={() => setModalShowKC(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setModalShowKC(true);
+                          }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
+                      </span>
+                    </label>{' '}
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"

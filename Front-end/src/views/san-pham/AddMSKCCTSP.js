@@ -55,7 +55,7 @@ function AddMSKCCTSP(props) {
                     }
                   />
                   <label className="form-check-label" htmlFor={d.id}>
-                    <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                    <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>&nbsp;</div>
                   </label>
                 </div>
               ))}
@@ -98,15 +98,18 @@ function AddMSKCCTSP(props) {
               <div className="form-check form-check-inline">
                 <input
                   type="number"
+                  min={1}
                   className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Nhập số lượng"
-                  onChange={(e) =>
-                    setValues({
-                      ...values,
-                      soLuong: e.target.value
-                    })
-                  }
+                  // value={values.soLuong}
+                  onChange={(e) => {
+                    if (e.target.value >= 1) {
+                      setValues({ ...values, soLuong: e.target.value });
+                    } else {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
             </div>
