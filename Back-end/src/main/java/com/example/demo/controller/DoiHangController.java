@@ -45,6 +45,24 @@ public class DoiHangController {
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
             hoaDonChiTiet.setLichSuSoLuongYeuCauDoi(hoaDonChiTiet.getSoLuongYeuCauDoi());
+            HoaDonChiTiet hd = hoaDonChiTietService.findById(hoaDonChiTiet.getId());
+            ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDonChiTiet.getChiTietSanPham().getId());
+            if (hd != null && sp != null && hoaDonChiTiet.getSoLuongHangDoi() != null) {
+                if (hoaDonChiTiet.getSoLuongHangDoi() > hd.getSoLuongHangDoi()) {
+                    chiTietSanPhamService.update(sp.getSoLuong() -
+                                    (hoaDonChiTiet.getSoLuongHangDoi() - hd.getSoLuongHangDoi()),
+                            hoaDonChiTiet.getChiTietSanPham().getId());
+                    hoaDonChiTietService.updateSLDH(hoaDonChiTiet.getSoLuongHangDoi(), hd.getId());
+                    return ResponseEntity.ok("Tang cthd, giam ctsp");
+                } else {
+                    // Không tìm thấy cặp id hoá đơn và id sản phẩm trong cơ sở dữ liệu, thực hiện thêm mới
+                    chiTietSanPhamService.update(sp.getSoLuong() +
+                                    (hd.getSoLuongHangDoi() - hoaDonChiTiet.getSoLuongHangDoi()),
+                            hoaDonChiTiet.getChiTietSanPham().getId());
+                    hoaDonChiTietService.updateSLDH(hoaDonChiTiet.getSoLuongHangDoi(), hd.getId());
+                    return ResponseEntity.ok("Giam cthd, tang ctsp");
+                }
+            }
         }
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
         return ResponseEntity.ok("ok");
@@ -98,15 +116,8 @@ public class DoiHangController {
                 existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
                 break;
             }
-            if (hdct.getSoLuongHangDoi() != null &&
-                    hdct.getId().equals(doiHangDTO.getHoaDonChiTiet().getId()) &&
-                    hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
-
-                // Check if the current HoaDonChiTiet has the same idHDCT and idCTSP
-                hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
-                break; // Break out of the loop once the update is done
-            }
         }
+        // Tạo hoá đơn chi tiết mới từ dữ liệu DTO
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet().builder()
                 .chiTietSanPham(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham())
                 .doiHang(existingDoiHang)
@@ -114,6 +125,17 @@ public class DoiHangController {
                 .donGia(doiHangDTO.getHoaDonChiTiet().getDonGia())
                 .soLuongHangDoi(doiHang.getSoHangDoi())
                 .build();
+
+        HoaDonChiTiet matchedHoaDonChiTiet = null;
+        HoaDonChiTiet matchedHoaDonChiTiet2 = null;
+        for (HoaDonChiTiet hdct : list) {
+            if (hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId())) {
+                matchedHoaDonChiTiet = hdct;
+            }
+            if (hdct.getChiTietSanPham().getId().equals(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId()) || hdct.getSoLuong() != null) {
+                matchedHoaDonChiTiet2 = hdct;
+            }
+        }
 
         if (existingDoiHang != null) {
             // Đã có đổi hàng, cộng dồn số lượng hàng đổi và tổng tiền hàng đổi vào hóa đơn chi tiết
@@ -130,30 +152,32 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
-                hoaDonChiTietService.add(hdct);
+//                hoaDonChiTietService.add(hdct);
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(existingDoiHang);
                     hoaDonChiTietService.add(hdct);
                 }
-//                else {
-//                    ChiTietSanPham existingCTSP = hdct.getChiTietSanPham();
-//                    HoaDon existingHD = hdct.getHoaDon();
-//                    hdct.setHoaDon(existingHD);
-//                    hdct.setChiTietSanPham(existingCTSP);
-//                    hdct.setSoLuongHangDoi(doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi() + hdct.getSoLuongHangDoi());
-//                }
             }
-
-            hoaDonChiTietService.add(hoaDonChiTiet);
+            ChiTietSanPham sp = chiTietSanPhamService.detail(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId());
+            if (matchedHoaDonChiTiet2 != null) {
+                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
+            }
+            if (matchedHoaDonChiTiet != null) {
+                if (matchedHoaDonChiTiet.getSoLuong() != null) {
+                    chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                    return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
+                }
+                // Tìm thấy hoá đơn chi tiết, cập nhật số lượng đổi hàng
+                matchedHoaDonChiTiet.setSoLuongHangDoi(matchedHoaDonChiTiet.getSoLuongHangDoi() + doiHangDTO.getDoiHang().getSoHangDoi());
+                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                return ResponseEntity.ok(hoaDonChiTietService.add(matchedHoaDonChiTiet));
+            }
+            chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+            return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
         } else {
             // Thêm mới đổi hàng
             doiHangService.add(doiHang);
-
-//            // Thêm mới hoá đơn chi tiết
-//            HoaDonChiTiet hoaDonChiTiet = doiHangDTO.getHoaDonChiTiet();
-//            hoaDonChiTiet.setDoiHang(doiHang);
-//            hoaDonChiTietService.add(hoaDonChiTiet);
-
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
                 if (hdct.getDoiHang() == null) {
@@ -161,10 +185,24 @@ public class DoiHangController {
                     hoaDonChiTietService.add(hdct);
                 }
             }
-            hoaDonChiTietService.add(hoaDonChiTiet);
+            ChiTietSanPham sp = chiTietSanPhamService.detail(doiHangDTO.getHoaDonChiTiet().getChiTietSanPham().getId());
+            if (matchedHoaDonChiTiet2 != null) {
+                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
+            }
+            if (matchedHoaDonChiTiet != null) {
+                if (matchedHoaDonChiTiet.getSoLuong() != null) {
+                    chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                    return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
+                }
+                // Tìm thấy hoá đơn chi tiết, cập nhật số lượng đổi hàng
+                matchedHoaDonChiTiet.setSoLuongHangDoi(matchedHoaDonChiTiet.getSoLuongHangDoi() + doiHangDTO.getDoiHang().getSoHangDoi());
+                chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+                return ResponseEntity.ok(hoaDonChiTietService.add(matchedHoaDonChiTiet));
+            }
+            chiTietSanPhamService.update(sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi(), sp.getId());
+            return ResponseEntity.ok(hoaDonChiTietService.add(hoaDonChiTiet));
         }
-
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("delete/{id}")
