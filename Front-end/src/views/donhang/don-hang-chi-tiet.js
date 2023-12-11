@@ -1856,6 +1856,7 @@ function DonHangCT() {
     const res = await deleteSPDH(idHDCT);
     if (res) {
       toast.success('Xoá thành công');
+      handleSearchSPofDH();
       let sum = 0;
       dataHDCT.forEach((d) => {
         sum += d.soLuongYeuCauDoi * d.donGia;
@@ -1885,6 +1886,7 @@ function DonHangCT() {
     const res = await updateSLDoiHang(value);
     if (res) {
       // findAll(dataHDCT[0].hoaDon.id);
+      handleSearchSPofDH();
     }
   };
 
@@ -1924,6 +1926,7 @@ function DonHangCT() {
     let res = await addSPToDH(value);
     if (res) {
       setIsshow(true);
+      handleSearchSPofDH();
       setIsshowDH(false);
       setIsshowMSKC(false);
       findAll(id);
