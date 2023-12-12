@@ -130,7 +130,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={575}
+                    height={600}
                   />
                 ) : (
                   <div style={{ height: 529 }} className="empty-icon-container">
@@ -174,7 +174,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={575}
+                    height={600}
                   />
                 ) : (
                   <div style={{ height: 528 }} className="empty-icon-container">
@@ -218,10 +218,10 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       }
                     ]}
                     width={width}
-                    height={575}
+                    height={600}
                   />
                 ) : (
-                  <div style={{ height: 529 }} className="empty-icon-container">
+                  <div style={{ height: 600 }} className="empty-icon-container">
                     <div style={{ alignItems: 'center', paddingTop: 200 }} className="animation-container">
                       <div className="bounce"></div>
                       <div className="pebble1"></div>

@@ -73,6 +73,8 @@ function DonHang(props) {
     tienGiam: 0
   });
 
+  console.log(dataDetailKM);
+
   const [valuesUpdateHD, setValuesUpdateHD] = useState({
     tenNguoiNhan: 'Khách lẻ',
     soDienThoai: '',
@@ -1489,7 +1491,7 @@ function DonHang(props) {
               </p>
             </div>
           </div>
-          <div className="ma-giam-gia">
+          {/* <div className="ma-giam-gia">
             <div>
               <h6>Mã giảm giá</h6>
             </div>
@@ -1502,7 +1504,7 @@ function DonHang(props) {
                 />{' '}
               </p>
             </div>
-          </div>
+          </div> */}
           <div className="ma-giam-gia">
             <div>
               <h6>Số lượng sản phẩm</h6>
