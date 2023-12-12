@@ -4,8 +4,8 @@ const pay = (id) => {
   return axios.get(`/api/pay/${id}`);
 };
 
-const payOnline = (tien) => {
-  return axios.get(`/api/pay?tien=${tien}`);
+const payOnline = (tien, urlReturn) => {
+  return axios.get(`/api/pay?tien=${tien}&urlReturn=${urlReturn}`);
 };
 
 export { pay, payOnline };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import MainCard from 'ui-component/cards/MainCard';
-import { Card } from '@mui/material';
+import { Avatar, Card, Pagination } from '@mui/material';
 import { getAllPageKH, deleteKH, searchKh } from 'services/KhachHangService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -224,7 +224,12 @@ const KhachHang = () => {
                     <td>{formatDate(d.ngaySinh)}</td>
                     <td>{d.gioiTinh === true ? 'Nam' : 'Nữ'}</td>
                     <td>
-                      <img src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
+                      <Avatar
+                        alt={d.tenKhachHang}
+                        src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`}
+                        sx={{ width: 80, height: 80 }}
+                      />
+                      {/* <img src={`http://localhost:8080/api/khach-hang/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} /> */}
                     </td>
                     <td>{d.trangThai === 0 ? 'Không hoạt động' : 'Hoạt động'}</td>
                     <td>
@@ -248,7 +253,16 @@ const KhachHang = () => {
                 ))}
               </tbody>
             </table>
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -265,7 +279,7 @@ const KhachHang = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

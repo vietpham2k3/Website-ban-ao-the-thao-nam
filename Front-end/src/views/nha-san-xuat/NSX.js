@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+import Pagination from '@mui/material/Pagination';
 import { toast } from 'react-toastify';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -204,8 +204,16 @@ function NhaSanXuat() {
                 ))}
               </tbody>
             </table>
-
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -222,7 +230,7 @@ function NhaSanXuat() {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

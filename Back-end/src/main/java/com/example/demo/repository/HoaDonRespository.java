@@ -53,16 +53,18 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "SELECT HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, \n" +
             "       SUM(HDCT.so_luong) AS tong_so_luong,\n" +
             "       SUM(HDCT.so_luong * HDCT.don_gia) as tong_tien, \n" +
-            "       HD.trang_thai, HD.loai_don\n" +
-            "FROM HoaDon HD\n" +
+            "       HD.trang_thai, HD.loai_don, \n" +
+            "       Httt.ten\n" +
+            " FROM HoaDon HD\n" +
             "JOIN HoaDonChiTiet HDCT ON HD.id = HDCT.id_hd\n" +
+            "JOIN HinhThucThanhToan Httt ON HD.id_httt = Httt.id\n" +
             "WHERE ((:key IS NULL OR HD.ma LIKE CONCAT('%', :key, '%')) \n" +
             "       OR (:key IS NULL OR HD.ten_nguoi_nhan LIKE CONCAT('%', :key, '%')))\n" +
             "       AND (:tuNgay IS NULL OR HD.ngay_tao >= :tuNgay) \n" +
             "       AND (:denNgay IS NULL OR HD.ngay_tao <= :denNgay) \n" +
             "       AND (HD.trang_thai IN :trangThai) \n" +
             "       AND (:loaiDon IS NULL OR HD.loai_don = :loaiDon)\n" +
-            "GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.trang_thai, HD.loai_don\n" +
+            "GROUP BY HD.id, HD.ma, HD.ten_nguoi_nhan, HD.ngay_tao, HD.trang_thai, HD.loai_don, Httt.ten\n" +
             "HAVING ((:minSL IS NULL OR SUM(HDCT.so_luong) >= :minSL) \n" +
             "       AND (:maxSL IS NULL OR SUM(HDCT.so_luong) <= :maxSL)) \n" +
             "       AND ((:minTT IS NULL OR SUM(HDCT.so_luong * HDCT.don_gia) >= :minTT) \n" +
@@ -121,6 +123,8 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
             "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
             "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.phuong_thuc_thanh_toan, '') as pttt,\n" +
+            "  ISNULL(DH.tien_khach_phai_tra, '') as tienKhachTra,\n" +
             "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
             "FROM\n" +
             "  DoiHang DH\n" +
@@ -129,13 +133,16 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "WHERE id_hd = :idHD", nativeQuery = true)
     List<String> doiHang(@Param("idHD") UUID idHD);
 
-    @Query(value = "SELECT\n" +
+    @Query(value = "SELECT" +
+            "  DH.id, \n" +
             "  DH.ma,\n" +
             "  ISNULL(DH.tong_tien_hang_doi, '') as tong_tien_hang_doi,\n" +
             "  ISNULL(DH.so_hang_doi, '') as so_hang_doi,\n" +
             "  ISNULL(DH.trang_thai, '') as trang_thai,\n" +
             "  ISNULL(DH.ngay_tao, '') as ngay_tao,\n" +
             "  ISNULL(DH.nguoi_tao, '') as nguoi_tao,\n" +
+            "  ISNULL(DH.phuong_thuc_thanh_toan, '') as pttt,\n" +
+            "  ISNULL(DH.tien_khach_phai_tra, '') as tienKhachTra,\n" +
             "  ISNULL(DH.ghi_chu, '') as ghi_chu\n" +
             "FROM\n" +
             "  DoiHang DH\n" +
@@ -284,7 +291,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "                DAY(HD.ngay_thanh_toan) = DAY(GETDATE())AND\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 16", nativeQuery = true)
+            "              AND HD.trang_thai = 15", nativeQuery = true)
     public Integer soDonTraNgay();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_ngay\n" +
@@ -326,7 +333,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
             "            FROM HoaDon HD WHERE\n" +
             "             MONTH(HD.ngay_thanh_toan) = MONTH(GETDATE()) AND\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 16", nativeQuery = true)
+            "              AND HD.trang_thai = 15", nativeQuery = true)
     public Integer soDonTraThang();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_thang\n" +
@@ -363,7 +370,7 @@ public interface HoaDonRespository extends JpaRepository<HoaDon, UUID> {
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +
             "            FROM HoaDon HD WHERE\n" +
             "            YEAR(HD.ngay_thanh_toan) = YEAR(GETDATE())\n" +
-            "              AND HD.trang_thai = 16", nativeQuery = true)
+            "              AND HD.trang_thai = 15", nativeQuery = true)
     public Integer soDonTraNam();
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) AS so_don_nam\n" +

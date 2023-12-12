@@ -31,13 +31,42 @@ function AddKhuyenMai() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    if (values.ma === '') {
+      toast.error('Không được để trống mã !');
+      return;
+    }
+    if (values.ten === '') {
+      toast.error('Không được để trống tên !');
+      return;
+    }
+    if (values.moTa === '') {
+      toast.error('Không được để trống mô tả !');
+      return;
+    }
+    if (values.tien === '') {
+      toast.error('Không được để trống tiền giảm tối thiểu !');
+      return;
+    }
+    if (values.thoiGianBatDau === '') {
+      toast.error('Không được để trống thời gian bắt đầu!');
+      return;
+    }
+    if (values.thoiGianKetThuc === '') {
+      toast.error('Không được để trống thời gian kết thúc!');
+      return;
+    }
+    const startDate = new Date(values.thoiGianBatDau);
+    const endDate = new Date(values.thoiGianKetThuc);
+    if (endDate <= startDate) {
+      toast.error('Ngày kết thúc phải lớn hơn ngày bắt đầu!');
+      return;
+    }
     if (values.loaiGiam === '') {
       toast.error('Vui lòng chọn loại giảm');
       return;
     }
 
-    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 100)) {
+    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 80)) {
       toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
@@ -81,7 +110,6 @@ function AddKhuyenMai() {
                   className="form-control"
                   type="text"
                   value={values.ma}
-                  disabled
                   onChange={(event) => setValues({ ...values, ma: event.target.value })}
                   style={{ fontWeight: 'bold' }}
                 />
@@ -109,7 +137,7 @@ function AddKhuyenMai() {
                     className={values.loaiGiam ? 'active' : ''}
                     onClick={() => setValues({ ...values, loaiGiam: true })}
                   >
-                    VND
+                    VNĐ
                   </Button>
                   <Button
                     variant="outline-secondary"

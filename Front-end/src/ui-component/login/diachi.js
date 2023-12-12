@@ -382,12 +382,10 @@ function DiaChi() {
     <div>
       <Header productCount={productCount} toggleSearchInput={toggleSearchInput} showSearchInput={showSearchInput} />
       <div className="container">
-        <div className="row slide-bar">
-          <div className="col-2">
+        <div className="row slide-bar mt-4">
+          <div className="col-3 slide-bar-children">
             <SlideBar></SlideBar>
           </div>
-
-          <div className="separator"></div>
           <div className="col-9">
             <div className="user-details">
               <div className="address-header">

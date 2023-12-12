@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+import Pagination from '@mui/material/Pagination';
 import MainCard from 'ui-component/cards/MainCard';
-import { Card } from '@mui/material';
+import { Avatar, Card } from '@mui/material';
 import { getAllPageNV, deleteNhanVien, searchNV } from 'services/NhanVienService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -72,6 +72,8 @@ const NhanVien = () => {
 
     return formattedDate;
   }
+
+  console.log(data);
 
   return (
     <div>
@@ -170,7 +172,8 @@ const NhanVien = () => {
                     <td>{d.gioiTinh === true ? 'Nam' : 'Nữ'}</td>
                     <td>{d.trangThai === 0 ? 'Hoạt động' : 'Không hoạt động'}</td>
                     <td>
-                      <img src={`http://localhost:8080/api/nhanvien/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} />
+                      <Avatar alt={d.ten} src={`http://localhost:8080/api/nhanvien/getAll/${d.id}`} sx={{ width: 80, height: 80 }} />
+                      {/* <img src={`http://localhost:8080/api/nhanvien/getAll/${d.id}`} alt="" style={{ width: '90px', height: '100px' }} /> */}
                     </td>
 
                     <td>
@@ -189,7 +192,16 @@ const NhanVien = () => {
                 ))}
               </tbody>
             </table>
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -206,7 +218,7 @@ const NhanVien = () => {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

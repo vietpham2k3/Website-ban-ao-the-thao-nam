@@ -13,7 +13,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
 import ButtonMUI from '@mui/material/Button';
-import { toast } from 'react-toastify';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 
 function ModalTraHang(props) {
   const {
@@ -39,12 +42,11 @@ function ModalTraHang(props) {
     totalAmountDHSP,
     setTotalAmountDHSP,
     handleDoiHang,
-    setGhiChu,
-    ghiChu,
     yeuCauDoi,
-    setYeuCauDoi
+    setYeuCauDoi,
+    totalAmount
   } = props;
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('Khác');
 
   // Hàm để thêm trường maxQuantity vào mỗi phần tử của mảng dataSPDoi
   const addMaxQuantityToData = () => {
@@ -73,14 +75,9 @@ function ModalTraHang(props) {
       sumDH += d.soLuongYeuCauDoi * d.donGia;
       sumDG += d.donGia;
     });
-    setTotalAmount(sumDH - sum);
+    setTotalAmount(sum - sumDH);
     setTotalAmountDH(sumDH);
     setTotalAmountDHSP(sumDG);
-    if (sumDH - sum < 0) {
-      toast.error('Bạn đã vượt quá số tiền hàng của bạn');
-      updatedDataHDCT[i].soLuongHangDoi = e - 1;
-      return;
-    }
     // Thêm trường maxQuantity vào mỗi phần tử của mảng newDataSPDoi
     const dataWithMaxQuantity = addMaxQuantityToData();
     // Cập nhật state với số lượng mới của sản phẩm và maxQuantity tương ứng
@@ -93,14 +90,12 @@ function ModalTraHang(props) {
         trangThai: 15,
         tongTienHangDoi: sum,
         soHangDoi: count,
-        nguoiTao: dataLogin.tenKhachHang
+        nguoiTao: dataLogin.ten,
+        tienKhachPhaiTra: sum - sumDH
       }
     });
-    console.log(count);
     setIsUpdateHD(true);
   };
-
-  console.log(valuesAdd);
 
   const handleChangeHD = (e, i) => {
     // Cập nhật số lượng vào sản phẩm d
@@ -120,7 +115,7 @@ function ModalTraHang(props) {
       sumDG += d.donGia;
       count += d.soLuongYeuCauDoi;
     });
-    setTotalAmount(sum - sumDH);
+    setTotalAmount(sumDH - sum);
     setTotalAmountDH(sum);
     setTotalAmountDHSP(sumDG);
     setValuesAdd({
@@ -130,14 +125,25 @@ function ModalTraHang(props) {
         trangThai: 15,
         tongTienHangDoi: sum,
         soHangDoi: count,
-        nguoiTao: dataLogin.tenKhachHang
+        nguoiTao: dataLogin.tenKhachHang,
+        tienKhachPhaiTra: sumDH - sum
       }
     });
   };
 
+  console.log(valuesAdd);
+
   return (
     <div>
-      <Modal show={show} onHide={handleClose} centered size="lg" keyboard={false} backdrop="static">
+      <Modal
+        style={{ paddingTop: 90, marginLeft: 150 }}
+        show={show}
+        onHide={handleClose}
+        centered
+        size="lg"
+        keyboard={false}
+        backdrop="static"
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             Đổi hàng{'   '}
@@ -149,14 +155,14 @@ function ModalTraHang(props) {
         <Modal.Body style={{ height: '100%' }}>
           {dataHDCT.map((d, i) => (
             <div key={i} className="d-flex">
-              <div className="me-3 mb-3" style={{}}>
+              <div className="me-3 mb-3">
                 <img
                   src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
                   alt=""
                   style={{ width: 120, borderRadius: 15 }}
                 />
               </div>
-              <div className="mt-3" style={{ width: 200 }}>
+              <div className="mt-3" style={{ width: 250 }}>
                 <p>
                   {d.chiTietSanPham.sanPham.ten}
                   <br />
@@ -169,9 +175,9 @@ function ModalTraHang(props) {
                   key={d.id}
                   type={'real'}
                   max={d.soLuong}
-                  min={0}
+                  min={null}
                   step={1}
-                  value={d.soLuongYeuCauDoi || 0} // Sử dụng counts[i] thay vì count
+                  value={d.soLuongYeuCauDoi || null} // Sử dụng counts[i] thay vì count
                   onChange={(e) => handleChangeHD(e, i)}
                   variant={'dark'}
                   size="sm"
@@ -210,7 +216,7 @@ function ModalTraHang(props) {
                 <InputSpinner
                   key={d.id}
                   type={'real'}
-                  max={d.maxQuantity || d.chiTietSanPham.soLuong}
+                  max={d.chiTietSanPham.soLuong}
                   min={1}
                   step={1}
                   value={d.soLuongHangDoi || 0}
@@ -252,10 +258,60 @@ function ModalTraHang(props) {
           {(value === 'Khác' || yeuCauDoi.lichSuHoaDon.ghiChu === '') && (
             <TextField
               style={{ width: '100%' }}
-              label="Lý do trả hàng đơn hàng"
               variant="outlined"
               onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
             />
+          )}
+          {totalAmount !== 0 && totalAmount > 0 && (
+            <div className="d-flex justify-content-between align-items-center">
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>
+                <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                  {totalAmount < 50000000 && (
+                    <FormControlLabel
+                      // checked={true}
+                      value={true}
+                      control={<Radio />}
+                      label="Tiền mặt"
+                      onChange={() =>
+                        setValuesAdd({
+                          ...valuesAdd,
+                          doiHang: {
+                            ...valuesAdd.doiHang,
+                            phuongThucThanhToan: true
+                          }
+                        })
+                      }
+                    />
+                  )}
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="VNPAY"
+                    onChange={() =>
+                      setValuesAdd({
+                        ...valuesAdd,
+                        doiHang: {
+                          ...valuesAdd.doiHang,
+                          phuongThucThanhToan: false
+                        }
+                      })
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              {totalAmount > 0 && (
+                <h4>
+                  Khách phải trả: <span style={{ color: 'red' }}> {convertToCurrency(totalAmount)}</span>
+                </h4>
+              )}
+            </div>
+          )}
+          {totalAmount < 0 && (
+            <h4 style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
+              Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
+            </h4>
           )}
         </Modal.Body>
         <Modal.Footer>

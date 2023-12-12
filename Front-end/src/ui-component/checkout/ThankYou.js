@@ -15,7 +15,6 @@ function ThankYou() {
   const idGH = localStorage.getItem('idGH') || '';
   const urlParams = new URLSearchParams(window.location.search);
   const transactionNo = urlParams.get('vnp_TransactionNo');
-  console.log(transactionNo); // Log ra giá trị của vnp_TransactionNo từ URL
 
   useEffect(() => {
     if (!dataLogin) {
@@ -30,7 +29,9 @@ function ThankYou() {
     if (idGH) {
       countSP(idGH);
     }
-    save(id, transactionNo);
+    if (transactionNo) {
+      save(id, transactionNo);
+    }
   }, [dataLogin, id, idGH, productCount, transactionNo]);
 
   const save = async (id, transactionNo) => {

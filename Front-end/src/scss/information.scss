@@ -1,6 +1,6 @@
 /* UserAccount.css */
 
-.card-box {
+.card-box1 {
   width: 100%;
   // border-radius: 15px;
   box-shadow: 0px 0px 5px 0.2px rgba(0, 0, 0, 0.8);
@@ -46,10 +46,10 @@
 }
 
 button {
-  padding: 10px 20px;
+  // padding: 10px 20px;
   background-color: #fff; /* Màu nền trắng */
   color: #007bff; /* Màu chữ xanh */
-  border: 2px solid #007bff; /* Viền xanh */
+  // border: 2px solid #007bff; /* Viền xanh */
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* Hiệu ứng hover */
@@ -80,7 +80,6 @@ button {
   cursor: pointer;
   font-family: 'Tahoma', sans-serif;
   font-size: 16px;
-  // font-weight: bold;
   color: black;
 }
 .slide-bar-children {
@@ -97,13 +96,6 @@ button {
   background-color: #ffffff; /* Màu nền của cột 9 */
 }
 
-.separator {
-  width: 5%; /* Đặt kích thước đường dọc trắng */
-  height: 100%;
-  float: left;
-  background-color: #fff; /* Màu nền của đường dọc */
-  margin: 0;
-}
 .right-aligned-modal {
   position: fixed;
   top: 50%;
@@ -116,32 +108,27 @@ button {
   max-width: 80%;
 }
 
-// .modal-content {
-//   border: 1px solid #0d89d7;
-//   padding: 20px;
-//   background-color: #fff;
-// }
 .input-group {
   position: relative;
   margin-bottom: 20px;
 }
-input {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 1px solid #000;
-  outline: none;
-}
-input,
-select {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 1px solid #000;
-  background: transparent;
-  outline: none;
-  font-size: 16px;
-}
+// input {
+//   width: 100%;
+//   padding: 10px;
+//   border: none;
+//   border-bottom: 1px solid #000;
+//   outline: none;
+// }
+// input,
+// select {
+//   width: 100%;
+//   padding: 10px;
+//   border: none;
+//   border-bottom: 1px solid #000;
+//   background: transparent;
+//   outline: none;
+//   font-size: 16px;
+// }
 .button1 {
   display: flex;
   justify-content: space-between;

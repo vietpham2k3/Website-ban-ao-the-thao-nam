@@ -1,19 +1,37 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
-import ReactPaginate from 'react-paginate';
+import { Avatar, Pagination } from '@mui/material';
 import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
+import { DateRangePicker } from 'rsuite';
+import { format } from 'date-fns';
+import { addMonths, subMonths } from 'date-fns';
 
 function HangLoi() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState();
+  const [tuNgay, setTuNgay] = useState(null);
+  const [denNgay, setDenNgay] = useState(null);
+  const [term, setTerm] = useState(null);
   const [data, setData] = useState([]);
+  //ngayTao
+  const currentDate = new Date();
+  const threeMonthsAgo = subMonths(currentDate, 3);
+  const threeMonthsLater = addMonths(currentDate, 0);
+
+  const defaultCalendarValue = [threeMonthsAgo, threeMonthsLater];
+
   useEffect(() => {
     getAll(0);
   }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [term, tuNgay, denNgay]);
 
   const getAll = async (page) => {
     setCurrentPage(page);
@@ -25,22 +43,30 @@ function HangLoi() {
     }
   };
 
-  const searchHL = async (key, page) => {
-    const res = await search(key, page);
+  const searchHL = async (key, tuNgay, denNgay, page) => {
+    const res = await search(key, tuNgay, denNgay, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
     }
   };
 
-  const handleSearch = _.debounce(async (e) => {
-    let term = e.target.value;
+  const handleSearch = _.debounce(async () => {
     if (term) {
-      searchHL(term, currentPage);
+      searchHL(term, tuNgay, denNgay, currentPage);
     } else {
-      searchHL('', currentPage);
+      searchHL('', tuNgay, denNgay, currentPage);
     }
   }, 100);
+
+  const handlePageClick = (event) => {
+    const selectedPage = event.selected;
+    searchHL('', tuNgay, denNgay, selectedPage);
+  };
+
+  const handleInputChange = (e) => {
+    setTerm(e.target.value);
+  };
 
   //Format date
   function formatDate(dateString) {
@@ -62,17 +88,50 @@ function HangLoi() {
     return formattedDate;
   }
 
+  const handleDateChange = (selectedRange) => {
+    if (selectedRange && selectedRange[0] && selectedRange[1]) {
+      const startDate = selectedRange[0];
+      const endDate = selectedRange[1];
+
+      const formattedStartDate = format(startDate, 'dd/MM/yyyy HH:mm aa');
+      const formattedEndDate = format(endDate, 'dd/MM/yyyy HH:mm aa');
+
+      setTuNgay(formattedStartDate);
+      setDenNgay(formattedEndDate);
+    }
+  };
+
   return (
     <div>
       <MainCard>
-        <div className="search">
-          <input
-            style={{ borderRadius: 15, width: 300, height: 40, paddingBottom: 3, paddingLeft: 10 }}
-            type="text"
-            className="input-search"
-            placeholder=" Nhập tên, mã màu cần tìm..."
-            onChange={handleSearch}
-          />
+        <div className="row">
+          <div className="text-center">
+            <h1>Hàng lỗi</h1>
+          </div>
+          <div className="col-6">
+            <div className="search">
+              <input
+                style={{ borderRadius: 15, width: 300, height: 40, paddingBottom: 3, paddingLeft: 10 }}
+                type="text"
+                className="input-search"
+                placeholder=" Nhập tên, mã màu cần tìm..."
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <div className="col-3">
+            <DateRangePicker
+              format="dd/MM/yyyy HH:mm aa"
+              showMeridian
+              defaultCalendarValue={defaultCalendarValue}
+              onChange={handleDateChange}
+              onClean={() => {
+                setTuNgay(null);
+                setDenNgay(null);
+              }}
+              // disabledDate={disabledDate}
+            />
+          </div>
         </div>
         <Table style={{ marginTop: 20 }}>
           <tr>
@@ -82,7 +141,7 @@ function HangLoi() {
             <th style={{ textAlign: 'center' }}>Số lượng</th>
             <th style={{ textAlign: 'center' }}>Ghi chú</th>
             <th style={{ textAlign: 'center' }}>Ngày tạo</th>
-            <th style={{ textAlign: 'center' }}>Người tạo</th>
+            <th style={{ textAlign: 'center' }}>Người xác nhận</th>
           </tr>
           <tbody>
             {data.map((d, i) => (
@@ -90,10 +149,12 @@ function HangLoi() {
                 <td style={{ textAlign: 'center' }}>{i + 1}</td>
                 <td>
                   <div className="d-flex justify-content-start">
-                    <img
+                    <Avatar
+                      alt={d.chiTietSanPham.sanPham.ten}
                       src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                      className="product-image me-3"
-                      style={{ width: '70px', height: '100px', borderRadius: 15 }}
+                      sx={{ width: 80, height: 110 }}
+                      variant="rounded"
+                      className="me-3"
                     />
                     <div>
                       {d.chiTietSanPham.sanPham.ten} <br />
@@ -113,7 +174,16 @@ function HangLoi() {
             ))}
           </tbody>
         </Table>
-        <ReactPaginate
+        <Pagination
+          count={totalPages}
+          onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+          variant="text"
+          color="primary"
+          showFirstButton
+          showLastButton
+          className="d-flex justify-content-center"
+        />
+        {/* <ReactPaginate
           breakLabel="..."
           nextLabel="Next >"
           //   onPageChange={handlePageClick}
@@ -130,7 +200,7 @@ function HangLoi() {
           breakLinkClassName="page-link"
           containerClassName="pagination justify-content-center"
           activeClassName="active"
-        />
+        /> */}
       </MainCard>
     </div>
   );

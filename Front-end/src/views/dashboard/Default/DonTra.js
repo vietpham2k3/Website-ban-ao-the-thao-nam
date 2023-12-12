@@ -148,7 +148,7 @@ const DonTra = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">ĐƠN TRẢ THÀNH CÔNG</Typography>}
+                  primary={<Typography variant="h4">ĐƠN ĐỔI HÀNG</Typography>}
                   secondary={
                     <Typography
                       variant="subtitle2"

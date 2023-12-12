@@ -86,7 +86,7 @@ public class CoAoServiceImpl implements CoAoService {
         coAo.setTrangThai(1);
         coAo.setNgaySua(new Date());
         coAo.setNgayTao(coAo.getNgayTao());
-        coAo.setTen(coAo.getMa());
+        coAo.setTen(coAo.getTen());
         return repository.save(coAo);
     }
 

@@ -36,6 +36,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -128,6 +129,7 @@ public class NhanVienController {
         if (anhBytes != null) {
             anhBase64 = Base64.getEncoder().encodeToString(anhBytes);
         }
+        VaiTro vaiTro = vtService.detail(nhanVien.getVaiTro().getId());
 
         NhanVienRequest nhanVienRequest = new NhanVienRequest();
         nhanVienRequest.setId(nhanVien.getId());
@@ -142,7 +144,7 @@ public class NhanVienController {
         nhanVienRequest.setNguoiTao(nhanVien.getNguoiTao());
         nhanVienRequest.setNguoiSua(nhanVien.getNguoiSua());
         nhanVienRequest.setMatKhau(nhanVien.getMatKhau());
-        nhanVienRequest.setVaiTro(VaiTro.builder().id(nhanVien.getId()).build());
+        nhanVienRequest.setVaiTro(vaiTro);
         nhanVienRequest.setGioiTinh(nhanVien.getGioiTinh());
         nhanVienRequest.setTrangThai(nhanVien.getTrangThai());
         nhanVienRequest.setAnh(anhBase64);
@@ -158,19 +160,27 @@ public class NhanVienController {
             @RequestParam("email") String email,
             @RequestParam("diaChi") String diaChi,
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
-            @RequestParam("vaiTro") String vaiTro,
+            @RequestParam("vaiTro") String tenVaiTro,
             @RequestParam("gioiTinh") Boolean gioiTinh,
             @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         NhanVien nv = new NhanVien();
         String ma = "NV" + new Random().nextInt(100000);
+        String maVT = "VT" + new Random().nextInt(100000);
+        VaiTro vaiTro = new VaiTro().builder()
+                .ma(maVT)
+                .ten(tenVaiTro)
+                .trangThai(0)
+                .ngayTao(new Date())
+                .build();
+        vaiTro = vtService.add(vaiTro);
         nv.setMa(ma);
         nv.setTen(ten);
         nv.setSdt(sdt);
         nv.setEmail(email);
         nv.setDiaChi(diaChi);
         nv.setNgaySinh(ngaySinh);
-        nv.setVaiTro(VaiTro.builder().id(UUID.fromString(vaiTro)).build());
+        nv.setVaiTro(vaiTro);
         nv.setGioiTinh(gioiTinh);
         nv.setTrangThai(trangThai);
 
@@ -198,6 +208,12 @@ public class NhanVienController {
                 + "<p>Lưu ý: Đây là mật khẩu mặc định được tạo bởi hệ thống, bạn vui lòng đổi lại để đảm bảo an toàn thông tin</p>"
                 + "<p>Đây là email tự động vui lòng không trả lời.</p>";
         emailService.sendEmail(email, subject, body);
+        List<NhanVien> list = service.fillAll();
+        for (NhanVien nhanVien : list) {
+            if(nv.getEmail().equalsIgnoreCase(nhanVien.getEmail())){
+                return ResponseEntity.ok("Email này đã tồn tại");
+            }
+        }
 
         // Save the nv object
         NhanVien saveNhanVien = service.add(nv);
@@ -260,11 +276,13 @@ public class NhanVienController {
                                     @RequestParam("diaChi") String diaChi,
                                     @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaySinh,
                                     @RequestParam("matKhau") String matKhau,
-                                    @RequestParam("vaiTro") String vaiTro,
+                                    @RequestParam("vaiTro") String tenVaiTro,
                                     @RequestParam("gioiTinh") Boolean gioiTinh,
                                     @RequestParam("trangThai") Integer trangThai) throws IOException, SQLException {
         // Create a new KhachHang object
         NhanVien nv = service.getOne(id);
+        VaiTro vaiTro = vtService.getOne(nv.getVaiTro().getId());
+        vaiTro.setTen(tenVaiTro);
 
         nv.setTen(ten);
         nv.setSdt(sdt);
@@ -272,7 +290,7 @@ public class NhanVienController {
         nv.setDiaChi(diaChi);
         nv.setNgaySinh(ngaySinh);
         nv.setMatKhau(matKhau);
-        nv.setVaiTro(VaiTro.builder().id(UUID.fromString(vaiTro)).build());
+        nv.setVaiTro(vaiTro);
         nv.setGioiTinh(gioiTinh);
         nv.setTrangThai(trangThai);
 

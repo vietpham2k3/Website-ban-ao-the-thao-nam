@@ -1,18 +1,25 @@
 import React from 'react';
 import Anhuser from '../assets/images/bieutuong.jpg';
 import { useNavigate } from 'react-router';
+import '../scss/SlideBar.scss';
+import { Avatar } from '@mui/material';
 
 function SlideBar() {
   const navigate = useNavigate();
+  const picture = localStorage.getItem('picture');
   return (
     <div>
       <ul>
         <li>
           <div className="user-column">
-            <div className="avatar">
-              <div className="avatar-image">
-                <img src={Anhuser} alt="Ảnh đại diện" />
-              </div>
+            <div className="avatar d-flex justify-content-center">
+              {picture ? (
+                <Avatar alt="Remy Sharp" src={picture} sx={{ width: 150, height: 150 }} />
+              ) : (
+                <div className="avatar-image">
+                  <img src={Anhuser} alt="Ảnh đại diện" />
+                </div>
+              )}
             </div>
           </div>
         </li>

@@ -9,18 +9,19 @@ const TableKCMS = (props) => {
   return (
     <div>
       <Modal
+        style={{ paddingTop: 150, marginLeft: 150 }}
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
-        size="md"
+        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ width: '100%' }}>
+        <Modal.Body>
           <div className="body-add-new">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -38,8 +39,8 @@ const TableKCMS = (props) => {
                     onChange={() => handleDetail(d.id, d.giaBan)}
                   />
                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>&nbsp;- {d.kichCo.ten} -{' '}
-                    {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
+                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>&nbsp;</div>
+                    &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                   </label>
                 </div>
               ))}
@@ -51,16 +52,21 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
-                onChange={(e) =>
-                  setValuesAdd({
-                    ...valuesAdd,
-                    hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
-                    doiHang: {
-                      ...valuesAdd.doiHang,
-                      soHangDoi: parseInt(e.target.value)
-                    }
-                  })
-                }
+                inputProps={{ min: 1 }}
+                onChange={(e) => {
+                  if (e.target.value >= 1) {
+                    setValuesAdd({
+                      ...valuesAdd,
+                      hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
+                      doiHang: {
+                        ...valuesAdd.doiHang,
+                        soHangDoi: parseInt(e.target.value)
+                      }
+                    });
+                  } else {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>

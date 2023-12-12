@@ -53,4 +53,10 @@ public class DoiHang {
     @Column(name = "nguoi_tao")
     private String nguoiTao;
 
+    @Column(name = "phuong_thuc_thanh_toan")
+    private Boolean phuongThucThanhToan;
+
+    @Column(name = "tien_khach_phai_tra")
+    private Double tienKhachPhaiTra;
+
 }

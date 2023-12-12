@@ -15,7 +15,10 @@ import { postCreate as postCa } from 'services/ServiceCoAo';
 import { add } from 'services/LoaiSanPhamService';
 import { postNSX } from 'services/NhaSanXuatService';
 import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
-
+import { Autocomplete, TextField } from '@mui/material';
+import AddMauSac from './AddQuicklyMauSac';
+import { postMS } from 'services/ServiceMauSac';
+import { postCreate as postKC } from 'services/KichCoService';
 function AddSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
@@ -26,6 +29,8 @@ function AddSanPham() {
   const [modalShow, setModalShow] = useState(false);
   const [modalShowCA, setModalShowCA] = useState(false);
   const [modalShowLSP, setModalShowLSP] = useState(false);
+  const [modalShowKC, setModalShowKC] = useState(false);
+  const [modalShowMS, setModalShowMS] = useState(false);
   const [modalShowNSX, setModalShowNSX] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
   const [confirmClicked, setConfirmClicked] = useState(false);
@@ -60,6 +65,12 @@ function AddSanPham() {
     trangThai: 1
   });
 
+  const [valuesMS, setValuesMS] = useState({
+    ten: '#ffffffff',
+    ma: '',
+    trangThai: 0
+  });
+
   const [valuesCL, setValuesCL] = useState({
     ten: '',
     trangThai: 0
@@ -70,9 +81,16 @@ function AddSanPham() {
     setModalShow(false);
     setModalShowNSX(false);
     setModalShowLSP(false);
+    setModalShowKC(false);
+    setModalShowMS(false);
     getAllList();
     setValuesCL({
       ten: '',
+      trangThai: 0
+    });
+    setValuesMS({
+      ten: '#ffffffff',
+      ma: '',
       trangThai: 0
     });
   };
@@ -177,7 +195,14 @@ function AddSanPham() {
       setListNSX(resNSX.data);
       setListMS(resMS.data);
       setListLC(resKC.data);
-      if (resCL.data.length > 0 || resCA.data.length > 0 || resLSP.data.length > 0 || resNSX.data.length > 0) {
+      if (
+        resCL.data.length > 0 ||
+        resCA.data.length > 0 ||
+        resLSP.data.length > 0 ||
+        resNSX.data.length > 0 ||
+        resKC.data.length > 0 ||
+        resMS.data.length > 0
+      ) {
         setValues({
           ...values,
           chatLieu: {
@@ -191,9 +216,79 @@ function AddSanPham() {
           },
           nhaSanXuat: {
             id: resNSX.data[0].id
+          },
+          kichCo: {
+            id: resKC.data[0].id
+          },
+          mauSac: {
+            id: resMS.data[0].id
           }
         });
       }
+    }
+  };
+
+  const handleAutocompleteChange = (event, value) => {
+    const selectedMauSac = listMS.find((item) => item.ma === value);
+    if (selectedMauSac) {
+      setValues({
+        ...values,
+        mauSac: {
+          id: selectedMauSac.id
+        }
+      });
+    } else {
+      setValues({
+        ...values,
+        mauSac: {
+          id: ''
+        }
+      });
+    }
+  };
+
+  const handleAutocompleteChangeKC = (event, value) => {
+    const selectedKichCo = listKC.find((item) => item.ten === value);
+    if (selectedKichCo) {
+      setValues({
+        ...values,
+        kichCo: {
+          id: selectedKichCo.id
+        }
+      });
+    } else {
+      setValues({
+        ...values,
+        kichCo: {
+          id: ''
+        }
+      });
+    }
+  };
+
+  const handleAddKC = (event) => {
+    event.preventDefault();
+    addKichCo(valuesCL);
+  };
+
+  const addKichCo = (value) => {
+    const res = postKC(value);
+    if (res) {
+      toast.success('Thêm thành công !');
+      closeModal();
+    }
+  };
+
+  const handleAddMS = (event) => {
+    event.preventDefault();
+    addMS(valuesMS);
+  };
+
+  const addMS = (value) => {
+    const res = postMS(value);
+    if (res) {
+      toast.success('Thêm thành công !');
+      closeModal();
     }
   };
 
@@ -276,7 +371,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -313,7 +408,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>
             <select
@@ -350,7 +445,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -387,7 +482,7 @@ function AddSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -454,6 +549,20 @@ function AddSanPham() {
           values={valuesCL}
           setValues={setValuesCL}
         />
+        <MyVerticallyCenteredModal
+          show={modalShowKC}
+          onHide={() => setModalShowKC(false)}
+          handleSubmit={handleAddKC}
+          values={valuesCL}
+          setValues={setValuesCL}
+        />
+        <AddMauSac
+          show={modalShowMS}
+          onHide={() => setModalShowMS(false)}
+          handleSubmit={handleAddMS}
+          values={valuesMS}
+          setValues={setValuesMS}
+        />
       </MainCard>
       {!isHidden && (
         <div className="hidden-element">
@@ -462,82 +571,92 @@ function AddSanPham() {
               <div className="col-12">
                 <h2>Thuộc tính</h2>
               </div>
-              <div className="col-12">
-                <div className="col-12">
+              <br></br>
+              <div className="col-12 row">
+                <div className="col-6">
                   <div className="form-inline">
-                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3" htmlFor="trang-thai6">
                       Màu sắc:{' '}
-                    </label>
-                    {listMS.map((d, i) => (
-                      <div key={i} className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="1"
-                          id={d.id}
-                          value={d.id}
-                          onChange={() =>
-                            setValues({
-                              ...values,
-                              mauSac: {
-                                id: d.id
-                              }
-                            })
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="fa-solid"
+                        onClick={() => setModalShowMS(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setModalShowMS(true);
                           }
-                        />
-                        <label className="form-check-label" htmlFor={d.id}>
-                          <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
-                        </label>
-                      </div>
-                    ))}
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
+                      </span>
+                    </label>{' '}
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={listMS.map((item) => item.ma)}
+                      sx={{ width: '100%' }}
+                      renderInput={(params) => <TextField {...params} label="Chọn màu sắc" />}
+                      onChange={handleAutocompleteChange}
+                    />
                   </div>
                 </div>
-                <div className="col-12">
+                <div className="col-6">
                   <div className="form-inline">
-                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
+                    <label style={{ fontWeight: 'bold' }} className="form-label me-3" htmlFor="trang-thai6">
                       Kích cỡ:{' '}
-                    </label>
-                    {listKC.map((d, i) => (
-                      <div key={i} className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="2"
-                          id={d.id}
-                          value={d.id}
-                          onChange={() =>
-                            setValues({
-                              ...values,
-                              kichCo: {
-                                id: d.id
-                              }
-                            })
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="fa-solid"
+                        onClick={() => setModalShowKC(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setModalShowKC(true);
                           }
-                        />
-                        <label className="form-check-label" htmlFor={d.id}>
-                          {d.ten}
-                        </label>
-                      </div>
-                    ))}
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
+                      </span>
+                    </label>{' '}
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={listKC.map((item) => item.ten)}
+                      sx={{ width: '100%' }}
+                      renderInput={(params) => <TextField {...params} label="Chọn Kích cỡ" />}
+                      onChange={handleAutocompleteChangeKC}
+                    />
                   </div>
                 </div>
-                <div className="col-12">
+                <div className="col-6">
                   <div className="form-inline">
-                    <label style={{ fontWeight: 'bold' }} className="form-label me-3">
-                      Số lượng:{' '}
-                    </label>
                     <div className="form-check form-check-inline">
-                      <input
+                      <TextField
+                        id="standard-basic"
+                        label="Số lượng"
+                        variant="standard"
+                        // style={{
+                        //   display: 'inline-block',
+                        //   width: '100%',
+                        //   fontSize: '15px',
+                        //   fontWeight: 'bold'
+                        // }}
                         type="number"
-                        className="form-control"
-                        id="exampleFormControlInput1"
-                        placeholder="Nhập số lượng"
-                        onChange={(e) =>
-                          setValues({
-                            ...values,
-                            soLuong: e.target.value
-                          })
-                        }
+                        value={values.soLuong}
+                        onChange={(e) => {
+                          if (e.target.value >= 1) {
+                            setValues({
+                              ...values,
+                              soLuong: e.target.value
+                            });
+                          } else {
+                            e.preventDefault();
+                          }
+                        }}
+                        inputProps={{ min: 1 }}
                       />
                     </div>
                   </div>

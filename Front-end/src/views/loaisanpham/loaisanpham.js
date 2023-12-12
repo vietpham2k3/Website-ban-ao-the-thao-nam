@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
-import { Card } from '@mui/material';
+import { Card, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 // import _ from 'lodash';
@@ -208,7 +208,16 @@ function LoaiSanPham() {
               </tbody>
             </table>
 
-            <ReactPaginate
+            <Pagination
+              count={totalPages}
+              onChange={(event, page) => handlePageClick({ selected: page - 1 })}
+              variant="text"
+              color="primary"
+              showFirstButton
+              showLastButton
+              className="d-flex justify-content-center"
+            />
+            {/* <ReactPaginate
               breakLabel="..."
               nextLabel="Next >"
               onPageChange={handlePageClick}
@@ -225,7 +234,7 @@ function LoaiSanPham() {
               breakLinkClassName="page-link"
               containerClassName="pagination justify-content-center"
               activeClassName="active"
-            />
+            /> */}
           </div>
         </Card>
       </MainCard>

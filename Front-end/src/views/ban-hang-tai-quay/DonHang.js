@@ -36,10 +36,11 @@ import { PDFDownloadLink, Document, Page, Text, StyleSheet, Font, View } from '@
 import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
+import { Avatar, TextField } from '@mui/material';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id, getAllHD } = props;
+  const { id, getAllHD, handleAddHoaDonTabs, valuesHoaDonTabs } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState(true);
@@ -59,7 +60,8 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -234,6 +236,8 @@ function DonHang(props) {
     }
   });
 
+  console.log(tienThua);
+
   const InvoiceDocument = () => {
     return (
       <Document>
@@ -250,10 +254,12 @@ function DonHang(props) {
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
-            <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
-            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            {dataDetailHD && dataDetailHD.diaChi && <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>}
+            {dataDetailHD && dataDetailHD.soDienThoai && (
+              <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
+            )}
             <Text style={styles.textThuocTinh}>
-              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+              Nhân viên bán hàng: {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
             </Text>
           </div>
           <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
@@ -289,12 +295,8 @@ function DonHang(props) {
               </View>
             ))}
             <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textLeft}>Tiền khách thanh toán</Text>
               <Text style={styles.textRight}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</Text>
-            </View>
-            <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền thừa</Text>
-              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
             </View>
           </View>
           <View>
@@ -492,6 +494,9 @@ function DonHang(props) {
   const ThanhToanHD = async (idHD, nguoiTao) => {
     const res = await thanhToan(idHD, nguoiTao);
     if (res) {
+      if (valuesHoaDonTabs <= 1) {
+        handleAddHoaDonTabs();
+      }
       toast.success('Thanh toán thành công');
       getAllHD();
     }
@@ -594,7 +599,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten));
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -609,7 +614,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten));
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -951,7 +956,7 @@ function DonHang(props) {
                 ></span>
               </button>
             </div>
-            <Modal style={{paddingTop: 100}} centered show={isModalOpen} onHide={closeModal}>
+            <Modal style={{ paddingTop: 100 }} centered show={isModalOpen} onHide={closeModal}>
               <Modal.Body>
                 <QrReader delay={1000} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
               </Modal.Body>
@@ -997,11 +1002,11 @@ function DonHang(props) {
                             dataSP.map((d, i) => (
                               <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
                                 <td>
-                                  <img
+                                  <Avatar
+                                    alt={d.sanPham.ten}
                                     src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                                    className="product-image"
-                                    style={{ width: '70px', height: '100px' }}
-                                    alt='"none"'
+                                    sx={{ width: 80, height: 110 }}
+                                    variant="rounded"
                                   />
                                 </td>
                                 <td>{d.sanPham.ma}</td>
@@ -1024,7 +1029,7 @@ function DonHang(props) {
                         style={{ marginLeft: 150 }}
                         backdrop="static"
                         keyboard={false}
-                        size="md"
+                        size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
                       >
@@ -1049,7 +1054,11 @@ function DonHang(props) {
                                     onChange={() => handleDetail(d.id)}
                                   />
                                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                    <div
+                                      style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}
+                                    >
+                                      &nbsp;
+                                    </div>
                                     &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                                   </label>
                                 </div>
@@ -1062,12 +1071,22 @@ function DonHang(props) {
                                   Còn lại <strong>{dataDetail.soLuong}</strong>
                                 </small>
                               </label>
-                              <input
-                                className="form-control"
+                              <br />
+                              <TextField
                                 id="exampleFormControlTextarea1"
                                 type="number"
-                                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
-                              ></input>
+                                fullWidth
+                                value={valuesAdd.soLuong}
+                                onChange={(e) => {
+                                  if (e.target.value >= 1) {
+                                    setValuesAdd({ ...valuesAdd, soLuong: e.target.value });
+                                  } else {
+                                    e.preventDefault();
+                                  }
+                                }}
+                                min={1}
+                                inputProps={{ min: 1 }}
+                              ></TextField>
                             </div>
                           </div>
                         </Modal.Body>
@@ -1113,10 +1132,11 @@ function DonHang(props) {
                     <td>{i + 1}</td>
                     <td>{d.chiTietSanPham.sanPham.ma}</td>
                     <td>
-                      <img
+                      <Avatar
+                        alt={d.chiTietSanPham.sanPham.ten}
                         src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                        className="product-image"
-                        style={{ width: '70px', height: '100px' }}
+                        sx={{ width: 80, height: 110 }}
+                        variant="rounded"
                       />
                     </td>
                     <td>
@@ -1526,6 +1546,7 @@ function DonHang(props) {
                 type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
+                min={0}
               />
             </div>
           </div>
@@ -1552,14 +1573,14 @@ function DonHang(props) {
               </select>
             </div>
           </div>
-          <div className="ma-giam-gia">
+          {/* <div className="ma-giam-gia">
             <div>
               <h6>Tiền thừa</h6>
             </div>
             <div>
               <p>{convertToCurrency(tienThua)}</p>
             </div>
-          </div>
+          </div> */}
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
               <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
@@ -1580,15 +1601,17 @@ function DonHang(props) {
               </div>
             ))}
           </div>
-          <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} className="me-2" />
-          In hoá đơn
+          <div>
+            <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
+            In hoá đơn
+          </div>
           <div className="button-thanh-toan">
             {check ? (
               httt === 'VNPAY' ? (
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToanWithVNP()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1599,7 +1622,7 @@ function DonHang(props) {
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToan()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1611,7 +1634,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToan()}
               >
                 Thanh toán
@@ -1620,7 +1643,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToanWithVNP()}
               >
                 Thanh toán

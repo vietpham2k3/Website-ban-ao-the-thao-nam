@@ -147,7 +147,7 @@ const EarningCard = ({ isLoading }) => {
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box height={157} sx={{ p: 2.25 }}>
+          <Box height={161} sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">

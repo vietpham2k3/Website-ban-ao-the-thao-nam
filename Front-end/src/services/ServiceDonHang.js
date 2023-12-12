@@ -197,6 +197,10 @@ const hienThiYCDoiHang = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-don-yeu-cau-doi/` + id);
 };
 
+const hoanTien = (id, idNV, values) => {
+  return axios.post(`/api/hoa-don/hoan-tien/${id}/${idNV}`, values);
+};
+
 const hienThiHangLoi = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-hang-loi/` + id);
 };
@@ -209,8 +213,13 @@ const hangLoi = (id, values) => {
   return axios.put('/api/hoa-don/update-sl-hang-loi/' + id, values);
 };
 
+const hangKoLoi = (id, soLuong) => {
+  return axios.put(`/api/hoa-don/update-sl-hang-ko-loi/${id}?soLuong=${soLuong}`);
+};
+
 export {
   getAllHD,
+  hoanTien,
   requestHuyDon,
   nhanHang,
   searchByTrangThai,
@@ -261,5 +270,6 @@ export {
   hangLoi,
   detailSLSPYCDoiByIdHDCT,
   getAllPageDHHuyChuaHoan,
-  findDonHuyChuaHoan
+  findDonHuyChuaHoan,
+  hangKoLoi
 };

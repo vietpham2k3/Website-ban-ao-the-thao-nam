@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { deleteByIdHD } from 'services/GioHangService';
+import '../../scss/Loading.scss';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,11 +39,12 @@ CustomTabPanel.propTypes = {
 export default function BanHangTaiQuay() {
   const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
   const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const [loading, setLoading] = useState(false);
 
   const [value, setValue] = useState(0);
   const [values, setValues] = useState([]);
   const nvID = {
-    nhanVien: { id: dataLoginNV && dataLoginNV.id }
+    nhanVien: { id: (dataLoginNV && dataLoginNV.id) || (dataLoginAD && dataLoginAD.id) }
   };
 
   useEffect(() => {
@@ -68,13 +70,20 @@ export default function BanHangTaiQuay() {
       toast.error('Không thể tạo quá 8 đơn');
       return;
     }
+    setLoading(true);
     add();
   };
 
   const getAll = async () => {
     const res = await getAllHD(); // Sử dụng await để chờ kết quả trả về
-    if (res) {
-      setValues(res.data);
+    try {
+      if (res) {
+        setValues(res.data);
+      }
+    } catch (error) {
+      toast.success('Lỗi');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,6 +96,7 @@ export default function BanHangTaiQuay() {
       toast.warning('Bạn không thể xoá hết đơn');
       return;
     }
+    setLoading(true);
     backToCart(id);
   };
 
@@ -99,11 +109,20 @@ export default function BanHangTaiQuay() {
       }
     } catch (error) {
       toast.success('Lỗi');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <MainCard>
+      {loading && (
+        <div className="overlay">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -126,7 +145,7 @@ export default function BanHangTaiQuay() {
         {values ? (
           values.map((d, i) => (
             <CustomTabPanel key={i} value={value} index={i}>
-              <DonHang id={d.id} getAllHD={getAll}></DonHang>
+              <DonHang id={d.id} getAllHD={getAll} handleAddHoaDonTabs={handleAdd} valuesHoaDonTabs={values}></DonHang>
             </CustomTabPanel>
           ))
         ) : (

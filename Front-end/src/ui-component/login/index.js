@@ -30,7 +30,7 @@ export default function IndexLogin(props) {
           openForgotPasswordModal={openForgotPasswordModal}
         />
         <div className="overlay-container">
-          <div className="overlay">
+          <div className="overlay1">
             <div className="overlay-panel overlay-left">
               <h1>Chào mừng trở lại</h1>
               <p className="text-login">Để duy trì kết nối với chúng tôi vui lòng đăng nhập bằng thông tin cá nhân của bạn</p>

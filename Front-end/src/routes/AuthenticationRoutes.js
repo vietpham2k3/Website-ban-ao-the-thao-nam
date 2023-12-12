@@ -16,6 +16,7 @@ const UserAccount = Loadable(lazy(() => import('ui-component/login/information_u
 
 const DiaChi = Loadable(lazy(() => import('ui-component/login/diachi')));
 const History = Loadable(lazy(() => import('ui-component/login/lichsudonhang')));
+const Loading = Loadable(lazy(() => import('ui-component/checkout/LoadingPay')));
 const ChinhSach = Loadable(lazy(() => import('ui-component/trangchu/chinhsach')));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -88,6 +89,10 @@ const AuthenticationRoutes = {
     {
       path: '/khachhang-doiMatKhau/:id',
       element: <UserAccount />
+    },
+    {
+      path: '/loading',
+      element: <Loading />
     },
     {
       path: '/chinh-sach',

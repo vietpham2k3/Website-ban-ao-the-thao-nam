@@ -31,6 +31,10 @@ function AddMauSac() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (values.ma === '') {
+      toast.error('Không được để trống mã !');
+      return;
+    }
     post(values);
   };
 

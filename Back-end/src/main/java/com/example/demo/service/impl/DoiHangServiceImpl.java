@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,9 +36,9 @@ public class DoiHangServiceImpl implements DoiHangService {
     }
 
     @Override
-    public Page<HoaDonChiTiet> search(String key, Integer page) {
+    public Page<HoaDonChiTiet> search(String key, Date tuNgay, Date denNgay, Integer page) {
         Pageable pageable = PageRequest.of(page, 5);
-        return hoaDonChiTietRepository.search(key, pageable);
+        return hoaDonChiTietRepository.search(key, tuNgay, denNgay, pageable);
     }
 
     @Override
