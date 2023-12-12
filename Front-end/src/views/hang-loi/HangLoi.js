@@ -4,7 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
-import { Pagination } from '@mui/material';
+import { Avatar, Pagination } from '@mui/material';
 import { getAllPageHL, search } from 'services/HangLoiService';
 import MainCard from 'ui-component/cards/MainCard';
 import { DateRangePicker } from 'rsuite';
@@ -149,10 +149,12 @@ function HangLoi() {
                 <td style={{ textAlign: 'center' }}>{i + 1}</td>
                 <td>
                   <div className="d-flex justify-content-start">
-                    <img
+                    <Avatar
+                      alt={d.chiTietSanPham.sanPham.ten}
                       src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                      className="product-image me-3"
-                      style={{ width: '70px', height: '100px', borderRadius: 15 }}
+                      sx={{ width: 80, height: 110 }}
+                      variant="rounded"
+                      className="me-3"
                     />
                     <div>
                       {d.chiTietSanPham.sanPham.ten} <br />

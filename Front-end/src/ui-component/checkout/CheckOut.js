@@ -16,6 +16,7 @@ import { payOnline } from 'services/PayService';
 import { detailKH, getAllDcKh, detailDC, addDCKH } from 'services/KhachHangService';
 import ChangeDC from './ChangeDC';
 import UpdateDC from './UpdateDC';
+import { Avatar } from '@mui/material';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
@@ -688,6 +689,7 @@ function CheckoutForm(props) {
       console.log(error);
     }
   };
+  console.log(valuesUpdateHD);
 
   const handleThanhToan = () => {
     if (valuesUpdateHD.tenNguoiNhan === '') {
@@ -696,7 +698,7 @@ function CheckoutForm(props) {
         tenNguoiNhan: false
       });
       return;
-    } else if (valuesUpdateHD.soDienThoai === '') {
+    } else if (valuesUpdateHD.soDienThoai === '' || valuesUpdateHD.soDienThoai === null || valuesUpdateHD.soDienThoai === undefined) {
       setErrors({
         ...errors,
         soDienThoai: false
@@ -762,7 +764,7 @@ function CheckoutForm(props) {
         tenNguoiNhan: false
       });
       return;
-    } else if (valuesUpdateHD.soDienThoai === '') {
+    } else if (valuesUpdateHD.soDienThoai === '' || valuesUpdateHD.soDienThoai === null || valuesUpdateHD.soDienThoai === undefined) {
       setErrors({
         ...errors,
         soDienThoai: false
@@ -1018,10 +1020,11 @@ function CheckoutForm(props) {
                       {dataHDCT.map((d, i) => (
                         <tr key={i}>
                           <td className="product-image-col">
-                            <img
+                            <Avatar
+                              alt={d.chiTietSanPham.sanPham.ten}
                               src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                              alt="Product 1"
-                              className="product-image"
+                              sx={{ width: 80, height: 110 }}
+                              variant="rounded"
                             />
                           </td>
                           <td>

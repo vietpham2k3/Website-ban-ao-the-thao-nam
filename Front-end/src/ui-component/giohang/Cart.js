@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { deleteSPInGH, getAllGH, postGH, updateSLGH } from 'services/GioHangService';
 import { updateSL } from 'services/SanPhamService';
 import { toast } from 'react-toastify';
+import { Avatar } from '@mui/material';
 
 function Cart(props) {
   // const [quantity, setQuantity] = useState(1);
@@ -325,10 +326,11 @@ function Cart(props) {
                             />
                           </td>
                           <td>
-                            <img
+                            <Avatar
+                              alt={product.chiTietSanPham.sanPham.ten}
                               src={`http://localhost:8080/api/chi-tiet-san-pham/${product.chiTietSanPham.id}`}
-                              className="img-cart"
-                              style={{ width: '70px', height: '100px', borderRadius: '15px' }}
+                              sx={{ width: 80, height: 110 }}
+                              variant="rounded"
                             />
                           </td>
                           <td>

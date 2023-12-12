@@ -101,6 +101,30 @@ function AddNhanVien() {
       toast.error('Vui lòng chọn ảnh');
       return;
     }
+    if (values.ten === '') {
+      toast.error('Vui lòng nhập tên');
+      return;
+    }
+    if (values.sdt === '') {
+      toast.error('Vui lòng nhập sdt');
+      return;
+    }
+    if (values.email === '') {
+      toast.error('Vui lòng nhập email');
+      return;
+    }
+    if (values.diaChi === '') {
+      toast.error('Vui lòng nhập địa chỉ');
+      return;
+    }
+    if (values.ngaySinh === '') {
+      toast.error('Vui lòng nhập ngày sinh');
+      return;
+    }
+    if (values.vaiTro === '') {
+      toast.error('Vui lòng chọn vai trò');
+      return;
+    }
     setLoading(true);
 
     const formData = new FormData();
@@ -116,7 +140,9 @@ function AddNhanVien() {
 
     try {
       const res = await addNV(formData);
-      if (res) {
+      if (res.data === 'Email này đã tồn tại') {
+        toast.error(res.data);
+      } else {
         toast.success('Thêm thành công');
         navigate('/nhan-vien');
       }
@@ -198,7 +224,7 @@ function AddNhanVien() {
                 </label>
                 <input
                   id="sdt"
-                  type="text"
+                  type="number"
                   className="form-control"
                   value={values.sdt}
                   onChange={(e) => setValues({ ...values, sdt: e.target.value })}

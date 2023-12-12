@@ -359,9 +359,8 @@ public class KhachHangController {
     public ResponseEntity<?> updateinfo(@PathVariable UUID id, @RequestBody KhachHang khachHang
     ) {
         khachHang.setId(id);
-        KhachHang savedKhachHang = khService.updateKhinfo(khachHang, id);
-        KhachHangInfo savedKhachHanginfo = convertToinfo(savedKhachHang);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHanginfo);
+        KhachHang savedKhachHang = khService.add(khachHang);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHang);
     }
 
 
