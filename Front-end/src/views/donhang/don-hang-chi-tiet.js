@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Card } from '@mui/material';
+import { Avatar, Card } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { Form } from 'react-bootstrap';
@@ -1856,6 +1856,7 @@ function DonHangCT() {
     const res = await deleteSPDH(idHDCT);
     if (res) {
       toast.success('Xoá thành công');
+      handleSearchSPofDH();
       let sum = 0;
       dataHDCT.forEach((d) => {
         sum += d.soLuongYeuCauDoi * d.donGia;
@@ -1885,6 +1886,7 @@ function DonHangCT() {
     const res = await updateSLDoiHang(value);
     if (res) {
       // findAll(dataHDCT[0].hoaDon.id);
+      handleSearchSPofDH();
     }
   };
 
@@ -1924,6 +1926,7 @@ function DonHangCT() {
     let res = await addSPToDH(value);
     if (res) {
       setIsshow(true);
+      handleSearchSPofDH();
       setIsshowDH(false);
       setIsshowMSKC(false);
       findAll(id);
@@ -1954,6 +1957,7 @@ function DonHangCT() {
       setTotalAmount(sumDH - sum);
       setTotalAmountDH(sum);
       setTotalAmountDHSP(sumDG);
+      handleDetailSL();
     }
   };
 
@@ -4917,11 +4921,11 @@ function DonHangCT() {
                                               <td style={{ paddingTop: 20 }}>{i + 1}</td>
                                               <td style={{ paddingTop: 20 }}>{d.chiTietSanPham.sanPham.ma}</td>
                                               <td>
-                                                <img
+                                                <Avatar
+                                                  alt={d.chiTietSanPham.sanPham.ten}
                                                   src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                                  className="product-image"
-                                                  style={{ width: '70px', height: '100px' }}
-                                                  alt="none"
+                                                  sx={{ width: 80, height: 110 }}
+                                                  variant="rounded"
                                                 />
                                               </td>
                                               <td style={{ paddingTop: 20 }}>
@@ -5295,11 +5299,11 @@ function DonHangCT() {
                                               <td>{i + 1}</td>
                                               <td>{d.chiTietSanPham.sanPham.ma}</td>
                                               <td>
-                                                <img
+                                                <Avatar
+                                                  alt={d.chiTietSanPham.sanPham.ten}
                                                   src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                                  className="product-image"
-                                                  style={{ width: '70px', height: '100px' }}
-                                                  alt="vai"
+                                                  sx={{ width: 80, height: 110 }}
+                                                  variant="rounded"
                                                 />
                                               </td>
                                               <td>
@@ -5392,11 +5396,11 @@ function DonHangCT() {
                                             <td>{i + 1}</td>
                                             <td>{d.chiTietSanPham.sanPham.ma}</td>
                                             <td>
-                                              <img
+                                              <Avatar
+                                                alt={d.chiTietSanPham.sanPham.ten}
                                                 src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                                                className="product-image"
-                                                style={{ width: '70px', height: '100px' }}
-                                                alt="vai"
+                                                sx={{ width: 80, height: 110 }}
+                                                variant="rounded"
                                               />
                                             </td>
                                             <td>
@@ -5518,11 +5522,11 @@ function DonHangCT() {
                                       dataSP.map((d, i) => (
                                         <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
                                           <td>
-                                            <img
+                                            <Avatar
+                                              alt={d.sanPham.ten}
                                               src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                                              className="product-image"
-                                              style={{ width: '70px', height: '100px' }}
-                                              alt='"none"'
+                                              sx={{ width: 80, height: 110 }}
+                                              variant="rounded"
                                             />
                                           </td>
                                           <td>{d.sanPham.ma}</td>
@@ -5545,7 +5549,7 @@ function DonHangCT() {
                                   style={{ marginLeft: 150 }}
                                   backdrop="static"
                                   keyboard={false}
-                                  size="md"
+                                  size="lg"
                                   aria-labelledby="contained-modal-title-vcenter"
                                   centered
                                 >
@@ -5570,7 +5574,16 @@ function DonHangCT() {
                                               onChange={() => handleDetail(d.id)}
                                             />
                                             <label className="form-check-label custom-label" htmlFor={d.id}>
-                                              <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                              <div
+                                                style={{
+                                                  backgroundColor: d.mauSac.ten,
+                                                  width: 50,
+                                                  borderRadius: '10px',
+                                                  border: '2px solid black'
+                                                }}
+                                              >
+                                                &nbsp;
+                                              </div>
                                               &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} -{' '}
                                               {d.nhaSanXuat.ten}
                                             </label>
@@ -5628,11 +5641,11 @@ function DonHangCT() {
                       <td>{i + 1}</td>
                       <td>{d.chiTietSanPham.sanPham.ma}</td>
                       <td>
-                        <img
+                        <Avatar
+                          alt={d.chiTietSanPham.sanPham.ten}
                           src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                          className="product-image"
-                          style={{ width: '70px', height: '100px' }}
-                          alt="vai"
+                          sx={{ width: 80, height: 110 }}
+                          variant="rounded"
                         />
                       </td>
                       <td>

@@ -17,6 +17,7 @@ import _ from 'lodash';
 import Slider from 'react-slider';
 import { Form, Row, Col } from 'react-bootstrap';
 import { getAllListCL, getAllListCO, getAllListLSP, getAllListMS, getAllListNSX } from 'services/SanPhamService';
+import { Avatar } from '@mui/material';
 
 const MIN = 0;
 const MAX = 1000000;
@@ -430,11 +431,17 @@ function SanPham() {
                   <tr key={i} className="text-center">
                     <td>{i + 1}</td>
                     <td>
-                      <img
+                      <Avatar
+                        alt={d.sanPham.ten}
+                        src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
+                        sx={{ width: 80, height: 110 }}
+                        variant="rounded"
+                      />
+                      {/* <img
                         src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
                         className="product-image"
                         style={{ width: '70px', height: '100px' }}
-                      />
+                      /> */}
                     </td>
                     <td>{d.sanPham.ma}</td>
                     <td>{d.sanPham.ten}</td>

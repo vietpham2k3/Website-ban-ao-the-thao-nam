@@ -36,6 +36,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -207,6 +208,12 @@ public class NhanVienController {
                 + "<p>Lưu ý: Đây là mật khẩu mặc định được tạo bởi hệ thống, bạn vui lòng đổi lại để đảm bảo an toàn thông tin</p>"
                 + "<p>Đây là email tự động vui lòng không trả lời.</p>";
         emailService.sendEmail(email, subject, body);
+        List<NhanVien> list = service.fillAll();
+        for (NhanVien nhanVien : list) {
+            if(nv.getEmail().equalsIgnoreCase(nhanVien.getEmail())){
+                return ResponseEntity.ok("Email này đã tồn tại");
+            }
+        }
 
         // Save the nv object
         NhanVien saveNhanVien = service.add(nv);

@@ -145,7 +145,7 @@ export default function BanHangTaiQuay() {
         {values ? (
           values.map((d, i) => (
             <CustomTabPanel key={i} value={value} index={i}>
-              <DonHang id={d.id} getAllHD={getAll}></DonHang>
+              <DonHang id={d.id} getAllHD={getAll} handleAddHoaDonTabs={handleAdd} valuesHoaDonTabs={values}></DonHang>
             </CustomTabPanel>
           ))
         ) : (

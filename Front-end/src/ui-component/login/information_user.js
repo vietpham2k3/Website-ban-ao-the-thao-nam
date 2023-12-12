@@ -4,12 +4,13 @@ import '../../scss/information.scss';
 import Header from 'ui-component/trangchu/Header';
 import Footer from 'ui-component/trangchu/Footer';
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import Modal from 'react-bootstrap/Modal';
 
 import { changePassword, detailKH, updateInfo, checkCurrentPassword } from 'services/KhachHangService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SlideBar from 'layout/SlideBar';
+import { Button } from 'react-bootstrap';
 
 function UserAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -136,6 +137,7 @@ function UserAccount() {
     event.preventDefault();
     put(id, values);
   };
+  console.log(values);
 
   return (
     <div>
@@ -150,6 +152,7 @@ function UserAccount() {
               <h1>THÔNG TIN TÀI KHOẢN</h1>
               <p>Họ Và Tên: {values.tenKhachHang}</p>
               <p>Email: {values.email}</p>
+              <p>SDT: {values.sdt}</p>
               <p>Ngày sinh: {formatDate(values.ngaySinh)}</p>
               <p>
                 Giới Tính:{' '}
@@ -165,60 +168,6 @@ function UserAccount() {
               >
                 Cập Nhật
               </button>
-
-              <Modal isOpen={isModalOpen} contentLabel="Update User Information" className="right-aligned-modal">
-                <div className="modal-content">
-                  <h2>Chỉnh sửa thông tin tài khoản</h2>
-                  <form>
-                    <div>
-                      <label htmlFor="name">Họ Và Tên:</label>
-                      <input
-                        type="text"
-                        id="tenKhachHang"
-                        value={values.tenKhachHang}
-                        onChange={(e) => setValues({ ...values, tenKhachHang: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email">Email:</label>
-                      <input
-                        type="text"
-                        id="email"
-                        value={values.email}
-                        onChange={(e) => setValues({ ...values, email: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="birthdate">Ngày sinh:</label>
-                      <input
-                        type="date"
-                        id="ngaySinh"
-                        value={values.ngaySinh}
-                        onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="gioiTinh">Giới Tính:</label>
-                      <div>
-                        <select
-                          id="gioiTinh"
-                          value={values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : 'null'}
-                          onChange={(e) => handleGenderChange(e.target.value === 'null' ? null : e.target.value === 'Nam')}
-                        >
-                          <option value="Nam">Nam</option>
-                          <option value="Nữ">Nữ</option>
-                          <option value="null">Không xác định</option>
-                        </select>
-                      </div>
-                    </div>
-                  </form>
-                  <br></br>
-                  <div className="button1">
-                    <button onClick={handleCloseModal}>Đóng</button>
-                    <button onClick={handleSubmit}>Cập nhật</button>
-                  </div>
-                </div>
-              </Modal>
             </div>
             <br></br>
             <br></br>
@@ -243,45 +192,128 @@ function UserAccount() {
               >
                 Cập nhật
               </button>
-              <Modal
-                isOpen={isChangePasswordModalOpen}
-                contentLabel="Update User Information"
-                className="right-aligned-modal" // Apply your CSS class here
-              >
-                <div className="modal-content">
-                  <h2>ĐỔI MẬT KHẨU</h2>
-                  <form>
-                    <input
-                      type="password"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      placeholder="Mật Khẩu Cũ"
-                    />
-                    <input
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Mật Khẩu Mới"
-                    />
-                    <input
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Xác Nhận Mật Khẩu Mới"
-                    />
-                  </form>
-                  <br></br>
-                  <div className="button1">
-                    <button onClick={handleCloseModalmk}>Đóng</button>
-                    <button onClick={handlePasswordUpdate}>Cập nhật</button>
-                  </div>
-                </div>
+              <Modal show={isChangePasswordModalOpen} onHide={handleCloseModalmk} backdrop="static" keyboard={false} size="lg">
+                <Modal.Header closeButton>
+                  <Modal.Title>
+                    <Modal.Title>ĐỔI MẬT KHẨU</Modal.Title>
+                  </Modal.Title>
+                </Modal.Header>
+                <form className="mx-3 mb-3">
+                  <label htmlFor="name">Họ Và Tên:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Mật Khẩu Cũ"
+                  />
+                  <label htmlFor="name">Họ Và Tên:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Mật Khẩu Mới"
+                  />
+                  <label htmlFor="name">Họ Và Tên:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Xác Nhận Mật Khẩu Mới"
+                  />
+                </form>
+
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseModalmk}>
+                    Đóng
+                  </Button>
+                  <Button variant="primary" onClick={handlePasswordUpdate}>
+                    Cập nhật
+                  </Button>
+                </Modal.Footer>
               </Modal>
             </div>
           </div>
         </div>
       </div>
       <Footer />
+
+      <Modal show={isModalOpen} onHide={handleCloseModal} backdrop="static" keyboard={false} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Modal.Title>Chỉnh sửa thông tin tài khoản</Modal.Title>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <div>
+              <label htmlFor="name">Họ Và Tên:</label>
+              <input
+                type="text"
+                id="tenKhachHang"
+                className="form-control"
+                value={values.tenKhachHang}
+                onChange={(e) => setValues({ ...values, tenKhachHang: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="email">Email:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="email"
+                value={values.email}
+                onChange={(e) => setValues({ ...values, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="name">SDT:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="tenKhachHang"
+                value={values.sdt}
+                onChange={(e) => setValues({ ...values, sdt: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="birthdate">Ngày sinh:</label>
+              <input
+                type="date"
+                id="ngaySinh"
+                className="form-control"
+                value={values.ngaySinh}
+                onChange={(e) => setValues({ ...values, ngaySinh: e.target.value })}
+              />
+            </div>
+            <div>
+              <label htmlFor="gioiTinh">Giới Tính:</label>
+              <div>
+                <select
+                  id="gioiTinh"
+                  className="form-select"
+                  value={values.gioiTinh === true ? 'Nam' : values.gioiTinh === false ? 'Nữ' : 'null'}
+                  onChange={(e) => handleGenderChange(e.target.value === 'null' ? null : e.target.value === 'Nam')}
+                >
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="null">Không xác định</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Cập nhật
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -37,9 +37,10 @@ import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QrReader from 'react-qr-reader';
+import { Avatar, TextField } from '@mui/material';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
-  const { id, getAllHD } = props;
+  const { id, getAllHD, handleAddHoaDonTabs, valuesHoaDonTabs } = props;
   const [inputValue, setInputValue] = useState('');
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState(true);
@@ -253,12 +254,10 @@ function DonHang(props) {
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
-            {(dataDetailHD && dataDetailHD.diaChi) &&(
-            <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
+            {dataDetailHD && dataDetailHD.diaChi && <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>}
+            {dataDetailHD && dataDetailHD.soDienThoai && (
+              <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
             )}
-            {(dataDetailHD && dataDetailHD.soDienThoai) &&(
-            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
-             )}
             <Text style={styles.textThuocTinh}>
               Nhân viên bán hàng: {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
             </Text>
@@ -495,6 +494,9 @@ function DonHang(props) {
   const ThanhToanHD = async (idHD, nguoiTao) => {
     const res = await thanhToan(idHD, nguoiTao);
     if (res) {
+      if (valuesHoaDonTabs <= 1) {
+        handleAddHoaDonTabs();
+      }
       toast.success('Thanh toán thành công');
       getAllHD();
     }
@@ -597,7 +599,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten));
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -612,7 +614,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten));
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -1000,11 +1002,11 @@ function DonHang(props) {
                             dataSP.map((d, i) => (
                               <tr key={i} onClick={() => handleAddSoLuong(d.id, d.sanPham.id)} style={{ cursor: 'pointer' }}>
                                 <td>
-                                  <img
+                                  <Avatar
+                                    alt={d.sanPham.ten}
                                     src={`http://localhost:8080/api/chi-tiet-san-pham/${d.id}`}
-                                    className="product-image"
-                                    style={{ width: '70px', height: '100px' }}
-                                    alt='"none"'
+                                    sx={{ width: 80, height: 110 }}
+                                    variant="rounded"
                                   />
                                 </td>
                                 <td>{d.sanPham.ma}</td>
@@ -1027,7 +1029,7 @@ function DonHang(props) {
                         style={{ marginLeft: 150 }}
                         backdrop="static"
                         keyboard={false}
-                        size="md"
+                        size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
                       >
@@ -1052,7 +1054,11 @@ function DonHang(props) {
                                     onChange={() => handleDetail(d.id)}
                                   />
                                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                    <div
+                                      style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}
+                                    >
+                                      &nbsp;
+                                    </div>
                                     &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                                   </label>
                                 </div>
@@ -1065,12 +1071,22 @@ function DonHang(props) {
                                   Còn lại <strong>{dataDetail.soLuong}</strong>
                                 </small>
                               </label>
-                              <input
-                                className="form-control"
+                              <br />
+                              <TextField
                                 id="exampleFormControlTextarea1"
                                 type="number"
-                                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
-                              ></input>
+                                fullWidth
+                                value={valuesAdd.soLuong}
+                                onChange={(e) => {
+                                  if (e.target.value >= 1) {
+                                    setValuesAdd({ ...valuesAdd, soLuong: e.target.value });
+                                  } else {
+                                    e.preventDefault();
+                                  }
+                                }}
+                                min={1}
+                                inputProps={{ min: 1 }}
+                              ></TextField>
                             </div>
                           </div>
                         </Modal.Body>
@@ -1116,10 +1132,11 @@ function DonHang(props) {
                     <td>{i + 1}</td>
                     <td>{d.chiTietSanPham.sanPham.ma}</td>
                     <td>
-                      <img
+                      <Avatar
+                        alt={d.chiTietSanPham.sanPham.ten}
                         src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                        className="product-image"
-                        style={{ width: '70px', height: '100px' }}
+                        sx={{ width: 80, height: 110 }}
+                        variant="rounded"
                       />
                     </td>
                     <td>

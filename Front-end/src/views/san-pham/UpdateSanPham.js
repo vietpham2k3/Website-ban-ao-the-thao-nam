@@ -239,15 +239,21 @@ function UpdateSanPham() {
   });
 
   const closeModal = () => {
-    toast.success('Thêm thành công');
+    toast.success('Thêm thành công !');
     setModalShowCA(false);
     setModalShowLSP(false);
     setModalShow(false);
     setModalShowNSX(false);
+    setModalShowMS(false);
     setModalShowKC(false);
     getAllList();
     setValuesCL({
       ten: '',
+      trangThai: 0
+    });
+    setValuesMS({
+      ten: '#ffffffff',
+      ma: '',
       trangThai: 0
     });
   };
@@ -336,6 +342,9 @@ function UpdateSanPham() {
   };
 
   const handleSubmitUpdate = async (event) => {
+    if (values.soLuong === null || values.soLuong === 0) {
+      toast.error('Vui lòng nhập số lượng !');
+    }
     try {
       event.preventDefault();
       await putctspmodal(idCTSP, idSP, values);
@@ -514,7 +523,7 @@ function UpdateSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -551,7 +560,7 @@ function UpdateSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>
             <select
@@ -588,7 +597,7 @@ function UpdateSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -625,7 +634,7 @@ function UpdateSanPham() {
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                <i className="fa-solid fa-plus"></i>
+                <i style={{ color: 'darkblue' }} className="fa-solid fa-circle-plus fa-lg"></i>
               </span>
             </label>{' '}
             <select
@@ -704,46 +713,30 @@ function UpdateSanPham() {
               <thead>
                 <tr className="text-center">
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
-                      <Button variant="" style={{ border: 'none' }}>
-                        <strong>#</strong>
-                      </Button>
-                    </OverlayTrigger>
+                    <strong>#</strong>
                   </th>
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh màu sắc ở đây</Tooltip>}>
+                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh màu sắc</Tooltip>}>
                       <Button variant="" style={{ border: 'none' }} onClick={() => setModalShowMS(true)}>
                         <strong>Màu sắc</strong>
                       </Button>
                     </OverlayTrigger>
                   </th>
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh kích cỡ ở đây</Tooltip>}>
+                    <OverlayTrigger overlay={<Tooltip>Thêm nhanh kích cỡ</Tooltip>}>
                       <Button variant="" style={{ border: 'none' }} onClick={() => setModalShowKC(true)}>
                         <strong>Kích cỡ</strong>
                       </Button>
                     </OverlayTrigger>
                   </th>
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
-                      <Button variant="" style={{ border: 'none' }}>
-                        <strong>Số lượng</strong>
-                      </Button>
-                    </OverlayTrigger>
+                    <strong>Số lượng</strong>
                   </th>{' '}
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
-                      <Button variant="" style={{ border: 'none' }}>
-                        <strong>Trạng thái</strong>
-                      </Button>
-                    </OverlayTrigger>
+                    <strong>Trạng thái</strong>
                   </th>
                   <th>
-                    <OverlayTrigger overlay={<Tooltip>Ấn vào đây thì sẽ bay acc fb :)</Tooltip>}>
-                      <Button variant="" style={{ border: 'none' }}>
-                        <strong>Action</strong>
-                      </Button>
-                    </OverlayTrigger>
+                    <strong>Action</strong>
                   </th>
                 </tr>
               </thead>
@@ -771,7 +764,9 @@ function UpdateSanPham() {
                       <td>{i + 1}</td>
                       <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {d.mauSac && d.kichCo ? (
-                          <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                          <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>
+                            &nbsp;
+                          </div>
                         ) : (
                           <p>Chưa có màu sắc nào</p>
                         )}

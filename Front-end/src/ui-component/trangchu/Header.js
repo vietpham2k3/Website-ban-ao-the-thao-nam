@@ -58,6 +58,7 @@ function Header() {
     localStorage.removeItem('dataLoginNV');
     localStorage.removeItem('dataLoginAD');
     localStorage.removeItem('idGH');
+    localStorage.removeItem('picture');
   };
 
   const Image = (id) => {
