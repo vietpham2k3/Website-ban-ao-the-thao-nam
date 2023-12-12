@@ -9,19 +9,19 @@ const TableKCMS = (props) => {
   return (
     <div>
       <Modal
-        style={{ paddingTop: 90, marginLeft: 150 }}
+        style={{ paddingTop: 150, marginLeft: 150 }}
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
-        size="md"
+        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ width: '100%' }}>
+        <Modal.Body >
           <div className="body-add-new">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -39,7 +39,7 @@ const TableKCMS = (props) => {
                     onChange={() => handleDetail(d.id, d.giaBan)}
                   />
                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>&nbsp;- {d.kichCo.ten} -{' '}
+                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: "2px solid black" }}>&nbsp;</div>&nbsp;- {d.kichCo.ten} -{' '}
                     {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                   </label>
                 </div>

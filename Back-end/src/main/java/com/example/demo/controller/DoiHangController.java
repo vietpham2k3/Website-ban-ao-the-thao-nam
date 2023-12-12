@@ -44,6 +44,20 @@ public class DoiHangController {
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody List<HoaDonChiTiet> hoaDonChiTiets) {
         for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTiets) {
+//            HoaDonChiTiet hd = hoaDonChiTietService.findById(hoaDonChiTiet.getId());
+//            if (hoaDonChiTiet.getId() == hd.getId()) {
+//                ChiTietSanPham sp = chiTietSanPhamService.detail(hd.getChiTietSanPham().getId());
+//                if (sp.getId() == hd.getChiTietSanPham().getId()) {
+////                    if (hoaDonChiTiet.getSoLuongHangDoi() > sp.getSoLuong()) {
+//                        chiTietSanPhamService.update((sp.getSoLuong() - hoaDonChiTiet.getSoLuongHangDoi()),
+//                                hd.getChiTietSanPham().getId());
+////                    }else{
+////                        chiTietSanPhamService.update((sp.getSoLuong() + hoaDonChiTiet.getSoLuongHangDoi()),
+////                                hd.getChiTietSanPham().getId());
+////                    }
+//
+//                }
+//            }
             hoaDonChiTiet.setLichSuSoLuongYeuCauDoi(hoaDonChiTiet.getSoLuongYeuCauDoi());
             HoaDonChiTiet hd = hoaDonChiTietService.findById(hoaDonChiTiet.getId());
             ChiTietSanPham sp = chiTietSanPhamService.detail(hoaDonChiTiet.getChiTietSanPham().getId());
@@ -64,6 +78,8 @@ public class DoiHangController {
                 }
             }
         }
+
+
         hoaDonChiTietService.taoHoaDon(hoaDonChiTiets);
         return ResponseEntity.ok("ok");
     }
@@ -108,10 +124,14 @@ public class DoiHangController {
         doiHang.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
         doiHang.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
 
+
         // Tìm hoặc tạo mới đổi hàng
         DoiHang existingDoiHang = null;
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
         for (HoaDonChiTiet hdct : list) {
+            ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+            chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+            hdct.getChiTietSanPham().getId());
             if (hdct.getDoiHang() != null) {
                 existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
                 break;
@@ -148,7 +168,10 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
-//                hoaDonChiTietService.add(hdct);
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+                        hdct.getChiTietSanPham().getId());
+                hoaDonChiTietService.add(hdct);
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(existingDoiHang);
                     hoaDonChiTietService.add(hdct);
@@ -172,6 +195,9 @@ public class DoiHangController {
             doiHangService.add(doiHang);
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
+                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+                        hdct.getChiTietSanPham().getId());
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(doiHang);
                     hoaDonChiTietService.add(hdct);
@@ -207,6 +233,15 @@ public class DoiHangController {
                                         @RequestBody DoiHangDTO doiHangDTO) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
+        List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
+
+        for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
+            String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
+            if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
+                lichSu.setNguoiTao(nguoiTaoValue);
+                doiHangDTO.getLichSuHoaDon().setNguoiTao(nguoiTaoValue);
+            }
+        }
         hoaDon.setNgaySua(new Date());
         doiHangDTO.getLichSuHoaDon().setTrangThai(15);
         hoaDon.setTrangThai(15);
@@ -214,7 +249,7 @@ public class DoiHangController {
         doiHangDTO.getLichSuHoaDon().setMa(maLSHD);
         doiHangDTO.getLichSuHoaDon().setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
         doiHangDTO.getLichSuHoaDon().setHoaDon(hoaDon);
-        doiHangDTO.getLichSuHoaDon().setNguoiTao(doiHangDTO.getLichSuHoaDon().getNguoiTao());
+//        doiHangDTO.getLichSuHoaDon().setNguoiTao(doiHangDTO.getLichSuHoaDon().getNguoiTao());
         doiHangDTO.getLichSuHoaDon().setTen("Đổi hàng");
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
         for (HoaDonChiTiet hdct : list) {

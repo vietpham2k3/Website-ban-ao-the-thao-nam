@@ -332,6 +332,7 @@ public class HoaDonController {
                 .ghiChu("Đã thanh toán")
                 .build();
         hd.setTrangThai(6);
+        hd.setNgayThanhToan(new Date());
         serviceHD.add(hd);
         return ResponseEntity.ok(serviceLSHD.add(ls));
     }
@@ -662,6 +663,7 @@ public class HoaDonController {
                 hoaDon.setTrangThai(1);
                 lichSuHoaDon.setNgayTao(new Date());
                 lichSuHoaDon.setMa(maLSHD);
+
                 List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
 
                 for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
@@ -850,6 +852,9 @@ public class HoaDonController {
         hoaDon.setNgaySua(new Date());
         lichSuHoaDon.setTrangThai(4);
         hoaDon.setTrangThai(4);
+        if (hoaDon.hinhThucThanhToan.getTen() == "Tiền mặt") {
+            hoaDon.setNgayThanhToan(new Date());
+        }
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());

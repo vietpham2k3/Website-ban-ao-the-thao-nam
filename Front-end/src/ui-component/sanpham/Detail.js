@@ -386,7 +386,7 @@ function Detail(props) {
                               }}
                               style={{
                                 backgroundColor: color,
-                                border: idMSSP === selectedIdMSSP ? '2px solid black' : '',
+                                border: '2px solid black',
                                 width: 35,
                                 borderRadius: '10px',
                                 cursor: 'pointer',

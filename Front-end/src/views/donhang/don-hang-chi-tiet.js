@@ -1957,6 +1957,7 @@ function DonHangCT() {
       setTotalAmount(sumDH - sum);
       setTotalAmountDH(sum);
       setTotalAmountDHSP(sumDG);
+      handleDetailSL();
     }
   };
 
@@ -5549,7 +5550,7 @@ function DonHangCT() {
                                   style={{ marginLeft: 150 }}
                                   backdrop="static"
                                   keyboard={false}
-                                  size="md"
+                                  size="lg"
                                   aria-labelledby="contained-modal-title-vcenter"
                                   centered
                                 >
@@ -5574,7 +5575,7 @@ function DonHangCT() {
                                               onChange={() => handleDetail(d.id)}
                                             />
                                             <label className="form-check-label custom-label" htmlFor={d.id}>
-                                              <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px' }}>&nbsp;</div>
+                                              <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: "2px solid black" }}>&nbsp;</div>
                                               &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} -{' '}
                                               {d.nhaSanXuat.ten}
                                             </label>
