@@ -81,4 +81,10 @@ public class KichCoController {
         return ResponseEntity.ok(service.detail(id));
     }
 
+    @GetMapping("/checkTrung")
+    public ResponseEntity<Boolean> checkNameExists(@RequestParam("ten") String ten) {
+        boolean exists = service.checkTrung(ten);
+        return ResponseEntity.ok(exists);
+    }
+
 }

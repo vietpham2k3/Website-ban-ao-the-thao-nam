@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface SanPhamRepository extends JpaRepository<SanPham, UUID> {
+    SanPham findByTen(String ten);
 }

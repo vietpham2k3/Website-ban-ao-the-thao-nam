@@ -85,4 +85,11 @@ public class KichCoServiceImpl implements KichCoService {
         }
         return kichCos;
     }
+
+    @Override
+    public Boolean checkTrung(String ten) {
+        KichCo tenMoi = repository.findByTen(ten);
+        return tenMoi != null;
+    }
+
 }

@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
-import { putUpdateKC, detailKC, fetchAllCTSP } from 'services/KichCoService';
-
+import { putUpdateKC, detailKC, fetchAllCTSP, checkTrung } from 'services/KichCoService';
+import Modal from 'react-bootstrap/Modal';
 // @mui material components
 import Card from '@mui/material/Card';
 
@@ -13,6 +13,7 @@ import { Button } from 'react-bootstrap';
 function UpdateKC() {
   const navigate = useNavigate();
   // const [KichCos, setCTSP] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [values, setValues] = useState({
     ma: '',
     ten: '',
@@ -32,6 +33,24 @@ function UpdateKC() {
     }
   };
 
+  const check = async (ten) => {
+    try {
+      const response = await checkTrung(ten);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi kiểm tra trùng lặp tên:', error);
+      return true;
+    }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const put = async (id, value) => {
     const res = await putUpdateKC(id, value);
     if (res) {
@@ -40,10 +59,30 @@ function UpdateKC() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    put(id, values);
+    if (values.ten.trim() === '') {
+      toast.error('Tên không được để trống');
+      return;
+    }
+    if (values.ten.length > 15) {
+      toast.error('Tên không được quá 15 kí tự');
+      return;
+    }
+    const isDuplicate = await check(values.ten);
+    if (isDuplicate) {
+      toast.error('Tên đã tồn tại');
+      return;
+    }
+    handleOpenModal();
   };
+
+  const handleConfirm = () => {
+    // Xử lý khi form được confirm và thêm mới
+    put(id, values);
+    handleCloseModal();
+  };
+
   useEffect(() => {
     getAllCTSP;
   }, []);
@@ -109,6 +148,22 @@ function UpdateKC() {
           </div>
         </Card>
       </MainCard>
+      <Modal style={{ paddingTop: 100 }} show={isModalOpen} onHide={handleCloseModal}>
+        <Modal.Header>
+          <Modal.Title>Xác nhận cập nhật</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Bạn có chắc chắn muốn cập nhật?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn btn-primary" onClick={handleConfirm}>
+            Xác nhận
+          </Button>
+          <Button className="btn btn-secondary" onClick={handleCloseModal}>
+            Hủy
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

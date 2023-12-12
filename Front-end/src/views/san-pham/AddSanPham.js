@@ -5,7 +5,16 @@ import React from 'react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { useState } from 'react';
-import { getAllListCL, getAllListCO, getAllListKC, getAllListLSP, getAllListMS, getAllListNSX, postCTSP } from 'services/SanPhamService';
+import {
+  getAllListCL,
+  getAllListCO,
+  getAllListKC,
+  getAllListLSP,
+  getAllListMS,
+  getAllListNSX,
+  postCTSP,
+  checkTrung
+} from 'services/SanPhamService';
 import { useEffect } from 'react';
 import '../../scss/SanPham.scss';
 import { toast } from 'react-toastify';
@@ -151,6 +160,16 @@ function AddSanPham() {
     getAllList();
   }, []);
 
+  const check = async (ten) => {
+    try {
+      const response = await checkTrung(ten);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi kiểm tra trùng lặp tên:', error);
+      return true;
+    }
+  };
+
   const postctsp = async (value) => {
     const res = await postCTSP(value);
     if (res) {
@@ -168,17 +187,26 @@ function AddSanPham() {
     await postctsp(values);
   };
 
-  const handleConfirmClick = () => {
+  const handleConfirmClick = async () => {
     // Perform validation
     if (values.sanPham.ten.trim() === '' || values.giaBan.trim() === '' || values.sanPham.moTa.trim() === '') {
       // Display an error message or prevent confirmation
       toast.error('Vui lòng điền đầy đủ thông tin tên, mô tả và giá bán.');
-    } else {
-      // Validation passed, update the states
-      toast.success('Xác nhận thành công');
-      setIsHidden(false);
-      setConfirmClicked(true);
+      return;
     }
+    if (values.giaBan <= 0) {
+      toast.error('Vui lòng nhập giá bán lớn hơn 0');
+      return;
+    }
+    const isDuplicate = await check(values.sanPham.ten);
+    if (isDuplicate) {
+      toast.error('Tên đã tồn tại');
+      return;
+    }
+    toast.success('Xác nhận thành công');
+    setIsHidden(false);
+    setConfirmClicked(true);
+    // Validation passed, update the states
   };
 
   const getAllList = async () => {

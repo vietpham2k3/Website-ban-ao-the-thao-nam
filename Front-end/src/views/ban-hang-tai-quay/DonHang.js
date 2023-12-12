@@ -958,7 +958,7 @@ function DonHang(props) {
             </div>
             <Modal style={{ paddingTop: 100 }} centered show={isModalOpen} onHide={closeModal}>
               <Modal.Body>
-                <QrReader delay={1000} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
+                <QrReader delay={1500} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeModal}>

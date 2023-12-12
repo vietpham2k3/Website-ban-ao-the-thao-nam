@@ -28,4 +28,6 @@ public interface KichCoService {
     KichCo delete(UUID id);
 
     List<KichCo> findByKichCoString (List<String> kichCos);
+
+    Boolean checkTrung(String ten);
 }
