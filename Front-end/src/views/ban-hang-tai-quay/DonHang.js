@@ -1558,6 +1558,7 @@ function DonHang(props) {
               />
             </div>
           </div>
+          <br></br>
           <div className="ma-giam-gia">
             <div>
               <select
@@ -1589,6 +1590,7 @@ function DonHang(props) {
               <p>{convertToCurrency(tienThua)}</p>
             </div>
           </div> */}
+          <br></br>
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
               <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>

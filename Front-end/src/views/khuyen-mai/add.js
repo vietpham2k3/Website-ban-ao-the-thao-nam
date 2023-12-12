@@ -55,6 +55,12 @@ function AddKhuyenMai() {
       toast.error('Không được để trống thời gian kết thúc!');
       return;
     }
+
+    if (values.ma === '') {
+      toast.error('Không được để trống mã !');
+      return;
+    }
+
     const startDate = new Date(values.thoiGianBatDau);
     const endDate = new Date(values.thoiGianKetThuc);
     if (endDate <= startDate) {
@@ -66,10 +72,16 @@ function AddKhuyenMai() {
       return;
     }
 
+    if (values.tien < 10000) {
+      toast.error('Vui lòng nhập tiền tối thiểu trên 10k !');
+      return;
+    }
+
     if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 80)) {
       toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
     }
+
     await post(values); // Gọi hàm post nếu dữ liệu hợp lệ
   };
 
@@ -79,15 +91,17 @@ function AddKhuyenMai() {
   //   setError(false); // Reset lỗi khi loại giảm được chọn
   // };
 
-  const handleMucGiamChange = (event) => {
-    const mucGiam = event.target.value;
-    setValues({ ...values, mucGiam });
-    // setError(false); // Reset lỗi khi giá trị thay đổi
-  };
+  // const handleMucGiamChange = (event) => {
+  //   const mucGiam = event.target.value;
+  //   setValues({ ...values, mucGiam });
+  //   // setError(false); // Reset lỗi khi giá trị thay đổi
+  // };
 
   const post = async (value) => {
     const res = await postKM(value);
-    if (res) {
+    if (res.data === 'Mã Khuyến Mãi Đã Tồn Tại !') {
+      toast.error(res.data);
+    } else {
       toast.success('Thêm thành công !');
       navigate('/voucher');
     }
@@ -146,7 +160,19 @@ function AddKhuyenMai() {
                   >
                     %
                   </Button>
-                  <Form.Control aria-label="Example text with two button addons" value={values.mucGiam} onChange={handleMucGiamChange} />
+                  <Form.Control
+                    aria-label="Example text with two button addons"
+                    value={values.mucGiam}
+                    type="number"
+                    min={0}
+                    onChange={(e) => {
+                      if (e.target.value >= 1) {
+                        setValues({ ...values, mucGiam: e.target.value });
+                      } else {
+                        e.preventDefault();
+                      }
+                    }}
+                  />{' '}
                 </InputGroup>
               </div>
 
@@ -158,7 +184,14 @@ function AddKhuyenMai() {
                   className="form-control"
                   type="number"
                   value={values.tien}
-                  onChange={(event) => setValues({ ...values, tien: event.target.value })}
+                  min={0}
+                  onChange={(e) => {
+                    if (e.target.value >= 1) {
+                      setValues({ ...values, tien: e.target.value });
+                    } else {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
 

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.KhuyenMai;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.KhuyenMaiServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -50,6 +52,12 @@ public class KhuyenMaiController {
             khuyenMai.setTrangThai(1);
         }else{
             khuyenMai.setTrangThai(2);
+        }
+        List<KhuyenMai> list = service.getAll();
+        for (KhuyenMai khuyenMai2 : list) {
+            if(khuyenMai.getMa().equalsIgnoreCase(khuyenMai2.getMa())){
+                return ResponseEntity.ok("Mã Khuyến Mãi Đã Tồn Tại !");
+            }
         }
         return ResponseEntity.ok(service.add(khuyenMai));
     }

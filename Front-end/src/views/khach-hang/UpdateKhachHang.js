@@ -300,6 +300,33 @@ function UpdateKhachHang() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!values.tenKhachHang) {
+      toast.error('Vui lòng nhập tên khách hàng');
+      return;
+    }
+
+    if (!values.sdt) {
+      toast.error('Vui lòng nhập số điện thoại');
+      return;
+    }
+    if (!values.email) {
+      toast.error('Vui lòng nhập email khách hàng');
+      return;
+    }
+
+    if (!values.ngaySinh) {
+      toast.error('Vui lòng nhập ngày Sinh khách hàng');
+      return;
+    }
+    const ngaySinhDate = new Date(values.ngaySinh);
+    const currentDate = new Date();
+
+    if (ngaySinhDate >= currentDate) {
+      toast.error('Ngày sinh phải nhỏ hơn ngày hiện tại');
+      return;
+    }
+
     const formData = new FormData();
 
     formData.append('tenKhachHang', values.tenKhachHang);

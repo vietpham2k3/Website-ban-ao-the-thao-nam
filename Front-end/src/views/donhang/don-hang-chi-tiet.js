@@ -4952,7 +4952,7 @@ function DonHangCT() {
                   </Col>
                 </Row>
               </Container>
-              {(hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' &&  hoaDon.loaiDon === 1) && (
+              {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' && hoaDon.loaiDon === 1 && (
                 <Container>
                   <Row>
                     <Col sm={6} className="row">

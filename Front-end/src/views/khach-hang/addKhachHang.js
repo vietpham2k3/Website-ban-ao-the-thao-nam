@@ -131,6 +131,33 @@ function AddKhachHang() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!values.khachHang.tenKhachHang) {
+      toast.error('Vui lòng nhập tên khách hàng');
+      return;
+    }
+
+    if (!values.khachHang.sdt) {
+      toast.error('Vui lòng nhập số điện thoại');
+      return;
+    }
+    if (!values.khachHang.email) {
+      toast.error('Vui lòng nhập email khách hàng');
+      return;
+    }
+
+    if (!values.khachHang.ngaySinh) {
+      toast.error('Vui lòng nhập ngày Sinh khách hàng');
+      return;
+    }
+    const ngaySinhDate = new Date(values.khachHang.ngaySinh);
+    const currentDate = new Date();
+
+    if (ngaySinhDate >= currentDate) {
+      toast.error('Ngày sinh phải nhỏ hơn ngày hiện tại');
+      return;
+    }
+
     setValues((prevValues) => ({
       ...prevValues,
       tinhThanh: selectedProvinceName,
