@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { detailGH } from 'services/GioHangService';
@@ -11,6 +12,14 @@ import { login } from 'services/LoginService';
 function SignInForm(props) {
   const navigate = useNavigate();
   const { setState, state, openForgotPasswordModal } = props;
+  const checkedLogin = localStorage.getItem('checkedLogin');
+
+  useEffect(() => {
+    if (checkedLogin) {
+      toast.warning('Vui lòng đăng nhập để mua hàng');
+      localStorage.removeItem('checkedLogin');
+    }
+  }, [checkedLogin]);
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -26,6 +35,10 @@ function SignInForm(props) {
       toast.error('Sai tài khoản hoặc mật khẩu');
       return;
     }
+    if (res.data === 'Tài khoản này đã bị khoá') {
+      toast.error(res.data);
+      return;
+    }
     if (res.data.role === 'KH') {
       navigate('/trang-chu');
       toast.success('Đăng nhập thành công');
@@ -35,12 +48,13 @@ function SignInForm(props) {
       navigate('/ban-hang-tai-quay');
       toast.success('Đăng nhập thành công');
       localStorage.setItem('dataLoginNV', JSON.stringify(res.data));
+      window.location.reload();
     } else {
       navigate('/thong-ke');
       toast.success('Đăng nhập thành công');
       localStorage.setItem('dataLoginAD', JSON.stringify(res.data));
+      window.location.reload();
     }
-    console.log(res);
   };
 
   const detail = async (id) => {

@@ -73,6 +73,8 @@ const NhanVien = () => {
     return formattedDate;
   }
 
+  console.log(data);
+
   return (
     <div>
       <MainCard>

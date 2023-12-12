@@ -16,7 +16,7 @@ function ModalAddHangDoi(props) {
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose} centered size="lg">
+      <Modal style={{ paddingTop: 90, marginLeft: 150 }} show={show} onHide={handleClose} centered size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Chọn sản phẩm đổi</Modal.Title>
         </Modal.Header>

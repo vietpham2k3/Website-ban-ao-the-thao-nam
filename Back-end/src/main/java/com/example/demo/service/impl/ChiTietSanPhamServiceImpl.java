@@ -3,13 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.FilterProductClient;
 import com.example.demo.dto.response.ProductDetailClientRespose;
 import com.example.demo.entity.Anh;
-import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.ChiTietSanPham;
-import com.example.demo.entity.CoAo;
-import com.example.demo.entity.KichCo;
-import com.example.demo.entity.LoaiSanPham;
-import com.example.demo.entity.MauSac;
-import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.repository.ChiTietSanPhamRepository;
 import com.example.demo.service.ChatLieuService;
 import com.example.demo.service.ChiTietSanPhamService;
@@ -24,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;

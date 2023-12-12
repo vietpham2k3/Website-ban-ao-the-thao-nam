@@ -15,4 +15,5 @@ public interface HoaDonCustom {
     Integer gettrang_thai();
     Integer getloai_don();
     String getma_giao_dich();
+    String getten();
 }

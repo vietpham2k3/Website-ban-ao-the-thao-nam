@@ -64,9 +64,11 @@ const AddLSP = Loadable(lazy(() => import('views/loaisanpham/AddLSP')));
 // kich co
 const KichCo = Loadable(lazy(() => import('views/kich-co/KichCo')));
 const UpdateKC = Loadable(lazy(() => import('views/kich-co/UpdateKichCo')));
+// error
+const Error = Loadable(lazy(() => import('views/errors/Error')));
 
 // import { Navigate } from 'react-router';
-// const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
 
 const MainRoutes = {
   path: '/',
@@ -94,138 +96,138 @@ const MainRoutes = {
       children: [
         {
           path: 'chi-tiet-san-pham',
-          element: <ChiTietSanPham />
+          element: dataLoginAD ? <ChiTietSanPham /> : <Error />
         },
         {
           path: 'chi-tiet-san-pham/add',
-          element: <AddChiTietSanPham />
+          element: dataLoginAD ? <AddChiTietSanPham /> : <Error />
         },
         {
           path: 'chi-tiet-san-pham/detail/:id/:idSP',
-          element: <UpdateSanPham />
+          element: dataLoginAD ? <UpdateSanPham /> : <Error />
         },
         //màu sắc
         {
           path: 'mau-sac',
-          element: <MauSac />
+          element: dataLoginAD ? <MauSac /> : <Error />
         },
         {
           path: 'mau-sac/add',
-          element: <AddMauSac />
+          element: dataLoginAD ? <AddMauSac /> : <Error />
         },
         {
           path: 'mau-sac/detail/:id',
-          element: <UpdateMS />
+          element: dataLoginAD ? <UpdateMS /> : <Error />
         },
         {
           path: 'mau-sac/update/:id',
-          element: <UpdateMS />
+          element: dataLoginAD ? <UpdateMS /> : <Error />
         },
         {
           path: 'mau-sac/delete/:id',
-          element: <MauSac />
+          element: dataLoginAD ? <MauSac /> : <Error />
         },
         //kichco
         {
           path: 'kich-co',
-          element: <KichCo />
+          element: dataLoginAD ? <KichCo /> : <Error />
         },
         {
           path: 'kich-co/add',
-          element: <AddKichCo />
+          element: dataLoginAD ? <AddKichCo /> : <Error />
         },
         {
           path: 'kich-co/update/:id',
-          element: <UpdateKC />
+          element: dataLoginAD ? <UpdateKC /> : <Error />
         },
         {
           path: 'kich-co/delete/:id',
-          element: <KichCo />
+          element: dataLoginAD ? <KichCo /> : <Error />
         },
         {
           path: 'kich-co/detail/:id',
-          element: <UpdateKC />
+          element: dataLoginAD ? <UpdateKC /> : <Error />
         },
         //co ao
         {
           path: 'co-ao',
-          element: <CoAo />
+          element: dataLoginAD ? <CoAo /> : <Error />
         },
         {
           path: 'co-ao/add',
-          element: <AddCoAo />
+          element: dataLoginAD ? <AddCoAo /> : <Error />
         },
         {
           path: 'co-ao/detail/:id',
-          element: <UpdateCA />
+          element: dataLoginAD ? <UpdateCA /> : <Error />
         },
         {
           path: 'co-ao/update/:id',
-          element: <UpdateCA />
+          element: dataLoginAD ? <UpdateCA /> : <Error />
         },
         {
           path: 'co-ao/delete/:id',
-          element: <CoAo />
+          element: dataLoginAD ? <CoAo /> : <Error />
         },
         {
           path: 'chat-lieu',
-          element: <ChatLieu />
+          element: dataLoginAD ? <ChatLieu /> : <Error />
         },
         {
           path: 'chat-lieu/add',
-          element: <AddChatLieu />
+          element: dataLoginAD ? <AddChatLieu /> : <Error />
         },
         {
           path: 'chat-lieu/detail/:id',
-          element: <UpdateCL />
+          element: dataLoginAD ? <UpdateCL /> : <Error />
         },
         {
           path: 'chat-lieu/update/:id',
-          element: <UpdateCL />
+          element: dataLoginAD ? <UpdateCL /> : <Error />
         },
         {
           path: 'chat-lieu/delete/:id',
-          element: <ChatLieu />
+          element: dataLoginAD ? <ChatLieu /> : <Error />
         },
 
         //Loại Sản Phẩm
         {
           path: 'loai-san-pham',
 
-          element: <LoaiSanPham />
+          element: dataLoginAD ? <LoaiSanPham /> : <Error />
         },
         //Nha San Xuat
         {
           path: 'nha-san-xuat',
-          element: <NhaSanXuat />
+          element: dataLoginAD ? <NhaSanXuat /> : <Error />
         },
         {
           path: 'nha-san-xuat/add',
-          element: <AddNSX />
+          element: dataLoginAD ? <AddNSX /> : <Error />
         },
         {
           path: 'nha-san-xuat/detail/:id',
-          element: <UpdateNSX />
+          element: dataLoginAD ? <UpdateNSX /> : <Error />
         },
         {
           path: 'nha-san-xuat/update/:id',
-          element: <UpdateNSX />
+          element: dataLoginAD ? <UpdateNSX /> : <Error />
         },
         {
           path: 'loai-san-pham/add',
-          element: <AddLSP />
+          element: dataLoginAD ? <AddLSP /> : <Error />
         },
         {
           path: 'loai-san-pham/detail/:id',
-          element: <UpdateLSP />
+          element: dataLoginAD ? <UpdateLSP /> : <Error />
         },
         {
           path: 'loai-san-pham/update/:id',
-          element: <UpdateLSP />
+          element: dataLoginAD ? <UpdateLSP /> : <Error />
         },
         {
           path: 'loai-san-pham/delete/:id',
-          element: <LoaiSanPham />
+          element: dataLoginAD ? <LoaiSanPham /> : <Error />
         }
         //====================
       ]
@@ -234,33 +236,33 @@ const MainRoutes = {
     //khuyen mai
     {
       path: '/voucher',
-      element: <KhuyenMai />
+      element: dataLoginAD ? <KhuyenMai /> : <Error />
     },
     {
       path: '/voucher/add',
-      element: <AddKhuyenMai />
+      element: dataLoginAD ? <AddKhuyenMai /> : <Error />
     },
     {
       path: '/voucher/update/:id',
-      element: <UpdateKhuyenMai />
+      element: dataLoginAD ? <UpdateKhuyenMai /> : <Error />
     },
     {
       path: '/voucher/detail/:id',
-      element: <UpdateKhuyenMai />
+      element: dataLoginAD ? <UpdateKhuyenMai /> : <Error />
     },
 
     //Khách Hàng
     {
       path: '/khach-hang',
-      element: <KhachHang />
+      element: dataLoginAD ? <KhachHang /> : <Error />
     },
     {
       path: '/khach-hang/add',
-      element: <AddKhachHang />
+      element: dataLoginAD ? <AddKhachHang /> : <Error />
     },
     {
       path: '/khach-hang/detail/:id',
-      element: <UpdateKhachHang />
+      element: dataLoginAD ? <UpdateKhachHang /> : <Error />
     },
     // {
     //   path: '/dia-chi/detail/:id',
@@ -268,31 +270,31 @@ const MainRoutes = {
     // },
     {
       path: '/khach-hang/update/:id',
-      element: <UpdateKhachHang />
+      element: dataLoginAD ? <UpdateKhachHang /> : <Error />
     },
 
     //Nhân Viên
     {
       path: '/nhan-vien/add',
-      element: <AddNhanVien />
+      element: dataLoginAD ? <AddNhanVien /> : <Error />
     },
     {
       path: '/nhan-vien',
-      element: <NhanVien />
+      element: dataLoginAD ? <NhanVien /> : <Error />
     },
     {
       path: '/nhan-vien/detail/:id',
-      element: <UpdateNhanVien />
+      element: dataLoginAD ? <UpdateNhanVien /> : <Error />
     },
     {
       path: '/nhan-vien/update/:id',
-      element: <UpdateNhanVien />
+      element: dataLoginAD ? <UpdateNhanVien /> : <Error />
     },
 
     //============//
     {
       path: '/thong-ke',
-      element: <DashboardDefault />
+      element: dataLoginAD ? <DashboardDefault /> : <Error />
     },
     // Bán hàng tại quầy
     {

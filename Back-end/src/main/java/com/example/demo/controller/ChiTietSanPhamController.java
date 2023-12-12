@@ -319,4 +319,9 @@ public class ChiTietSanPhamController {
         return ResponseEntity.status(HttpStatus.OK).body(chiTietSanPhamService.filter(filterProductClient, page));
     }
 
+    @GetMapping("checkTrung")
+    public ResponseEntity<Boolean> checkNameExists(@RequestParam("ten") String ten) {
+        boolean exists = sanPhamRepository.checkTrung(ten);
+        return ResponseEntity.ok(exists);
+    }
 }

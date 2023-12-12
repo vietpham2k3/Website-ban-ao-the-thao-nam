@@ -282,6 +282,7 @@ public class HoaDonController {
             hoaDon.setTenNguoiNhan("Khách lẻ");
         }
         hoaDon.setTenNguoiNhan(hoaDon.getTenNguoiNhan());
+        hoaDon.setNhanVien(hd.getNhanVien());
         hoaDon.setSoDienThoai(hoaDon.getSoDienThoai());
         if (hoaDon.getTrangThai() != 6) {
             hoaDon.setTrangThai(0);
@@ -355,19 +356,19 @@ public class HoaDonController {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
         ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
 
-            hoaDonChiTietService.updateSLDH(hoaDonCT.getSoLuongHangDoi(), hdct
-                    .getId());
+        hoaDonChiTietService.updateSLDH(hoaDonCT.getSoLuongHangDoi(), hdct
+                .getId());
 
-            chiTietSanPhamService.update(sp.getSoLuong() + (hoaDonCT.getSoLuongHangDoi() - hdct.getSoLuongHangDoi()),
+        chiTietSanPhamService.update(sp.getSoLuong() + (hoaDonCT.getSoLuongHangDoi() - hdct.getSoLuongHangDoi()),
                 hdct.getChiTietSanPham().getId());
-            return ResponseEntity.ok("ok");
+        return ResponseEntity.ok("ok");
     }
 
     @PutMapping("update-sl-hang-loi/{id}")
     public ResponseEntity<?> updateSLHLoi(@PathVariable UUID id, @RequestBody HoaDonChiTiet hoaDonCT) {
         HoaDonChiTiet hdct = hoaDonChiTietService.findById(id);
 //        ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-//
+////
 //        chiTietSanPhamService.update(sp.getSoLuong() +
 //                        (hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi()),
 //                hdct.getChiTietSanPham().getId());
@@ -386,6 +387,7 @@ public class HoaDonController {
             hdct.setHangLoi(hl);
             hdct.setSoLuongHangLoi(hoaDonCT.getSoLuongHangLoi());
             hdct.setSoLuongYeuCauDoi(hdct.getSoLuongYeuCauDoi() - hoaDonCT.getSoLuongHangLoi());
+
         } else {
             List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(hdct.getHoaDon().getId());
 
@@ -418,6 +420,18 @@ public class HoaDonController {
                 hdct.getChiTietSanPham().getId());
 
         hdct.setSoLuongYeuCauDoi(hdct.getSoLuongYeuCauDoi() - soLuong);
+//
+//        String maLH = "HL" + new Random().nextInt(100000);
+//        HangLoi hl = new HangLoi().builder()
+//                .soHangLoi(hdct.getSoLuongYeuCauDoi() - soLuong)
+//                .ghiChu(hdct.getHangLoi().getGhiChu())
+//                .nguoiTao(hdct.getHangLoi().getNguoiTao())
+//                .ngayTao(new Date())
+//                .ma(maLH)
+//                .build();
+//        hl = hangLoiService.add(hl);
+//        hdct.setHangLoi(hl);
+//        hdct.setSoLuongHangLoi(hdct.getSoLuongYeuCauDoi() - soLuong);
 
         hoaDonChiTietService.add(hdct);
         return ResponseEntity.ok("ok");
@@ -501,7 +515,7 @@ public class HoaDonController {
 
     @GetMapping("hien-thi-page-find-don-huy-chua-hoan")
     public ResponseEntity<?> findVIPDonHuyChuaHoan(String key, String tuNgay, String denNgay,
-                                     @RequestParam(defaultValue = "0") int page) {
+                                                   @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
         Date tuNgayDate = null;
@@ -524,6 +538,26 @@ public class HoaDonController {
                 hoaDon.getDiaChi(), hoaDon.getTinh(), hoaDon.getHuyen(), hoaDon.getXa(),
                 hoaDon.getTongTien(), hoaDon.getTongTienKhiGiam(), hoaDon.getTienShip());
         return ResponseEntity.ok().body("ok");
+    }
+
+    @PostMapping("hoan-tien/{id}/{idNV}")
+    public ResponseEntity<?> hoanTien(@PathVariable UUID id,
+                                      @PathVariable UUID idNV,
+                                      @RequestBody LichSuHoaDon lichSuHoaDon) {
+        String maLSHD = "LSHD" + new Random().nextInt(100000);
+        HoaDon hoaDon = serviceHD.detailHD(id);
+        NhanVien nhanVien = nvService.getOne(idNV);
+        hoaDon.setNgaySua(new Date());
+        lichSuHoaDon.setTrangThai(18);
+        hoaDon.setTrangThai(18);
+        hoaDon.setNhanVien(nhanVien);
+        lichSuHoaDon.setNgayTao(new Date());
+        lichSuHoaDon.setMa(maLSHD);
+        lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setTen("Hoàn tiền thành công");
+        lichSuHoaDon.setNguoiTao(nhanVien.getTen());
+        return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
     @PostMapping("xac-nhan-tra-hang/{id}")
@@ -556,7 +590,7 @@ public class HoaDonController {
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());
         lichSuHoaDon.setHoaDon(hoaDon);
         lichSuHoaDon.setTen("Đổi hàng thất bại");
-
+        lichSuHoaDon.setNguoiTao(hoaDon.getNhanVien().getTen());
         return ResponseEntity.ok(serviceLSHD.createLichSuDonHang(lichSuHoaDon));
     }
 
@@ -715,38 +749,38 @@ public class HoaDonController {
         hoaDon.setNgaySua(new Date());
         hoaDon.setTrangThai(2);
 
-        if (hoaDon.getLoaiDon() == 1 && "VNPay".equals(hoaDon.hinhThucThanhToan.getTen())) {
-            lichSuHoaDon.setTen("Hoàn tiền thành công");
-            lichSuHoaDon.setTrangThai(18);
-
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.schedule(() -> {
-                LichSuHoaDon additionalLichSu = new LichSuHoaDon();
-                additionalLichSu.setTen("Đã hủy đơn hàng");
-                additionalLichSu.setTrangThai(2);
-                additionalLichSu.setNgayTao(new Date());
-                additionalLichSu.setMa(maLSHD);
-                additionalLichSu.setGhiChu(lichSuHoaDon.getGhiChu());
-                additionalLichSu.setHoaDon(hoaDon);
-
-                List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
-
-                for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
-                    String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
-                    if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
-                        lichSu.setNguoiTao(nguoiTao);
-                        additionalLichSu.setNguoiTao(nguoiTao);
-                    }
-                }
-
-                // Save the additional LichSuHoaDon
-                serviceLSHD.createLichSuDonHang(additionalLichSu);
-            }, 1, TimeUnit.MILLISECONDS);
-        } else {
-            lichSuHoaDon.setTrangThai(2);
-            lichSuHoaDon.setTen("Đã hủy đơn hàng");
-        }
-
+//        if (hoaDon.getLoaiDon() == 1 && "VNPay".equals(hoaDon.hinhThucThanhToan.getTen())) {
+//            lichSuHoaDon.setTen("Hoàn tiền thành công");
+//            lichSuHoaDon.setTrangThai(18);
+//
+//            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+//            executorService.schedule(() -> {
+//                LichSuHoaDon additionalLichSu = new LichSuHoaDon();
+//                additionalLichSu.setTen("Đã hủy đơn hàng");
+//                additionalLichSu.setTrangThai(2);
+//                additionalLichSu.setNgayTao(new Date());
+//                additionalLichSu.setMa(maLSHD);
+//                additionalLichSu.setGhiChu(lichSuHoaDon.getGhiChu());
+//                additionalLichSu.setHoaDon(hoaDon);
+//
+//                List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
+//
+//                for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
+//                    String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
+//                    if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
+//                        lichSu.setNguoiTao(nguoiTao);
+//                        additionalLichSu.setNguoiTao(nguoiTao);
+//                    }
+//                }
+//
+//                // Save the additional LichSuHoaDon
+//                serviceLSHD.createLichSuDonHang(additionalLichSu);
+//            }, 1, TimeUnit.MILLISECONDS);
+//        } else {
+//
+//        }
+        lichSuHoaDon.setTrangThai(2);
+        lichSuHoaDon.setTen("Đã hủy đơn hàng");
         lichSuHoaDon.setNgayTao(new Date());
         lichSuHoaDon.setMa(maLSHD);
         lichSuHoaDon.setGhiChu(lichSuHoaDon.getGhiChu());

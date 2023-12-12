@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,19 +31,25 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "WHERE id_hl IS NOT NULL;", nativeQuery = true)
     Page<HoaDonChiTiet> getAll(Pageable pageable);
 
-    @Query(value = "SELECT hdct.*\n" +
-            "FROM HoaDonChiTiet hdct\n" +
-            "JOIN ChiTietSanPham ctsp ON hdct.id_ctsp = ctsp.id\n" +
-            "JOIN SanPham sp ON sp.id = ctsp.id_sp\n" +
-            "JOIN HoaDon hd ON hd.id = hdct.id_hd\n" +
-            "JOIN HangLoi hl ON hl.id = hdct.id_hl\n" +
-            "WHERE id_hl IS NOT NULL\n" +
+    @Query(value = "SELECT ctsp.id_ms, hdct.*, ctsp.id_kc, ctsp.id as idctsp, sp.ten, \n" +
+            "hd.ma, hl.so_luong_hang_loi as soluonghangloi, hl.ghi_chu, hl.ngay_tao, hl.nguoi_tao \n" +
+            "FROM HoaDonChiTiet hdct \n" +
+            "JOIN ChiTietSanPham ctsp ON hdct.id_ctsp = ctsp.id \n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp \n" +
+            "JOIN HoaDon hd ON hd.id = hdct.id_hd \n" +
+            "JOIN HangLoi hl ON hl.id = hdct.id_hl \n" +
+            "JOIN NhanVien nv ON nv.id = hd.id_tk \n" +
+            "WHERE id_hl IS NOT NULL \n" +
             "AND (\n" +
-            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , :key , '%'))\n" +
+            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , :key , '%')) \n" +
             "    or\n" +
-            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , :key , '%'))) " +
+            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , :key , '%')) " +
+            "    or\n" +
+            "    (:key IS NULL OR nv.ten LIKE CONCAT('%' , :key , '%'))) " +
+            "                   AND ((:tuNgay IS NULL OR hd.ngay_tao >= :tuNgay)\n" +
+            "                   AND (:denNgay IS NULL OR hd.ngay_tao <= :denNgay))\n" +
             "order by hl.ngay_tao desc", nativeQuery = true)
-    Page<HoaDonChiTiet> search(String key, Pageable pageable);
+    Page<HoaDonChiTiet> search(String key, Date tuNgay, Date denNgay, Pageable pageable);
 
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +

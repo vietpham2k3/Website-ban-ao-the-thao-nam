@@ -3,6 +3,7 @@ import React from 'react';
 // import { Card } from '@mui/material';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import '../../scss/Loading.scss';
 import { useState } from 'react';
 import {
   getAllListCL,
@@ -257,14 +258,21 @@ function UpdateSanPham() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     detail(idCTSP !== null ? idCTSP : id);
     getAllAnh(idCTSP !== null ? idCTSP : id);
   }, [idCTSP]);
 
   const detail = async (idCTSP) => {
     const res = await detailCTSP(idCTSP);
-    if (res) {
-      setValues(res.data);
+    try {
+      if (res) {
+        setValues(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -415,6 +423,13 @@ function UpdateSanPham() {
   return (
     <div>
       <MainCard>
+        {isLoading && (
+          <div className="overlay">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
         <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-8">
             <label className="form-label" htmlFor="trang-thai">

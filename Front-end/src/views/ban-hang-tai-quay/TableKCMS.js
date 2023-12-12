@@ -9,6 +9,7 @@ const TableKCMS = (props) => {
   return (
     <div>
       <Modal
+        style={{ paddingTop: 90, marginLeft: 150 }}
         show={show}
         onHide={handleClose}
         backdrop="static"
@@ -51,16 +52,21 @@ const TableKCMS = (props) => {
                 style={{ width: '100%' }}
                 type="number"
                 variant="standard"
-                onChange={(e) =>
-                  setValuesAdd({
-                    ...valuesAdd,
-                    hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
-                    doiHang: {
-                      ...valuesAdd.doiHang,
-                      soHangDoi: parseInt(e.target.value)
-                    }
-                  })
-                }
+                inputProps={{ min: 1 }}
+                onChange={(e) => {
+                  if (e.target.value >= 1) {
+                    setValuesAdd({
+                      ...valuesAdd,
+                      hoaDonChiTiet: { ...valuesAdd.hoaDonChiTiet, soLuongHangDoi: parseInt(e.target.value) },
+                      doiHang: {
+                        ...valuesAdd.doiHang,
+                        soHangDoi: parseInt(e.target.value)
+                      }
+                    });
+                  } else {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>

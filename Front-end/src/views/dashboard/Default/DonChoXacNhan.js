@@ -124,7 +124,7 @@ const DonChoXacNhan = ({ isLoading }) => {
         <TotalIncomeCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2 }}>
+          <Box height={112} sx={{ p: 2 }}>
             <List sx={{ py: 0, display: 'flex' }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>

@@ -1,4 +1,4 @@
-import { postCreate } from 'services/KichCoService';
+import { postCreate, checkTrung } from 'services/KichCoService';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,16 @@ function AddKichCo() {
     }
   };
 
+  const check = async (ten) => {
+    try {
+      const response = await checkTrung(ten);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi kiểm tra trùng lặp tên:', error);
+      return true;
+    }
+  };
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -31,7 +41,7 @@ function AddKichCo() {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (values.ten.trim() === '') {
       toast.error('Tên không được để trống');
@@ -39,6 +49,11 @@ function AddKichCo() {
     }
     if (values.ten.length > 15) {
       toast.error('Tên không được quá 15 kí tự');
+      return;
+    }
+    const isDuplicate = await check(values.ten);
+    if (isDuplicate) {
+      toast.error('Tên đã tồn tại');
       return;
     }
     handleOpenModal();

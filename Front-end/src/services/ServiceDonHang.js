@@ -197,6 +197,10 @@ const hienThiYCDoiHang = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-don-yeu-cau-doi/` + id);
 };
 
+const hoanTien = (id, idNV, values) => {
+  return axios.post(`/api/hoa-don/hoan-tien/${id}/${idNV}`, values);
+};
+
 const hienThiHangLoi = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-hang-loi/` + id);
 };
@@ -215,6 +219,7 @@ const hangKoLoi = (id, soLuong) => {
 
 export {
   getAllHD,
+  hoanTien,
   requestHuyDon,
   nhanHang,
   searchByTrangThai,

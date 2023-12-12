@@ -4,6 +4,7 @@ import com.example.demo.entity.DoiHang;
 import com.example.demo.entity.HoaDonChiTiet;
 import org.springframework.data.domain.Page;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public interface DoiHangService {
 
     Page<HoaDonChiTiet> page(Integer page);
 
-    Page<HoaDonChiTiet> search(String key, Integer page);
+    Page<HoaDonChiTiet> search(String key, Date tuNgay, Date denNgay, Integer page);
 
     List<HoaDonChiTiet> getAllHD(UUID id);
 

@@ -20,7 +20,8 @@ public interface ChatLieuRepository extends JpaRepository<ChatLieu, UUID> {
     @Query(value = "SELECT * FROM ChatLieu\n" +
             "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "or (ten is null or ten LIKE lower(CONCAT('%', ?1, '%'))))\n" +
-            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
+            "and (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%'))) \n " +
+            "ORDER BY ngay_tao DESC", nativeQuery = true)
     Page<ChatLieu> searchPageMS(@Param("key") String key,
                                 @Param("trangThai") Integer trangThai,
                                 Pageable pageable);

@@ -27,7 +27,8 @@ public interface LoaiSanPhamRepository extends JpaRepository<LoaiSanPham, UUID> 
     @Query(value = "SELECT * FROM LoaiSanPham\n" +
             "WHERE ((ma is null or ma LIKE lower(CONCAT('%', ?1, '%')))\n" +
             "OR (ten is null or ten LIKE lower(CONCAT('%', ?1, '%'))))\n" +
-            "AND (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%')))", nativeQuery = true)
+            "AND (trang_thai is null or trang_thai LIKE lower(CONCAT('%', ?2, '%'))) \n" +
+            "ORDER BY ngay_tao DESC", nativeQuery = true)
     Page<LoaiSanPham> searchPage(@Param("key") String key,
                                  @Param("trangThai") Integer trangThai,
                                  Pageable pageable);

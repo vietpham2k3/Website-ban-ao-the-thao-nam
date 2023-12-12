@@ -29,4 +29,8 @@ const searchKC = (key, trangThai, page) => {
   return axios.get(`/api/kich-co/serach?trangThai=${trangThai}&key=${key}&page=${page}`);
 };
 
-export { fetchAll, detailKC, fetchAllList, postCreate, putUpdateKC, deleteKC, searchKC, fetchAllCTSP };
+const checkTrung = (ten) => {
+  return axios.get(`/api/kich-co/checkTrung?ten=${ten}`);
+};
+
+export { fetchAll, detailKC, fetchAllList, postCreate, putUpdateKC, deleteKC, searchKC, fetchAllCTSP, checkTrung };

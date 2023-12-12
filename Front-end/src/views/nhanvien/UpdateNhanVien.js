@@ -37,7 +37,7 @@ function UpdateNhanVien() {
   //Anh
   const fileInputRef = useRef(null);
   const [selectedImageURL, setSelectedImageURL] = useState(imageURL || '');
-
+  console.log(vaiTroS);
   useEffect(() => {
     return () => {
       selectedImageURL && URL.revokeObjectURL(selectedImageURL);
@@ -140,7 +140,7 @@ function UpdateNhanVien() {
       const { ngaySinh, vaiTro, ...values } = res.data;
       setValues({
         ...values,
-        vaiTro: vaiTro, // Gán giá trị của vaiTro từ API
+        vaiTro: vaiTro.ten, // Gán giá trị của vaiTro từ API
         ngaySinh: formatDate(ngaySinh)
       });
     }
@@ -157,12 +157,12 @@ function UpdateNhanVien() {
     }
   };
 
-  console.log(values);
-
   const formatDate = (date) => {
     const formattedDate = new Date(parseInt(date, 10)).toISOString().slice(0, 10);
     return formattedDate;
   };
+
+  console.log(values);
 
   return (
     <MainCard>
@@ -308,11 +308,8 @@ function UpdateNhanVien() {
                   value={values.vaiTro} // Đặt giá trị của trường <select> thành giá trị đã chọn (values.vaiTro)
                   onChange={(e) => setValues({ ...values, vaiTro: e.target.value })}
                 >
-                  {vaiTroS.map((d) => (
-                    <option key={d.id} value={d.id} selected={d.id === values.vaiTro.id}>
-                      {d.ten}
-                    </option>
-                  ))}
+                  <option value={'Admin'}>Admin</option>
+                  <option value={'Nhân viên'}>Nhân viên</option>
                 </select>
               </div>
               <div className="col-md-6">
@@ -359,7 +356,7 @@ function UpdateNhanVien() {
                     name="inlineRadioOptions"
                     id="inlineRadio1"
                     value={values.trangThai}
-                    checked={true}
+                    checked={values.trangThai === 0}
                     onChange={() => setValues({ ...values, trangThai: 0 })}
                   />
                   <label htmlFor="a" className="form-check-label">
@@ -373,6 +370,7 @@ function UpdateNhanVien() {
                     name="inlineRadioOptions"
                     id="inlineRadio2"
                     value={values.trangThai}
+                    checked={values.trangThai === 1}
                     onChange={() => setValues({ ...values, trangThai: 1 })}
                   />
                   <label htmlFor="a" className="form-check-label">

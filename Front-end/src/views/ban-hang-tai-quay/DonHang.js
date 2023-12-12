@@ -59,7 +59,8 @@ function DonHang(props) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [dataDetailHD, setDataDetailHD] = useState({});
   const [dataDetailKM, setDataDetailKM] = useState({});
-  const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
+  const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+  const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
   Font.register({ family: 'Roboto', src: myFont });
   const [valuesAddKM, setValuesAddKM] = useState({
     khuyenMai: {
@@ -234,6 +235,8 @@ function DonHang(props) {
     }
   });
 
+  console.log(tienThua);
+
   const InvoiceDocument = () => {
     return (
       <Document>
@@ -250,10 +253,14 @@ function DonHang(props) {
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(dataDetailHD.ngayThanhToan)}</Text>
             <Text style={styles.textThuocTinh}>Khách hàng: {dataDetailHD.tenNguoiNhan}</Text>
+            {(dataDetailHD && dataDetailHD.diaChi) &&(
             <Text style={styles.textThuocTinh}>Địa chỉ: {dataDetailHD.diaChi}</Text>
-            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.sdt}</Text>
+            )}
+            {(dataDetailHD && dataDetailHD.soDienThoai) &&(
+            <Text style={styles.textThuocTinh}>Số điện thoại: {dataDetailHD.soDienThoai}</Text>
+             )}
             <Text style={styles.textThuocTinh}>
-              Nhân viên bán hàng: {dataDetailHD && dataDetailHD.taiKhoan && dataDetailHD.taiKhoan.ten}
+              Nhân viên bán hàng: {(dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten)}
             </Text>
           </div>
           <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
@@ -289,12 +296,8 @@ function DonHang(props) {
               </View>
             ))}
             <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền cần thanh toán</Text>
+              <Text style={styles.textLeft}>Tiền khách thanh toán</Text>
               <Text style={styles.textRight}>{convertToCurrency(dataDetailHD.tongTienKhiGiam)}</Text>
-            </View>
-            <View style={styles.flexContainer}>
-              <Text style={styles.textLeft}>Tiền thừa</Text>
-              <Text style={styles.textRight}>{convertToCurrency(tienThua)}</Text>
             </View>
           </View>
           <View>
@@ -594,7 +597,7 @@ function DonHang(props) {
   }
 
   const handleThanhToan = () => {
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -609,7 +612,7 @@ function DonHang(props) {
 
   const handleThanhToanWithVNP = () => {
     window.location.href = urlPay;
-    ThanhToanHD(id, dataLogin && dataLogin.ten);
+    ThanhToanHD(id, (dataLoginNV && dataLoginNV.ten) || (dataLoginAD && dataLoginAD.ten) );
     setValuesUpdateHD({
       ...valuesUpdateHD,
       ...valuesUpdateHD.hinhThucThanhToan,
@@ -951,7 +954,7 @@ function DonHang(props) {
                 ></span>
               </button>
             </div>
-            <Modal style={{paddingTop: 100}} centered show={isModalOpen} onHide={closeModal}>
+            <Modal style={{ paddingTop: 100 }} centered show={isModalOpen} onHide={closeModal}>
               <Modal.Body>
                 <QrReader delay={1500} onError={handleError} onScan={handleScan} style={{ width: '100%' }} />
               </Modal.Body>
@@ -1526,6 +1529,7 @@ function DonHang(props) {
                 type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
+                min={0}
               />
             </div>
           </div>
@@ -1552,14 +1556,14 @@ function DonHang(props) {
               </select>
             </div>
           </div>
-          <div className="ma-giam-gia">
+          {/* <div className="ma-giam-gia">
             <div>
               <h6>Tiền thừa</h6>
             </div>
             <div>
               <p>{convertToCurrency(tienThua)}</p>
             </div>
-          </div>
+          </div> */}
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
               <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
@@ -1590,7 +1594,7 @@ function DonHang(props) {
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToanWithVNP()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1601,7 +1605,7 @@ function DonHang(props) {
                 <button
                   type="button"
                   className="btn btn-success"
-                  disabled={tienThua < 0 || tienKhachDua === 0}
+                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                   onClick={() => handleThanhToan()}
                 >
                   <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
@@ -1613,7 +1617,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToan()}
               >
                 Thanh toán
@@ -1622,7 +1626,7 @@ function DonHang(props) {
               <button
                 type="button"
                 className="btn btn-success"
-                disabled={tienThua < 0 || tienKhachDua === 0}
+                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
                 onClick={() => handleThanhToanWithVNP()}
               >
                 Thanh toán
