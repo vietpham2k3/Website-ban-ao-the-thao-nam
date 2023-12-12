@@ -40,6 +40,24 @@ function UpdateCA() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Kiểm tra điều kiện trước khi gọi put
+    if (!values.ten.trim()) {
+      toast.error('Vui lòng nhập tên cổ áo.');
+      return;
+    }
+
+    if (values.ten.length > 50) {
+      toast.error('Tên cổ áo không được vượt quá 50 ký tự.');
+      return;
+    }
+
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(values.ten)) {
+      toast.error('Tên cổ áo chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }    
+
     put(id, values);
   };
 

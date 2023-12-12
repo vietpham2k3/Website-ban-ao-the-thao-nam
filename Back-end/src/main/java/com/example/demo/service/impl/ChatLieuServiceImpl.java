@@ -48,11 +48,19 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ChatLieu add(ChatLieu chatLieu) {
-        chatLieu.setMa(chatLieu.getMa());
-        chatLieu.setTen(chatLieu.getTen());
-        chatLieu.setTrangThai(chatLieu.getTrangThai());
-        chatLieu.setNgayTao(new Date());
-        return chatLieuRepository.save(chatLieu);
+        try {
+            ChatLieu existingChatLieu = chatLieuRepository.findByTen(chatLieu.getTen());
+            if (existingChatLieu != null) {
+                throw new RuntimeException("Tên chất liệu đã tồn tại");
+            }
+            chatLieu.setMa(chatLieu.getMa());
+            chatLieu.setTrangThai(chatLieu.getTrangThai());
+            chatLieu.setNgayTao(new Date());
+            return chatLieuRepository.save(chatLieu);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm chất liệu: " + e.getMessage());
+        }
     }
 
     @Override
@@ -66,7 +74,6 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         chatLieu.setNgaySua(new Date());
         return chatLieuRepository.save(chatLieu);
     }
-
 
     @Override
     public ChatLieu delete(UUID id) {

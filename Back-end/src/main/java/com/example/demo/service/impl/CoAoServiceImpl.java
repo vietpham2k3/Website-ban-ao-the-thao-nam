@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
 import com.example.demo.repository.CoAoRepository;
 import com.example.demo.service.CoAoService;
@@ -51,11 +52,20 @@ public class CoAoServiceImpl implements CoAoService {
 
     @Override
     public CoAo add(CoAo coAo) {
+        try {
+            CoAo existingCoAo = repository.findByTen(coAo.getTen());
+            if (existingCoAo != null) {
+                throw new RuntimeException("Tên cổ áo đã tồn tại");
+            }
         coAo.setMa(coAo.getMa());
         coAo.setTen(coAo.getTen());
         coAo.setTrangThai(coAo.getTrangThai());
         coAo.setNgayTao(new Date());
         return repository.save(coAo);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm cổ áo: " + e.getMessage());
+        }
     }
 
     @Override
@@ -69,7 +79,6 @@ public class CoAoServiceImpl implements CoAoService {
         coAo.setNgaySua(new Date());
         return repository.save(coAo);
     }
-
 
     @Override
     public CoAo delete(UUID id) {
