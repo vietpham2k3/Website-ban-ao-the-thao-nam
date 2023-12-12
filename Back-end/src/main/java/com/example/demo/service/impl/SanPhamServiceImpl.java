@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.KichCo;
 import com.example.demo.entity.SanPham;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.SanPhamService;
@@ -22,5 +23,11 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public SanPham detail(UUID id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Boolean checkTrung(String ten) {
+        SanPham tenMoi = repository.findByTen(ten);
+        return tenMoi != null;
     }
 }

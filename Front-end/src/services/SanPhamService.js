@@ -111,6 +111,10 @@ const filterProduct = (values) => {
   return axios.post('/api/chi-tiet-san-pham/filter', values);
 };
 
+const checkTrung = (ten) => {
+  return axios.get(`/api/chi-tiet-san-pham/checkTrung?ten=${ten}`);
+};
+
 export {
   getAll,
   updateSL,
@@ -138,5 +142,6 @@ export {
   getAllCTSPWeb,
   findAllProductClient,
   filterProduct,
-  searchSP
+  searchSP,
+  checkTrung
 };

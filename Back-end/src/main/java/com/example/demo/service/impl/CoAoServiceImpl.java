@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.CoAo;
 import com.example.demo.repository.CoAoRepository;
 import com.example.demo.service.CoAoService;
@@ -28,14 +29,14 @@ public class CoAoServiceImpl implements CoAoService {
     }
 
     @Override
-    public Page<CoAo>fillAll(Integer page) {
+    public Page<CoAo> fillAll(Integer page) {
         Pageable pageable = PageRequest.of(page, 5, Sort.by("ngayTao").descending());
         return repository.findAll(pageable);
     }
 
     @Override
     public Page<CoAo> pageSearchMS(String key, Integer trangThai, Pageable pageable) {
-        return repository.searchPageMS(key,trangThai,pageable);
+        return repository.searchPageMS(key, trangThai, pageable);
     }
 
 
@@ -51,25 +52,42 @@ public class CoAoServiceImpl implements CoAoService {
 
     @Override
     public CoAo add(CoAo coAo) {
-        coAo.setMa(coAo.getMa());
-        coAo.setTen(coAo.getTen());
-        coAo.setTrangThai(coAo.getTrangThai());
-        coAo.setNgayTao(new Date());
-        return repository.save(coAo);
+        try {
+            CoAo existingCoAo = repository.findByTen(coAo.getTen());
+            if (existingCoAo != null) {
+                throw new RuntimeException("Tên cổ áo đã tồn tại");
+            }
+            coAo.setMa(coAo.getMa());
+            coAo.setTen(coAo.getTen());
+            coAo.setTrangThai(coAo.getTrangThai());
+            coAo.setNgayTao(new Date());
+            return repository.save(coAo);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm cổ áo: " + e.getMessage());
+        }
     }
 
     @Override
     public CoAo update(CoAo coAo) {
-        CoAo c = detail(coAo.getId());
-        coAo.setId(coAo.getId());
-        coAo.setMa(c.getMa());
-        coAo.setTen(coAo.getTen());
-        coAo.setTrangThai(coAo.getTrangThai());
-        coAo.setNgayTao(coAo.getNgayTao());
-        coAo.setNgaySua(new Date());
-        return repository.save(coAo);
+        try {
+            CoAo existingCoAo = repository.findByTen(coAo.getTen());
+            if (existingCoAo != null) {
+                throw new RuntimeException("Tên cổ áo đã tồn tại");
+            }
+            CoAo c = detail(coAo.getId());
+            coAo.setId(coAo.getId());
+            coAo.setMa(c.getMa());
+            coAo.setTen(coAo.getTen());
+            coAo.setTrangThai(coAo.getTrangThai());
+            coAo.setNgayTao(coAo.getNgayTao());
+            coAo.setNgaySua(new Date());
+            return repository.save(coAo);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm cổ áo: " + e.getMessage());
+        }
     }
-
 
     @Override
     public CoAo delete(UUID id) {
@@ -84,7 +102,7 @@ public class CoAoServiceImpl implements CoAoService {
     @Override
     public List<CoAo> findByCoAoString(List<String> coAoString) {
         List<CoAo> coAos = new ArrayList<>();
-        for (String coAo: coAoString) {
+        for (String coAo : coAoString) {
             CoAo ca = repository.findByTen(coAo);
             coAos.add(ca);
         }

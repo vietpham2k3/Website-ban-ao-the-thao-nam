@@ -1616,7 +1616,7 @@ function DonHangCT() {
       const value = parseFloat(e.target.value);
       if (!isNaN(value) && value >= 0) {
         // const nonNegativeValue = Math.max(value, 0);
-        // Nếu nhỏ hơn 0, đặt giá trị thành 0
+        //  Nếu nhỏ hơn 0, đặt giá trị thành 0
         setHoaDon({ ...hoaDon, tienShip: value });
         updateHD(id, { ...hoaDon, tienShip: value , tongTienKhiGiam: hoaDon.tongTien + value - totalGiam});
       }
@@ -5640,7 +5640,6 @@ function DonHangCT() {
                             Đổi hàng
                           </ButtonMUI>
                         )}
-
                       <Modal
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"

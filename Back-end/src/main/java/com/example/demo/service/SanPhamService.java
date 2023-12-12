@@ -10,4 +10,6 @@ public interface SanPhamService {
 
     SanPham detail(UUID id);
 
+    Boolean checkTrung(String ten);
+
 }

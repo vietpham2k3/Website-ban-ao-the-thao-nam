@@ -14,7 +14,7 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Body>
         <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
-            <span className="form-label">TÊN</span>
+            <span className="form-label">Tên</span>
             <input
               type="text"
               className="form-control"
