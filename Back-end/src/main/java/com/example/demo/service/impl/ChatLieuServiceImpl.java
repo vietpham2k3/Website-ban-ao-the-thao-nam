@@ -28,7 +28,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public Page<ChatLieu> pageSearchMS(String key, Integer trangThai, Pageable pageable) {
-        return chatLieuRepository.searchPageMS(key,trangThai,pageable);
+        return chatLieuRepository.searchPageMS(key, trangThai, pageable);
     }
 
     @Override
@@ -65,14 +65,22 @@ public class ChatLieuServiceImpl implements ChatLieuService {
 
     @Override
     public ChatLieu update(ChatLieu chatLieu) {
-        ChatLieu c = detail(chatLieu.getId());
-        chatLieu.setId(chatLieu.getId());
-        chatLieu.setMa(c.getMa());
-        chatLieu.setTen(chatLieu.getTen());
-        chatLieu.setTrangThai(chatLieu.getTrangThai());
-        chatLieu.setNgayTao(chatLieu.getNgayTao());
-        chatLieu.setNgaySua(new Date());
-        return chatLieuRepository.save(chatLieu);
+        try {
+            ChatLieu existingChatLieu = chatLieuRepository.findByTen(chatLieu.getTen());
+            if (existingChatLieu != null) {
+                throw new RuntimeException("Tên chất liệu đã tồn tại");
+            }
+            ChatLieu c = detail(chatLieu.getId());
+            chatLieu.setId(chatLieu.getId());
+            chatLieu.setMa(c.getMa());
+            chatLieu.setTen(chatLieu.getTen());
+            chatLieu.setTrangThai(chatLieu.getTrangThai());
+            chatLieu.setNgayTao(chatLieu.getNgayTao());
+            chatLieu.setNgaySua(new Date());
+            return chatLieuRepository.save(chatLieu);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi thêm chất liệu: " + e.getMessage());
+        }
     }
 
     @Override
@@ -80,7 +88,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         ChatLieu chatLieu1 = chatLieuRepository.findById(id).orElse(null);
         chatLieu1.setTrangThai(1);
         chatLieu1.setNgaySua(new Date());
-      chatLieu1.setNgayTao(chatLieu1.getNgayTao());
+        chatLieu1.setNgayTao(chatLieu1.getNgayTao());
         chatLieu1.setTen(chatLieu1.getTen());
         return chatLieuRepository.save(chatLieu1);
     }
@@ -88,7 +96,7 @@ public class ChatLieuServiceImpl implements ChatLieuService {
     @Override
     public List<ChatLieu> findByChatLieuString(List<String> chatLieusString) {
         List<ChatLieu> chatLieus = new ArrayList<>();
-        for (String clString: chatLieusString) {
+        for (String clString : chatLieusString) {
             ChatLieu chatLieu = chatLieuRepository.findByTen(clString);
             chatLieus.add(chatLieu);
         }

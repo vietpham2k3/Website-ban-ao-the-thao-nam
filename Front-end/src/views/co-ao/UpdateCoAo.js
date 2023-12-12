@@ -38,7 +38,7 @@ function UpdateCA() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     // Kiểm tra điều kiện trước khi gọi put
@@ -58,7 +58,14 @@ function UpdateCA() {
       return;
     }    
 
-    put(id, values);
+    try {
+      await put(id, values);
+      navigate('/san-pham/co-ao');
+  } catch (error) {
+      // Nếu có lỗi từ service, hiển thị thông báo lỗi
+      toast.error('Tên cổ áo đã tồn tại');
+  }
+    
   };
 
   return (
