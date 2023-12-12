@@ -861,6 +861,12 @@ function DonHang(props) {
 
   const handleAddKH = (event) => {
     event.preventDefault();
+
+    if (!valuesKH.tenKhachHang || !valuesKH.sdt) {
+      toast.error('Vui lòng nhập tên và số điện thoại khách hàng !');
+      return;
+    }
+
     postKH(id, valuesKH);
   };
 

@@ -14,6 +14,14 @@ import ButtonMUI from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import TableBody from '@mui/material/TableBody';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 // import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 // import { styled } from '@mui/system';
@@ -71,8 +79,8 @@ import { Button } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/ErrorMessage.scss';
 import InputSpinner from 'react-bootstrap-input-spinner';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+// import Tooltip from 'react-bootstrap/Tooltip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {
@@ -89,6 +97,8 @@ import ModalTraHang from 'ui-component/login/ModalTraHang';
 import ModalAddHangDoi from 'ui-component/login/ModalAddHangDoi';
 import TableKCMS from 'views/ban-hang-tai-quay/TableKCMS';
 import { payOnline } from 'services/PayService';
+const options = ['In hóa đơn', 'In hóa đơn đổi'];
+
 function DonHangCT() {
   const { id } = useParams();
   const dataLogin = JSON.parse(localStorage.getItem('dataLoginAD') || localStorage.getItem('dataLoginNV'));
@@ -100,6 +110,8 @@ function DonHangCT() {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedWard, setSelectedWard] = useState('');
+  //checked
+  const [checkUpdateHD, setCheckUpdateHD] = useState(false);
   //sp
   const [valuesSanPham, setValuesSanPham] = useState([]);
   const [isShowMSKC, setIsshowMSKC] = useState(false);
@@ -348,7 +360,7 @@ function DonHangCT() {
       toast.error('Vui lòng chọn phường/xã.');
       return;
     }
-
+    
     toast.success('Cập nhật thành công !');
     await updateHD(id, hoaDon);
   };
@@ -366,12 +378,14 @@ function DonHangCT() {
       },
       soLuong: soLuong
     });
-
+    
     setHoaDon((prevValues) => ({
       ...prevValues,
       tongTien: totalAmount,
       tongTienKhiGiam: tongTienKhiGiam
     }));
+
+    setCheckUpdateHD(true);
   };
 
   const update = async (idHDCT, hoaDon) => {
@@ -383,10 +397,10 @@ function DonHangCT() {
   };
 
   useEffect(() => {
-    if (totalAmount) {
+    if (checkUpdateHD) {
       updateHD(id, hoaDon);
     }
-  }, [hoaDon.tongTien, totalAmount]);
+  }, [hoaDon.tongTien,checkUpdateHD,totalAmount]);
 
   useEffect(() => {
     if (idHDCT) {
@@ -1357,12 +1371,10 @@ function DonHangCT() {
           <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
           <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
           <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
-          {hoaDon.trangThai === 15 ? (
-            <Text style={styles.titleHD}>HOÁ ĐƠN ĐỔI HÀNG</Text>
-          ) : (
             <Text style={styles.titleHD}>HOÁ ĐƠN MUA HÀNG</Text>
-          )}
+
           <Text style={styles.textMaHD}>{hoaDon.ma}</Text>
+
           <div style={styles.container}>
             <Text style={styles.textThuocTinh}>Nhân viên bán hàng: {lichSuHoaDon2}</Text>
             <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(hoaDon.ngayThanhToan)}</Text>
@@ -1376,7 +1388,6 @@ function DonHangCT() {
           </div>
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
-          {hoaDon.trangThai !== 15 && (
             <>
               <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
               <View style={styles.table}>
@@ -1400,9 +1411,77 @@ function DonHangCT() {
                 ))}
               </View>
             </>
-          )}
+          <br></br>
+          <Text style={styles.textThuocTinh}></Text>
 
-          {hoaDon.trangThai === 15 && (
+          <View>
+              <>
+                <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+                  <Text style={styles.textLeft}>Tiền hàng: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+                </View>
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                {hoaDon.tienShip !== 0 && (
+                  <View style={styles.flexContainer}>
+                    <Text style={styles.textLeft}>Tiền ship: </Text>
+                    <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
+                  </View>
+                )}
+
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+                {dataHDKM.map((d) => (
+                  <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                    <Text style={styles.textLeft}>Khuyến mãi:</Text>
+                    <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+                  </View>
+                ))}
+                <br></br>
+                <Text style={styles.textThuocTinh}></Text>
+
+                <View style={styles.flexContainer}>
+                  <Text style={styles.textLeft}>Tiền cần thanh toán: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
+                </View>
+              </>
+          </View>
+          <View>
+            <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
+
+  const InvoiceDocument2 = () => {
+    return (
+      <Document>
+        <Page>
+          <Text style={styles.title}>Sports Shop</Text>
+          <Text style={styles.text}>SDT: 0559044158</Text>
+          <Text style={styles.text}>Email: sportsshop@gmail.com</Text>
+          <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
+          <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
+          <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
+            <Text style={styles.titleHD}>HOÁ ĐƠN ĐỔI HÀNG</Text>
+          <Text style={styles.textMaHD}>{tienKhachPhaiTra.ma}</Text>
+
+          <div style={styles.container}>
+            <Text style={styles.textThuocTinh}>Nhân viên bán hàng: {lichSuHoaDon2}</Text>
+            <Text style={styles.textThuocTinh}>Ngày mua: {formatDate(hoaDon.ngayThanhToan)}</Text>
+            <Text style={styles.textThuocTinh}>Khách hàng: {hoaDon.tenNguoiNhan}</Text>
+            {hoaDon && hoaDon.soDienThoai && <Text style={styles.textThuocTinh}>Số điện thoại: {hoaDon.soDienThoai}</Text>}
+            {hoaDon && hoaDon.diaChi && (
+              <Text style={styles.textThuocTinh}>
+                Địa chỉ: {hoaDon.diaChi + ', ' + hoaDon.xa + ', ' + hoaDon.huyen + ', ' + hoaDon.tinh}
+              </Text>
+            )}
+          </div>
+          <br></br>
+          <Text style={styles.textThuocTinh}></Text>
+
             <>
               <br></br>
               <Text style={styles.textThuocTinh}></Text>
@@ -1459,45 +1538,10 @@ function DonHangCT() {
                 ))}
               </View>
             </>
-          )}
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
 
           <View>
-            {hoaDon.trangThai !== 15 && (
-              <>
-                <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
-                  <Text style={styles.textLeft}>Tiền hàng: </Text>
-                  <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
-                </View>
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
-
-                {hoaDon.tienShip !== 0 && (
-                  <View style={styles.flexContainer}>
-                    <Text style={styles.textLeft}>Tiền ship: </Text>
-                    <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
-                  </View>
-                )}
-
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
-                {dataHDKM.map((d) => (
-                  <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
-                    <Text style={styles.textLeft}>Khuyến mãi:</Text>
-                    <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
-                  </View>
-                ))}
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
-
-                <View style={styles.flexContainer}>
-                  <Text style={styles.textLeft}>Tiền cần thanh toán: </Text>
-                  <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
-                </View>
-              </>
-            )}
-
             {hoaDon.trangThai === 15 && (
               <>
                 <br></br>
@@ -1565,20 +1609,16 @@ function DonHangCT() {
     );
   };
 
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      In hóa đơn
-    </Tooltip>
-  );
-
   const handleTienShipChange = async (e) => {
+    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+
     if (e) {
       const value = parseFloat(e.target.value);
       if (!isNaN(value) && value >= 0) {
         // const nonNegativeValue = Math.max(value, 0);
         // Nếu nhỏ hơn 0, đặt giá trị thành 0
         setHoaDon({ ...hoaDon, tienShip: value });
-        updateHD(id, { ...hoaDon, tienShip: value });
+        updateHD(id, { ...hoaDon, tienShip: value , tongTienKhiGiam: hoaDon.tongTien + value - totalGiam});
       }
     }
   };
@@ -2116,6 +2156,37 @@ function DonHangCT() {
   const lichSuHoaDon5 = lichSuHoaDon[lichSuHoaDon.length - 1]?.ngayTao || '';
 
   console.log(formatDate(lichSuHoaDon5));
+
+  const [open9, setOpen9] = React.useState(false);
+  const anchorRef = React.useRef(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  
+  // const handleClick = () => {
+  //   if (selectedIndex === 0) {
+  //     return handlePrintInvoice();
+  //   } else if (selectedIndex === 1) {
+  //     console.info('You clicked In hóa đơn đổi');
+  //   }
+  //   setOpen9(false);
+  // };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setOpen9(false);
+  };
+
+  const handleToggle = () => {
+    setOpen9((prevOpen) => !prevOpen);
+  };
+
+  const handleClose98 = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen9(false);
+  };
+
   return (
     <>
       <MainCard>
@@ -3896,7 +3967,8 @@ function DonHangCT() {
                           {((hoaDon.trangThai === 4 && hoaDon.loaiDon === 1) ||
                             (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
                             hoaDon.trangThai === 15) && (
-                            <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                              <> 
+                                               {/* <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
                                 <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
                                   <Text style={styles.button}>
@@ -3904,7 +3976,88 @@ function DonHangCT() {
                                   </Text>
                                 </PDFDownloadLink>
                               </button>
-                            </OverlayTrigger>
+                            </OverlayTrigger> */}
+<React.Fragment>
+      <ButtonGroup style={{backgroundColor: 'white'}} variant="contained" ref={anchorRef} aria-label="split button">
+
+{selectedIndex === 0 && (
+  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+        <button className="btn btn-dark" data-bs-placement="right">
+          <Text style={styles.button}>
+          {options[selectedIndex]}
+          </Text>
+        </button>
+      </PDFDownloadLink>
+)}
+{hoaDon.trangThai === 15 && (
+  <>
+  {selectedIndex === 1 && (
+  <PDFDownloadLink document={<InvoiceDocument2 />} fileName="hoa_don.pdf">
+        <button className="btn btn-dark" data-bs-placement="right">
+          <Text style={styles.button}>
+          {options[selectedIndex]}
+          </Text>
+        </button>
+      </PDFDownloadLink>
+)}
+  </>
+)}
+
+{hoaDon.trangThai === 15 && (
+
+        <Button
+         style={{backgroundColor: 'black'}}
+          size="small"
+          aria-controls={open9 ? 'split-button-menu' : undefined}
+          aria-expanded={open9 ? 'true' : undefined}
+          aria-label="select merge strategy"
+          aria-haspopup="menu"
+          onClick={handleToggle}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+)}
+      </ButtonGroup>
+      <Popper
+        sx={{
+          zIndex: 1,
+        }}
+        open={open9}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose98}>
+                <MenuList id="split-button-menu" autoFocusItem>
+                  {options.map((option, index) => (
+                    <MenuItem
+                      key={option}
+                      disabled={index === 2}
+                      selected={index === selectedIndex}
+                      onClick={(event) => handleMenuItemClick(event, index)}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </React.Fragment>
+                              </>
+    
                           )}
                         </div>
                       </div>
