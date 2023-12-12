@@ -348,6 +348,22 @@ function CheckoutForm(props) {
   };
 
   const handleUpdateDC = () => {
+    if (!valuesAddDC.diaChi) {
+      toast.error('Vui lòng nhập địa chỉ');
+      return;
+    }
+    if (!valuesAddDC.phuongXa) {
+      toast.error('Vui lòng nhập phường');
+      return;
+    }
+    if (!valuesAddDC.quanHuyen) {
+      toast.error('Vui lòng nhập quận');
+      return;
+    }
+    if (!valuesAddDC.tinhThanh) {
+      toast.error('Vui lòng nhập tỉnh');
+      return;
+    }
     if (isShowAdd) {
       addDC(dataLogin.id, valuesAddDC);
       return;

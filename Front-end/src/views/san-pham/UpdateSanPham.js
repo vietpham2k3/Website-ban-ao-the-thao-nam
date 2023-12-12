@@ -343,7 +343,7 @@ function UpdateSanPham() {
 
   const handleSubmitUpdate = async (event) => {
     if (values.soLuong === null || values.soLuong === 0) {
-      toast.error('Vui lòng nhập số lượng !')
+      toast.error('Vui lòng nhập số lượng !');
     }
     try {
       event.preventDefault();
@@ -764,7 +764,9 @@ function UpdateSanPham() {
                       <td>{i + 1}</td>
                       <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {d.mauSac && d.kichCo ? (
-                          <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>&nbsp;</div>
+                          <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>
+                            &nbsp;
+                          </div>
                         ) : (
                           <p>Chưa có màu sắc nào</p>
                         )}

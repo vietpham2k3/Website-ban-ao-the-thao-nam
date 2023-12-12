@@ -99,7 +99,9 @@ function Content() {
               })}
           </div>
           <div className="text-center">
-            <Link to="/san-pham/web" className="btn btn1">Xem tất cả </Link>
+            <Link to="/san-pham/web" className="btn btn1">
+              Xem tất cả{' '}
+            </Link>
           </div>
         </div>
 
@@ -133,7 +135,9 @@ function Content() {
             })}
           </div>
           <div className="text-center">
-          <Link to="/san-pham/web" className="btn btn1">Xem tất cả </Link>
+            <Link to="/san-pham/web" className="btn btn1">
+              Xem tất cả{' '}
+            </Link>
           </div>
         </div>
       </section>

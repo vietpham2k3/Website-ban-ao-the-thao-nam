@@ -37,7 +37,7 @@ import myFont from '../../fonts/Roboto Việt Hóa/Roboto-Regular.ttf';
 import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QrReader from 'react-qr-reader';
-import { Avatar } from '@mui/material';
+import { Avatar, TextField } from '@mui/material';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAllHD, handleAddHoaDonTabs, valuesHoaDonTabs } = props;
@@ -1054,7 +1054,11 @@ function DonHang(props) {
                                     onChange={() => handleDetail(d.id)}
                                   />
                                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: "2px solid black" }}>&nbsp;</div>
+                                    <div
+                                      style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}
+                                    >
+                                      &nbsp;
+                                    </div>
                                     &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                                   </label>
                                 </div>
@@ -1067,12 +1071,22 @@ function DonHang(props) {
                                   Còn lại <strong>{dataDetail.soLuong}</strong>
                                 </small>
                               </label>
-                              <input
-                                className="form-control"
+                              <br />
+                              <TextField
                                 id="exampleFormControlTextarea1"
                                 type="number"
-                                onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
-                              ></input>
+                                fullWidth
+                                value={valuesAdd.soLuong}
+                                onChange={(e) => {
+                                  if (e.target.value >= 1) {
+                                    setValuesAdd({ ...valuesAdd, soLuong: e.target.value });
+                                  } else {
+                                    e.preventDefault();
+                                  }
+                                }}
+                                min={1}
+                                inputProps={{ min: 1 }}
+                              ></TextField>
                             </div>
                           </div>
                         </Modal.Body>

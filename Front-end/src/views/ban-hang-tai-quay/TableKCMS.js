@@ -21,7 +21,7 @@ const TableKCMS = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>Chọn loại của sản phẩm</Modal.Title>
         </Modal.Header>
-        <Modal.Body >
+        <Modal.Body>
           <div className="body-add-new">
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -39,8 +39,8 @@ const TableKCMS = (props) => {
                     onChange={() => handleDetail(d.id, d.giaBan)}
                   />
                   <label className="form-check-label custom-label" htmlFor={d.id}>
-                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: "2px solid black" }}>&nbsp;</div>&nbsp;- {d.kichCo.ten} -{' '}
-                    {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
+                    <div style={{ backgroundColor: d.mauSac.ten, width: 50, borderRadius: '10px', border: '2px solid black' }}>&nbsp;</div>
+                    &nbsp;- {d.kichCo.ten} - {d.chatLieu.ten} - {d.loaiSanPham.ten} - {d.coAo.ten} - {d.nhaSanXuat.ten}
                   </label>
                 </div>
               ))}

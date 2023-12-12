@@ -141,7 +141,7 @@ function HangLoi() {
             <th style={{ textAlign: 'center' }}>Số lượng</th>
             <th style={{ textAlign: 'center' }}>Ghi chú</th>
             <th style={{ textAlign: 'center' }}>Ngày tạo</th>
-            <th style={{ textAlign: 'center' }}>Người tạo</th>
+            <th style={{ textAlign: 'center' }}>Người xác nhận</th>
           </tr>
           <tbody>
             {data.map((d, i) => (
