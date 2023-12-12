@@ -233,15 +233,9 @@ public class DoiHangController {
                                         @RequestBody DoiHangDTO doiHangDTO) {
         String maLSHD = "LSHD" + new Random().nextInt(100000);
         HoaDon hoaDon = serviceHD.detailHD(id);
-        List<LichSuHoaDon> danhSachLichSuHoaDon = serviceLSHD.findAllLSHDByIDsHD(id);
+//        LichSuHoaDon lshd = serviceLSHD.findLSHDByIDsHD(id);
+//
 
-        for (LichSuHoaDon lichSu : danhSachLichSuHoaDon) {
-            String nguoiTaoValue = lichSu.getNguoiTao(); // Lấy giá trị nguoiTao từ LichSuHoaDon
-            if (nguoiTaoValue == null || nguoiTaoValue.isEmpty()) {
-                lichSu.setNguoiTao(nguoiTaoValue);
-                doiHangDTO.getLichSuHoaDon().setNguoiTao(nguoiTaoValue);
-            }
-        }
         hoaDon.setNgaySua(new Date());
         doiHangDTO.getLichSuHoaDon().setTrangThai(15);
         hoaDon.setTrangThai(15);
@@ -249,7 +243,7 @@ public class DoiHangController {
         doiHangDTO.getLichSuHoaDon().setMa(maLSHD);
         doiHangDTO.getLichSuHoaDon().setGhiChu(doiHangDTO.getLichSuHoaDon().getGhiChu());
         doiHangDTO.getLichSuHoaDon().setHoaDon(hoaDon);
-//        doiHangDTO.getLichSuHoaDon().setNguoiTao(doiHangDTO.getLichSuHoaDon().getNguoiTao());
+        doiHangDTO.getLichSuHoaDon().setNguoiTao(doiHangDTO.getDoiHang().getNguoiTao());
         doiHangDTO.getLichSuHoaDon().setTen("Đổi hàng");
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
         for (HoaDonChiTiet hdct : list) {
@@ -261,6 +255,8 @@ public class DoiHangController {
                 dh.setNguoiTao(doiHangDTO.getDoiHang().getNguoiTao());
                 dh.setPhuongThucThanhToan(doiHangDTO.getDoiHang().getPhuongThucThanhToan());
                 dh.setTienKhachPhaiTra(doiHangDTO.getDoiHang().getTienKhachPhaiTra());
+//                lshd.setNguoiTao(doiHangDTO.getDoiHang().getNguoiTao());
+//                        doiHangDTO.getLichSuHoaDon().setNguoiTao(nguoiTaoValue);
                 doiHangService.add(dh);
                 break;
             }

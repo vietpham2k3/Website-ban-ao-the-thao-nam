@@ -162,7 +162,7 @@ function ModalTraHang(props) {
                   style={{ width: 120, borderRadius: 15 }}
                 />
               </div>
-              <div className="mt-3" style={{ width: 250 }}>
+              <div className="mt-3" style={{ width: 260 }}>
                 <p>
                   {d.chiTietSanPham.sanPham.ten}
                   <br />
@@ -170,7 +170,7 @@ function ModalTraHang(props) {
                   <span style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, borderRadius: '50%' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 </p>
               </div>
-              <div style={{ width: 130 }} className="d-flex align-items-center justify-content-center ms-5">
+              <div style={{ width: 140 }} className="d-flex align-items-center justify-content-center ms-5">
                 <InputSpinner
                   key={d.id}
                   type={'real'}
@@ -191,6 +191,9 @@ function ModalTraHang(props) {
               </div>
             </div>
           ))}
+
+{totalAmountDH > 0 &&(
+<>
           <hr />
           <ButtonMUI variant="contained" onClick={handleOpen} className="mb-3 mt-1">
             Chọn sản phẩm
@@ -313,8 +316,14 @@ function ModalTraHang(props) {
               Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
             </h4>
           )}
-        </Modal.Body>
-        <Modal.Footer>
+       
+</>
+)}
+
+</Modal.Body>
+{totalAmountDH > 0 &&(
+<>
+     <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Huỷ
           </Button>
@@ -322,6 +331,9 @@ function ModalTraHang(props) {
             Xác nhận
           </Button>
         </Modal.Footer>
+</>
+)}
+   
       </Modal>
     </div>
   );

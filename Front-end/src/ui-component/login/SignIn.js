@@ -114,7 +114,7 @@ function SignInForm(props) {
             console.log('Login Failed');
           }}
         />
-        ;
+      <br></br>
         <button className="button-login" onClick={handleOnSubmit}>
           Đăng nhập
         </button>

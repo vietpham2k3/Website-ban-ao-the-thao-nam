@@ -303,6 +303,12 @@ public class NhanVienController {
             // Set the image blob to the KhachHang object
             nv.setAnh(imageBlob);
         }
+        List<NhanVien> list = service.fillAll();
+        for (NhanVien nhanVien : list) {
+            if(nv.getEmail().equalsIgnoreCase(nhanVien.getEmail())){
+                return ResponseEntity.ok("Email này đã tồn tại");
+            }
+        }
 
         // Save the KhachHang object
         NhanVien saveNhanVien = service.update(nv, id);

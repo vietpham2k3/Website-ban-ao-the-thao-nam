@@ -360,7 +360,7 @@ function DonHangCT() {
       toast.error('Vui lòng chọn phường/xã.');
       return;
     }
-    
+
     toast.success('Cập nhật thành công !');
     await updateHD(id, hoaDon);
   };
@@ -378,7 +378,7 @@ function DonHangCT() {
       },
       soLuong: soLuong
     });
-    
+
     setHoaDon((prevValues) => ({
       ...prevValues,
       tongTien: totalAmount,
@@ -400,7 +400,7 @@ function DonHangCT() {
     if (checkUpdateHD) {
       updateHD(id, hoaDon);
     }
-  }, [hoaDon.tongTien,checkUpdateHD,totalAmount]);
+  }, [hoaDon.tongTien, checkUpdateHD, totalAmount]);
 
   useEffect(() => {
     if (idHDCT) {
@@ -1371,7 +1371,7 @@ function DonHangCT() {
           <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
           <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
           <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
-            <Text style={styles.titleHD}>HOÁ ĐƠN MUA HÀNG</Text>
+          <Text style={styles.titleHD}>HOÁ ĐƠN MUA HÀNG</Text>
 
           <Text style={styles.textMaHD}>{hoaDon.ma}</Text>
 
@@ -1388,64 +1388,64 @@ function DonHangCT() {
           </div>
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
-            <>
-              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
-              <View style={styles.table}>
-                <View style={[styles.row, styles.header]}>
-                  <Text style={styles.row1}>STT</Text>
-                  <Text style={styles.row2}>Sản phẩm</Text>
-                  <Text style={styles.row3}>Số lượng</Text>
-                  <Text style={styles.row4}>Đơn giá</Text>
-                  <Text style={styles.row5}>Thành tiền</Text>
-                </View>
-                {valuesSanPham.map((d, i) => (
-                  <View key={i} style={[styles.row, styles.header]}>
-                    <Text style={styles.row1}>{i + 1}</Text>
-                    <Text style={styles.row2}>
-                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
-                    </Text>
-                    <Text style={styles.row3}>{d.soLuong}</Text>
-                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
-                    <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
-                  </View>
-                ))}
+          <>
+            <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA</Text>
+            <View style={styles.table}>
+              <View style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>STT</Text>
+                <Text style={styles.row2}>Sản phẩm</Text>
+                <Text style={styles.row3}>Số lượng</Text>
+                <Text style={styles.row4}>Đơn giá</Text>
+                <Text style={styles.row5}>Thành tiền</Text>
               </View>
-            </>
+              {valuesSanPham.map((d, i) => (
+                <View key={i} style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>{i + 1}</Text>
+                  <Text style={styles.row2}>
+                    {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                  </Text>
+                  <Text style={styles.row3}>{d.soLuong}</Text>
+                  <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                  <Text style={styles.row5}>{convertToCurrency(d.soLuong * d.donGia)}</Text>
+                </View>
+              ))}
+            </View>
+          </>
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
 
           <View>
-              <>
-                <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
-                  <Text style={styles.textLeft}>Tiền hàng: </Text>
-                  <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
-                </View>
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
+            <>
+              <View style={[styles.flexContainer, { paddingTop: '10px' }]}>
+                <Text style={styles.textLeft}>Tiền hàng: </Text>
+                <Text style={styles.textRight}>{convertToCurrency(totalAmount)}</Text>
+              </View>
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
 
-                {hoaDon.tienShip !== 0 && (
-                  <View style={styles.flexContainer}>
-                    <Text style={styles.textLeft}>Tiền ship: </Text>
-                    <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
-                  </View>
-                )}
-
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
-                {dataHDKM.map((d) => (
-                  <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
-                    <Text style={styles.textLeft}>Khuyến mãi:</Text>
-                    <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
-                  </View>
-                ))}
-                <br></br>
-                <Text style={styles.textThuocTinh}></Text>
-
+              {hoaDon.tienShip !== 0 && (
                 <View style={styles.flexContainer}>
-                  <Text style={styles.textLeft}>Tiền cần thanh toán: </Text>
-                  <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
+                  <Text style={styles.textLeft}>Tiền ship: </Text>
+                  <Text style={styles.textRight}>{convertToCurrency(hoaDon.tienShip)}</Text>
                 </View>
-              </>
+              )}
+
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+              {dataHDKM.map((d) => (
+                <View key={d.id} style={[styles.flexContainer, { color: 'red' }]}>
+                  <Text style={styles.textLeft}>Khuyến mãi:</Text>
+                  <Text style={styles.textRight}>-{convertToCurrency(d.tienGiam)}</Text>
+                </View>
+              ))}
+              <br></br>
+              <Text style={styles.textThuocTinh}></Text>
+
+              <View style={styles.flexContainer}>
+                <Text style={styles.textLeft}>Tiền cần thanh toán: </Text>
+                <Text style={styles.textRight}>{convertToCurrency(hoaDon.tongTienKhiGiam)}</Text>
+              </View>
+            </>
           </View>
           <View>
             <Text style={[styles.text, { paddingTop: '50px' }]}>-------------Cảm ơn quý khách!-------------</Text>
@@ -1465,7 +1465,7 @@ function DonHangCT() {
           <Text style={styles.text}>Địa chỉ: Đại Đồng - Tiên Du - Bắc Ninh</Text>
           <Text style={styles.text}>Ngân hàng: Techcombank - STK: 69696969696969</Text>
           <Text style={styles.text}>Chủ tải khoản: Trần Quang Dũng</Text>
-            <Text style={styles.titleHD}>HOÁ ĐƠN ĐỔI HÀNG</Text>
+          <Text style={styles.titleHD}>HOÁ ĐƠN ĐỔI HÀNG</Text>
           <Text style={styles.textMaHD}>{tienKhachPhaiTra.ma}</Text>
 
           <div style={styles.container}>
@@ -1482,62 +1482,62 @@ function DonHangCT() {
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
 
-            <>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG YÊU CẦU ĐỔI</Text>
-              <View style={styles.table}>
-                <View style={[styles.row, styles.header]}>
-                  <Text style={styles.row1}>STT</Text>
-                  <Text style={styles.row2}>Sản phẩm</Text>
-                  <Text style={styles.row3}>Số lượng</Text>
-                  <Text style={styles.row4}>Đơn giá</Text>
-                  <Text style={styles.row5}>Thành tiền</Text>
-                </View>
-                {spYCDoi.map((d, i) => (
-                  <View key={i} style={[styles.row, styles.header]}>
-                    <Text style={styles.row1}>{i + 1}</Text>
-                    <Text style={styles.row2}>
-                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
-                    </Text>
-                    <Text style={styles.row3}>{d.lichSuSoLuongYeuCauDoi}</Text>
-                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
-                    <Text style={styles.row5}>{convertToCurrency(d.lichSuSoLuongYeuCauDoi * d.donGia)}</Text>
-                  </View>
-                ))}
+          <>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG YÊU CẦU ĐỔI</Text>
+            <View style={styles.table}>
+              <View style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>STT</Text>
+                <Text style={styles.row2}>Sản phẩm</Text>
+                <Text style={styles.row3}>Số lượng</Text>
+                <Text style={styles.row4}>Đơn giá</Text>
+                <Text style={styles.row5}>Thành tiền</Text>
               </View>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <br></br>
-              <Text style={styles.textThuocTinh}></Text>
-              <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUỐN ĐỔI</Text>
-              <View style={styles.table}>
-                <View style={[styles.row, styles.header]}>
-                  <Text style={styles.row1}>STT</Text>
-                  <Text style={styles.row2}>Sản phẩm</Text>
-                  <Text style={styles.row3}>Số lượng</Text>
-                  <Text style={styles.row4}>Đơn giá</Text>
-                  <Text style={styles.row5}>Thành tiền</Text>
+              {spYCDoi.map((d, i) => (
+                <View key={i} style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>{i + 1}</Text>
+                  <Text style={styles.row2}>
+                    {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                  </Text>
+                  <Text style={styles.row3}>{d.lichSuSoLuongYeuCauDoi}</Text>
+                  <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                  <Text style={styles.row5}>{convertToCurrency(d.lichSuSoLuongYeuCauDoi * d.donGia)}</Text>
                 </View>
-                {spDoiHang.map((d, i) => (
-                  <View key={i} style={[styles.row, styles.header]}>
-                    <Text style={styles.row1}>{i + 1}</Text>
-                    <Text style={styles.row2}>
-                      {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
-                    </Text>
-                    <Text style={styles.row3}>{d.soLuongHangDoi}</Text>
-                    <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
-                    <Text style={styles.row5}>{convertToCurrency(d.soLuongHangDoi * d.donGia)}</Text>
-                  </View>
-                ))}
+              ))}
+            </View>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <br></br>
+            <Text style={styles.textThuocTinh}></Text>
+            <Text style={styles.titleTB}>DANH SÁCH SẢN PHẨM KHÁCH HÀNG MUỐN ĐỔI</Text>
+            <View style={styles.table}>
+              <View style={[styles.row, styles.header]}>
+                <Text style={styles.row1}>STT</Text>
+                <Text style={styles.row2}>Sản phẩm</Text>
+                <Text style={styles.row3}>Số lượng</Text>
+                <Text style={styles.row4}>Đơn giá</Text>
+                <Text style={styles.row5}>Thành tiền</Text>
               </View>
-            </>
+              {spDoiHang.map((d, i) => (
+                <View key={i} style={[styles.row, styles.header]}>
+                  <Text style={styles.row1}>{i + 1}</Text>
+                  <Text style={styles.row2}>
+                    {d.chiTietSanPham.sanPham.ten} [{d.chiTietSanPham.kichCo.ten} - {d.chiTietSanPham.mauSac.ma}]
+                  </Text>
+                  <Text style={styles.row3}>{d.soLuongHangDoi}</Text>
+                  <Text style={styles.row4}>{convertToCurrency(d.donGia)}</Text>
+                  <Text style={styles.row5}>{convertToCurrency(d.soLuongHangDoi * d.donGia)}</Text>
+                </View>
+              ))}
+            </View>
+          </>
           <br></br>
           <Text style={styles.textThuocTinh}></Text>
 
@@ -1618,7 +1618,7 @@ function DonHangCT() {
         // const nonNegativeValue = Math.max(value, 0);
         //  Nếu nhỏ hơn 0, đặt giá trị thành 0
         setHoaDon({ ...hoaDon, tienShip: value });
-        updateHD(id, { ...hoaDon, tienShip: value , tongTienKhiGiam: hoaDon.tongTien + value - totalGiam});
+        updateHD(id, { ...hoaDon, tienShip: value, tongTienKhiGiam: hoaDon.tongTien + value - totalGiam });
       }
     }
   };
@@ -2022,17 +2022,26 @@ function DonHangCT() {
     }
   };
 
+  // const lichSuHoaDonNguoiTao = lichSuHoaDon.reduce((acc, d) => acc + d.nguoiTao, 0);
+
+  console.log('Vui lòng chọn sản phẩm khách muốn đổi : ' + valuesAddDH.doiHang.soHangDoi);
+
   const handleDoiHang = () => {
     if (yeuCauDoi.lichSuHoaDon.ghiChu === '') {
-      toast.error('Vui lòng nhập ghi chú');
+      toast.error('Vui lòng nhập ghi chú !');
       return;
     }
 
     if (totalAmountV !== 0 && totalAmountV > 0) {
       if (valuesAddDH.doiHang.phuongThucThanhToan === '') {
-        toast.error('Vui lòng chọn phương thức thanh toán');
+        toast.error('Vui lòng chọn phương thức thanh toán !');
         return;
       }
+    }
+
+    if (valuesAddDH.doiHang.soHangDoi === 0 || valuesAddDH.doiHang.soHangDoi === null) {
+      toast.error('Vui lòng chọn sản phẩm khách muốn đổi !');
+      return;
     }
 
     setIsDoiHang(true);
@@ -2142,7 +2151,6 @@ function DonHangCT() {
   };
 
   // const tongSlYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, 0);
-  // const tongSlHDoi = spYCDoi.reduce((acc, d) => acc + d.doiHang.soHangDoi, 0);
   // const tongGiaDon = spYCDoi.reduce((acc, d) => acc + d.donGia, 0);
   // const tienKhachPhaiTra = spYCDoi.reduce((acc, d) => acc + d.doiHang.tienKhachPhaiTra, 0);
 
@@ -2160,7 +2168,7 @@ function DonHangCT() {
   const [open9, setOpen9] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  
+
   // const handleClick = () => {
   //   if (selectedIndex === 0) {
   //     return handlePrintInvoice();
@@ -2186,6 +2194,10 @@ function DonHangCT() {
 
     setOpen9(false);
   };
+
+  // const slHangYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, null);
+
+  console.log('sohangycdoi  :' + valuesAddDH.hoaDonChiTiet.soLuongYeuCauDoi);
 
   return (
     <>
@@ -3967,8 +3979,8 @@ function DonHangCT() {
                           {((hoaDon.trangThai === 4 && hoaDon.loaiDon === 1) ||
                             (hoaDon.trangThai === 6 && hoaDon.loaiDon === 0) ||
                             hoaDon.trangThai === 15) && (
-                              <> 
-                                               {/* <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
+                            <>
+                              {/* <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltip}>
                               <button className="btn btn-dark" data-bs-placement="right">
                                 <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
                                   <Text style={styles.button}>
@@ -3977,87 +3989,84 @@ function DonHangCT() {
                                 </PDFDownloadLink>
                               </button>
                             </OverlayTrigger> */}
-<React.Fragment>
-      <ButtonGroup style={{backgroundColor: 'white'}} variant="contained" ref={anchorRef} aria-label="split button">
+                              <React.Fragment>
+                                <ButtonGroup
+                                  style={{ backgroundColor: 'white' }}
+                                  variant="contained"
+                                  ref={anchorRef}
+                                  aria-label="split button"
+                                >
+                                  {selectedIndex === 0 && (
+                                    <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                                      <button className="btn btn-dark" data-bs-placement="right">
+                                        <Text style={styles.button}>{options[selectedIndex]}</Text>
+                                      </button>
+                                    </PDFDownloadLink>
+                                  )}
+                                  {hoaDon.trangThai === 15 && (
+                                    <>
+                                      {selectedIndex === 1 && (
+                                        <PDFDownloadLink document={<InvoiceDocument2 />} fileName="hoa_don.pdf">
+                                          <button className="btn btn-dark" data-bs-placement="right">
+                                            <Text style={styles.button}>{options[selectedIndex]}</Text>
+                                          </button>
+                                        </PDFDownloadLink>
+                                      )}
+                                    </>
+                                  )}
 
-{selectedIndex === 0 && (
-  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
-        <button className="btn btn-dark" data-bs-placement="right">
-          <Text style={styles.button}>
-          {options[selectedIndex]}
-          </Text>
-        </button>
-      </PDFDownloadLink>
-)}
-{hoaDon.trangThai === 15 && (
-  <>
-  {selectedIndex === 1 && (
-  <PDFDownloadLink document={<InvoiceDocument2 />} fileName="hoa_don.pdf">
-        <button className="btn btn-dark" data-bs-placement="right">
-          <Text style={styles.button}>
-          {options[selectedIndex]}
-          </Text>
-        </button>
-      </PDFDownloadLink>
-)}
-  </>
-)}
-
-{hoaDon.trangThai === 15 && (
-
-        <Button
-         style={{backgroundColor: 'black'}}
-          size="small"
-          aria-controls={open9 ? 'split-button-menu' : undefined}
-          aria-expanded={open9 ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-)}
-      </ButtonGroup>
-      <Popper
-        sx={{
-          zIndex: 1,
-        }}
-        open={open9}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose98}>
-                <MenuList id="split-button-menu" autoFocusItem>
-                  {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      disabled={index === 2}
-                      selected={index === selectedIndex}
-                      onClick={(event) => handleMenuItemClick(event, index)}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </React.Fragment>
-                              </>
-    
+                                  {hoaDon.trangThai === 15 && (
+                                    <Button
+                                      style={{ backgroundColor: 'black' }}
+                                      size="small"
+                                      aria-controls={open9 ? 'split-button-menu' : undefined}
+                                      aria-expanded={open9 ? 'true' : undefined}
+                                      aria-label="select merge strategy"
+                                      aria-haspopup="menu"
+                                      onClick={handleToggle}
+                                    >
+                                      <ArrowDropDownIcon />
+                                    </Button>
+                                  )}
+                                </ButtonGroup>
+                                <Popper
+                                  sx={{
+                                    zIndex: 1
+                                  }}
+                                  open={open9}
+                                  anchorEl={anchorRef.current}
+                                  role={undefined}
+                                  transition
+                                  disablePortal
+                                >
+                                  {({ TransitionProps, placement }) => (
+                                    <Grow
+                                      {...TransitionProps}
+                                      style={{
+                                        transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
+                                      }}
+                                    >
+                                      <Paper>
+                                        <ClickAwayListener onClickAway={handleClose98}>
+                                          <MenuList id="split-button-menu" autoFocusItem>
+                                            {options.map((option, index) => (
+                                              <MenuItem
+                                                key={option}
+                                                disabled={index === 2}
+                                                selected={index === selectedIndex}
+                                                onClick={(event) => handleMenuItemClick(event, index)}
+                                              >
+                                                {option}
+                                              </MenuItem>
+                                            ))}
+                                          </MenuList>
+                                        </ClickAwayListener>
+                                      </Paper>
+                                    </Grow>
+                                  )}
+                                </Popper>
+                              </React.Fragment>
+                            </>
                           )}
                         </div>
                       </div>
@@ -4943,7 +4952,7 @@ function DonHangCT() {
                   </Col>
                 </Row>
               </Container>
-              {hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' && (
+              {(hoaDon.hinhThucThanhToan && hoaDon.hinhThucThanhToan.ten === 'VNPay' &&  hoaDon.loaiDon === 1) && (
                 <Container>
                   <Row>
                     <Col sm={6} className="row">
@@ -6030,6 +6039,13 @@ function DonHangCT() {
               listLyDo={listLyDo}
               dataSPDoi={spDoiHang}
               handleOpen={() => {
+                console.log(totalAmountDH);
+
+                if (totalAmountDH <= 0) {
+                  toast.warning('Vui lòng chọn sản phẩm khách muốn đổi !');
+                  return;
+                }
+
                 setIsshow(false);
                 setIsshowDH(true);
               }}

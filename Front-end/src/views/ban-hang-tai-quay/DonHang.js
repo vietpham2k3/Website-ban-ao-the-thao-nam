@@ -1577,7 +1577,7 @@ function DonHang(props) {
                 }}
               >
                 <option value="Tiền mặt">Tiền mặt</option>
-                <option value="VNPAY">VNPAY</option>
+                <option value="VNPay">VNPay</option>
               </select>
             </div>
           </div>
@@ -1609,13 +1609,14 @@ function DonHang(props) {
               </div>
             ))}
           </div>
+          <br></br>
           <div>
             <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
             In hoá đơn
           </div>
           <div className="button-thanh-toan">
             {check ? (
-              httt === 'VNPAY' ? (
+              httt === 'VNPay' ? (
                 <button
                   type="button"
                   className="btn btn-success"
