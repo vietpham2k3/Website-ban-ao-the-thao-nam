@@ -27,7 +27,7 @@ import MyVerticallyCenteredModal from './AddQuicklyChatLuong';
 import { Autocomplete, TextField } from '@mui/material';
 import AddMauSac from './AddQuicklyMauSac';
 import { postMS } from 'services/ServiceMauSac';
-import { postCreate as postKC } from 'services/KichCoService';
+import { postCreate as postKC, checkTrung1 } from 'services/KichCoService';
 function AddSanPham() {
   const [listCL, setListCL] = useState([]);
   const [listNSX, setListNSX] = useState([]);
@@ -104,48 +104,122 @@ function AddSanPham() {
     });
   };
 
-  const handleAddNSX = (event) => {
+  const handleAddNSX = async (event) => {
     event.preventDefault();
-    addNSX(valuesCL);
+    if (!valuesCL.ten.trim()) {
+      toast.error('Vui lòng nhập tên nhà sản xuất.');
+      return;
+    }
+    if (valuesCL.ten.length > 50) {
+      toast.error('Tên nhà sản xuất không được vượt quá 50 ký tự.');
+      return;
+    }
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(valuesCL.ten)) {
+      toast.error('Tên nhà sản xuất chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    try {
+      await addNSX(valuesCL);
+    } catch (error) {
+      // Nếu có lỗi từ service, hiển thị thông báo lỗi
+      toast.error('Tên nhà sản xuất đã tồn tại');
+    }
   };
 
-  const addNSX = (value) => {
-    const res = postNSX(value);
+  const addNSX = async (value) => {
+    const res = await postNSX(value);
     if (res) {
       toast.success('Thêm thành công');
       closeModal();
     }
   };
 
-  const handleAddLSP = (event) => {
+  const handleAddLSP = async (event) => {
     event.preventDefault();
-    addLSP(valuesCL);
+    if (!valuesCL.ten.trim()) {
+      toast.error('Vui lòng nhập tên loại sản phẩm.');
+      return;
+    }
+    if (valuesCL.ten.length > 50) {
+      toast.error('Tên loại sản phẩm không được vượt quá 50 ký tự.');
+      return;
+    }
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(valuesCL.ten)) {
+      toast.error('Tên loại sản phẩm chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    try {
+      await addLSP(valuesCL);
+    } catch (error) {
+      // Nếu có lỗi từ service, hiển thị thông báo lỗi
+      toast.error('Tên loại sản phẩm đã tồn tại');
+    }
   };
 
-  const addLSP = (value) => {
-    const res = add(value);
+  const addLSP = async (value) => {
+    const res = await add(value);
     if (res) {
       toast.success('Thêm thành công');
       closeModal();
     }
   };
 
-  const handleSubmitCA = (event) => {
+  const handleSubmitCA = async (event) => {
     event.preventDefault();
-    postCA(valuesCL);
+    if (!valuesCL.ten.trim()) {
+      toast.error('Vui lòng nhập tên cổ áo.');
+      return;
+    }
+    if (valuesCL.ten.length > 50) {
+      toast.error('Tên cổ áo không được vượt quá 50 ký tự.');
+      return;
+    }
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(valuesCL.ten)) {
+      toast.error('Tên cổ áo chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    try {
+      await postCA(valuesCL);
+    } catch (error) {
+      // Nếu có lỗi từ service, hiển thị thông báo lỗi
+      toast.error('Tên cổ áo đã tồn tại');
+    }
   };
 
-  const postCA = (value) => {
-    const res = postCa(value);
+  const postCA = async (value) => {
+    const res = await postCa(value);
     if (res) {
       toast.success('Thêm thành công');
       closeModal();
     }
   };
 
-  const handleSubmitCL = (event) => {
+  const handleSubmitCL = async (event) => {
     event.preventDefault();
-    post(valuesCL);
+    if (!valuesCL.ten.trim()) {
+      toast.error('Vui lòng nhập tên chất liệu.');
+      return;
+    }
+
+    if (valuesCL.ten.length > 50) {
+      toast.error('Tên chất liệu không được vượt quá 50 ký tự.');
+      return;
+    }
+
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(valuesCL.ten)) {
+      toast.error('Tên chất liệu chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    try {
+      await post(valuesCL);
+    } catch (error) {
+      // Nếu có lỗi từ service, hiển thị thông báo lỗi
+      toast.error('Tên chất liệu đã tồn tại');
+    }
   };
 
   const post = async (value) => {
@@ -294,27 +368,69 @@ function AddSanPham() {
     }
   };
 
-  const handleAddKC = (event) => {
+  const check1 = async (ten) => {
+    try {
+      const response = await checkTrung1(ten);
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi kiểm tra trùng lặp tên:', error);
+      return true;
+    }
+  };
+
+  const handleAddKC = async (event) => {
     event.preventDefault();
+    if (valuesCL.ten.trim() === '') {
+      toast.error('Tên không được để trống');
+      return;
+    }
+    if (valuesCL.ten.length > 15) {
+      toast.error('Tên không được quá 15 kí tự');
+      return;
+    }
+    const isDuplicate = await check1(valuesCL.ten);
+    if (isDuplicate) {
+      toast.error('Tên đã tồn tại');
+      return;
+    }
     addKichCo(valuesCL);
   };
 
-  const addKichCo = (value) => {
-    const res = postKC(value);
+  const addKichCo = async (value) => {
+    const res = await postKC(value);
     if (res) {
       toast.success('Thêm thành công !');
       closeModal();
     }
   };
 
-  const handleAddMS = (event) => {
+  const handleAddMS = async (event) => {
     event.preventDefault();
-    addMS(valuesMS);
+    if (!valuesMS.ma.trim()) {
+      toast.error('Vui lòng nhập tên màu sắc.');
+      return;
+    }
+
+    if (valuesMS.ma.length > 50) {
+      toast.error('Tên màu sắc không được vượt quá 50 ký tự.');
+      return;
+    }
+
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(valuesMS.ma)) {
+      toast.error('Tên màu sắc chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    await addMS(valuesMS);
   };
 
-  const addMS = (value) => {
-    const res = postMS(value);
-    if (res) {
+  const addMS = async (value) => {
+    const res = await postMS(value);
+    if (res.data === 'Tên màu đã tồn tại') {
+      toast.error(res.data);
+    } else if (res.data === 'Mã màu đã tồn tại') {
+      toast.error(res.data);
+    } else {
       toast.success('Thêm thành công !');
       closeModal();
     }

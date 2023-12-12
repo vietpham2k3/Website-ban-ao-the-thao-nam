@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.MauSacServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -38,6 +40,15 @@ public class MauSacController {
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody MauSac mauSac){
         mauSac.setNgayTao(new Date());
+        List<MauSac> list = service.getAllMS1();
+        for (MauSac nhanVien : list) {
+            if(mauSac.getMa().equalsIgnoreCase(nhanVien.getMa())){
+                return ResponseEntity.ok("Tên màu đã tồn tại");
+            }
+            if(mauSac.getTen().equalsIgnoreCase(nhanVien.getTen())){
+                return ResponseEntity.ok("Mã màu đã tồn tại");
+            }
+        }
         return ResponseEntity.ok(service.add(mauSac));
     }
     

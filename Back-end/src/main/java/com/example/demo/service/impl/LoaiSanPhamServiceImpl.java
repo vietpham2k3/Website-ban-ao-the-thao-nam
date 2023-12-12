@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.CoAo;
 import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.service.LoaiSanPhamService;
@@ -34,7 +35,20 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
 
     @Override
     public LoaiSanPham add(LoaiSanPham loaiSanPham) {
-        return repository.save(loaiSanPham);
+        try {
+            LoaiSanPham existingCoAo = repository.findByTen(loaiSanPham.getTen());
+            if (existingCoAo != null) {
+                throw new RuntimeException("Tên loại sản phẩm đã tồn tại");
+            }
+            loaiSanPham.setMa(loaiSanPham.getMa());
+            loaiSanPham.setTen(loaiSanPham.getTen());
+            loaiSanPham.setTrangThai(loaiSanPham.getTrangThai());
+            loaiSanPham.setNgayTao(new Date());
+            return repository.save(loaiSanPham);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm loại sản phẩm: " + e.getMessage());
+        }
     }
 
     @Override

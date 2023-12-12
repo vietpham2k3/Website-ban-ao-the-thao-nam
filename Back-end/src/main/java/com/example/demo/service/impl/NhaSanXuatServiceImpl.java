@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.NhaSanXuat;
 import com.example.demo.repository.NhaSanXuatRepository;
 import com.example.demo.service.NhaSanXuatService;
@@ -40,7 +41,20 @@ public class NhaSanXuatServiceImpl implements NhaSanXuatService {
     @Override
     public NhaSanXuat add(NhaSanXuat nhaSanXuat) {
         nhaSanXuat.setTen(nhaSanXuat.getTen());
-        return repository.save(nhaSanXuat);
+        try {
+            NhaSanXuat existingCoAo = repository.findByTen(nhaSanXuat.getTen());
+            if (existingCoAo != null) {
+                throw new RuntimeException("Tên nhà sản xuất đã tồn tại");
+            }
+            nhaSanXuat.setMa(nhaSanXuat.getMa());
+            nhaSanXuat.setTen(nhaSanXuat.getTen());
+            nhaSanXuat.setTrangThai(nhaSanXuat.getTrangThai());
+            nhaSanXuat.setNgayTao(new Date());
+            return repository.save(nhaSanXuat);
+        } catch (Exception e) {
+            // Bắt exception và trả về thông báo lỗi
+            throw new RuntimeException("Lỗi khi thêm nhà sản xuất: " + e.getMessage());
+        }
     }
 
     @Override

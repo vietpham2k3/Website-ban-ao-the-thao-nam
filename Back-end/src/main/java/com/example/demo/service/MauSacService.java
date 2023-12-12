@@ -13,6 +13,8 @@ import java.util.UUID;
 public interface MauSacService {
     public List<MauSac> getAllMS();
 
+    public List<MauSac> getAllMS1();
+
     public Page<MauSac> pageMS(Pageable pageable);
 
     public Page<MauSac> pageSearchMS(String key,Integer trangThai,Pageable pageable);

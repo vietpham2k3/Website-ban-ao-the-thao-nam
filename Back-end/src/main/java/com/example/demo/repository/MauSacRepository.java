@@ -30,4 +30,6 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
     List<MauSac> getAll();
 
     MauSac findByTen(String ten);
+
+    MauSac findByMa(String ma);
 }

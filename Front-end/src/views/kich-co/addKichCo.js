@@ -1,4 +1,4 @@
-import { postCreate, checkTrung } from 'services/KichCoService';
+import { postCreate, checkTrung1 } from 'services/KichCoService';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ function AddKichCo() {
 
   const check = async (ten) => {
     try {
-      const response = await checkTrung(ten);
+      const response = await checkTrung1(ten);
       return response.data;
     } catch (error) {
       console.error('Lỗi kiểm tra trùng lặp tên:', error);

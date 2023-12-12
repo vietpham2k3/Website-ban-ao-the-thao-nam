@@ -25,6 +25,11 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
+    public List<MauSac> getAllMS1(){
+        return res.findAll();
+    }
+
+    @Override
     public Page<MauSac> pageMS(Pageable pageable){
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("ngayTao").descending());
 

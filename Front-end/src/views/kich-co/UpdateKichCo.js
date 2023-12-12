@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
-import { putUpdateKC, detailKC, fetchAllCTSP, checkTrung } from 'services/KichCoService';
+import { putUpdateKC, detailKC, fetchAllCTSP, checkTrung1 } from 'services/KichCoService';
 import Modal from 'react-bootstrap/Modal';
 // @mui material components
 import Card from '@mui/material/Card';
@@ -35,7 +35,7 @@ function UpdateKC() {
 
   const check = async (ten) => {
     try {
-      const response = await checkTrung(ten);
+      const response = await checkTrung1(ten);
       return response.data;
     } catch (error) {
       console.error('Lỗi kiểm tra trùng lặp tên:', error);

@@ -29,18 +29,33 @@ function AddMauSac() {
     trangThai: 0
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (values.ma === '') {
-      toast.error('Không được để trống mã !');
+    if (!values.ma.trim()) {
+      toast.error('Vui lòng nhập tên màu sắc.');
       return;
     }
-    post(values);
+
+    if (values.ma.length > 50) {
+      toast.error('Tên màu sắc không được vượt quá 50 ký tự.');
+      return;
+    }
+
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(values.ma)) {
+      toast.error('Tên màu sắc chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
+    await post(values);
   };
 
   const post = async (value) => {
     const res = await postMS(value);
-    if (res) {
+    if (res.data === 'Tên màu đã tồn tại') {
+      toast.error(res.data);
+    } else if (res.data === 'Mã màu đã tồn tại') {
+      toast.error(res.data);
+    } else {
       toast.success('Thêm thành công !');
       navigate('/san-pham/mau-sac');
     }
