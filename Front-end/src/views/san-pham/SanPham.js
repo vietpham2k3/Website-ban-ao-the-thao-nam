@@ -290,7 +290,10 @@ function SanPham() {
               onChange={handleInputChange}
               style={{ width: '500px' }}
             />
-            <div className="box d-flex flex-row col-auto">
+            <div style={{ paddingBottom: 35, paddingTop: 10 }} className="box d-flex flex-row col-auto">
+              <span style={{ fontWeight: 'bold', marginRight: 25 }} className="form-check-label">
+                Trạng Thái:
+              </span>
               <div className="form-check">
                 <input
                   className="form-check-input"
@@ -304,13 +307,7 @@ function SanPham() {
                   Tất cả
                 </label>
               </div>
-              <div className="form-check">
-                <input className="form-check-input" type="radio" checked={radio === '0'} value="0" onChange={handleRadioChange} />
-                <label className="form-check-label" htmlFor="exampleRadios2" style={{ width: '120px' }}>
-                  Ngừng kinh doanh
-                </label>
-              </div>
-              <div className="form-check">
+              <div style={{ marginLeft: 10 }} className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
@@ -323,8 +320,14 @@ function SanPham() {
                   Đang kinh doanh
                 </label>
               </div>
+              <div style={{ marginLeft: 10 }} className="form-check">
+                <input className="form-check-input" type="radio" checked={radio === '0'} value="0" onChange={handleRadioChange} />
+                <label className="form-check-label" htmlFor="exampleRadios2" style={{ width: '120px' }}>
+                  Ngừng kinh doanh
+                </label>
+              </div>
             </div>
-            <div className="box col-auto" style={{ marginLeft: '120px', width: '200px' }}>
+            <div className="box col-auto" style={{ marginLeft: '120px', width: '415px' }}>
               <div className="values">
                 <strong>Khoảng giá:</strong> {convertToCurrency(values[0]) + ' - ' + convertToCurrency(values[1])}
               </div>

@@ -1,14 +1,12 @@
 // assets
-import { IconShirt, IconShirtOff } from '@tabler/icons';
+import { IconShirt } from '@tabler/icons';
 
 // constant
 const icons = {
-  IconShirt,
-  IconShirtOff
+  IconShirt
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
-
 const pages = {
   id: 'san-pham',
   title: 'Sản phẩm',
@@ -70,13 +68,6 @@ const pages = {
           breadcrumbs: false
         }
       ]
-    },
-    {
-      id: 'hang-loi',
-      title: 'Hàng lỗi',
-      type: 'item',
-      url: '/hang-loi',
-      icon: icons.IconShirtOff
     }
   ]
 };

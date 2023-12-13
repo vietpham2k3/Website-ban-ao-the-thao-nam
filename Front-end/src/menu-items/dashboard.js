@@ -1,8 +1,8 @@
 // assets
-import { IconDashboard, IconShoppingCart, IconShirt } from '@tabler/icons';
+import { IconDashboard, IconShoppingCart, IconShirt,IconShirtOff } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconShirt, IconShoppingCart };
+const icons = { IconDashboard, IconShirt, IconShoppingCart, IconShirtOff };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -25,6 +25,13 @@ const dashboard = {
       type: 'item',
       url: '/don-huy-chua-hoan-tien',
       icon: icons.IconShirt
+    },
+    {
+      id: 'hang-loi',
+      title: 'Hàng lỗi',
+      type: 'item',
+      url: '/hang-loi',
+      icon: icons.IconShirtOff
     }
   ]
 };

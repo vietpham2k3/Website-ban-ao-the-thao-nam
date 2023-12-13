@@ -201,7 +201,7 @@ function AddKhuyenMai() {
                 </label>
                 <input
                   className="form-control"
-                  type="datetime-local"
+                  type="date"
                   value={values.thoiGianBatDau}
                   onChange={(event) => setValues({ ...values, thoiGianBatDau: event.target.value })}
                 />
@@ -213,7 +213,7 @@ function AddKhuyenMai() {
                 </label>
                 <input
                   className="form-control"
-                  type="datetime-local"
+                  type="date"
                   value={values.thoiGianKetThuc}
                   onChange={(event) => setValues({ ...values, thoiGianKetThuc: event.target.value })}
                 />

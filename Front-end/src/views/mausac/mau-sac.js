@@ -185,7 +185,7 @@ function MauSac() {
                     <td>{i + 1}</td>
                     <td>{d.ma}</td>
                     <td>
-                      <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px', textAlign: 'center' }}>&nbsp;</div>
+                      <div style={{ backgroundColor: d.ten, width: 50, borderRadius: '10px', textAlign: 'center', border: '2px solid black' }}>&nbsp;</div>
                     </td>
                     <td>{formatDate(d.ngayTao)}</td>
                     <td>{formatDate(d.ngaySua)}</td>

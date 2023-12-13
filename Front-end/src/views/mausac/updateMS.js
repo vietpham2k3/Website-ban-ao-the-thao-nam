@@ -83,7 +83,8 @@ function UpdateMS() {
                     width: 300,
                     height: 300,
                     marginTop: 20,
-                    backgroundColor: color.rgba
+                    backgroundColor: color.rgba,
+                    border: '2px solid black'
                   }}
                 />
               </div>

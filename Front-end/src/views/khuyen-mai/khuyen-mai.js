@@ -105,10 +105,10 @@ function KhuyenMai() {
     const month = dateObject.getMonth() + 1;
     const year = dateObject.getFullYear();
 
-    const hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
+    // const hours = dateObject.getHours();
+    // const minutes = dateObject.getMinutes();
 
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    const formattedDate = `${day}/${month}/${year}`;
 
     return formattedDate;
   }

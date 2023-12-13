@@ -9,7 +9,6 @@ import UpdateMS from 'views/mausac/updateMS';
 import DonHang from 'views/donhang/don-hang';
 import DonHangCT from 'views/donhang/don-hang-chi-tiet';
 //chatlieu
-
 import UpdateCL from 'views/chat-lieu/UpdateChatLieu';
 // cổ áo
 import AddCoAo from 'views/co-ao/addCoAo';
@@ -69,27 +68,29 @@ const Error = Loadable(lazy(() => import('views/errors/Error')));
 
 // import { Navigate } from 'react-router';
 const dataLoginAD = JSON.parse(localStorage.getItem('dataLoginAD'));
+const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
+// const dataLogin = JSON.parse(localStorage.getItem('dataLogin'));
 
 const MainRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: (dataLoginNV || dataLoginAD) ? <MainLayout /> : '',
   children: [
     //đơn hàng
     {
       path: '/don-hang',
-      element: <DonHang />
+      element: (dataLoginNV || dataLoginAD) ? <DonHang /> : <Error />
     },
     {
       path: '/don-hang/chi-tiet/:id',
-      element: <DonHangCT />
+      element: (dataLoginNV || dataLoginAD) ? <DonHangCT /> : <Error />
     },
     {
       path: '/hang-loi',
-      element: <HangLoi />
+      element: (dataLoginNV || dataLoginAD) ? <HangLoi /> : <Error />
     },
     {
       path: '/don-huy-chua-hoan-tien',
-      element: <DonHuyChuaHoan />
+      element: (dataLoginNV || dataLoginAD) ? <DonHuyChuaHoan /> : <Error />
     },
     {
       path: '/san-pham',
@@ -290,7 +291,6 @@ const MainRoutes = {
       path: '/nhan-vien/update/:id',
       element: dataLoginAD ? <UpdateNhanVien /> : <Error />
     },
-
     //============//
     {
       path: '/thong-ke',
@@ -299,7 +299,7 @@ const MainRoutes = {
     // Bán hàng tại quầy
     {
       path: '/ban-hang-tai-quay',
-      element: <BanHangTaiQuay />
+      element: (dataLoginNV || dataLoginAD) ? <BanHangTaiQuay /> : <Error />
     }
   ]
 };

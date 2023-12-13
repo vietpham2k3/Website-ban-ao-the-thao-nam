@@ -117,7 +117,7 @@ function UpdateKhuyenMai() {
       toast.error('Vui lòng nhập tiền tối thiểu trên 10k !');
       return;
     }
-    
+
     if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 80)) {
       toast.error('Nhập số % giảm sai, vui lòng nhập lại');
       return;
@@ -221,8 +221,8 @@ function UpdateKhuyenMai() {
                 </label>
                 <input
                   className="form-control"
-                  type="datetime-local"
-                  value={values.thoiGianBatDau}
+                  type="date"
+                  value={values.thoiGianBatDau ? values.thoiGianBatDau.split('T')[0] : ''}
                   onChange={(event) => setValues({ ...values, thoiGianBatDau: event.target.value })}
                 />
               </div>
@@ -233,8 +233,8 @@ function UpdateKhuyenMai() {
                 </label>
                 <input
                   className="form-control"
-                  type="datetime-local"
-                  value={values.thoiGianKetThuc}
+                  type="date"
+                  value={values.thoiGianKetThuc ? values.thoiGianKetThuc.split('T')[0] : ''}
                   onChange={(event) => setValues({ ...values, thoiGianKetThuc: event.target.value })}
                 />
               </div>

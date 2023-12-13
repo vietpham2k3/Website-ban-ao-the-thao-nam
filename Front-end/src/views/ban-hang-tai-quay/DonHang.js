@@ -1224,7 +1224,7 @@ function DonHang(props) {
                   onChange={handleInputChangeKH}
                 />
               </div>
-              <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'auto' }}>
+              <Modal.Body style={{ width: 500, maxHeight: 390, overflow: 'scroll' }}>
                 {kh.map((k, index) => (
                   <div
                     key={k.id}
@@ -1593,7 +1593,7 @@ function DonHang(props) {
           <br></br>
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
-              <div key={i} className={`col-10 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer' }}>
+              <div key={i} className={`col-12 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer', overflow: 'scroll',color: 'aqua' }}>
                 <h6 style={{ color: 'red', wordWrap: 'break-word' }}>
                   Giảm {d.loaiGiam ? convertToCurrency(d.mucGiam) : d.mucGiam + '%'} cho đơn tối thiểu {convertToCurrency(d.tien)}
                 </h6>

@@ -53,13 +53,13 @@ public class KhuyenMai {
     private Double tien;
 
     @Column(name = "thoi_gian_bat_dau")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 //    @NotNull(message = "Không được để trống")
     @Temporal(TemporalType.TIMESTAMP)
     private Date thoiGianBatDau;
 
     @Column(name = "thoi_gian_ket_thuc")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 //    @NotNull(message = "Không được để trống")
     @Temporal(TemporalType.TIMESTAMP)
     private Date thoiGianKetThuc;
