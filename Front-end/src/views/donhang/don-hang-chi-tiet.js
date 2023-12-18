@@ -3185,7 +3185,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3234,7 +3234,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3283,7 +3283,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3332,7 +3332,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3381,7 +3381,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3430,7 +3430,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3479,7 +3479,7 @@ function DonHangCT() {
                           }}
                           className="btn-text"
                         >
-                          Ghi Chú
+                          Xác nhận
                         </span>
                       </button>
                     </div>
@@ -3585,7 +3585,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>
@@ -3650,7 +3650,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>
@@ -3715,7 +3715,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>
@@ -3780,7 +3780,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>
@@ -3845,7 +3845,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>
@@ -3910,7 +3910,7 @@ function DonHangCT() {
                             }}
                             className="btn-text"
                           >
-                            Ghi Chú
+                            Xác nhận
                           </span>
                         </button>
                       </div>

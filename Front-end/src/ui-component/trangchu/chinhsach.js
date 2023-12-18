@@ -18,6 +18,7 @@ const ChinhSach = () => {
         <section>
           <h2>ĐIỀU KIỆN ĐỔI HÀNG</h2>
           <ul>
+            <li>Sản phẩm chỉ được đổi khi khách mua tại cửa hàng.</li>
             <li>Sản phẩm còn nguyên tem mác, chưa qua sử dụng.</li>
             <li>Sản phẩm được xác định có lỗi kỹ thuật (không do tác động ngoại quan và nguyên nhân do sử dụng).</li>
             <li>
@@ -31,10 +32,10 @@ const ChinhSach = () => {
           <h2>Phí đổi sản phẩm</h2>
           <ul>
             <li>Trường hợp đổi hàng trong chính sách: Miễn phí.</li>
-            <li>
+            {/* <li>
               Trường hợp đổi hàng do phát sinh từ phía khách hàng ngoài chính sách và đổi hàng lần hai, vui lòng thanh toán phí vận chuyển 2
               chiều (nếu có).
-            </li>
+            </li> */}
           </ul>
         </section>
 
@@ -53,7 +54,6 @@ const ChinhSach = () => {
               <td>
                 - Khi mua hàng tại Sports Shop: Đổi hàng trong 15 ngày
                 <br></br>
-                <br></br>- Khi mua hàng Online: Đổi hàng trong 15 ngày
               </td>
             </tbody>
           </table>
