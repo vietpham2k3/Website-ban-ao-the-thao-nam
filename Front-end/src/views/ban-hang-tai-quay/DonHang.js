@@ -930,6 +930,9 @@ function DonHang(props) {
       console.error(error);
     }
   };
+
+  console.log(detailHD.tongTienKhiGiam);
+
   return (
     <div>
       <div className="row">
@@ -1549,14 +1552,29 @@ function DonHang(props) {
             <div>
               <h6>Tiền khách đưa</h6>
             </div>
-            <div>
+            {dataLoginNV ? (
+              <div>
+                {dataDetailHD.tongTienKhiGiam >= 50000000 ? (
+                  <>
+                    <p style={{ fontWeight: 'bold', color: 'red' }}>Không đủ điều kiện thanh toán</p>
+                  </>
+                ) : (
+                  <input
+                    type="number"
+                    style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
+                    onChange={(e) => handleChangeValueTien(e.target.value)}
+                    min={0}
+                  />
+                )}
+              </div>
+            ) : (
               <input
                 type="number"
                 style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
                 onChange={(e) => handleChangeValueTien(e.target.value)}
                 min={0}
               />
-            </div>
+            )}
           </div>
           <br></br>
           <div className="ma-giam-gia">
@@ -1593,7 +1611,12 @@ function DonHang(props) {
           <br></br>
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
-              <div key={i} className={`col-12 card-voucher card-width`} onClick={() => handleDivClick(i)} style={{ cursor: 'pointer', overflow: 'scroll',color: 'aqua' }}>
+              <div
+                key={i}
+                className={`col-12 card-voucher card-width`}
+                onClick={() => handleDivClick(i)}
+                style={{ cursor: 'pointer', overflow: 'scroll', color: 'aqua' }}
+              >
                 <h6 style={{ color: 'red', wordWrap: 'break-word' }}>
                   Giảm {d.loaiGiam ? convertToCurrency(d.mucGiam) : d.mucGiam + '%'} cho đơn tối thiểu {convertToCurrency(d.tien)}
                 </h6>
@@ -1612,55 +1635,120 @@ function DonHang(props) {
             ))}
           </div>
           <br></br>
-          <div>
-            <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
-            In hoá đơn
-          </div>
-          <div className="button-thanh-toan">
-            {check ? (
-              httt === 'VNPay' ? (
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
-                  onClick={() => handleThanhToanWithVNP()}
-                >
-                  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
-                    <Text style={styles.button}>Thanh toán</Text>
-                  </PDFDownloadLink>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
-                  onClick={() => handleThanhToan()}
-                >
-                  <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
-                    <Text style={styles.button}>Thanh toán</Text>
-                  </PDFDownloadLink>
-                </button>
-              )
-            ) : httt === 'Tiền mặt' ? (
-              <button
-                type="button"
-                className="btn btn-success"
-                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
-                onClick={() => handleThanhToan()}
-              >
-                Thanh toán
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-success"
-                disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0}
-                onClick={() => handleThanhToanWithVNP()}
-              >
-                Thanh toán
-              </button>
-            )}
-          </div>
+          {dataLoginNV ? (
+            <>
+              {dataDetailHD.tongTienKhiGiam < 50000000 && (
+                <div>
+                  <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
+                  In hoá đơn
+                </div>
+              )}
+              {dataDetailHD.tongTienKhiGiam < 50000000 && (
+                <div className="button-thanh-toan">
+                  {check ? (
+                    httt === 'VNPay' ? (
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua}
+                        onClick={() => handleThanhToanWithVNP()}
+                      >
+                        <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                          <Text style={styles.button}>Thanh toán</Text>
+                        </PDFDownloadLink>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua}
+                        onClick={() => handleThanhToan()}
+                      >
+                        <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                          <Text style={styles.button}>Thanh toán</Text>
+                        </PDFDownloadLink>
+                      </button>
+                    )
+                  ) : httt === 'Tiền mặt' ? (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0 || totalAmount >= 50000000}
+                      onClick={() => handleThanhToan()}
+                    >
+                      Thanh toán
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0 || totalAmount >= 50000000}
+                      onClick={() => handleThanhToanWithVNP()}
+                    >
+                      Thanh toán
+                    </button>
+                  )}
+                </div>
+              )}
+              {dataDetailHD.tongTienKhiGiam >= 50000000 && (
+                <div>
+                  <h1 style={{ color: 'brown' }}>Nhân viên chỉ được thanh toán đơn hàng dưới 50 triệu vnd !</h1>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div>
+                <input type="checkbox" checked={check === true} onChange={() => setCheck(!check)} />
+                In hoá đơn
+              </div>
+              <div className="button-thanh-toan">
+                {check ? (
+                  httt === 'VNPay' ? (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua}
+                      onClick={() => handleThanhToanWithVNP()}
+                    >
+                      <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                        <Text style={styles.button}>Thanh toán</Text>
+                      </PDFDownloadLink>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua}
+                      onClick={() => handleThanhToan()}
+                    >
+                      <PDFDownloadLink document={<InvoiceDocument />} fileName="hoa_don.pdf">
+                        <Text style={styles.button}>Thanh toán</Text>
+                      </PDFDownloadLink>
+                    </button>
+                  )
+                ) : httt === 'Tiền mặt' ? (
+                  <button
+                    type="button"
+                    className="btn btn-success"
+                    disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0 || totalAmount >= 50000000}
+                    onClick={() => handleThanhToan()}
+                  >
+                    Thanh toán
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-success"
+                    disabled={dataDetailHD.tongTienKhiGiam > tienKhachDua || tienKhachDua === 0 || totalAmount >= 50000000}
+                    onClick={() => handleThanhToanWithVNP()}
+                  >
+                    Thanh toán
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
       <TableKM
