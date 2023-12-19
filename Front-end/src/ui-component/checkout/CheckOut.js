@@ -16,7 +16,8 @@ import { payOnline } from 'services/PayService';
 import { detailKH, getAllDcKh, detailDC, addDCKH } from 'services/KhachHangService';
 import ChangeDC from './ChangeDC';
 import UpdateDC from './UpdateDC';
-import { Avatar } from '@mui/material';
+import { Avatar, Checkbox, FormControlLabel } from '@mui/material';
+import ModalChinhSach from './Modal/ModalChinhSach';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
@@ -45,7 +46,9 @@ function CheckoutForm(props) {
   const [isUpdatingDiaChi, setIsUpdatingDiaChi] = useState(false);
   const [dataDC, setDataDC] = useState([]);
   const product = localStorage.getItem('productAfter');
-  // const [isLoading, setIsLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [isShowDK, setIsShowDK] = useState(false);
+
   const [valuesAddDC, setValuesAddDC] = useState({
     diaChi: '',
     tinhThanh: '',
@@ -310,19 +313,15 @@ function CheckoutForm(props) {
     if (isUpdatingDiaChi) {
       // Ngừng cập nhật địa chỉ
       setIsUpdatingDiaChi(false);
-
-      if (dataLogin && dataLogin.role == 'KH') {
-        clear(idGH, id);
-      }
-
       // Gọi thanhToanHD khi địa chỉ đã được cập nhật hoàn toàn
       if (valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt') {
         thanhToanHD(id, valuesUpdateHD, '');
         navigate('/checkout/thankyou');
         localStorage.setItem('product', product);
+        clear(idGH, id);
       } else {
-        thanhToanHD(id, valuesUpdateHD, '');
-        localStorage.setItem('product', product);
+        localStorage.setItem('product', JSON.stringify({ ...valuesUpdateHD, id: id }));
+        window.location.href = urlPay;
       }
     }
     VNP(tongTienKhiGiam);
@@ -686,7 +685,7 @@ function CheckoutForm(props) {
 
   const VNP = async (tien) => {
     try {
-      const res = await payOnline(tien, 'http://localhost:3000/checkout/thankyou');
+      const res = await payOnline(tien, 'http://localhost:3000/check-vnp');
       if (res) {
         setUrlPay(res.data);
       }
@@ -705,7 +704,7 @@ function CheckoutForm(props) {
       console.log(error);
     }
   };
-  console.log(valuesUpdateHD);
+  console.log(isShowDK);
 
   const handleThanhToan = () => {
     if (valuesUpdateHD.tenNguoiNhan === '') {
@@ -752,6 +751,9 @@ function CheckoutForm(props) {
       return;
     } else if (!/^(0[1-9])+([0-9]{8})\b$/.test(valuesUpdateHD.soDienThoai)) {
       toast.error('Số điện thoại không đúng định dạng');
+      return;
+    } else if (!checked) {
+      toast.error('Bạn hãy chấp nhận điểu khoản của chúng tôi để tiếp tục mua hàng');
       return;
     }
 
@@ -819,6 +821,9 @@ function CheckoutForm(props) {
     } else if (valuesUpdateHD.hinhThucThanhToan.ten === '') {
       toast.error('Hãy chọn phương thức thanh toán');
       return;
+    } else if (!checked) {
+      toast.error('Bạn hãy chấp nhận điểu khoản của chúng tôi để tiếp tục mua hàng');
+      return;
     }
 
     // Bắt đầu cập nhật địa chỉ
@@ -843,7 +848,6 @@ function CheckoutForm(props) {
       tongTien: totalAmount,
       tongTienKhiGiam: totalAmount - totalGiam
     }));
-    window.location.href = urlPay;
   };
 
   return (
@@ -1209,6 +1213,19 @@ function CheckoutForm(props) {
                       </td>
                     </tr>
                   </table>
+                  <p style={{ color: 'red', fontSize: 16, fontWeight: 'bold' }}>
+                    Lưu ý: Tổng tiền ở bên trên chưa tính tiền ship, khách hàng sẽ trả tiền ship cho shipper khi đã nhận được hàng
+                  </p>
+                  <FormControlLabel
+                    // required
+                    control={<Checkbox />}
+                    onChange={() => setChecked(!checked)}
+                    label={
+                      <p style={{ marginBottom: 0 }}>
+                        Bạn hãy chấp nhận <button onClick={() => setIsShowDK(true)}>điều khoản</button> của chúng tôi để mua hàng
+                      </p>
+                    }
+                  />
                   <div className="text-center">
                     {valuesUpdateHD.hinhThucThanhToan.ten === 'Tiền mặt' || valuesUpdateHD.hinhThucThanhToan.ten === '' ? (
                       <button className="btn btn-primary btn-lg btn-apply" type="button" onClick={() => handleThanhToan()}>
@@ -1226,6 +1243,7 @@ function CheckoutForm(props) {
           </div>
         </div>
       </div>
+      <ModalChinhSach show={isShowDK} handleClose={() => setIsShowDK(false)} />
       <ChangeDC
         show={isShow}
         handleClose={() => setIsShow(false)}

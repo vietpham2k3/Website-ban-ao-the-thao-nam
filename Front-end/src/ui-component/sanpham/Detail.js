@@ -294,6 +294,10 @@ function Detail(props) {
   };
 
   const handleAddToCartGH = () => {
+    if (quantity > product.soLuong) {
+      toast.error('Đã vượt quá số lượng cho phép');
+      return;
+    }
     if (!dataLogin) {
       localStorage.setItem('checkedLogin', true);
       navigate('/login');
@@ -491,7 +495,7 @@ function Detail(props) {
                 <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCartGH}>
                   Thêm vào giỏ hàng
                 </button>
-                <button className="add-to-cart1 btn btn-default" type="button" onClick={handleTaoHoaDon}>
+                <button className="add-to-cart1 btn btn-default" type="button" style={{ display: 'none' }} onClick={handleTaoHoaDon}>
                   Mua Ngay
                 </button>
               </div>

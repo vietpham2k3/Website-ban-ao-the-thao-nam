@@ -78,6 +78,10 @@ function Cart(props) {
       toast.error('Vui lòng chọn sản phẩm trước khi thanh toán');
       return;
     }
+    if (totalAmount >= 50000000) {
+      toast.error('Đơn tối thiểu khi đặt không được phép lớn hơn 50.000.000đ');
+      return;
+    }
     // eslint-disable-next-line react/prop-types
     if (dataLogin && dataLogin.role == 'KH') {
       taoHoaDon('', selectedProducts);
