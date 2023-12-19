@@ -1,6 +1,8 @@
 import { lazy } from 'react';
 // project imports
 import Loadable from 'ui-component/Loadable';
+import CheckThanhToan from 'ui-component/checkout/CheckVNP/CheckThanhToan';
+import ThanhToanThatBai from 'ui-component/checkout/CheckVNP/ThanhToanThatBai';
 import ChiTietDonHang from 'ui-component/login/ChiTietDonHang';
 
 // login option 3 routing
@@ -97,6 +99,14 @@ const AuthenticationRoutes = {
     {
       path: '/chinh-sach',
       element: <ChinhSach />
+    },
+    {
+      path: '/check-vnp',
+      element: <CheckThanhToan />
+    },
+    {
+      path: '/pay-error',
+      element: <ThanhToanThatBai />
     }
   ]
 };
