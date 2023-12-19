@@ -21,14 +21,22 @@ function AddLSP() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.ten.trim()) {
+      toast.error('Không được để trống tên');
+      return;
+    }
     post(values);
   };
 
   const post = async (value) => {
-    const res = await add(value);
-    if (res) {
-      toast.success('Thêm thành công !');
-      navigate('/san-pham/loai-san-pham');
+    try {
+      const res = await add(value);
+      if (res) {
+        toast.success('Thêm thành công !');
+        navigate('/san-pham/loai-san-pham');
+      }
+    } catch (error) {
+      toast.error('Loại sản phẩm này đã tồn tại');
     }
   };
 

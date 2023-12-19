@@ -52,6 +52,19 @@ function UpdateMS() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.ma.trim()) {
+      toast.error('Không được để trống tên');
+      return;
+    }
+    if (values.ma.length > 50) {
+      toast.error('Tên màu sắc không được vượt quá 50 ký tự.');
+      return;
+    }
+    // Kiểm tra nếu tên chất liệu chứa số hoặc ký tự đặc biệt
+    if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(values.ma)) {
+      toast.error('Tên màu sắc chỉ được chứa ký tự chữ cái và khoảng trắng.');
+      return;
+    }
     put(id, values);
   };
 

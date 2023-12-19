@@ -747,6 +747,12 @@ function CheckoutForm(props) {
     } else if (valuesUpdateHD.hinhThucThanhToan.ten === '') {
       toast.error('Hãy chọn phương thức thanh toán');
       return;
+    } else if (/\d/.test(valuesUpdateHD.tenNguoiNhan)) {
+      toast.error('Tên không được chứa chữ số');
+      return;
+    } else if (!/^(0[1-9])+([0-9]{8})\b$/.test(valuesUpdateHD.soDienThoai)) {
+      toast.error('Số điện thoại không đúng định dạng');
+      return;
     }
 
     // Bắt đầu cập nhật địa chỉ

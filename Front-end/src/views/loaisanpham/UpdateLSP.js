@@ -34,15 +34,23 @@ function UpdateLSP() {
   };
 
   const put = async (id, value) => {
-    const res = await updateLSP(id, value);
-    if (res) {
-      toast.success('Cập nhật thành công !');
-      navigate('/san-pham/loai-san-pham');
+    try {
+      const res = await updateLSP(id, value);
+      if (res) {
+        toast.success('Cập nhật thành công !');
+        navigate('/san-pham/loai-san-pham');
+      }
+    } catch (error) {
+      toast.error('Loại sản phẩm này đã tồn tại');
     }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.ten.trim()) {
+      toast.error('Không được để trống tên');
+      return;
+    }
     put(id, values);
   };
 

@@ -13,6 +13,11 @@ public interface GioHangChiTietService {
 
     GioHangChiTiet add(GioHangChiTiet gioHangChiTiet);
 
+    List<GioHangChiTiet> findAll();
+
+    void deleteAll();
+
+
     List<GioHangChiTiet> getAll(UUID id);
 
     GioHangChiTiet findById(UUID id);

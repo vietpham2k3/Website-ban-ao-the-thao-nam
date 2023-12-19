@@ -85,18 +85,6 @@ function AddKhuyenMai() {
     await post(values); // Gọi hàm post nếu dữ liệu hợp lệ
   };
 
-  // const handleLoaiGiamChange = (event) => {
-  //   const loaiGiam = event.target.value;
-  //   setValues({ ...values, loaiGiam });
-  //   setError(false); // Reset lỗi khi loại giảm được chọn
-  // };
-
-  // const handleMucGiamChange = (event) => {
-  //   const mucGiam = event.target.value;
-  //   setValues({ ...values, mucGiam });
-  //   // setError(false); // Reset lỗi khi giá trị thay đổi
-  // };
-
   const post = async (value) => {
     const res = await postKM(value);
     if (res.data === 'Mã Khuyến Mãi Đã Tồn Tại !') {

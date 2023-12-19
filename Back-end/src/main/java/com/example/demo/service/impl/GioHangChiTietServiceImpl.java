@@ -26,6 +26,16 @@ public class GioHangChiTietServiceImpl implements GioHangChiTietService {
     }
 
     @Override
+    public List<GioHangChiTiet> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
+
+    @Override
     public List<GioHangChiTiet> getAll(UUID id) {
         return repository.getAll(id);
     }

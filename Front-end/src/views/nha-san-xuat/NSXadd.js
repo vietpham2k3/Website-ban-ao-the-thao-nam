@@ -21,14 +21,22 @@ function AddNSX() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.ten.trim()) {
+      toast.error('Không được để trống tên');
+      return;
+    }
     post(values);
   };
 
   const post = async (value) => {
-    const res = await postNSX(value);
-    if (res) {
-      toast.success('Thêm thành công !');
-      navigate('/san-pham/nha-san-xuat');
+    try {
+      const res = await postNSX(value);
+      if (res) {
+        toast.success('Thêm thành công !');
+        navigate('/san-pham/nha-san-xuat');
+      }
+    } catch (error) {
+      toast.error('Nhà sản xuất này đã tồn tại');
     }
   };
 

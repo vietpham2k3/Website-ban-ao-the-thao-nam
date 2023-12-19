@@ -44,6 +44,10 @@ function UpdateNSX() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!values.ten.trim()) {
+      toast.error('Không được để trống tên');
+      return;
+    }
     put(id, values);
   };
 

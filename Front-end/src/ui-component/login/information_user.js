@@ -89,6 +89,7 @@ function UserAccount() {
 
     setIsModalOpen(false);
   };
+
   const handlePasswordUpdate = async () => {
     if (newPassword !== confirmPassword) {
       toast.error('Mật khẩu mới và xác nhận mật khẩu mới không khớp');
@@ -135,9 +136,21 @@ function UserAccount() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (/\d/.test(values.tenKhachHang)) {
+      toast.error('Tên không được chứa chữ số');
+      return;
+    }
+    //Email
+    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(values.email)) {
+      toast.error('Email không đúng định dạng');
+      return;
+    } //Email
+    if (!/^(0[1-9])+([0-9]{8})\b$/.test(values.sdt)) {
+      toast.error('Số điện thoại không đúng định dạng');
+      return;
+    }
     put(id, values);
   };
-  console.log(values);
 
   return (
     <div>

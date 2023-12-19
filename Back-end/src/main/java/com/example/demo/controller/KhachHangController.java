@@ -6,6 +6,7 @@ import com.example.demo.dto.KhachHangDTO;
 import com.example.demo.dto.KhachHangInfo;
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.service.impl.DiaChiServiceImpl;
 import com.example.demo.service.impl.HoaDonServiceImpl;
 import com.example.demo.service.impl.KhachHangServiceImpl;
@@ -40,6 +41,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -59,7 +61,6 @@ public class KhachHangController {
 
     @Autowired
     private SendEmailServicecImpl emailService;
-
 
 
     @GetMapping("/getAll/{id}")
@@ -88,7 +89,7 @@ public class KhachHangController {
     }
 
     @GetMapping("/getAllKH/{id}")
-    public ResponseEntity<?> getAllKH(@PathVariable("id") UUID id){
+    public ResponseEntity<?> getAllKH(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(khService.getOne(id));
     }
 
@@ -198,6 +199,12 @@ public class KhachHangController {
 
             // Set the image blob to the KhachHang object
             khachHang.setAnh(imageBlob);
+        }
+        List<KhachHang> list = khService.getAll();
+        for (KhachHang khachHang1 : list) {
+            if(email.equalsIgnoreCase(khachHang1.getEmail())){
+                return ResponseEntity.ok("Email này đã tồn tại");
+            }
         }
 
         // Save the KhachHang object
@@ -364,7 +371,6 @@ public class KhachHangController {
     }
 
 
-
     @PutMapping("/change-password/{id}")
     public String changePassword(
             @PathVariable UUID id,
@@ -392,6 +398,7 @@ public class KhachHangController {
 
         return "Password changed successfully";
     }
+
     @PostMapping("/check-current-password")
     public ResponseEntity<String> checkCurrentPassword(@RequestBody DoiMatKhau request) {
         UUID userId = request.getId();

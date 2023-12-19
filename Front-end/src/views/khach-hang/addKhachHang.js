@@ -180,7 +180,9 @@ function AddKhachHang() {
     formData.append('phuongXa', selectedWardName);
     try {
       const res = await addKH(formData);
-      if (res) {
+      if (res.data === 'Email này đã tồn tại') {
+        toast.error(res.data);
+      } else {
         toast.success('Thêm thành công');
         navigate('/khach-hang');
       }
@@ -247,7 +249,7 @@ function AddKhachHang() {
                   Số Điện Thoại
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
                   value={values.khachHang.sdt}
                   onChange={(e) =>
