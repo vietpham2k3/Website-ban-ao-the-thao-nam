@@ -13,7 +13,8 @@ function SignUpForm(props) {
     email: '',
     password: '',
     passwordConfirmation: '',
-    passwordMatch: false // Trạng thái kiểm tra mật khẩu xác nhận
+    passwordMatch: false, // Trạng thái kiểm tra mật khẩu xác nhận
+    trangThai: 1
   });
 
   const handleChange = (evt) => {

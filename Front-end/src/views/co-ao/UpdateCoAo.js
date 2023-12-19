@@ -56,16 +56,15 @@ function UpdateCA() {
     if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(values.ten)) {
       toast.error('Tên cổ áo chỉ được chứa ký tự chữ cái và khoảng trắng.');
       return;
-    }    
+    }
 
     try {
       await put(id, values);
       navigate('/san-pham/co-ao');
-  } catch (error) {
+    } catch (error) {
       // Nếu có lỗi từ service, hiển thị thông báo lỗi
       toast.error('Tên cổ áo đã tồn tại');
-  }
-    
+    }
   };
 
   return (

@@ -128,6 +128,7 @@ public class LoginController {
 
         String ma = "KH" + new Random().nextInt(100000);
         khachHang.setMaKhachHang(ma);
+        khachHang.setTrangThai(1);
 
         // Thêm khách hàng mới vào cơ sở dữ liệu
         KhachHang savedKhachHang = khService.dangKy(khachHang);

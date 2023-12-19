@@ -192,148 +192,147 @@ function ModalTraHang(props) {
             </div>
           ))}
 
-{totalAmountDH > 0 &&(
-<>
-          <hr />
-          <ButtonMUI variant="contained" onClick={handleOpen} className="mb-3 mt-1">
-            Chọn sản phẩm
-          </ButtonMUI>
-          {dataSPDoi.map((d, i) => (
-            <div key={i} className="d-flex">
-              <div className="me-3 mb-3">
-                <img
-                  src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
-                  alt=""
-                  style={{ width: 120, borderRadius: 15 }}
-                />
-              </div>
-              <div className="mt-3" style={{ width: 200 }}>
-                <p>
-                  {d.chiTietSanPham.sanPham.ten}
-                  <br />
-                  {d.chiTietSanPham.kichCo.ten} -{' '}
-                  <span style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, borderRadius: '50%' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                </p>
-              </div>
-              <div style={{ width: 150 }} className="d-flex align-items-center justify-content-center ms-5">
-                <InputSpinner
-                  key={d.id}
-                  type={'real'}
-                  max={d.chiTietSanPham.soLuong}
-                  min={1}
-                  step={1}
-                  value={d.soLuongHangDoi || 0}
-                  onChange={(e) => handleChange(e, i)}
-                  variant={'dark'}
-                  size="sm"
-                />
-              </div>
-              <div className="d-flex align-items-center justify-content-center ms-5">
-                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia)}</p>
-              </div>
-              <div className="d-flex align-items-center justify-content-center ms-5">
-                <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongHangDoi || 0)}</p>
-              </div>
-              <div className="d-flex align-items-center justify-content-center ms-5">
-                <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
-              </div>
-            </div>
-          ))}
-          <FormControl required sx={{ mb: 1, mt: 3, width: '100%' }}>
-            <InputLabel id="demo-simple-select-required-label">Lý do trả hàng đơn hàng</InputLabel>
-            <Select
-              labelId="demo-simple-select-required-label"
-              id="demo-simple-select-required"
-              value={value || 'Khác'} // Nếu ghiChu không có giá trị hoặc không khớp với bất kỳ label nào, sử dụng 'Khác'
-              label="Lý do trả hàng đơn hàng *"
-              onChange={(e) => {
-                setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } });
-                setValue(e.target.value);
-              }}
-            >
-              {listLyDo.map((d, i) => (
-                <MenuItem key={i} value={d.label}>
-                  {d.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {(value === 'Khác' || yeuCauDoi.lichSuHoaDon.ghiChu === '') && (
-            <TextField
-              style={{ width: '100%' }}
-              variant="outlined"
-              onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
-            />
-          )}
-          {totalAmount !== 0 && totalAmount > 0 && (
-            <div className="d-flex justify-content-between align-items-center">
-              <FormControl>
-                <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>
-                <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-                  {totalAmount < 50000000 && (
-                    <FormControlLabel
-                      // checked={true}
-                      value={true}
-                      control={<Radio />}
-                      label="Tiền mặt"
-                      onChange={() =>
-                        setValuesAdd({
-                          ...valuesAdd,
-                          doiHang: {
-                            ...valuesAdd.doiHang,
-                            phuongThucThanhToan: true
-                          }
-                        })
-                      }
+          {totalAmountDH > 0 && (
+            <>
+              <hr />
+              <ButtonMUI variant="contained" onClick={handleOpen} className="mb-3 mt-1">
+                Chọn sản phẩm
+              </ButtonMUI>
+              {dataSPDoi.map((d, i) => (
+                <div key={i} className="d-flex">
+                  <div className="me-3 mb-3">
+                    <img
+                      src={`http://localhost:8080/api/chi-tiet-san-pham/${d.chiTietSanPham.id}`}
+                      alt=""
+                      style={{ width: 120, borderRadius: 15 }}
                     />
-                  )}
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label="VNPAY"
-                    onChange={() =>
-                      setValuesAdd({
-                        ...valuesAdd,
-                        doiHang: {
-                          ...valuesAdd.doiHang,
-                          phuongThucThanhToan: false
-                        }
-                      })
-                    }
-                  />
-                </RadioGroup>
+                  </div>
+                  <div className="mt-3" style={{ width: 200 }}>
+                    <p>
+                      {d.chiTietSanPham.sanPham.ten}
+                      <br />
+                      {d.chiTietSanPham.kichCo.ten} -{' '}
+                      <span style={{ backgroundColor: d.chiTietSanPham.mauSac.ten, borderRadius: '50%' }}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </span>
+                    </p>
+                  </div>
+                  <div style={{ width: 150 }} className="d-flex align-items-center justify-content-center ms-5">
+                    <InputSpinner
+                      key={d.id}
+                      type={'real'}
+                      max={d.chiTietSanPham.soLuong}
+                      min={1}
+                      step={1}
+                      value={d.soLuongHangDoi || 0}
+                      onChange={(e) => handleChange(e, i)}
+                      variant={'dark'}
+                      size="sm"
+                    />
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center ms-5">
+                    <p style={{ color: 'red' }}>{convertToCurrency(d.donGia)}</p>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center ms-5">
+                    <p style={{ color: 'red' }}>{convertToCurrency(d.donGia * d.soLuongHangDoi || 0)}</p>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center ms-5">
+                    <button onClick={() => handleDelete(d.id)} className="fa-solid fa-trash mx-3"></button>
+                  </div>
+                </div>
+              ))}
+              <FormControl required sx={{ mb: 1, mt: 3, width: '100%' }}>
+                <InputLabel id="demo-simple-select-required-label">Lý do trả hàng đơn hàng</InputLabel>
+                <Select
+                  labelId="demo-simple-select-required-label"
+                  id="demo-simple-select-required"
+                  value={value || 'Khác'} // Nếu ghiChu không có giá trị hoặc không khớp với bất kỳ label nào, sử dụng 'Khác'
+                  label="Lý do trả hàng đơn hàng *"
+                  onChange={(e) => {
+                    setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } });
+                    setValue(e.target.value);
+                  }}
+                >
+                  {listLyDo.map((d, i) => (
+                    <MenuItem key={i} value={d.label}>
+                      {d.label}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
+              {(value === 'Khác' || yeuCauDoi.lichSuHoaDon.ghiChu === '') && (
+                <TextField
+                  style={{ width: '100%' }}
+                  variant="outlined"
+                  onChange={(e) => setYeuCauDoi({ ...yeuCauDoi, lichSuHoaDon: { ghiChu: e.target.value } })}
+                />
+              )}
+              {totalAmount !== 0 && totalAmount > 0 && (
+                <div className="d-flex justify-content-between align-items-center">
+                  <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Phương thức thanh toán</FormLabel>
+                    <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                      {totalAmount < 50000000 && (
+                        <FormControlLabel
+                          // checked={true}
+                          value={true}
+                          control={<Radio />}
+                          label="Tiền mặt"
+                          onChange={() =>
+                            setValuesAdd({
+                              ...valuesAdd,
+                              doiHang: {
+                                ...valuesAdd.doiHang,
+                                phuongThucThanhToan: true
+                              }
+                            })
+                          }
+                        />
+                      )}
+                      <FormControlLabel
+                        value={false}
+                        control={<Radio />}
+                        label="VNPAY"
+                        onChange={() =>
+                          setValuesAdd({
+                            ...valuesAdd,
+                            doiHang: {
+                              ...valuesAdd.doiHang,
+                              phuongThucThanhToan: false
+                            }
+                          })
+                        }
+                      />
+                    </RadioGroup>
+                  </FormControl>
 
-              {totalAmount > 0 && (
-                <h4>
-                  Khách phải trả: <span style={{ color: 'red' }}> {convertToCurrency(totalAmount)}</span>
+                  {totalAmount > 0 && (
+                    <h4>
+                      Khách phải trả: <span style={{ color: 'red' }}> {convertToCurrency(totalAmount)}</span>
+                    </h4>
+                  )}
+                </div>
+              )}
+              {totalAmount < 0 && (
+                <h4 style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
+                  Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
                 </h4>
               )}
-            </div>
+            </>
           )}
-          {totalAmount < 0 && (
-            <h4 style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
-              Tiền trả khách: <span style={{ color: 'red' }}> {convertToCurrency(-totalAmount)}</span>
-            </h4>
-          )}
-       
-</>
-)}
-
-</Modal.Body>
-{totalAmountDH > 0 &&(
-<>
-     <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Huỷ
-          </Button>
-          <Button variant="primary" onClick={handleDoiHang}>
-            Xác nhận
-          </Button>
-        </Modal.Footer>
-</>
-)}
-   
+        </Modal.Body>
+        {totalAmountDH > 0 && (
+          <>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Huỷ
+              </Button>
+              <Button variant="primary" onClick={handleDoiHang}>
+                Xác nhận
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
       </Modal>
     </div>
   );

@@ -73,24 +73,24 @@ const dataLoginNV = JSON.parse(localStorage.getItem('dataLoginNV'));
 
 const MainRoutes = {
   path: '/',
-  element: (dataLoginNV || dataLoginAD) ? <MainLayout /> : '',
+  element: dataLoginNV || dataLoginAD ? <MainLayout /> : '',
   children: [
     //đơn hàng
     {
       path: '/don-hang',
-      element: (dataLoginNV || dataLoginAD) ? <DonHang /> : <Error />
+      element: dataLoginNV || dataLoginAD ? <DonHang /> : <Error />
     },
     {
       path: '/don-hang/chi-tiet/:id',
-      element: (dataLoginNV || dataLoginAD) ? <DonHangCT /> : <Error />
+      element: dataLoginNV || dataLoginAD ? <DonHangCT /> : <Error />
     },
     {
       path: '/hang-loi',
-      element: (dataLoginNV || dataLoginAD) ? <HangLoi /> : <Error />
+      element: dataLoginNV || dataLoginAD ? <HangLoi /> : <Error />
     },
     {
       path: '/don-huy-chua-hoan-tien',
-      element: (dataLoginNV || dataLoginAD) ? <DonHuyChuaHoan /> : <Error />
+      element: dataLoginNV || dataLoginAD ? <DonHuyChuaHoan /> : <Error />
     },
     {
       path: '/san-pham',
@@ -299,7 +299,7 @@ const MainRoutes = {
     // Bán hàng tại quầy
     {
       path: '/ban-hang-tai-quay',
-      element: (dataLoginNV || dataLoginAD) ? <BanHangTaiQuay /> : <Error />
+      element: dataLoginNV || dataLoginAD ? <BanHangTaiQuay /> : <Error />
     }
   ]
 };

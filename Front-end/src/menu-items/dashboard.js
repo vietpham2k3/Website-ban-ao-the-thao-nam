@@ -1,5 +1,5 @@
 // assets
-import { IconDashboard, IconShoppingCart, IconShirt,IconShirtOff } from '@tabler/icons';
+import { IconDashboard, IconShoppingCart, IconShirt, IconShirtOff } from '@tabler/icons';
 
 // constant
 const icons = { IconDashboard, IconShirt, IconShoppingCart, IconShirtOff };

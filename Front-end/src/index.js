@@ -22,7 +22,7 @@ const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <Provider store={store}>
-    <GoogleOAuthProvider clientId="922646833014-tsutt5t8ar4v8d5pir38ngh4n6bj32ja.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="922646833014-ii1jccpqe21t52j71imk8hudn14sh9mr.apps.googleusercontent.com">
       <BrowserRouter basename={config.basename}>
         <App />
       </BrowserRouter>
