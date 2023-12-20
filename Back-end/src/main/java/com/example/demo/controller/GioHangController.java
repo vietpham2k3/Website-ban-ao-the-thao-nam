@@ -301,11 +301,15 @@ public class GioHangController {
     public ResponseEntity<?> deleteByIdHD(@PathVariable UUID id) {
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
         for (HoaDonChiTiet hoaDonChiTiet : list) {
-//            if(hoaDonChiTiet.getChiTietSanPham() != null){
-                chiTietSanPhamService.update(hoaDonChiTiet.getSoLuong()
-                        + hoaDonChiTiet.getChiTietSanPham().getSoLuong(), hoaDonChiTiet.getChiTietSanPham().getId());
-//            }
+            chiTietSanPhamService.update(hoaDonChiTiet.getSoLuong()
+                    + hoaDonChiTiet.getChiTietSanPham().getSoLuong(), hoaDonChiTiet.getChiTietSanPham().getId());
         }
+        hoaDonChiTietService.deleteByIdHD(id);
+        return ResponseEntity.ok("Thành công");
+    }
+
+    @DeleteMapping("/backToGH/{id}")
+    public ResponseEntity<?> backToGH(@PathVariable UUID id) {
         hoaDonChiTietService.deleteByIdHD(id);
         return ResponseEntity.ok("Thành công");
     }

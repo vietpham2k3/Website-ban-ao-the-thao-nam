@@ -1,5 +1,5 @@
 import CheckoutForm from 'ui-component/checkout/CheckOut';
-import { deleteByIdHD } from 'services/GioHangService';
+import { backToGH } from 'services/GioHangService';
 import { useNavigate, useParams } from 'react-router';
 
 function Checkout() {
@@ -13,7 +13,7 @@ function Checkout() {
 
   const backToCart = async (idHD) => {
     try {
-      const res = await deleteByIdHD(idHD);
+      const res = await backToGH(idHD);
       if (res) {
         navigate('/gio-hang');
         setDataHDCT(res.data);
