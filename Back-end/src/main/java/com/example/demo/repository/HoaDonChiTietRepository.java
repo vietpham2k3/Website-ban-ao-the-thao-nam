@@ -51,6 +51,27 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "order by hl.ngay_tao desc", nativeQuery = true)
     Page<HoaDonChiTiet> search(String key, Date tuNgay, Date denNgay, Pageable pageable);
 
+    @Query(value = "SELECT ctsp.id_ms, hdct.*, ctsp.id_kc, ctsp.id as idctsp, sp.ten, \n" +
+            "hd.ma\n" +
+            "FROM HoaDonChiTiet hdct \n" +
+            "JOIN ChiTietSanPham ctsp ON hdct.id_ctsp = ctsp.id \n" +
+            "JOIN SanPham sp ON sp.id = ctsp.id_sp \n" +
+            "JOIN HoaDon hd ON hd.id = hdct.id_hd \n" +
+            "JOIN NhanVien nv ON nv.id = hd.id_tk \n" +
+            "JOIN DoiHang dh ON dh.id = hdct.id_th \n" +
+            "WHERE hdct.id_th IS NOT NULL \n" +
+            "AND (\n" +
+            "    (:key IS NULL OR sp.ten LIKE CONCAT('%' , :key , '%')) \n" +
+            "    or\n" +
+            "    (:key IS NULL OR hd.ma LIKE CONCAT('%' , :key , '%')) " +
+            "    or\n" +
+            "    (:key IS NULL OR nv.ten LIKE CONCAT('%' , :key , '%'))) " +
+            "                   AND ((:tuNgay IS NULL OR hd.ngay_tao >= :tuNgay)\n" +
+            "                   AND (:denNgay IS NULL OR hd.ngay_tao <= :denNgay))\n" +
+            "                   AND lich_su_so_luong_yeu_cau_doi IS NOT NULL\n" +
+            "order by dh.ngay_tao desc", nativeQuery = true)
+    Page<HoaDonChiTiet> searchAllDH(String key, Date tuNgay, Date denNgay, Pageable pageable);
+
     @Query(value = "SELECT h.*\n" +
             "FROM HoaDonChiTiet h\n" +
             "WHERE " +
@@ -78,6 +99,12 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "\t\t\t  AND so_luong_yeu_cau_doi IS NOT NULL"
             , nativeQuery = true)
     List<HoaDonChiTiet> getAllByIdHDAndIdTHAndSLYCD(UUID id);
+
+    @Query(value = "SELECT *\n" +
+            "            FROM HoaDonChiTiet\n" +
+            "            WHERE lich_su_so_luong_yeu_cau_doi IS NOT NULL"
+            , nativeQuery = true)
+    Page<HoaDonChiTiet> getAllSLYCD(Pageable pageable);
 
     @Query(value = "SELECT *\n" +
             "          FROM HoaDonChiTiet\n" +

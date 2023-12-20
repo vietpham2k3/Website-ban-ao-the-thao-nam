@@ -13,7 +13,7 @@ const BanHangTaiQuay = {
   children: [
     {
       id: 'ban-hang-tai-quay',
-      title: 'Bán hàn tại quầy',
+      title: 'Bán hàng tại quầy',
       type: 'item',
       url: '/ban-hang-tai-quay',
       icon: icons.IconBuildingStore

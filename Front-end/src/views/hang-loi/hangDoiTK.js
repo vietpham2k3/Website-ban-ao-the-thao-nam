@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import { Avatar, Pagination } from '@mui/material';
-import { getAllPageHL, search } from 'services/HangLoiService';
+import { hienThiALLSPYCDoiHang,searchALl } from 'services/ServiceDonHang';
 import MainCard from 'ui-component/cards/MainCard';
 import { DateRangePicker } from 'rsuite';
 import { format } from 'date-fns';
 import { addMonths, subMonths } from 'date-fns';
 
-function HangLoi() {
+function HangDoiTK() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState();
   const [tuNgay, setTuNgay] = useState(null);
@@ -35,7 +35,7 @@ function HangLoi() {
 
   const getAll = async (page) => {
     setCurrentPage(page);
-    const res = await getAllPageHL(page);
+    const res = await hienThiALLSPYCDoiHang(page);
     if (res) {
       console.log(res);
       setData(res.data.content);
@@ -44,7 +44,7 @@ function HangLoi() {
   };
 
   const searchHL = async (key, tuNgay, denNgay, page) => {
-    const res = await search(key, tuNgay, denNgay, page);
+    const res = await searchALl(key, tuNgay, denNgay, page);
     if (res) {
       setData(res.data.content);
       setTotalPages(res.data.totalPages);
@@ -106,7 +106,7 @@ function HangLoi() {
       <MainCard>
         <div className="row">
           <div className="text-center">
-            <h1>Hàng lỗi</h1>
+            <h1>Hàng khách yêu cầu đổi</h1>
           </div>
           <div className="col-7">
             <div className="search">
@@ -139,6 +139,7 @@ function HangLoi() {
             <th>Sản phẩm</th>
             <th style={{ textAlign: 'center' }}>Mã hoá đơn</th>
             <th style={{ textAlign: 'center' }}>Số lượng</th>
+            {/* <th style={{ textAlign: 'center' }}>Tiền Hàng</th> */}
             <th style={{ textAlign: 'center' }}>Ghi chú</th>
             <th style={{ textAlign: 'center' }}>Ngày tạo</th>
             <th style={{ textAlign: 'center' }}>Người xác nhận</th>
@@ -166,10 +167,11 @@ function HangLoi() {
                   </div>
                 </td>
                 <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hoaDon.ma}</td>
-                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.soHangLoi}</td>
-                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.ghiChu}</td>
-                <td style={{ textAlign: 'center', marginTop: 50 }}>{formatDate(d.hangLoi.ngayTao)}</td>
-                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.hangLoi.nguoiTao}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.lichSuSoLuongYeuCauDoi}</td>
+                {/* <td style={{ textAlign: 'center', marginTop: 50 }}>{d.donGia}</td> */}
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.doiHang.ghiChu}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{formatDate(d.doiHang.ngayTao)}</td>
+                <td style={{ textAlign: 'center', marginTop: 50 }}>{d.doiHang.nguoiTao}</td>
               </tr>
             ))}
           </tbody>
@@ -206,4 +208,4 @@ function HangLoi() {
   );
 }
 
-export default HangLoi;
+export default HangDoiTK;

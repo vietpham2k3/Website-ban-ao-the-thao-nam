@@ -109,6 +109,32 @@ public class HoaDonController {
         return ResponseEntity.ok(serviceHD.listYCDoiHang(id));
     }
 
+    @GetMapping("hien-thi-ls-sp-yeu-cau-doi")
+    public ResponseEntity<?> getAllHangYCDoi(@RequestParam(defaultValue = "0") Integer page) {
+        Pageable pageable = PageRequest.of(page,5);
+        return ResponseEntity.ok(serviceHD.findAllYCDH(pageable));
+    }
+
+    @GetMapping("/searchAllDH")
+    public ResponseEntity<?> searchAll(@RequestParam(defaultValue = "0") Integer page,
+                                    @RequestParam String key,
+                                    @RequestParam String tuNgay,
+                                    @RequestParam String denNgay) {
+        Pageable pageable = PageRequest.of(page,5);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
+        Date tuNgayDate = null;
+        Date denNgayDate = null;
+
+        try {
+            tuNgayDate = dateFormat.parse(tuNgay);
+            denNgayDate = dateFormat.parse(denNgay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(serviceHD.searchDHALL(key, tuNgayDate, denNgayDate, pageable));
+    }
+
     @GetMapping("hien-thi-sl-spDoi/{id}")
     public ResponseEntity<?> detailSPDoiByIdHDCT(@PathVariable UUID id) {
         return ResponseEntity.ok(hoaDonChiTietService.detailSLSPDoi(id));

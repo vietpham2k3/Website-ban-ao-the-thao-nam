@@ -41,6 +41,10 @@ public interface HoaDonService {
 
     public List<String> bieuDoNam();
 
+    public Page<HoaDonChiTiet> findAllYCDH(Pageable pageable);
+
+    public Page<HoaDonChiTiet> searchDHALL(String key, Date tuNgay, Date denNgay,Pageable pageable);
+
     public List<String> bieuDoNgay();
 
     public List<String> bieuDoThang();
