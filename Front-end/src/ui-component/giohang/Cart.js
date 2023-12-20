@@ -31,16 +31,16 @@ function Cart(props) {
     },
     soLuong: 1
   });
-  const hoaDonChiTietList = selectedProducts.map((product) => {
-    return {
-      chiTietSanPham: {
-        id: product.id
-        // Các trường khác của chi tiết sản phẩm nếu cần
-      },
-      soLuong: product.soLuong, // Thêm số lượng
-      donGia: product.soLuong * product.donGia // Thêm giá bán
-    };
-  });
+  // const hoaDonChiTietList = selectedProducts.map((product) => {
+  //   return {
+  //     chiTietSanPham: {
+  //       id: product.id
+  //       // Các trường khác của chi tiết sản phẩm nếu cần
+  //     },
+  //     soLuong: product.soLuong, // Thêm số lượng
+  //     donGia: product.soLuong * product.donGia // Thêm giá bán
+  //   };
+  // });
 
   useEffect(() => {
     const storedProductList = JSON.parse(localStorage.getItem('product'));
@@ -82,12 +82,23 @@ function Cart(props) {
       toast.error('Đơn tối thiểu khi đặt không được phép lớn hơn 50.000.000đ');
       return;
     }
-    // eslint-disable-next-line react/prop-types
-    if (dataLogin && dataLogin.role == 'KH') {
+    let hasError = false;
+
+    selectedProducts.forEach((product) => {
+      if (product.soLuong > product.chiTietSanPham.soLuong) {
+        toast.error('Không còn đủ hàng để thanh toán');
+        hasError = true;
+        return;
+      }
+      if (product.chiTietSanPham.sanPham.trangThai === 0 || product.chiTietSanPham.trangThai === 0) {
+        toast.error('Mặt hàng này đã ngừng kinh doanh');
+        hasError = true;
+        return;
+      }
+    });
+
+    if (!hasError) {
       taoHoaDon('', selectedProducts);
-    } else {
-      taoHoaDon('', hoaDonChiTietList);
-      localStorage.setItem('productAfter', JSON.stringify(temporaryProductAfter));
     }
   };
 
@@ -130,76 +141,26 @@ function Cart(props) {
   };
 
   const handleUpdate = (e, id, soLuong, tongSoLuong, idCTSP) => {
-    if (dataLogin && dataLogin.role == 'KH') {
-      setIdGHCT(id);
-      setCheck(true);
-      setValuesUpdateGH({
-        ...valuesUpdateGH,
-        chiTietSanPham: {
-          id: idCTSP
-        },
-        soLuong: e
-      });
-      const updatedSelectedProducts = selectedProducts.map((product) => {
-        if (product.chiTietSanPham.id === idCTSP) {
-          return {
-            ...product,
-            soLuong: e
-          };
-        }
-        return product;
-      });
-
-      setSelectedProducts(updatedSelectedProducts);
-    } else {
-      // Lấy giá trị số lượng mới
-      const newQuantity = e;
-
-      // Lấy danh sách sản phẩm từ local
-      const storedProductList = JSON.parse(localStorage.getItem('product'));
-
-      // Tìm sản phẩm tương ứng
-      const productIndex = storedProductList.findIndex((product) => product.id === id);
-
-      // Lấy số lượng hiện tại
-      const currentQuantity = storedProductList[productIndex].soLuong;
-
-      // Cập nhật số lượng sản phẩm
-      storedProductList[productIndex].soLuong = newQuantity;
-      // Lưu danh sách sản phẩm vào local
-      localStorage.setItem('product', JSON.stringify(storedProductList));
-
-      // Cập nhật danh sách sản phẩm trong state
-      setProductList(storedProductList);
-      const totalCount = storedProductList.reduce((count, product) => count + product.soLuong, 0);
-
-      // Cập nhật biến productCount
-      setProductCount(totalCount);
-
-      if (newQuantity > currentQuantity) {
-        storedProductList[productIndex].tongSoLuong = tongSoLuong - (newQuantity - currentQuantity);
-      } else {
-        storedProductList[productIndex].tongSoLuong = tongSoLuong + (currentQuantity - newQuantity);
+    setIdGHCT(id);
+    setCheck(true);
+    setValuesUpdateGH({
+      ...valuesUpdateGH,
+      chiTietSanPham: {
+        id: idCTSP
+      },
+      soLuong: e
+    });
+    const updatedSelectedProducts = selectedProducts.map((product) => {
+      if (product.chiTietSanPham.id === idCTSP) {
+        return {
+          ...product,
+          soLuong: e
+        };
       }
+      return product;
+    });
 
-      // Lưu lại danh sách sản phẩm đã được cập nhật
-      localStorage.setItem('product', JSON.stringify(storedProductList));
-
-      // Gọi hàm để cập nhật tổng số lượng trong local storage
-      putSl(id, storedProductList[productIndex].tongSoLuong);
-
-      const updatedSelectedProducts = selectedProducts.map((product) => {
-        if (product.id === id) {
-          return {
-            ...product,
-            soLuong: e
-          };
-        }
-        return product;
-      });
-
-      setSelectedProducts(updatedSelectedProducts);
-    }
+    setSelectedProducts(updatedSelectedProducts);
   };
 
   const deleteProductInCart = async (id) => {
@@ -271,7 +232,7 @@ function Cart(props) {
     }
   };
 
-  console.log(temporaryProductAfter);
+  console.log(selectedProducts);
 
   return (
     <div>
@@ -317,130 +278,69 @@ function Cart(props) {
                     <td>Thành tiền</td>
                     <td>Action</td>
                   </tr>
-                  {dataLogin
-                    ? listSP.map((product, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              name=""
-                              id=""
-                              checked={selectedProducts.some((p) => p.id === product.id)}
-                              onChange={() => handleCheckboxChange(product)}
-                            />
-                          </td>
-                          <td>
-                            <Avatar
-                              alt={product.chiTietSanPham.sanPham.ten}
-                              src={`http://localhost:8080/api/chi-tiet-san-pham/${product.chiTietSanPham.id}`}
-                              sx={{ width: 80, height: 110 }}
-                              variant="rounded"
-                            />
-                          </td>
-                          <td>
-                            {product.chiTietSanPham.sanPham.ten} <br />
-                            {product.chiTietSanPham.kichCo.ten} -{' '}
-                            <span
-                              className="color-circle"
-                              style={{
-                                backgroundColor: product.chiTietSanPham.mauSac.ten,
-                                display: 'inline-block',
-                                verticalAlign: 'middle',
-                                height: '2px',
-                                width: '10px'
-                              }}
-                            ></span>
-                          </td>
-                          <td>{convertToCurrency(product.donGia)}</td>
-                          <td>
-                            <div
-                              className="input-spinner"
-                              style={{ display: 'flex', alignItems: 'center', width: 140, justifyContent: 'center' }}
-                            >
-                              <InputSpinner
-                                max={product.chiTietSanPham.soLuong + product.soLuong}
-                                min={1}
-                                className="input-spinner"
-                                step={1}
-                                variant={'dark'}
-                                type="real"
-                                size="md"
-                                value={product.soLuong}
-                                onChange={(e) =>
-                                  handleUpdate(e, product.id, product.soLuong, product.chiTietSanPham.soLuong, product.chiTietSanPham.id)
-                                }
-                              />
-                            </div>
-                          </td>
-                          <td>{convertToCurrency(product.donGia * product.soLuong)}</td>
-                          <td>
-                            <button
-                              onClick={() => handleDelete(product.id, product.soLuong, product.chiTietSanPham.soLuong)}
-                              className="fa-solid fa-trash mx-3"
-                            ></button>
-                          </td>
-                        </tr>
-                      ))
-                    : productList.map((product, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              name=""
-                              id=""
-                              checked={selectedProducts.some((p) => p.id === product.id)}
-                              onChange={() => handleCheckboxChange(product)}
-                            />
-                          </td>
-                          <td>
-                            <img
-                              src={`http://localhost:8080/api/chi-tiet-san-pham/${product.id}`}
-                              className="img-cart"
-                              style={{ width: '70px', height: '100px', borderRadius: '15px' }}
-                            />
-                          </td>
-                          <td>
-                            {product.sanPham.ten} <br />
-                            {product.kichCo.ten} -{' '}
-                            <span
-                              className="color-circle"
-                              style={{
-                                backgroundColor: product.mauSac.ten,
-                                display: 'inline-block',
-                                verticalAlign: 'middle',
-                                height: '2px',
-                                width: '10px'
-                              }}
-                            ></span>
-                          </td>
-                          <td>{convertToCurrency(product.donGia)}</td>
-                          <td>
-                            <div
-                              className="input-spinner"
-                              style={{ display: 'flex', alignItems: 'center', width: 140, justifyContent: 'center' }}
-                            >
-                              <InputSpinner
-                                max={product.tongSoLuong + product.soLuong}
-                                min={1}
-                                className="input-spinner"
-                                step={1}
-                                variant={'dark'}
-                                type="real"
-                                size="md"
-                                value={product.soLuong}
-                                onChange={(e) => handleUpdate(e, product.id, product.soLuong, product.tongSoLuong)}
-                              />
-                            </div>
-                          </td>
-                          <td>{convertToCurrency(product.donGia * product.soLuong)}</td>
-                          <td>
-                            <button
-                              onClick={() => handleDelete(product.id, product.soLuong, product.tongSoLuong)}
-                              className="fa-solid fa-trash mx-3"
-                            ></button>
-                          </td>
-                        </tr>
-                      ))}
+                  {listSP.map((product, index) => (
+                    <tr key={index}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name=""
+                          id=""
+                          checked={selectedProducts.some((p) => p.id === product.id)}
+                          onChange={() => handleCheckboxChange(product)}
+                        />
+                      </td>
+                      <td>
+                        <Avatar
+                          alt={product.chiTietSanPham.sanPham.ten}
+                          src={`http://localhost:8080/api/chi-tiet-san-pham/${product.chiTietSanPham.id}`}
+                          sx={{ width: 80, height: 110 }}
+                          variant="rounded"
+                        />
+                      </td>
+                      <td>
+                        {product.chiTietSanPham.sanPham.ten} <br />
+                        {product.chiTietSanPham.kichCo.ten} -{' '}
+                        <span
+                          className="color-circle"
+                          style={{
+                            backgroundColor: product.chiTietSanPham.mauSac.ten,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            height: '2px',
+                            width: '10px'
+                          }}
+                        ></span>
+                      </td>
+                      <td>{convertToCurrency(product.donGia)}</td>
+                      <td>
+                        <div
+                          className="input-spinner"
+                          style={{ display: 'flex', alignItems: 'center', width: 140, justifyContent: 'center' }}
+                        >
+                          <InputSpinner
+                            max={product.chiTietSanPham.soLuong + product.soLuong}
+                            min={1}
+                            className="input-spinner"
+                            step={1}
+                            variant={'dark'}
+                            type="real"
+                            size="md"
+                            value={product.soLuong}
+                            onChange={(e) =>
+                              handleUpdate(e, product.id, product.soLuong, product.chiTietSanPham.soLuong, product.chiTietSanPham.id)
+                            }
+                          />
+                        </div>
+                      </td>
+                      <td>{convertToCurrency(product.donGia * product.soLuong)}</td>
+                      <td>
+                        <button
+                          onClick={() => handleDelete(product.id, product.soLuong, product.chiTietSanPham.soLuong)}
+                          className="fa-solid fa-trash mx-3"
+                        ></button>
+                      </td>
+                    </tr>
+                  ))}
                 </Table>
               </div>
             </div>

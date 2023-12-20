@@ -299,6 +299,17 @@ public class GioHangController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteByIdHD(@PathVariable UUID id) {
+        List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(id);
+        for (HoaDonChiTiet hoaDonChiTiet : list) {
+            chiTietSanPhamService.update(hoaDonChiTiet.getSoLuong()
+                    + hoaDonChiTiet.getChiTietSanPham().getSoLuong(), hoaDonChiTiet.getChiTietSanPham().getId());
+        }
+        hoaDonChiTietService.deleteByIdHD(id);
+        return ResponseEntity.ok("Thành công");
+    }
+
+    @DeleteMapping("/backToGH/{id}")
+    public ResponseEntity<?> backToGH(@PathVariable UUID id) {
         hoaDonChiTietService.deleteByIdHD(id);
         return ResponseEntity.ok("Thành công");
     }

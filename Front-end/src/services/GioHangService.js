@@ -8,6 +8,10 @@ const deleteByIdHD = (id) => {
   return axios.delete(`/api/gio-hang/delete/${id}`);
 };
 
+const backToGH = (id) => {
+  return axios.delete(`/api/gio-hang/backToGH/${id}`);
+};
+
 const addKhuyenMai = (values) => {
   return axios.post('/api/gio-hang/add-km', values);
 };
@@ -51,6 +55,7 @@ const saveTransactionNo = (id, transactionNo) => {
 export {
   postGH,
   deleteByIdHD,
+  backToGH,
   addKhuyenMai,
   thanhToan,
   count,
