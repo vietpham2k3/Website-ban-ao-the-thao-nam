@@ -33,4 +33,7 @@ public interface ProductDetailClientRespose {
 
     @Value("#{target.idSanPham}")
     String getIdSanPham();
+
+    @Value("#{target.trangThai}")
+    Integer getTrangThai();
 }

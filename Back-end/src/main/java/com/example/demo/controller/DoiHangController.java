@@ -129,9 +129,9 @@ public class DoiHangController {
         DoiHang existingDoiHang = null;
         List<HoaDonChiTiet> list = hoaDonChiTietService.getAllByIdHD(doiHangDTO.getHoaDonChiTiet().getHoaDon().getId());
         for (HoaDonChiTiet hdct : list) {
-            ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-            chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
-            hdct.getChiTietSanPham().getId());
+//            ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+//            chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+//            hdct.getChiTietSanPham().getId());
             if (hdct.getDoiHang() != null) {
                 existingDoiHang = doiHangService.findById(hdct.getDoiHang().getId());
                 break;
@@ -168,10 +168,10 @@ public class DoiHangController {
 
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
-                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
-                        hdct.getChiTietSanPham().getId());
-                hoaDonChiTietService.add(hdct);
+//                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+//                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+//                        hdct.getChiTietSanPham().getId());
+//                hoaDonChiTietService.add(hdct);
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(existingDoiHang);
                     hoaDonChiTietService.add(hdct);
@@ -195,9 +195,9 @@ public class DoiHangController {
             doiHangService.add(doiHang);
             // Cập nhật đổi hàng cho tất cả hoá đơn chi tiết có idHD trùng nhau
             for (HoaDonChiTiet hdct : list) {
-                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
-                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
-                        hdct.getChiTietSanPham().getId());
+//                ChiTietSanPham sp = chiTietSanPhamService.detail(hdct.getChiTietSanPham().getId());
+//                chiTietSanPhamService.update((sp.getSoLuong() - doiHangDTO.getHoaDonChiTiet().getSoLuongHangDoi()),
+//                        hdct.getChiTietSanPham().getId());
                 if (hdct.getDoiHang() == null) {
                     hdct.setDoiHang(doiHang);
                     hoaDonChiTietService.add(hdct);

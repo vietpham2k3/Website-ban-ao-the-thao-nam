@@ -77,8 +77,18 @@ function AddKhuyenMai() {
       return;
     }
 
-    if (values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 80)) {
-      toast.error('Nhập số % giảm sai, vui lòng nhập lại');
+    if (!values.loaiGiam && (values.mucGiam < 0 || values.mucGiam > 85)) {
+      toast.error('Chỉ được giảm tối đa 85%, vui lòng nhập lại');
+      return;
+    }
+
+    if (!values.loaiGiam === false && (values.mucGiam > (values.tien * 10/100) )) {
+      toast.error('Mức giảm không được lớn hơn quá 10% so với mức tiền tối thiểu, vui lòng nhập lại');
+      return;
+    }
+
+    if (!values.loaiGiam === false && (values.mucGiam < 0 || values.mucGiam > 5000000)) {
+      toast.error('Chỉ được giảm tối đa 5.000.000 vnd, vui lòng nhập lại');
       return;
     }
 

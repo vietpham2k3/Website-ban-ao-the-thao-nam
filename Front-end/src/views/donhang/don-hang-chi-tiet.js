@@ -240,7 +240,7 @@ function DonHangCT() {
     hoaDon: {
       id: id
     },
-    soLuong: ''
+    soLuong: 1
   });
 
   useEffect(() => {
@@ -711,6 +711,10 @@ function DonHangCT() {
 
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
+    if (valuesSanPham.length === 0) {
+      toast.error('Vui lòng thêm sản phẩm để xác nhận !')
+      return;
+    }
     await xacNhan(id, lshd, tenNV.nhanVien.ten);
   };
 
@@ -744,6 +748,10 @@ function DonHangCT() {
 
   const handleXacNhanGiaoHang = async (event) => {
     event.preventDefault();
+    if (valuesSanPham.length === 0) {
+      toast.error('Vui lòng thêm sản phẩm để giao hàng !')
+      return;
+    }
     await giaoHang(id, lshd2);
   };
 
@@ -1609,19 +1617,19 @@ function DonHangCT() {
     );
   };
 
-  const handleTienShipChange = async (e) => {
-    const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
+  // const handleTienShipChange = async (e) => {
+  //   const totalGiam = dataHDKM.reduce((total, d) => total + d.tienGiam, 0);
 
-    if (e) {
-      const value = parseFloat(e.target.value);
-      if (!isNaN(value) && value >= 0) {
-        // const nonNegativeValue = Math.max(value, 0);
-        //  Nếu nhỏ hơn 0, đặt giá trị thành 0
-        setHoaDon({ ...hoaDon, tienShip: value });
-        updateHD(id, { ...hoaDon, tienShip: value, tongTienKhiGiam: hoaDon.tongTien + value - totalGiam });
-      }
-    }
-  };
+  //   if (e) {
+  //     const value = parseFloat(e.target.value);
+  //     if (!isNaN(value) && value >= 0) {
+  //       // const nonNegativeValue = Math.max(value, 0);
+  //       //  Nếu nhỏ hơn 0, đặt giá trị thành 0
+  //       setHoaDon({ ...hoaDon, tienShip: value });
+  //       updateHD(id, { ...hoaDon, tienShip: value, tongTienKhiGiam: hoaDon.tongTien + value - totalGiam });
+  //     }
+  //   }
+  // };
 
   ///hàng doi
   const [open, setOpen] = React.useState(false);
@@ -2001,13 +2009,28 @@ function DonHangCT() {
     }
   };
 
+  console.log('san pham bip : ' + valuesAddDH.hoaDonChiTiet.chiTietSanPham.id);
+
   const handleAddSP = () => {
-    if (valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === null) {
-      toast.warning('Vui lòng chọn sản phẩm !');
+    if (
+      valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === undefined ||
+      valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === null ||
+      valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === ''
+    ) {
+      toast.error('Vui lòng chọn sản phẩm !');
       return;
     }
-    if (valuesAddDH.hoaDonChiTiet.soLuongHangDoi === null) {
-      toast.warning('Vui lòng chọn sản phẩm !');
+    if (
+      valuesAddDH.hoaDonChiTiet.soLuongHangDoi === 0 ||
+      valuesAddDH.hoaDonChiTiet.soLuongHangDoi === null ||
+      valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === undefined ||
+      valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === ''
+    ) {
+      toast.warning('Vui lòng nhập số lượng hàng đổi !');
+      return;
+    }
+    if (valuesAddDH.doiHang.soHangDoi === 0 || valuesAddDH.doiHang.soHangDoi === null) {
+      toast.warning('Vui lòng nhập số lượng hàng đổi !');
       return;
     }
 
@@ -2197,7 +2220,8 @@ function DonHangCT() {
 
   // const slHangYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, null);
 
-  console.log('sohangycdoi  :' + valuesAddDH.hoaDonChiTiet.soLuongYeuCauDoi);
+  console.log('sohangycdoi  :' + valuesAddDH.hoaDonChiTiet.soLuongHangDoi);
+  console.log('sohangycdoi  :' + valuesAddDH.doiHang.soHangDoi);
 
   return (
     <>
@@ -4080,7 +4104,7 @@ function DonHangCT() {
                       show={show}
                       onHide={handleUpdateHD}
                     >
-                      <Modal.Header onClick={handleUpdateHD}>
+                      <Modal.Header onClick={handleUpdateHD} closeButton>
                         <Modal.Title style={{ marginLeft: 225 }}>Cập Nhật Thông Tin Người Nhận</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
@@ -5760,10 +5784,20 @@ function DonHangCT() {
                                           </small>
                                         </label>
                                         <input
+                                          min={1}
                                           className="form-control"
                                           id="exampleFormControlTextarea1"
+                                          value={valuesAdd.soLuong}
                                           type="number"
-                                          onChange={(e) => setValuesAdd({ ...valuesAdd, soLuong: e.target.value })}
+                                          onChange={(e) =>
+                                            {if (e.target.value >= 1) {
+                                            
+                                            setValuesAdd({ ...valuesAdd, soLuong: e.target.value })
+                                            }else{
+                                              e.preventDefault();
+
+                                            }
+                                          }}
                                         ></input>
                                       </div>
                                     </div>
@@ -5896,7 +5930,7 @@ function DonHangCT() {
 
               <br></br>
 
-              {hoaDon && hoaDon.loaiDon === 1 && (
+              {/* {hoaDon && hoaDon.loaiDon === 1 && (
                 <Container style={{ display: 'flex', justifyContent: 'end' }}>
                   <Row style={{ marginBottom: 10 }}>
                     <Col sm={12} className="row">
@@ -5946,8 +5980,8 @@ function DonHangCT() {
                     </Col>
                   </Row>
                 </Container>
-              )}
-              <br></br>
+              )} */}
+              {/* <br></br> */}
 
               {dataHDKM && dataHDKM.length > 0 && (
                 <Container style={{ display: 'flex', justifyContent: 'end' }}>
@@ -6046,6 +6080,13 @@ function DonHangCT() {
                   return;
                 }
 
+                setValuesAddDH({
+                  ...valuesAddDH,
+                  hoaDonChiTiet: {
+                    chiTietSanPham: '',
+                    soLuongHangDoi: 0
+                  }
+                });
                 setIsshow(false);
                 setIsshowDH(true);
               }}
@@ -6074,6 +6115,13 @@ function DonHangCT() {
             ></ModalAddHangDoi>
             <TableKCMS
               handleClose={() => {
+                setValuesAddDH({
+                  ...valuesAddDH,
+                  hoaDonChiTiet: {
+                    chiTietSanPham: '',
+                    soLuongHangDoi: 0
+                  }
+                });
                 setIsshowMSKC(false);
                 setIsshowDH(true);
               }}
