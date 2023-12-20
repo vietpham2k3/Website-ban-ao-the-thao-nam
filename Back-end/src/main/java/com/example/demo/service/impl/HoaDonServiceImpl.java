@@ -98,6 +98,16 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public Page<HoaDonChiTiet> findAllYCDH(Pageable pageable) {
+        return resHDCT.getAllSLYCD(pageable);
+    }
+
+    @Override
+    public Page<HoaDonChiTiet> searchDHALL(String key, Date tuNgay, Date denNgay, Pageable pageable) {
+        return resHDCT.searchAllDH(key,tuNgay,denNgay,pageable);
+    }
+
+    @Override
     public List<String> bieuDoNgay() {
         return res.bieuDoNgay();
     }

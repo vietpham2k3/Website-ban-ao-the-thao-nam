@@ -189,6 +189,10 @@ const hienThiSPYCDoiHang = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-sp-yeu-cau-doi/` + id);
 };
 
+const hienThiALLSPYCDoiHang = (page) => {
+  return axios.get(`/api/hoa-don/hien-thi-ls-sp-yeu-cau-doi?page=${page}`);
+};
+
 const detailSLSPYCDoiByIdHDCT = (id) => {
   return axios.get(`/api/hoa-don/hien-thi-sl-spDoi/` + id);
 };
@@ -215,6 +219,10 @@ const hangLoi = (id, values) => {
 
 const hangKoLoi = (id, soLuong) => {
   return axios.put(`/api/hoa-don/update-sl-hang-ko-loi/${id}?soLuong=${soLuong}`);
+};
+
+const searchALl = (key, tuNgay, denNgay, page) => {
+  return axios.get(`/api/hoa-don/searchAllDH?key=${key}&tuNgay=${tuNgay}&denNgay=${denNgay}&page=${page}`);
 };
 
 export {
@@ -271,5 +279,7 @@ export {
   detailSLSPYCDoiByIdHDCT,
   getAllPageDHHuyChuaHoan,
   findDonHuyChuaHoan,
-  hangKoLoi
+  hangKoLoi,
+  hienThiALLSPYCDoiHang,
+  searchALl
 };
