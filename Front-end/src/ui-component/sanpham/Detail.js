@@ -161,12 +161,10 @@ function Detail(props) {
       toast.warning('Bạn đang xem ảnh của sản phẩm này');
     } else {
       navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
-      // localStorage.setItem("idMS",idMS);
       getAllAnh(idMS, idSP);
       setVal(0);
-      // setDetailProduct(null);
       setActiveIdKCMaMau('');
-      // console.log(id);
+      setValuesAddGH({ ...valuesAddGH, chiTietSanPham: { id: '' } });
     }
   };
 
@@ -209,8 +207,6 @@ function Detail(props) {
     navigate(`/detail/${idCTSP}/${idSP}/${idMS}`);
     localStorage.setItem('idMS', idMS);
   };
-
-  // const handleAddToCart = () => {
   //   // Lấy danh sách sản phẩm từ localStorage
   //   const storedProducts = JSON.parse(localStorage.getItem('product')) || [];
 
@@ -309,7 +305,6 @@ function Detail(props) {
       toast.error('Sản phẩm đã hết hàng !');
       return;
     }
-
     if (!dataLogin) {
       localStorage.setItem('checkedLogin', true);
       navigate('/login');

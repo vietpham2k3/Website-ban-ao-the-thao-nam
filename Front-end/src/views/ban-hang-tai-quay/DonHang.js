@@ -38,6 +38,8 @@ import { pay } from 'services/PayService';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import QrReader from 'react-qr-reader';
 import { Avatar, TextField } from '@mui/material';
+import ModalUpdateKH from './ModalUpdateKH';
+import { detailKH } from 'services/KhachHangService';
 function DonHang(props) {
   // eslint-disable-next-line react/prop-types
   const { id, getAllHD, handleAddHoaDonTabs, valuesHoaDonTabs } = props;
@@ -46,6 +48,8 @@ function DonHang(props) {
   const [check, setCheck] = useState(true);
   const [idHDCT, setIdHDCT] = useState('');
   const [idKM, setIdKM] = useState('');
+  const [idKH, setIdKH] = useState('');
+  const [isShowUPKH, setIsShowUPKH] = useState(false);
   const [httt, setHttt] = useState('Tiền mặt');
   const [urlPay, setUrlPay] = useState('');
   const [values, setValues] = useState([]);
@@ -900,6 +904,25 @@ function DonHang(props) {
     setShow4(false);
   };
 
+  useEffect(() => {
+    if (idKH) {
+      detail(idKH);
+    }
+  }, [idKH]);
+
+  const detail = async (id) => {
+    const res = await detailKH(id);
+    if (res) {
+      const { ngaySinh, ...valuesKH } = res.data;
+      setValuesKH({
+        ...valuesKH,
+        ngaySinh: formatDate(ngaySinh)
+      });
+    }
+  };
+
+  console.log(valuesKH);
+
   //showScanQR
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [checkAdd, setCheckAdd] = useState(false);
@@ -1240,9 +1263,17 @@ function DonHang(props) {
                     }}
                   >
                     <h7 style={{ paddingLeft: 15 }}>
+                      <button
+                        style={{ color: 'aqua', display: 'none' }}
+                        onClick={() => {
+                          setIsShowUPKH(true);
+                          setShow4(false);
+                          setIdKH(k.id);
+                        }}
+                        className="fa-regular fa-pen-to-square fa-khenh me-1"
+                      ></button>
                       <strong style={{ fontSize: 16 }}>{k.tenKhachHang}</strong> |{' '}
                       <label style={{ fontSize: 15, fontStyle: 'italic' }} htmlFor="sdt">
-                        {' '}
                         {k.sdt}
                       </label>
                     </h7>
@@ -1314,7 +1345,7 @@ function DonHang(props) {
                             type="text"
                             className="form-control"
                             placeholder="Mã mặc định"
-                            // value={valuesKH.maKhachHang}
+                            value={valuesKH.maKhachHang}
                             onChange={(e) => {
                               setValuesKH({ ...valuesKH, maKhachHang: e.target.value });
                             }}
@@ -1332,7 +1363,7 @@ function DonHang(props) {
                             className="form-control"
                             // name="tenKhachHang"
                             placeholder=""
-                            // value={valuesKH.tenKhachHang}
+                            value={valuesKH.tenKhachHang}
                             onChange={(e) => {
                               setValuesKH({ ...valuesKH, tenKhachHang: e.target.value });
                             }}
@@ -1352,7 +1383,7 @@ function DonHang(props) {
                             className="form-control"
                             // name="soDienThoai"
                             placeholder=""
-                            // value={valuesKH.sdt}
+                            value={valuesKH.sdt}
                             onChange={(e) => {
                               setValuesKH({ ...valuesKH, sdt: e.target.value });
                             }}
@@ -1375,7 +1406,7 @@ function DonHang(props) {
                             className="form-control"
                             // name="email"
                             placeholder=""
-                            // value={valuesKH.email}
+                            value={valuesKH.email}
                             onChange={(e) => {
                               setValuesKH({ ...valuesKH, email: e.target.value });
                             }}
@@ -1429,7 +1460,7 @@ function DonHang(props) {
                             className="form-control"
                             // name="ngaySinh"
                             placeholder=""
-                            // value={valuesKH.ngaySinh}
+                            value={valuesKH.ngaySinh}
                             onChange={(e) => {
                               setValuesKH({ ...valuesKH, ngaySinh: e.target.value });
                             }}
@@ -1500,20 +1531,6 @@ function DonHang(props) {
               </p>
             </div>
           </div>
-          {/* <div className="ma-giam-gia">
-            <div>
-              <h6>Mã giảm giá</h6>
-            </div>
-            <div>
-              <p>
-                <input
-                  type="text"
-                  style={{ border: 'none', borderBottom: '1px solid gray', textAlign: 'right' }}
-                  defaultValue={dataDetailKM && dataDetailKM.ma}
-                />{' '}
-              </p>
-            </div>
-          </div> */}
           <div className="ma-giam-gia">
             <div>
               <h6>Số lượng sản phẩm</h6>
@@ -1600,14 +1617,6 @@ function DonHang(props) {
               </select>
             </div>
           </div>
-          {/* <div className="ma-giam-gia">
-            <div>
-              <h6>Tiền thừa</h6>
-            </div>
-            <div>
-              <p>{convertToCurrency(tienThua)}</p>
-            </div>
-          </div> */}
           <br></br>
           <div className="ma-giam-gia">
             {dataKM.map((d, i) => (
@@ -1761,6 +1770,15 @@ function DonHang(props) {
         handleAddKM={handleAddKM}
         formatDate={formatDate}
       ></TableKM>
+      <ModalUpdateKH
+        show={isShowUPKH}
+        handleClose={() => {
+          setIsShowUPKH(false);
+          setShow4(true);
+        }}
+        setValuesKH={setValuesKH}
+        valuesKH={valuesKH}
+      />
     </div>
   );
 }

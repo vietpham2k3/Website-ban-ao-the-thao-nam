@@ -100,16 +100,18 @@ function UpdateMSKCCTSP(props) {
               <div className="form-check form-check-inline">
                 <input
                   type="number"
+                  min={1}
                   className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Nhập số lượng"
                   value={values.soLuong}
-                  onChange={(e) =>
-                    setValues({
-                      ...values,
-                      soLuong: e.target.value
-                    })
-                  }
+                  onChange={(e) => {
+                    if (e.target.value >= 1) {
+                      setValues({ ...values, soLuong: e.target.value });
+                    } else {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
             </div>
