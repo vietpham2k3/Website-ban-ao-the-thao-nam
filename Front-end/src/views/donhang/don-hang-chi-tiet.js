@@ -257,21 +257,6 @@ function DonHangCT() {
   //searchSPinDH
   const [term, setTerm] = useState('');
 
-  const searchSPofDH = async (term) => {
-    const res = await searchCTSPofDH(term);
-    if (res) {
-      setDataSP(res.data);
-    }
-  };
-
-  const handleSearchSPofDH = _.debounce(async () => {
-    if (term) {
-      searchSPofDH(term);
-    } else {
-      searchSPofDH('');
-    }
-  }, []);
-
   useEffect(() => {
     handleSearchSPofDH();
   }, [term]);
@@ -626,8 +611,6 @@ function DonHangCT() {
   const tenNV = {
     nhanVien: { ten: dataLogin && dataLogin.ten }
   };
-
-  console.log(dataLogin);
 
   const [lshd, setLshd] = useState({
     ghiChu: '',
@@ -1364,7 +1347,6 @@ function DonHangCT() {
     }
   });
 
-  console.log(hoaDon.nhanVien);
   const lichSuHoaDon2 = lichSuHoaDon[lichSuHoaDon.length - 1]?.nguoiTao || '';
   const tien = spYCDoi.reduce((acc, d) => acc + d.lichSuSoLuongYeuCauDoi * d.donGia, 0);
   const tien2 = spDoiHang.reduce((acc, d) => acc + d.soLuongHangDoi * d.donGia, 0);
@@ -1668,7 +1650,6 @@ function DonHangCT() {
     const res = await detailDoiHang(id);
     if (res && res.data) {
       setTienKhachPhaiTra(res.data);
-      console.log(res.data);
     }
   };
 
@@ -1888,7 +1869,7 @@ function DonHangCT() {
     if (id) {
       findAll(id);
     }
-  }, [id]);
+  }, [id, totalAmountDH]);
 
   useEffect(() => {
     if (isUpdate) {
@@ -1899,6 +1880,22 @@ function DonHangCT() {
       setIsUpdateHD(false);
     }
   }, [isUpdate, isUpdateHD]);
+
+  const searchSPofDH = async (term) => {
+    const res = await searchCTSPofDH(term);
+    if (res) {
+      const filteredProducts = res.data.filter((product) => product.giaBan >= totalAmountDH);
+      setDataSP(filteredProducts);
+    }
+  };
+
+  const handleSearchSPofDH = _.debounce(async () => {
+    if (term || isShow) {
+      searchSPofDH(term);
+    } else {
+      searchSPofDH('');
+    }
+  }, [term, totalAmountDH, isShow]);
 
   const deleteHD2 = async (idHDCT) => {
     const res = await deleteSPDH(idHDCT);
@@ -1934,7 +1931,7 @@ function DonHangCT() {
     const res = await updateSLDoiHang(value);
     if (res) {
       // findAll(dataHDCT[0].hoaDon.id);
-      handleSearchSPofDH();
+      searchSPofDH(term);
     }
   };
 
@@ -2009,8 +2006,6 @@ function DonHangCT() {
     }
   };
 
-  console.log('san pham bip : ' + valuesAddDH.hoaDonChiTiet.chiTietSanPham.id);
-
   const handleAddSP = () => {
     if (
       valuesAddDH.hoaDonChiTiet.chiTietSanPham.id === undefined ||
@@ -2046,8 +2041,6 @@ function DonHangCT() {
   };
 
   // const lichSuHoaDonNguoiTao = lichSuHoaDon.reduce((acc, d) => acc + d.nguoiTao, 0);
-
-  console.log('Vui lòng chọn sản phẩm khách muốn đổi : ' + valuesAddDH.doiHang.soHangDoi);
 
   const handleDoiHang = () => {
     if (yeuCauDoi.lichSuHoaDon.ghiChu === '') {
@@ -2130,8 +2123,6 @@ function DonHangCT() {
     }
   }, [isDoiHang]);
 
-  console.log('DHDM' + tienKhachPhaiTra.phuongThucThanhToan);
-
   const VNP = async (tien) => {
     try {
       const res = await payOnline(tien, 'http://localhost:3000/loading');
@@ -2186,8 +2177,6 @@ function DonHangCT() {
 
   const lichSuHoaDon5 = lichSuHoaDon[lichSuHoaDon.length - 1]?.ngayTao || '';
 
-  console.log(formatDate(lichSuHoaDon5));
-
   const [open9, setOpen9] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -2219,10 +2208,6 @@ function DonHangCT() {
   };
 
   // const slHangYCD = spYCDoi.reduce((acc, d) => acc + d.soLuongYeuCauDoi, null);
-
-  console.log('sohangycdoi  :' + valuesAddDH.hoaDonChiTiet.soLuongHangDoi);
-  console.log('sohangycdoi  :' + valuesAddDH.doiHang.soHangDoi);
-
   return (
     <>
       <MainCard>
@@ -6071,8 +6056,6 @@ function DonHangCT() {
               listLyDo={listLyDo}
               dataSPDoi={spDoiHang}
               handleOpen={() => {
-                console.log(totalAmountDH);
-
                 if (totalAmountDH <= 0) {
                   toast.warning('Vui lòng chọn sản phẩm khách muốn đổi !');
                   return;
