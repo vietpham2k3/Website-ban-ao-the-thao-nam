@@ -186,10 +186,10 @@ function Detail(props) {
   };
 
   const fetchProductDetail = async (id) => {
-      const res = await detailCTSP(id);
-      if (res && res.data) {
+    const res = await detailCTSP(id);
+    if (res && res.data) {
       setProduct(res.data);
-      }
+    }
   };
 
   function convertToCurrency(number) {
@@ -305,7 +305,6 @@ function Detail(props) {
       return;
     }
 
-
     if (!dataLogin) {
       localStorage.setItem('checkedLogin', true);
       navigate('/login');
@@ -368,167 +367,163 @@ function Detail(props) {
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-<p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
+              <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
               <br></br>
               {(product && product.sanPham && product.sanPham.trangThai) || (product && product.sanPham && product.sanPham.trangThai) ? (
+                <>
+                  <div>
+                    <div style={{ display: 'flex' }}>
+                      <p
+                        style={{
+                          fontSize: 17,
+                          marginTop: 3
+                        }}
+                      >
+                        Màu sắc:
+                      </p>
+                      <ButtonToolbar>
+                        {listMS.map((d) => {
+                          const colorData = d.split(',');
+                          const id = colorData[0];
+                          const color = colorData[1];
+                          const idCTSP = colorData[2];
+                          const idSP = colorData[3];
 
-<>
+                          const idMSSP = `${id}-${idSP}`;
 
-              <div>
-                <div style={{ display: 'flex' }}>
-                  <p
-                    style={{
-                      fontSize: 17,
-                      marginTop: 3
-                    }}
+                          return (
+                            <div style={{ marginLeft: 15, height: 30 }} key={id}>
+                              {color ? (
+                                <Button
+                                  className="custom-button"
+                                  onClick={() => {
+                                    handleChangeId(idCTSP, idSP, id, idMSSP);
+                                    fetchProductDetail(idCTSP);
+                                  }}
+                                  style={{
+                                    backgroundColor: color,
+                                    border: '2px solid black',
+                                    width: 35,
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    height: 25
+                                  }}
+                                  tabIndex={0}
+                                >
+                                  <span style={{ color: idMSSP === selectedIdMSSP ? 'greenyellow' : 'black', fontSize: '15px' }}>
+                                    {idMSSP === selectedIdMSSP ? '✔' : ''}
+                                  </span>
+                                </Button>
+                              ) : (
+                                <p>Chưa có màu sắc nào</p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </ButtonToolbar>
+                    </div>
+                  </div>
+                  <br></br>
+                  <div>
+                    <div style={{ display: 'flex' }}>
+                      <p
+                        style={{
+                          fontSize: 17,
+                          marginTop: 8
+                        }}
+                      >
+                        Kích cỡ:
+                      </p>
+                      <ButtonToolbar>
+                        {listKC.map((d) => {
+                          const sizeData = d.split(',');
+                          const size = sizeData[0];
+                          const idCTSP = sizeData[1];
+                          const idMS = sizeData[2];
+                          const soLuong = sizeData[4];
+                          const idKC = sizeData[5];
+
+                          const idKCMS = `${idKC}-${idMS}`;
+
+                          return (
+                            <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
+                              <Button
+                                className="custom-button"
+                                appearance="ghost"
+                                onClick={() => handleClick2(idCTSP, idKCMS)}
+                                style={{
+                                  backgroundColor: idKCMS === activeIdKCMaMau ? 'black' : 'transparent',
+                                  color: idKCMS === activeIdKCMaMau ? 'white' : 'black',
+                                  border: idKCMS === activeIdKCMaMau ? '1px solid red' : ''
+                                }}
+                                disabled={soLuong === '0'}
+                              >
+                                {size}
+                              </Button>
+                            </div>
+                          );
+                        })}
+                      </ButtonToolbar>
+                    </div>
+                  </div>
+                  <br></br>
+
+                  <div className="product-count">
+                    <p
+                      style={{
+                        paddingTop: 12,
+                        paddingRight: 15,
+                        fontSize: 17
+                      }}
+                    >
+                      Số lượng:{' '}
+                    </p>
+                    <div className="inputSpinner" style={{ width: 130 }}>
+                      <InputSpinner
+                        max={product.soLuong}
+                        min={1}
+                        className="input-spinner"
+                        step={1}
+                        variant={'dark'}
+                        type="real"
+                        size="md"
+                        value={quantity}
+                        onChange={(value) => {
+                          setQuantity(value);
+                          // Tạo một bản sao của mảng valuesHDCT
+                          const updatedValuesHDCT = [...valuesHDCT];
+                          // Cập nhật giá trị soLuong trong phần tử đầu tiên của mảng
+                          updatedValuesHDCT[0].soLuong = value;
+                          setValuesHDCT(updatedValuesHDCT);
+
+                          setValuesAddGH({ ...valuesAddGH, soLuong: value });
+                        }}
+                      />
+
+                      {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
+                    </div>
+                  </div>
+
+                  <div className="action">
+                    <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCartGH}>
+                      Thêm vào giỏ hàng
+                    </button>
+                    <button className="add-to-cart1 btn btn-default" type="button" style={{ display: 'none' }} onClick={handleTaoHoaDon}>
+                      Mua Ngay
+                    </button>
+                  </div>
+                  <h1
+                    style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}
+                    onChange={(event) => setValues({ ...values, moTa: event.target.value })}
                   >
-                    Màu sắc:
-                  </p>
-                  <ButtonToolbar>
-                    {listMS.map((d) => {
-                      const colorData = d.split(',');
-                      const id = colorData[0];
-                      const color = colorData[1];
-                      const idCTSP = colorData[2];
-                      const idSP = colorData[3];
-
-                      const idMSSP = `${id}-${idSP}`;
-
-                      return (
-                        <div style={{ marginLeft: 15, height: 30 }} key={id}>
-                          {color ? (
-                            <Button
-                              className="custom-button"
-                              onClick={() => {
-                                handleChangeId(idCTSP, idSP, id, idMSSP);
-                                fetchProductDetail(idCTSP);
-                              }}
-                              style={{
-                                backgroundColor: color,
-                                border: '2px solid black',
-                                width: 35,
-                                borderRadius: '10px',
-                                cursor: 'pointer',
-                                height: 25
-                              }}
-                              tabIndex={0}
-                            >
-                              <span style={{ color: idMSSP === selectedIdMSSP ? 'greenyellow' : 'black', fontSize: '15px' }}>
-                                {idMSSP === selectedIdMSSP ? '✔' : ''}
-                              </span>
-                            </Button>
-                          ) : (
-                            <p>Chưa có màu sắc nào</p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </ButtonToolbar>
-                </div>
-              </div>
-              <br></br>
-              <div>
-                <div style={{ display: 'flex' }}>
-                  <p
-                    style={{
-                      fontSize: 17,
-                      marginTop: 8
-                    }}
-                  >
-                    Kích cỡ:
-                  </p>
-                  <ButtonToolbar>
-                    {listKC.map((d) => {
-                      const sizeData = d.split(',');
-                      const size = sizeData[0];
-                      const idCTSP = sizeData[1];
-                      const idMS = sizeData[2];
-                      const soLuong = sizeData[4];
-                      const idKC = sizeData[5];
-
-                      const idKCMS = `${idKC}-${idMS}`;
-
-                      return (
-                        <div style={{ marginLeft: 15, marginBottom: 15 }} key={d.id}>
-                          <Button
-                            className="custom-button"
-                            appearance="ghost"
-                            onClick={() => handleClick2(idCTSP, idKCMS)}
-                            style={{
-                              backgroundColor: idKCMS === activeIdKCMaMau ? 'black' : 'transparent',
-                              color: idKCMS === activeIdKCMaMau ? 'white' : 'black',
-                              border: idKCMS === activeIdKCMaMau ? '1px solid red' : ''
-                            }}
-                            disabled={soLuong === '0'}
-                          >
-                            {size}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </ButtonToolbar>
-                </div>
-              </div>
-              <br></br>
-
-              <div className="product-count">
-                <p
-                  style={{
-                    paddingTop: 12,
-                    paddingRight: 15,
-                    fontSize: 17
-                  }}
-                >
-                  Số lượng:{' '}
-                </p>
-                <div className="inputSpinner" style={{ width: 130 }}>
-                  <InputSpinner
-                    max={product.soLuong}
-                    min={1}
-                    className="input-spinner"
-                    step={1}
-                    variant={'dark'}
-                    type="real"
-                    size="md"
-                    value={quantity}
-                    onChange={(value) => {
-                      setQuantity(value);
-                      // Tạo một bản sao của mảng valuesHDCT
-                      const updatedValuesHDCT = [...valuesHDCT];
-                      // Cập nhật giá trị soLuong trong phần tử đầu tiên của mảng
-                      updatedValuesHDCT[0].soLuong = value;
-                      setValuesHDCT(updatedValuesHDCT);
-
-                      setValuesAddGH({ ...valuesAddGH, soLuong: value });
-                    }}
-                  />
-
-                  {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
-                </div>
-              </div>
-              
-              <div className="action">
-                <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCartGH}>
-                  Thêm vào giỏ hàng
-                </button>
-                <button className="add-to-cart1 btn btn-default" type="button" style={{ display: 'none' }} onClick={handleTaoHoaDon}>
-                  Mua Ngay
-                </button>
-              </div>
-              <h1
-                style={{ fontStyle: 'italic', paddingTop: 30, fontSize: 30, fontWeight: 'inherit' }}
-                onChange={(event) => setValues({ ...values, moTa: event.target.value })}
-              >
-                Mô tả
-              </h1>
-              <hr></hr>
-              <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
-              </>
-              ):(
-                <h2 style={{color: "brown",paddingTop: 210}}>Sản phẩm không còn kinh doanh !</h2>
+                    Mô tả
+                  </h1>
+                  <hr></hr>
+                  <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
+                </>
+              ) : (
+                <h2 style={{ color: 'brown', paddingTop: 210 }}>Sản phẩm không còn kinh doanh !</h2>
               )}
-
-             
             </div>
           </div>
         </div>

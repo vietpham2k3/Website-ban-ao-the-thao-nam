@@ -123,7 +123,7 @@ function UpdateKhuyenMai() {
       return;
     }
 
-    if (!values.loaiGiam === false && (values.mucGiam > (values.tien * 10/100) )) {
+    if (!values.loaiGiam === false && values.mucGiam > (values.tien * 10) / 100) {
       toast.error('Mức giảm không được lớn hơn quá 10% so với mức tiền tối thiểu, vui lòng nhập lại');
       return;
     }

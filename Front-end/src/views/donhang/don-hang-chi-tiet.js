@@ -712,7 +712,7 @@ function DonHangCT() {
   const handleXacNhanDH = async (event) => {
     event.preventDefault();
     if (valuesSanPham.length === 0) {
-      toast.error('Vui lòng thêm sản phẩm để xác nhận !')
+      toast.error('Vui lòng thêm sản phẩm để xác nhận !');
       return;
     }
     await xacNhan(id, lshd, tenNV.nhanVien.ten);
@@ -749,7 +749,7 @@ function DonHangCT() {
   const handleXacNhanGiaoHang = async (event) => {
     event.preventDefault();
     if (valuesSanPham.length === 0) {
-      toast.error('Vui lòng thêm sản phẩm để giao hàng !')
+      toast.error('Vui lòng thêm sản phẩm để giao hàng !');
       return;
     }
     await giaoHang(id, lshd2);
@@ -5789,13 +5789,11 @@ function DonHangCT() {
                                           id="exampleFormControlTextarea1"
                                           value={valuesAdd.soLuong}
                                           type="number"
-                                          onChange={(e) =>
-                                            {if (e.target.value >= 1) {
-                                            
-                                            setValuesAdd({ ...valuesAdd, soLuong: e.target.value })
-                                            }else{
+                                          onChange={(e) => {
+                                            if (e.target.value >= 1) {
+                                              setValuesAdd({ ...valuesAdd, soLuong: e.target.value });
+                                            } else {
                                               e.preventDefault();
-
                                             }
                                           }}
                                         ></input>
