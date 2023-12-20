@@ -10,7 +10,7 @@ function CheckThanhToan() {
   const transactionNo = urlParams.get('vnp_TransactionNo');
   const idHDCT = localStorage.getItem('idHDCT');
   const transactionStaus = urlParams.get('vnp_TransactionStatus');
-  const product = JSON.parse(localStorage.getItem('product'));
+  const product = JSON.parse(localStorage.getItem('productHDUpdate'));
   const idGH = localStorage.getItem('idGH') || '';
 
   useEffect(() => {

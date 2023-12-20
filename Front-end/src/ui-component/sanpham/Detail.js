@@ -186,12 +186,10 @@ function Detail(props) {
   };
 
   const fetchProductDetail = async (id) => {
-    try {
-      const response = await detailCTSP(id);
-      setProduct(response.data);
-    } catch (error) {
-      console.error('Error fetching product detail:', error);
-    }
+      const res = await detailCTSP(id);
+      if (res && res.data) {
+      setProduct(res.data);
+      }
   };
 
   function convertToCurrency(number) {
@@ -298,6 +296,16 @@ function Detail(props) {
       toast.error('Đã vượt quá số lượng cho phép');
       return;
     }
+    if (product.trangThai === 0) {
+      toast.error('Sản phẩm không còn kinh doanh !');
+      return;
+    }
+    if (product.sanPham.trangThai === 0) {
+      toast.error('Sản phẩm không còn kinh doanh !');
+      return;
+    }
+
+
     if (!dataLogin) {
       localStorage.setItem('checkedLogin', true);
       navigate('/login');
@@ -305,6 +313,8 @@ function Detail(props) {
     }
     addSPToGH(dataLogin.id, valuesAddGH);
   };
+
+  console.log(product);
 
   return (
     <div className="container">
@@ -358,8 +368,12 @@ function Detail(props) {
             </div>
             <div className="details col-md-6">
               <h3 className="product-title">{product.sanPham.ten}</h3>
-              <p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
+<p style={{ color: 'red', fontWeight: 'bold', fontSize: '30px', lineHeight: '30px' }}>{convertToCurrency(product.giaBan)}</p>
               <br></br>
+              {(product && product.sanPham && product.sanPham.trangThai) || (product && product.sanPham && product.sanPham.trangThai) ? (
+
+<>
+
               <div>
                 <div style={{ display: 'flex' }}>
                   <p
@@ -387,6 +401,7 @@ function Detail(props) {
                               className="custom-button"
                               onClick={() => {
                                 handleChangeId(idCTSP, idSP, id, idMSSP);
+                                fetchProductDetail(idCTSP);
                               }}
                               style={{
                                 backgroundColor: color,
@@ -491,6 +506,7 @@ function Detail(props) {
                   {product.soLuong <= 10 ? <span style={{ color: 'red' }}>Còn lại: {product.soLuong}</span> : ''}
                 </div>
               </div>
+              
               <div className="action">
                 <button className="add-to-cart2 btn btn-default" type="button" onClick={handleAddToCartGH}>
                   Thêm vào giỏ hàng
@@ -507,6 +523,12 @@ function Detail(props) {
               </h1>
               <hr></hr>
               <p style={{ fontWeight: 'inherit', paddingBottom: 10 }}>{product.sanPham.moTa}</p>
+              </>
+              ):(
+                <h2 style={{color: "brown",paddingTop: 210}}>Sản phẩm không còn kinh doanh !</h2>
+              )}
+
+             
             </div>
           </div>
         </div>

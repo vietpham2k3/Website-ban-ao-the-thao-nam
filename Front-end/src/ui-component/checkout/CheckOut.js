@@ -320,7 +320,7 @@ function CheckoutForm(props) {
         localStorage.setItem('product', product);
         clear(idGH, id);
       } else {
-        localStorage.setItem('product', JSON.stringify({ ...valuesUpdateHD, id: id }));
+        localStorage.setItem('productHDUpdate', JSON.stringify({ ...valuesUpdateHD, id: id }));
         window.location.href = urlPay;
       }
     }

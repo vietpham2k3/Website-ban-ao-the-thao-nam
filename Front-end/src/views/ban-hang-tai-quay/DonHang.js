@@ -592,10 +592,8 @@ function DonHang(props) {
     const month = dateObject.getMonth() + 1;
     const year = dateObject.getFullYear();
 
-    const hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
 
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    const formattedDate = `${day}/${month}/${year}`;
 
     return formattedDate;
   }
@@ -703,10 +701,12 @@ function DonHang(props) {
     if (res.data === 'ok') {
       window.location.reload();
       toast.success('Thêm sản phẩm thành công');
+      setCheckAdd(false)
     } else if (res) {
       toast.success('Thêm sản phẩm thành công');
       getAllById(id);
       handleCloseSPofDH();
+      setCheckAdd(false)
       getAll();
       if (idCTSP) {
         detail2(idCTSP);
@@ -771,7 +771,7 @@ function DonHang(props) {
     hoaDon: {
       id: id
     },
-    soLuong: ''
+    soLuong: 1
   });
 
   useEffect(() => {
