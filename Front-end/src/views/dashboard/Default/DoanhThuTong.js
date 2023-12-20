@@ -5,7 +5,7 @@ import '../../../scss/ThongKe.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
 //service api
-import { doanhThuTongTheoNgay, doanhThuTongTheoThang, doanhThuTongTheoNam } from 'services/ServiceThongKe';
+import { doanhThuTongTheoNgay, doanhThuTongTheoThang, doanhThuTongTheoNam, tienNam, tienNgay, tienThang } from 'services/ServiceThongKe';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -61,6 +61,35 @@ const EarningCard = ({ isLoading }) => {
   const [thang, setThang] = useState(0);
   const [nam, setNam] = useState(0);
 
+  const [ngay1, setNgay1] = useState(0);
+  const [thang1, setThang1] = useState(0);
+  const [nam1, setNam1] = useState(0);
+
+  console.log(ngay1);
+  console.log(thang1);
+  console.log(nam1);
+
+  const doanhThuNgay1 = async () => {
+    const res = await tienNgay();
+    if (res && res.data) {
+      setNgay1(res.data);
+    }
+  };
+
+  const doanhThuThang1 = async () => {
+    const res = await tienThang();
+    if (res && res.data) {
+      setThang1(res.data);
+    }
+  };
+
+  const doanhThuNam1 = async () => {
+    const res = await tienNam();
+    if (res && res.data) {
+      setNam1(res.data);
+    }
+  };
+
   const doanhThuTongNgay = async () => {
     const res = await doanhThuTongTheoNgay();
     if (res && res.data) {
@@ -111,6 +140,9 @@ const EarningCard = ({ isLoading }) => {
 
   useEffect(() => {
     handleDoanhThuTongThang();
+    doanhThuNgay1();
+    doanhThuThang1();
+    doanhThuNam1();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -235,19 +267,19 @@ const EarningCard = ({ isLoading }) => {
                   <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
                     {ngay !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(ngay)}
+                        {convertToCurrency(ngay + ngay1)}
                       </Typography>
                     )}
 
                     {thang !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(thang)}
+                        {convertToCurrency(thang + thang1)}
                       </Typography>
                     )}
 
                     {nam !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(nam)}
+                        {convertToCurrency(nam + nam1)}
                       </Typography>
                     )}
                   </Grid>

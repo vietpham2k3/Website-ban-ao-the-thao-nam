@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
-import { bieuDoNam, bieuDoNgay, bieuDoThang } from 'services/ServiceThongKe';
+import { bieuDoNam, bieuDoNgay, bieuDoThang, tienNam, tienNgay, tienThang } from 'services/ServiceThongKe';
 import { useState, useEffect } from 'react';
 
 // project imports
@@ -19,6 +19,35 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const [ngay, setNgay] = useState(['']);
   const [thang, setThang] = useState(['']);
   const [nam, setNam] = useState(['']);
+
+  const [ngay1, setNgay1] = useState(0);
+  const [thang1, setThang1] = useState(0);
+  const [nam1, setNam1] = useState(0);
+
+  console.log(ngay1);
+  console.log(thang1);
+  console.log(nam1);
+
+  const doanhThuNgay1 = async () => {
+    const res = await tienNgay();
+    if (res && res.data) {
+      setNgay1(res.data);
+    }
+  };
+
+  const doanhThuThang1 = async () => {
+    const res = await tienThang();
+    if (res && res.data) {
+      setThang1(res.data);
+    }
+  };
+
+  const doanhThuNam1 = async () => {
+    const res = await tienNam();
+    if (res && res.data) {
+      setNam1(res.data);
+    }
+  };
 
   const SPBCNgay = async () => {
     const res = await bieuDoNgay();
@@ -59,6 +88,9 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   useEffect(() => {
     handleSPBCNam();
+    doanhThuNgay1();
+    doanhThuThang1();
+    doanhThuNam1();
   }, []);
 
   const currentDate = new Date();
@@ -109,7 +141,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   return parseFloat(parts[1]) !== 0;
                 }) ? (
                   <BarChart
-                    margin={{ left: 70 }}
+                    margin={{ left: 85 }}
                     xAxis={[
                       {
                         id: 'barCategories',
@@ -153,7 +185,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   return parseFloat(parts[1]) !== 0;
                 }) ? (
                   <BarChart
-                    margin={{ left: 70 }}
+                    margin={{ left: 85 }}
                     xAxis={[
                       {
                         id: 'barCategories',
@@ -197,7 +229,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                   return parseFloat(parts[1]) !== 0;
                 }) ? (
                   <BarChart
-                    margin={{ left: 70 }}
+                    margin={{ left: 85 }}
                     xAxis={[
                       {
                         id: 'barCategories',

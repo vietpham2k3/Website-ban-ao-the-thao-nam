@@ -88,6 +88,21 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
+    public Double tienDHNgay() {
+        return res.tienDHNgay();
+    }
+
+    @Override
+    public Double tienDHThang() {
+        return res.tienDHThang();
+    }
+
+    @Override
+    public Double tienDHNam() {
+        return res.tienDHNam();
+    }
+
+    @Override
     public String[] doanhThuAllNgay() {
         return res.doanhThuAllNgay();
     }

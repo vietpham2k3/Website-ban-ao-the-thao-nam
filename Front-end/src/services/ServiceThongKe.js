@@ -132,6 +132,18 @@ const bieuDoNam = () => {
   return axios.get(`/api/thong-ke/bieu-do-nam`);
 };
 
+const tienNgay = () => {
+  return axios.get(`/api/thong-ke/tien-ngay`);
+};
+
+const tienThang = () => {
+  return axios.get(`/api/thong-ke/tien-thang`);
+};
+
+const tienNam = () => {
+  return axios.get(`/api/thong-ke/tien-nam`);
+};
+
 export {
   doanhThuTongTheoNgay,
   doanhThuTongTheoThang,
@@ -165,5 +177,8 @@ export {
   doanhThuAllThang,
   bieuDoNgay,
   bieuDoThang,
-  bieuDoNam
+  bieuDoNam,
+  tienNgay,
+  tienThang,
+  tienNam
 };

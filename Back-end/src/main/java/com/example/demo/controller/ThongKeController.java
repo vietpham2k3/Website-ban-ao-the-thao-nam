@@ -190,4 +190,20 @@ public class ThongKeController {
     public ResponseEntity<?> bieuDoNam() {
         return ResponseEntity.ok().body(hdSer.bieuDoNam());
     }
+
+    //
+    @GetMapping("tien-ngay")
+    public ResponseEntity<?> tienN() {
+        return ResponseEntity.ok().body(hdSer.tienDHNgay());
+    }
+
+    @GetMapping("tien-thang")
+    public ResponseEntity<?> tienT() {
+        return ResponseEntity.ok().body(hdSer.tienDHThang());
+    }
+
+    @GetMapping("tien-nam")
+    public ResponseEntity<?> tienNam() {
+        return ResponseEntity.ok().body(hdSer.tienDHNam());
+    }
 }

@@ -5,7 +5,7 @@ import '../../../scss/ThongKe.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
 //service api
-import { doanhThuAllNam, doanhThuAllNgay, doanhThuAllThang } from 'services/ServiceThongKe';
+import { doanhThuAllNam, doanhThuAllNgay, doanhThuAllThang, tienNam, tienNgay, tienThang } from 'services/ServiceThongKe';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -62,6 +62,36 @@ const DoanhThuAll = ({ isLoading }) => {
   const [thang, setThang] = useState([]);
   const [nam, setNam] = useState([]);
 
+  const [ngay1, setNgay1] = useState(0);
+  const [thang1, setThang1] = useState(0);
+  const [nam1, setNam1] = useState(0);
+
+  console.log(ngay1);
+  console.log(thang1);
+  console.log(nam1);
+
+  const doanhThuNgay1 = async () => {
+    const res = await tienNgay();
+    if (res && res.data) {
+      setNgay1(res.data);
+    }
+  };
+
+  const doanhThuThang1 = async () => {
+    const res = await tienThang();
+    if (res && res.data) {
+      setThang1(res.data);
+    }
+  };
+
+  const doanhThuNam1 = async () => {
+    const res = await tienNam();
+    if (res && res.data) {
+      setNam1(res.data);
+    }
+  };
+
+
   const doanhThuTongNgay = async () => {
     const res = await doanhThuAllNgay();
     if (res && res.data) {
@@ -115,6 +145,9 @@ const DoanhThuAll = ({ isLoading }) => {
 
   useEffect(() => {
     handleDoanhThuTongNam();
+    doanhThuNgay1();
+    doanhThuThang1();
+    doanhThuNam1();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -253,9 +286,9 @@ const DoanhThuAll = ({ isLoading }) => {
                               <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
                             </tr>
                             <tr>
-                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ color: 'red' }}>{convertToCurrency(parseFloat(taiQuay)+ngay1)}</td>
                               <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
-                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(parseFloat(tong) + ngay1)}</td>
                             </tr>
                           </table>
                         );
@@ -275,9 +308,9 @@ const DoanhThuAll = ({ isLoading }) => {
                               <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
                             </tr>
                             <tr>
-                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ color: 'red' }}>{convertToCurrency(parseFloat(taiQuay)+thang1)}</td>
                               <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
-                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(parseFloat(tong) + thang1)}</td>
                             </tr>
                           </table>
                         );
@@ -297,9 +330,9 @@ const DoanhThuAll = ({ isLoading }) => {
                               <th style={{ paddingLeft: 30 }}> Tổng doanh thu: </th>
                             </tr>
                             <tr>
-                              <td style={{ color: 'red' }}>{convertToCurrency(taiQuay)}</td>
+                              <td style={{ color: 'red' }}>{convertToCurrency(parseFloat(taiQuay)+parseFloat(nam1))}</td>
                               <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(online)}</td>
-                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(tong)}</td>
+                              <td style={{ paddingLeft: 30, color: 'red' }}>{convertToCurrency(parseFloat(tong) + nam1)}</td>
                             </tr>
                           </table>
                         );

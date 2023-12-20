@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { doanhThuTQTheoNgay, doanhThuTQTheoThang, doanhThuTQTheoNam } from 'services/ServiceThongKe';
+import { doanhThuTQTheoNgay, doanhThuTQTheoThang, doanhThuTQTheoNam, tienNgay, tienThang,tienNam } from 'services/ServiceThongKe';
 import '../../../scss/ThongKe.scss';
 
 // material-ui
@@ -64,6 +64,35 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
   const [thang, setThang] = useState(0);
   const [nam, setNam] = useState(0);
 
+  const [ngay1, setNgay1] = useState(0);
+  const [thang1, setThang1] = useState(0);
+  const [nam1, setNam1] = useState(0);
+
+  console.log(ngay1);
+  console.log(thang1);
+  console.log(nam1);
+
+  const doanhThuNgay1 = async () => {
+    const res = await tienNgay();
+    if (res && res.data) {
+      setNgay1(res.data);
+    }
+  };
+
+  const doanhThuThang1 = async () => {
+    const res = await tienThang();
+    if (res && res.data) {
+      setThang1(res.data);
+    }
+  };
+
+  const doanhThuNam1 = async () => {
+    const res = await tienNam();
+    if (res && res.data) {
+      setNam1(res.data);
+    }
+  };
+
   const doanhThuNgay = async () => {
     const res = await doanhThuTQTheoNgay();
     if (res && res.data) {
@@ -114,6 +143,10 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
 
   useEffect(() => {
     handleDoanhThuNgay();
+    doanhThuNgay1();
+    doanhThuThang1();
+    doanhThuNam1();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -236,17 +269,17 @@ const DoanhThuTaiQuay = ({ isLoading }) => {
                   <Grid item>
                     {ngay !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(ngay)}
+                        {convertToCurrency(ngay+ngay1)}
                       </Typography>
                     )}
                     {thang !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(thang)}
+                        {convertToCurrency(thang+thang1)}
                       </Typography>
                     )}
                     {nam !== '' && (
                       <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {convertToCurrency(nam)}
+                        {convertToCurrency(nam+nam1)}
                       </Typography>
                     )}{' '}
                   </Grid>

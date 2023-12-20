@@ -37,13 +37,19 @@ public interface HoaDonService {
 
     public Double doanhThuTongNgayCurrent();
 
+    public Double tienDHNgay();
+
+    public Double tienDHThang();
+
+    public Double tienDHNam();
+
     public String[] doanhThuAllNgay();
 
     public List<String> bieuDoNam();
 
     public Page<HoaDonChiTiet> findAllYCDH(Pageable pageable);
 
-    public Page<HoaDonChiTiet> searchDHALL(String key, Date tuNgay, Date denNgay,Pageable pageable);
+    public Page<HoaDonChiTiet> searchDHALL(String key, Date tuNgay, Date denNgay, Pageable pageable);
 
     public List<String> bieuDoNgay();
 
