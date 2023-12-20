@@ -102,7 +102,7 @@ function AddMSKCCTSP(props) {
                   className="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Nhập số lượng"
-                  // value={values.soLuong}
+                  value={values.soLuong}
                   onChange={(e) => {
                     if (e.target.value >= 1) {
                       setValues({ ...values, soLuong: e.target.value });
