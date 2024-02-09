@@ -18,6 +18,7 @@ import ChangeDC from './ChangeDC';
 import UpdateDC from './UpdateDC';
 import { Avatar, Checkbox, FormControlLabel } from '@mui/material';
 import ModalChinhSach from './Modal/ModalChinhSach';
+import { getAllKM } from 'services/ServiceKhuyenMai';
 
 function CheckoutForm(props) {
   // eslint-disable-next-line react/prop-types
@@ -850,6 +851,37 @@ function CheckoutForm(props) {
     }));
   };
 
+  
+  const [dataKM, setDataKM] = useState([]);
+  function formatDate(dateString) {
+    if (dateString === null) {
+      return ''; // Trả về chuỗi rỗng nếu giá trị là null
+    }
+
+    const dateObject = new Date(dateString);
+
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1;
+    const year = dateObject.getFullYear();
+
+
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return formattedDate;
+  }
+
+
+  useEffect(() => {
+    getKM(totalAmount)
+  }, [totalAmount])
+
+  const getKM = async (tien) => {
+    const res = await getAllKM(tien);
+    if (res) {
+      setDataKM(res.data);
+    }
+  };
+
   return (
     <div className="site-section">
       <div className="container ctn">
@@ -1109,6 +1141,25 @@ function CheckoutForm(props) {
                             </button>
                           </div>
                         </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="text-black">
+                      {dataKM.map((d, i) => (
+              <div
+                key={i}
+                className={`col-12 card-voucher card-width`}
+                onClick={() => handleDivClick(i)}
+                style={{ cursor: 'pointer', overflow: 'scroll', color: 'aqua' }}
+              >
+                <h6 style={{ color: 'red', wordWrap: 'break-word' }}>
+                  Giảm {d.loaiGiam ? convertToCurrency(d.mucGiam) : d.mucGiam + '%'} cho đơn tối thiểu {convertToCurrency(d.tien)} - ({d.ma})
+                </h6>
+                <div className="text-voucher">
+                  <p style={{ fontSize: '13px', color: 'gray' }}>HSD: {formatDate(d.thoiGianKetThuc)}</p>
+                </div>
+              </div>
+            ))}
                       </td>
                     </tr>
                     <tr>
